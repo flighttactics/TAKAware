@@ -83,7 +83,6 @@ class Converter {
             #else
             metersPerSecond = 0
             #endif
-            
         }
         let numFeetInOneMeter = 3.281
         let numFeetInOneMile = 5280.0

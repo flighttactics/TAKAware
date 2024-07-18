@@ -173,6 +173,7 @@ struct DataPackageEnrollment: View {
             VStack(alignment: .center) {
                 HStack {
                     Button {
+                        isProcessingDataPackage = true
                         isShowingFilePicker.toggle()
                     } label: {
                         HStack {
@@ -181,11 +182,12 @@ struct DataPackageEnrollment: View {
                             Image(systemName: "square.and.arrow.up")
                                 .multilineTextAlignment(.trailing)
                         }
-                        .contentShape(Rectangle())
                         
                     }
                     .buttonStyle(.plain)
+                    
                     .fileImporter(isPresented: $isShowingFilePicker, allowedContentTypes: [.zip], allowsMultipleSelection: false, onCompletion: { results in
+                        
                         switch results {
                         case .success(let fileurls):
                             isProcessingDataPackage = true
@@ -207,11 +209,11 @@ struct DataPackageEnrollment: View {
                                 } else {
                                     TAKLogger.error("Unable to securely access  \(String(describing: fileurl))")
                                 }
+                                isProcessingDataPackage = false
                             }
-                            isProcessingDataPackage = false
                         case .failure(let error):
-                            isProcessingDataPackage = false
                             TAKLogger.debug(String(describing: error))
+                            isProcessingDataPackage = false
                         }
                         
                     })
@@ -247,6 +249,7 @@ struct ConnectionOptionsScreen: View {
     
     @State var formServerURL = ""
     @State var formServerPort = ""
+    @State var formSecureAPIPort = ""
     @State var formUsername = ""
     @State var formPassword = ""
     @State var formCSRPort = ""
@@ -348,13 +351,13 @@ struct ConnectionOptionsScreen: View {
                     
                     Section(header:
                                 Text("Advanced Options")
-                                .font(.system(size: 14, weight: .medium))
+                        .font(.system(size: 14, weight: .medium))
                     ) {
                         VStack {
                             HStack {
-                                Text("Port")
+                                Text("Streaming Port")
                                     .foregroundColor(.secondary)
-                                TextField("Server Port", text: $formServerPort)
+                                TextField("Streaming Port", text: $formServerPort)
                                     .keyboardType(.numberPad)
                             }
                         }
@@ -364,6 +367,15 @@ struct ConnectionOptionsScreen: View {
                                 Text("CSR Port")
                                     .foregroundColor(.secondary)
                                 TextField("CSR Port", text: $formCSRPort)
+                                    .keyboardType(.numberPad)
+                            }
+                        }
+                        
+                        VStack {
+                            HStack {
+                                Text("Secure API Port")
+                                    .foregroundColor(.secondary)
+                                TextField("Secure API Port", text: $formSecureAPIPort)
                                     .keyboardType(.numberPad)
                             }
                         }
@@ -386,6 +398,7 @@ struct ConnectionOptionsScreen: View {
                             settingsStore.takServerUsername = formUsername
                             settingsStore.takServerPassword = formPassword
                             settingsStore.takServerCSRPort = formCSRPort
+                            settingsStore.takServerSecureAPIPort = formSecureAPIPort
                             csrRequest.beginEnrollment()
                         }
                         .buttonStyle(.borderedProminent)
@@ -432,6 +445,7 @@ struct ConnectionOptionsScreen: View {
             formUsername = settingsStore.takServerUsername
             formPassword = settingsStore.takServerPassword
             formCSRPort = settingsStore.takServerCSRPort
+            formSecureAPIPort = settingsStore.takServerSecureAPIPort
         })
     }
 }
