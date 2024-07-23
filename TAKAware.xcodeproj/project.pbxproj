@@ -15,7 +15,7 @@
 		4630FD1C2B5071D200988ED4 /* MessageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD1B2B5071D200988ED4 /* MessageData.swift */; };
 		4630FD1E2B5072D300988ED4 /* Sheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD1D2B5072D300988ED4 /* Sheet.swift */; };
 		4630FD4C2B51A34500988ED4 /* MessageModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD4A2B51A34500988ED4 /* MessageModel.xcdatamodeld */; };
-		479B8B617AB264363ABCD93B /* Pods_TAKTracker_TAKTrackerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEFD401A913144B7229D2781 /* Pods_TAKTracker_TAKTrackerTests.framework */; };
+		479B8B617AB264363ABCD93B /* Pods_TAKAware_TAKAwareTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEFD401A913144B7229D2781 /* Pods_TAKAware_TAKAwareTests.framework */; };
 		A5014F9B2C178C5300BE40C1 /* Migrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5014F9A2C178C5300BE40C1 /* Migrator.swift */; };
 		A5014F9C2C178C5300BE40C1 /* Migrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5014F9A2C178C5300BE40C1 /* Migrator.swift */; };
 		A5014F9F2C17973E00BE40C1 /* MigratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5014F9D2C17973E00BE40C1 /* MigratorTests.swift */; };
@@ -30,7 +30,7 @@
 		A54F70872AB0AEA400D8C541 /* DataPackageParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F70862AB0AEA400D8C541 /* DataPackageParserTests.swift */; };
 		A54F70892AB0C40B00D8C541 /* TCPMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F70882AB0C40B00D8C541 /* TCPMessageTests.swift */; };
 		A54F708A2AB0C41100D8C541 /* TCPMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BF02012A5EBCA40043065B /* TCPMessage.swift */; };
-		A5582CC32AD5CB4600DE0D5C /* TAKTrackerTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5582CC22AD5CB4600DE0D5C /* TAKTrackerTestCase.swift */; };
+		A5582CC32AD5CB4600DE0D5C /* TAKAwareTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5582CC22AD5CB4600DE0D5C /* TAKAwareTestCase.swift */; };
 		A55ABF452ABDBF9A00195AB7 /* UserInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55ABF442ABDBF9A00195AB7 /* UserInformation.swift */; };
 		A55ABF472ABDBFEA00195AB7 /* ServerInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55ABF462ABDBFEA00195AB7 /* ServerInformation.swift */; };
 		A55ABF492ABDC02200195AB7 /* ConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55ABF482ABDC02200195AB7 /* ConnectionOptions.swift */; };
@@ -3367,11 +3367,11 @@
 		A5B5E6922BEDC4F600EB0FE4 /* NIOSSL in Frameworks */ = {isa = PBXBuildFile; productRef = A5B5E6912BEDC4F600EB0FE4 /* NIOSSL */; };
 		A5BF02002A5EB7440043065B /* UDPMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BF01FF2A5EB63F0043065B /* UDPMessage.swift */; };
 		A5BF02022A5EBCA40043065B /* TCPMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5BF02012A5EBCA40043065B /* TCPMessage.swift */; };
-		A5D8D37E2A53B0F9002F0E3E /* TAKTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D37D2A53B0F9002F0E3E /* TAKTrackerApp.swift */; };
+		A5D8D37E2A53B0F9002F0E3E /* TAKAwareApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D37D2A53B0F9002F0E3E /* TAKAwareApp.swift */; };
 		A5D8D3802A53B0F9002F0E3E /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D37F2A53B0F9002F0E3E /* MainScreen.swift */; };
 		A5D8D3852A53B0FA002F0E3E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5D8D3842A53B0FA002F0E3E /* Preview Assets.xcassets */; };
-		A5D8D3992A53B0FB002F0E3E /* TAKTrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D3982A53B0FB002F0E3E /* TAKTrackerUITests.swift */; };
-		A5D8D39B2A53B0FB002F0E3E /* TAKTrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D39A2A53B0FB002F0E3E /* TAKTrackerUITestsLaunchTests.swift */; };
+		A5D8D3992A53B0FB002F0E3E /* TAKAwareUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D3982A53B0FB002F0E3E /* TAKAwareUITests.swift */; };
+		A5D8D39B2A53B0FB002F0E3E /* TAKAwareUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D39A2A53B0FB002F0E3E /* TAKAwareUITestsLaunchTests.swift */; };
 		A5D8D3A82A53B465002F0E3E /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D3A72A53B465002F0E3E /* LocationManager.swift */; };
 		A5E2D0BB2C3F1E47009FCD51 /* ChannelOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2D0BA2C3F1E47009FCD51 /* ChannelOptions.swift */; };
 		A5E2D0BD2C3F218B009FCD51 /* ChannelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2D0BC2C3F218B009FCD51 /* ChannelManager.swift */; };
@@ -3395,7 +3395,7 @@
 		A5FB4E8B2AACF2830034966D /* itak-do-foyc.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5FB4E862AACF2820034966D /* itak-do-foyc.zip */; };
 		A5FB4E8C2AACF2830034966D /* foyc.p12 in Resources */ = {isa = PBXBuildFile; fileRef = A5FB4E872AACF2830034966D /* foyc.p12 */; };
 		A5FB4E8E2AACF2A20034966D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5FB4E8D2AACF2A10034966D /* Assets.xcassets */; };
-		B6C8997D4C1B298C733111DC /* Pods_TAKTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0840B3A75D0239E21ADEA2E7 /* Pods_TAKTracker.framework */; };
+		B6C8997D4C1B298C733111DC /* Pods_TAKAware.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0840B3A75D0239E21ADEA2E7 /* Pods_TAKAware.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -3429,8 +3429,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0840B3A75D0239E21ADEA2E7 /* Pods_TAKTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TAKTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0CD85BD73504580BC32FA239 /* Pods-TAKTracker-TAKTrackerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKTracker-TAKTrackerTests.debug.xcconfig"; path = "Target Support Files/Pods-TAKTracker-TAKTrackerTests/Pods-TAKTracker-TAKTrackerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		0840B3A75D0239E21ADEA2E7 /* Pods_TAKAware.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TAKAware.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CD85BD73504580BC32FA239 /* Pods-TAKAware-TAKAwareTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKAware-TAKAwareTests.debug.xcconfig"; path = "Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4630FD0D2B506EC000988ED4 /* Palette+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Palette+Color.swift"; sourceTree = "<group>"; };
 		4630FD102B5071A100988ED4 /* ChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		4630FD122B5071A100988ED4 /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
@@ -3439,8 +3439,8 @@
 		4630FD1B2B5071D200988ED4 /* MessageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageData.swift; sourceTree = "<group>"; };
 		4630FD1D2B5072D300988ED4 /* Sheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheet.swift; sourceTree = "<group>"; };
 		4630FD4B2B51A34500988ED4 /* Message.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Message.xcdatamodel; sourceTree = "<group>"; };
-		4B2EC40D21C80BEBE05D29F8 /* Pods-TAKTracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKTracker.debug.xcconfig"; path = "Target Support Files/Pods-TAKTracker/Pods-TAKTracker.debug.xcconfig"; sourceTree = "<group>"; };
-		94A6A10561B512E86B0E9DC2 /* Pods-TAKTracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKTracker.release.xcconfig"; path = "Target Support Files/Pods-TAKTracker/Pods-TAKTracker.release.xcconfig"; sourceTree = "<group>"; };
+		4B2EC40D21C80BEBE05D29F8 /* Pods-TAKAware.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKAware.debug.xcconfig"; path = "Target Support Files/Pods-TAKAware/Pods-TAKAware.debug.xcconfig"; sourceTree = "<group>"; };
+		94A6A10561B512E86B0E9DC2 /* Pods-TAKAware.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKAware.release.xcconfig"; path = "Target Support Files/Pods-TAKAware/Pods-TAKAware.release.xcconfig"; sourceTree = "<group>"; };
 		A5014F9A2C178C5300BE40C1 /* Migrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Migrator.swift; sourceTree = "<group>"; };
 		A5014F9D2C17973E00BE40C1 /* MigratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MigratorTests.swift; sourceTree = "<group>"; };
 		A507C0702C1BE5CE0022BB0F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -3452,7 +3452,7 @@
 		A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SituationalAwarenessOptions.swift; sourceTree = "<group>"; };
 		A54F70862AB0AEA400D8C541 /* DataPackageParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackageParserTests.swift; sourceTree = "<group>"; };
 		A54F70882AB0C40B00D8C541 /* TCPMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPMessageTests.swift; sourceTree = "<group>"; };
-		A5582CC22AD5CB4600DE0D5C /* TAKTrackerTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKTrackerTestCase.swift; sourceTree = "<group>"; };
+		A5582CC22AD5CB4600DE0D5C /* TAKAwareTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKAwareTestCase.swift; sourceTree = "<group>"; };
 		A55ABF442ABDBF9A00195AB7 /* UserInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInformation.swift; sourceTree = "<group>"; };
 		A55ABF462ABDBFEA00195AB7 /* ServerInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInformation.swift; sourceTree = "<group>"; };
 		A55ABF482ABDC02200195AB7 /* ConnectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionOptions.swift; sourceTree = "<group>"; };
@@ -3469,10 +3469,10 @@
 		A595F6652C278CBF00E81976 /* TrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerView.swift; sourceTree = "<group>"; };
 		A595F6672C278CCD00E81976 /* AwarenessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwarenessView.swift; sourceTree = "<group>"; };
 		A595F6692C278CFE00E81976 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
-		A599D66C2A5E45CD00B507D9 /* TAKTracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TAKTracker.entitlements; sourceTree = "<group>"; };
+		A599D66C2A5E45CD00B507D9 /* TAKAware.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TAKAware.entitlements; sourceTree = "<group>"; };
 		A59C08462AACF95100C33B44 /* CertificateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateManager.swift; sourceTree = "<group>"; };
 		A5A49D8F2A5459B5009764C1 /* TAKManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKManager.swift; sourceTree = "<group>"; };
-		A5A49D912A547378009764C1 /* TAKTracker-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TAKTracker-Info.plist"; sourceTree = SOURCE_ROOT; };
+		A5A49D912A547378009764C1 /* TAKAware-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TAKAware-Info.plist"; sourceTree = SOURCE_ROOT; };
 		A5AA51092AC33488006696B2 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		A5AA510E2AC35B75006696B2 /* SettingsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStoreTests.swift; sourceTree = "<group>"; };
 		A5B1FF632C3B86D600C7F546 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
@@ -6779,14 +6779,14 @@
 		A5B31FB72C3AEBEA007B3914 /* suupwt---------.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "suupwt---------.png"; sourceTree = "<group>"; };
 		A5BF01FF2A5EB63F0043065B /* UDPMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UDPMessage.swift; sourceTree = "<group>"; };
 		A5BF02012A5EBCA40043065B /* TCPMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPMessage.swift; sourceTree = "<group>"; };
-		A5D8D37A2A53B0F9002F0E3E /* TAKTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TAKTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A5D8D37D2A53B0F9002F0E3E /* TAKTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKTrackerApp.swift; sourceTree = "<group>"; };
+		A5D8D37A2A53B0F9002F0E3E /* TAKAware.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TAKAware.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5D8D37D2A53B0F9002F0E3E /* TAKAwareApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKAwareApp.swift; sourceTree = "<group>"; };
 		A5D8D37F2A53B0F9002F0E3E /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
 		A5D8D3842A53B0FA002F0E3E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		A5D8D38A2A53B0FA002F0E3E /* TAKTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TAKTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A5D8D3942A53B0FB002F0E3E /* TAKTrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TAKTrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A5D8D3982A53B0FB002F0E3E /* TAKTrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKTrackerUITests.swift; sourceTree = "<group>"; };
-		A5D8D39A2A53B0FB002F0E3E /* TAKTrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKTrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A5D8D38A2A53B0FA002F0E3E /* TAKAwareTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TAKAwareTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5D8D3942A53B0FB002F0E3E /* TAKAwareUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TAKAwareUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5D8D3982A53B0FB002F0E3E /* TAKAwareUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKAwareUITests.swift; sourceTree = "<group>"; };
+		A5D8D39A2A53B0FB002F0E3E /* TAKAwareUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKAwareUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A5D8D3A72A53B465002F0E3E /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		A5E2D0BA2C3F1E47009FCD51 /* ChannelOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelOptions.swift; sourceTree = "<group>"; };
 		A5E2D0BC2C3F218B009FCD51 /* ChannelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelManager.swift; sourceTree = "<group>"; };
@@ -6803,8 +6803,8 @@
 		A5FB4E862AACF2820034966D /* itak-do-foyc.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = "itak-do-foyc.zip"; sourceTree = "<group>"; };
 		A5FB4E872AACF2830034966D /* foyc.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = foyc.p12; sourceTree = "<group>"; };
 		A5FB4E8D2AACF2A10034966D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		CEFD401A913144B7229D2781 /* Pods_TAKTracker_TAKTrackerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TAKTracker_TAKTrackerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E7150D9B3F41CFFF2C34C4A3 /* Pods-TAKTracker-TAKTrackerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKTracker-TAKTrackerTests.release.xcconfig"; path = "Target Support Files/Pods-TAKTracker-TAKTrackerTests/Pods-TAKTracker-TAKTrackerTests.release.xcconfig"; sourceTree = "<group>"; };
+		CEFD401A913144B7229D2781 /* Pods_TAKAware_TAKAwareTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TAKAware_TAKAwareTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E7150D9B3F41CFFF2C34C4A3 /* Pods-TAKAware-TAKAwareTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKAware-TAKAwareTests.release.xcconfig"; path = "Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -6816,7 +6816,7 @@
 				A5FB4E622A8FDF430034966D /* X509 in Frameworks */,
 				A507C0742C1BECE80022BB0F /* SwiftTAK in Frameworks */,
 				A56679832C04DACD00C453DC /* NIOSSL in Frameworks */,
-				B6C8997D4C1B298C733111DC /* Pods_TAKTracker.framework in Frameworks */,
+				B6C8997D4C1B298C733111DC /* Pods_TAKAware.framework in Frameworks */,
 				A5702A432C205772008E1763 /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6826,7 +6826,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A5B5E6922BEDC4F600EB0FE4 /* NIOSSL in Frameworks */,
-				479B8B617AB264363ABCD93B /* Pods_TAKTracker_TAKTrackerTests.framework in Frameworks */,
+				479B8B617AB264363ABCD93B /* Pods_TAKAware_TAKAwareTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6844,8 +6844,8 @@
 			isa = PBXGroup;
 			children = (
 				A55ACD3E2C1A87AF0055A21A /* SwiftTAK */,
-				0840B3A75D0239E21ADEA2E7 /* Pods_TAKTracker.framework */,
-				CEFD401A913144B7229D2781 /* Pods_TAKTracker_TAKTrackerTests.framework */,
+				0840B3A75D0239E21ADEA2E7 /* Pods_TAKAware.framework */,
+				CEFD401A913144B7229D2781 /* Pods_TAKAware_TAKAwareTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -10225,9 +10225,9 @@
 				A5FB4E8D2AACF2A10034966D /* Assets.xcassets */,
 				A58B372C2A57B0390002B984 /* README.md */,
 				A58B372D2A57B38A0002B984 /* LICENSE.md */,
-				A5D8D37C2A53B0F9002F0E3E /* TAKTracker */,
-				A5D8D38D2A53B0FB002F0E3E /* TAKTrackerTests */,
-				A5D8D3972A53B0FB002F0E3E /* TAKTrackerUITests */,
+				A5D8D37C2A53B0F9002F0E3E /* TAKAware */,
+				A5D8D38D2A53B0FB002F0E3E /* TAKAwareTests */,
+				A5D8D3972A53B0FB002F0E3E /* TAKAwareUITests */,
 				A5D8D37B2A53B0F9002F0E3E /* Products */,
 				B7B57F813DDA55B613DBA70B /* Pods */,
 				085BD5615028DC7C36297967 /* Frameworks */,
@@ -10237,14 +10237,14 @@
 		A5D8D37B2A53B0F9002F0E3E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A5D8D37A2A53B0F9002F0E3E /* TAKTracker.app */,
-				A5D8D38A2A53B0FA002F0E3E /* TAKTrackerTests.xctest */,
-				A5D8D3942A53B0FB002F0E3E /* TAKTrackerUITests.xctest */,
+				A5D8D37A2A53B0F9002F0E3E /* TAKAware.app */,
+				A5D8D38A2A53B0FA002F0E3E /* TAKAwareTests.xctest */,
+				A5D8D3942A53B0FB002F0E3E /* TAKAwareUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A5D8D37C2A53B0F9002F0E3E /* TAKTracker */ = {
+		A5D8D37C2A53B0F9002F0E3E /* TAKAware */ = {
 			isa = PBXGroup;
 			children = (
 				A5B312DB2C3AEBBF007B3914 /* Resources */,
@@ -10257,11 +10257,11 @@
 				A5D8D3832A53B0FA002F0E3E /* Preview Content */,
 				A5E2F8FD2A791F3000EDD0B4 /* Screens */,
 				A5E2F9002A791FD900EDD0B4 /* TAK */,
-				A5A49D912A547378009764C1 /* TAKTracker-Info.plist */,
-				A599D66C2A5E45CD00B507D9 /* TAKTracker.entitlements */,
+				A5A49D912A547378009764C1 /* TAKAware-Info.plist */,
+				A599D66C2A5E45CD00B507D9 /* TAKAware.entitlements */,
 				A5E2F8FF2A791F6B00EDD0B4 /* Utilities */,
 			);
-			path = TAKTracker;
+			path = TAKAware;
 			sourceTree = "<group>";
 		};
 		A5D8D3832A53B0FA002F0E3E /* Preview Content */ = {
@@ -10272,7 +10272,7 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		A5D8D38D2A53B0FB002F0E3E /* TAKTrackerTests */ = {
+		A5D8D38D2A53B0FB002F0E3E /* TAKAwareTests */ = {
 			isa = PBXGroup;
 			children = (
 				A5FB4E6C2AAA483B0034966D /* Test Files */,
@@ -10282,22 +10282,22 @@
 				A54F70882AB0C40B00D8C541 /* TCPMessageTests.swift */,
 				A55CE96C2AB1D8A20081AF86 /* ConverterTests.swift */,
 				A5AA510E2AC35B75006696B2 /* SettingsStoreTests.swift */,
-				A5582CC22AD5CB4600DE0D5C /* TAKTrackerTestCase.swift */,
+				A5582CC22AD5CB4600DE0D5C /* TAKAwareTestCase.swift */,
 				A5014F9D2C17973E00BE40C1 /* MigratorTests.swift */,
 				A5B312C92C39D1F0007B3914 /* IconDataTests.swift */,
 				A5B312CB2C39DD03007B3914 /* StreamParserTests.swift */,
 				A5E2D0BF2C3F8D84009FCD51 /* ChannelManagerTests.swift */,
 			);
-			path = TAKTrackerTests;
+			path = TAKAwareTests;
 			sourceTree = "<group>";
 		};
-		A5D8D3972A53B0FB002F0E3E /* TAKTrackerUITests */ = {
+		A5D8D3972A53B0FB002F0E3E /* TAKAwareUITests */ = {
 			isa = PBXGroup;
 			children = (
-				A5D8D3982A53B0FB002F0E3E /* TAKTrackerUITests.swift */,
-				A5D8D39A2A53B0FB002F0E3E /* TAKTrackerUITestsLaunchTests.swift */,
+				A5D8D3982A53B0FB002F0E3E /* TAKAwareUITests.swift */,
+				A5D8D39A2A53B0FB002F0E3E /* TAKAwareUITestsLaunchTests.swift */,
 			);
-			path = TAKTrackerUITests;
+			path = TAKAwareUITests;
 			sourceTree = "<group>";
 		};
 		A5E2F8FA2A791EC100EDD0B4 /* Parsers */ = {
@@ -10331,7 +10331,7 @@
 				A55ABF432ABDBF7600195AB7 /* SettingsScreens */,
 				A5D8D37F2A53B0F9002F0E3E /* MainScreen.swift */,
 				A50C5F5C2A601CF0001E52E6 /* SettingsView.swift */,
-				A5D8D37D2A53B0F9002F0E3E /* TAKTrackerApp.swift */,
+				A5D8D37D2A53B0F9002F0E3E /* TAKAwareApp.swift */,
 				A50C5F5E2A6032D2001E52E6 /* EmergencyView.swift */,
 				A5AA51092AC33488006696B2 /* OnboardingView.swift */,
 			);
@@ -10390,10 +10390,10 @@
 		B7B57F813DDA55B613DBA70B /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				4B2EC40D21C80BEBE05D29F8 /* Pods-TAKTracker.debug.xcconfig */,
-				94A6A10561B512E86B0E9DC2 /* Pods-TAKTracker.release.xcconfig */,
-				0CD85BD73504580BC32FA239 /* Pods-TAKTracker-TAKTrackerTests.debug.xcconfig */,
-				E7150D9B3F41CFFF2C34C4A3 /* Pods-TAKTracker-TAKTrackerTests.release.xcconfig */,
+				4B2EC40D21C80BEBE05D29F8 /* Pods-TAKAware.debug.xcconfig */,
+				94A6A10561B512E86B0E9DC2 /* Pods-TAKAware.release.xcconfig */,
+				0CD85BD73504580BC32FA239 /* Pods-TAKAware-TAKAwareTests.debug.xcconfig */,
+				E7150D9B3F41CFFF2C34C4A3 /* Pods-TAKAware-TAKAwareTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -10401,9 +10401,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A5D8D3792A53B0F9002F0E3E /* TAKTracker */ = {
+		A5D8D3792A53B0F9002F0E3E /* TAKAware */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A5D8D39E2A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKTracker" */;
+			buildConfigurationList = A5D8D39E2A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKAware" */;
 			buildPhases = (
 				764FA0D86787F8AAAE7F1B0D /* [CP] Check Pods Manifest.lock */,
 				A5D8D3762A53B0F9002F0E3E /* Sources */,
@@ -10416,7 +10416,7 @@
 			);
 			dependencies = (
 			);
-			name = TAKTracker;
+			name = TAKAware;
 			packageProductDependencies = (
 				A5FB4E612A8FDF430034966D /* X509 */,
 				A56679822C04DACD00C453DC /* NIOSSL */,
@@ -10425,12 +10425,12 @@
 				A5B312C42C39CA91007B3914 /* SQLite */,
 			);
 			productName = "TAK Spike";
-			productReference = A5D8D37A2A53B0F9002F0E3E /* TAKTracker.app */;
+			productReference = A5D8D37A2A53B0F9002F0E3E /* TAKAware.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A5D8D3892A53B0FA002F0E3E /* TAKTrackerTests */ = {
+		A5D8D3892A53B0FA002F0E3E /* TAKAwareTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A5D8D3A12A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKTrackerTests" */;
+			buildConfigurationList = A5D8D3A12A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKAwareTests" */;
 			buildPhases = (
 				4F091DA11E97FA41B7E18FCD /* [CP] Check Pods Manifest.lock */,
 				A5D8D3862A53B0FA002F0E3E /* Sources */,
@@ -10443,17 +10443,17 @@
 			dependencies = (
 				A5D8D38C2A53B0FA002F0E3E /* PBXTargetDependency */,
 			);
-			name = TAKTrackerTests;
+			name = TAKAwareTests;
 			packageProductDependencies = (
 				A5B5E6912BEDC4F600EB0FE4 /* NIOSSL */,
 			);
 			productName = "TAK SpikeTests";
-			productReference = A5D8D38A2A53B0FA002F0E3E /* TAKTrackerTests.xctest */;
+			productReference = A5D8D38A2A53B0FA002F0E3E /* TAKAwareTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		A5D8D3932A53B0FB002F0E3E /* TAKTrackerUITests */ = {
+		A5D8D3932A53B0FB002F0E3E /* TAKAwareUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A5D8D3A42A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKTrackerUITests" */;
+			buildConfigurationList = A5D8D3A42A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKAwareUITests" */;
 			buildPhases = (
 				A5D8D3902A53B0FB002F0E3E /* Sources */,
 				A5D8D3912A53B0FB002F0E3E /* Frameworks */,
@@ -10464,9 +10464,9 @@
 			dependencies = (
 				A5D8D3962A53B0FB002F0E3E /* PBXTargetDependency */,
 			);
-			name = TAKTrackerUITests;
+			name = TAKAwareUITests;
 			productName = "TAK SpikeUITests";
-			productReference = A5D8D3942A53B0FB002F0E3E /* TAKTrackerUITests.xctest */;
+			productReference = A5D8D3942A53B0FB002F0E3E /* TAKAwareUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -10492,7 +10492,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A5D8D3752A53B0F9002F0E3E /* Build configuration list for PBXProject "TAKTracker" */;
+			buildConfigurationList = A5D8D3752A53B0F9002F0E3E /* Build configuration list for PBXProject "TAKAware" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -10514,9 +10514,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A5D8D3792A53B0F9002F0E3E /* TAKTracker */,
-				A5D8D3892A53B0FA002F0E3E /* TAKTrackerTests */,
-				A5D8D3932A53B0FB002F0E3E /* TAKTrackerUITests */,
+				A5D8D3792A53B0F9002F0E3E /* TAKAware */,
+				A5D8D3892A53B0FA002F0E3E /* TAKAwareTests */,
+				A5D8D3932A53B0FB002F0E3E /* TAKAwareUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -13854,15 +13854,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TAKTracker-TAKTrackerTests/Pods-TAKTracker-TAKTrackerTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TAKTracker-TAKTrackerTests/Pods-TAKTracker-TAKTrackerTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TAKTracker-TAKTrackerTests/Pods-TAKTracker-TAKTrackerTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		4F091DA11E97FA41B7E18FCD /* [CP] Check Pods Manifest.lock */ = {
@@ -13880,7 +13880,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TAKTracker-TAKTrackerTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-TAKAware-TAKAwareTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -13902,7 +13902,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TAKTracker-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-TAKAware-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -13915,15 +13915,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TAKTracker/Pods-TAKTracker-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TAKAware/Pods-TAKAware-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TAKTracker/Pods-TAKTracker-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-TAKAware/Pods-TAKAware-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TAKTracker/Pods-TAKTracker-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TAKAware/Pods-TAKAware-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -13946,7 +13946,7 @@
 				A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */,
 				A55ABF532ABDC11900195AB7 /* AboutInformation.swift in Sources */,
 				A55ABF512ABDC0E900195AB7 /* MapOptions.swift in Sources */,
-				A5D8D37E2A53B0F9002F0E3E /* TAKTrackerApp.swift in Sources */,
+				A5D8D37E2A53B0F9002F0E3E /* TAKAwareApp.swift in Sources */,
 				A5B312BB2C38C5A6007B3914 /* COTData.xcdatamodeld in Sources */,
 				A5B312D92C3AC94F007B3914 /* COTColor.swift in Sources */,
 				A5E7B00B2A70B5FA00D9203F /* TAKDataPackageParser.swift in Sources */,
@@ -14007,7 +14007,7 @@
 				A5E2D0C02C3F8D84009FCD51 /* ChannelManagerTests.swift in Sources */,
 				A5B312DA2C3AC94F007B3914 /* COTColor.swift in Sources */,
 				A5B312BC2C38C5A6007B3914 /* COTData.xcdatamodeld in Sources */,
-				A5582CC32AD5CB4600DE0D5C /* TAKTrackerTestCase.swift in Sources */,
+				A5582CC32AD5CB4600DE0D5C /* TAKAwareTestCase.swift in Sources */,
 				A5E2D0BE2C3F218B009FCD51 /* ChannelManager.swift in Sources */,
 				A5FB4E782AAA49D30034966D /* TestConstants.swift in Sources */,
 				A5FB4E6B2AA751890034966D /* CertificateSigningRequestTests.swift in Sources */,
@@ -14024,8 +14024,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A5D8D39B2A53B0FB002F0E3E /* TAKTrackerUITestsLaunchTests.swift in Sources */,
-				A5D8D3992A53B0FB002F0E3E /* TAKTrackerUITests.swift in Sources */,
+				A5D8D39B2A53B0FB002F0E3E /* TAKAwareUITestsLaunchTests.swift in Sources */,
+				A5D8D3992A53B0FB002F0E3E /* TAKAwareUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -14034,12 +14034,12 @@
 /* Begin PBXTargetDependency section */
 		A5D8D38C2A53B0FA002F0E3E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A5D8D3792A53B0F9002F0E3E /* TAKTracker */;
+			target = A5D8D3792A53B0F9002F0E3E /* TAKAware */;
 			targetProxy = A5D8D38B2A53B0FA002F0E3E /* PBXContainerItemProxy */;
 		};
 		A5D8D3962A53B0FB002F0E3E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A5D8D3792A53B0F9002F0E3E /* TAKTracker */;
+			target = A5D8D3792A53B0F9002F0E3E /* TAKAware */;
 			targetProxy = A5D8D3952A53B0FB002F0E3E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -14165,20 +14165,20 @@
 		};
 		A5D8D39F2A53B0FB002F0E3E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4B2EC40D21C80BEBE05D29F8 /* Pods-TAKTracker.debug.xcconfig */;
+			baseConfigurationReference = 4B2EC40D21C80BEBE05D29F8 /* Pods-TAKAware.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = TAKTracker/TAKTracker.entitlements;
+				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 80;
-				DEVELOPMENT_ASSET_PATHS = "TAKTracker/Preview\\ Content";
+				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "TAKTracker-Info.plist";
+				INFOPLIST_FILE = "TAKAware-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "TAK Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSCameraUsageDescription = "TAK Tracker uses the camera to scan QR codes and to capture photos for sharing on the map";
@@ -14196,7 +14196,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKTracker;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -14206,20 +14206,20 @@
 		};
 		A5D8D3A02A53B0FB002F0E3E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 94A6A10561B512E86B0E9DC2 /* Pods-TAKTracker.release.xcconfig */;
+			baseConfigurationReference = 94A6A10561B512E86B0E9DC2 /* Pods-TAKAware.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = TAKTracker/TAKTracker.entitlements;
+				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 80;
-				DEVELOPMENT_ASSET_PATHS = "TAKTracker/Preview\\ Content";
+				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "TAKTracker-Info.plist";
+				INFOPLIST_FILE = "TAKAware-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "TAK Tracker";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
 				INFOPLIST_KEY_NSCameraUsageDescription = "TAK Tracker uses the camera to scan QR codes and to capture photos for sharing on the map";
@@ -14237,7 +14237,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.3;
-				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKTracker;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -14247,7 +14247,7 @@
 		};
 		A5D8D3A22A53B0FB002F0E3E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0CD85BD73504580BC32FA239 /* Pods-TAKTracker-TAKTrackerTests.debug.xcconfig */;
+			baseConfigurationReference = 0CD85BD73504580BC32FA239 /* Pods-TAKAware-TAKAwareTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -14263,13 +14263,13 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TAKTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TAKTracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TAKAware.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TAKAware";
 			};
 			name = Debug;
 		};
 		A5D8D3A32A53B0FB002F0E3E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E7150D9B3F41CFFF2C34C4A3 /* Pods-TAKTracker-TAKTrackerTests.release.xcconfig */;
+			baseConfigurationReference = E7150D9B3F41CFFF2C34C4A3 /* Pods-TAKAware-TAKAwareTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -14285,7 +14285,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TAKTracker.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TAKTracker";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TAKAware.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TAKAware";
 			};
 			name = Release;
 		};
@@ -14328,7 +14328,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A5D8D3752A53B0F9002F0E3E /* Build configuration list for PBXProject "TAKTracker" */ = {
+		A5D8D3752A53B0F9002F0E3E /* Build configuration list for PBXProject "TAKAware" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A5D8D39C2A53B0FB002F0E3E /* Debug */,
@@ -14337,7 +14337,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A5D8D39E2A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKTracker" */ = {
+		A5D8D39E2A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKAware" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A5D8D39F2A53B0FB002F0E3E /* Debug */,
@@ -14346,7 +14346,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A5D8D3A12A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKTrackerTests" */ = {
+		A5D8D3A12A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKAwareTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A5D8D3A22A53B0FB002F0E3E /* Debug */,
@@ -14355,7 +14355,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A5D8D3A42A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKTrackerUITests" */ = {
+		A5D8D3A42A53B0FB002F0E3E /* Build configuration list for PBXNativeTarget "TAKAwareUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A5D8D3A52A53B0FB002F0E3E /* Debug */,
@@ -14475,7 +14475,7 @@
 			);
 			currentVersion = A5B312BA2C38C5A6007B3914 /* COTData.xcdatamodel */;
 			name = COTData.xcdatamodeld;
-			path = "/Users/foyc/Workspace/flighttactics/TAKTracker/TAKTracker/Data Models/COTData.xcdatamodeld";
+			path = "/Users/foyc/Workspace/flighttactics/TAKAware/TAKAware/Data Models/COTData.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
