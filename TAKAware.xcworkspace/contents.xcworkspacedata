@@ -5,7 +5,7 @@
       location = "group:../swift-nio-ssl">
    </FileRef>
    <FileRef
-      location = "group:TAKTracker.xcodeproj">
+      location = "group:TAKAware.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

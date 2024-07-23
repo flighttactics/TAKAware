@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import TAKTracker
+@testable import TAKAware
 
 final class TAKTrackerTests: XCTestCase {
 

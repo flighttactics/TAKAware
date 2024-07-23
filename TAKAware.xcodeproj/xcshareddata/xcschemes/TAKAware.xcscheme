@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A5D8D3792A53B0F9002F0E3E"
-               BuildableName = "TAKTracker.app"
-               BlueprintName = "TAKTracker"
-               ReferencedContainer = "container:TAKTracker.xcodeproj">
+               BuildableName = "TAKAware.app"
+               BlueprintName = "TAKAware"
+               ReferencedContainer = "container:TAKAware.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,9 +35,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A5D8D3892A53B0FA002F0E3E"
-               BuildableName = "TAKTrackerTests.xctest"
-               BlueprintName = "TAKTrackerTests"
-               ReferencedContainer = "container:TAKTracker.xcodeproj">
+               BuildableName = "TAKAwareTests.xctest"
+               BlueprintName = "TAKAwareTests"
+               ReferencedContainer = "container:TAKAware.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -46,9 +46,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A5D8D3932A53B0FB002F0E3E"
-               BuildableName = "TAKTrackerUITests.xctest"
-               BlueprintName = "TAKTrackerUITests"
-               ReferencedContainer = "container:TAKTracker.xcodeproj">
+               BuildableName = "TAKAwareUITests.xctest"
+               BlueprintName = "TAKAwareUITests"
+               ReferencedContainer = "container:TAKAware.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -74,9 +74,9 @@
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "A5D8D3792A53B0F9002F0E3E"
-                     BuildableName = "TAKTracker.app"
-                     BlueprintName = "TAKTracker"
-                     ReferencedContainer = "container:TAKTracker.xcodeproj">
+                     BuildableName = "TAKAware.app"
+                     BlueprintName = "TAKAware"
+                     ReferencedContainer = "container:TAKAware.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
             </ActionContent>
@@ -87,9 +87,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A5D8D3792A53B0F9002F0E3E"
-            BuildableName = "TAKTracker.app"
-            BlueprintName = "TAKTracker"
-            ReferencedContainer = "container:TAKTracker.xcodeproj">
+            BuildableName = "TAKAware.app"
+            BlueprintName = "TAKAware"
+            ReferencedContainer = "container:TAKAware.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -104,9 +104,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A5D8D3792A53B0F9002F0E3E"
-            BuildableName = "TAKTracker.app"
-            BlueprintName = "TAKTracker"
-            ReferencedContainer = "container:TAKTracker.xcodeproj">
+            BuildableName = "TAKAware.app"
+            BlueprintName = "TAKAware"
+            ReferencedContainer = "container:TAKAware.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
