@@ -22,6 +22,7 @@ double const SF_BEARING_SOUTH = 180.0;
 double const SF_BEARING_WEST = 270.0;
 double const SF_RADIANS_TO_DEGREES = 180.0 / M_PI;
 double const SF_DEGREES_TO_RADIANS = M_PI / 180.0;
+double const SF_EARTH_RADIUS = 6378137.0;
 
 @implementation SFGeometryConstants
 

@@ -133,16 +133,32 @@
     [self setHasM:m != nil];
 }
 
+-(double) xValue{
+    return [_x doubleValue];
+}
+
 -(void) setXValue: (double) x{
     self.x = [[NSDecimalNumber alloc] initWithDouble:x];
+}
+
+-(double) yValue{
+    return [_y doubleValue];
 }
 
 -(void) setYValue: (double) y{
     self.y = [[NSDecimalNumber alloc] initWithDouble:y];
 }
 
+-(double) zValue{
+    return [_z doubleValue];
+}
+
 -(void) setZValue: (double) z{
     self.z = [[NSDecimalNumber alloc] initWithDouble:z];
+}
+
+-(double) mValue{
+    return [_m doubleValue];
 }
 
 -(void) setMValue: (double) m{

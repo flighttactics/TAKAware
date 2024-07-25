@@ -72,7 +72,7 @@ Open color-ios.xcworkspace in Xcode or build from command line:
 
 Run tests from Xcode or from command line:
 
-    xcodebuild test -workspace 'color-ios.xcworkspace' -scheme color-ios -destination 'platform=iOS Simulator,name=iPhone 14'
+    xcodebuild test -workspace 'color-ios.xcworkspace' -scheme color-ios -destination 'platform=iOS Simulator,name=iPhone 15'
 
 ### Include Library ###
 
@@ -80,12 +80,12 @@ Include this repository by specifying it in a Podfile using a supported option.
 
 Pull from [CocoaPods](https://cocoapods.org/pods/color-ios):
 
-    pod 'color-ios', '~> 1.0.1'
+    pod 'color-ios', '~> 1.0.2'
 
 Pull from GitHub:
 
     pod 'color-ios', :git => 'https://github.com/ngageoint/color-ios.git', :branch => 'master'
-    pod 'color-ios', :git => 'https://github.com/ngageoint/color-ios.git', :tag => '1.0.1'
+    pod 'color-ios', :git => 'https://github.com/ngageoint/color-ios.git', :tag => '1.0.2'
 
 Include as local project:
 

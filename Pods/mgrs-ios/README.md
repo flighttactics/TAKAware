@@ -217,7 +217,7 @@ Open mgrs-ios.xcworkspace in Xcode or build from command line:
 
 Run tests from Xcode or from command line:
 
-    xcodebuild test -workspace 'mgrs-ios.xcworkspace' -scheme mgrs-ios -destination 'platform=iOS Simulator,name=iPhone 14'
+    xcodebuild test -workspace 'mgrs-ios.xcworkspace' -scheme mgrs-ios -destination 'platform=iOS Simulator,name=iPhone 15'
 
 ### Include Library ###
 
@@ -225,12 +225,12 @@ Include this repository by specifying it in a Podfile using a supported option.
 
 Pull from [CocoaPods](https://cocoapods.org/pods/mgrs-ios):
 
-    pod 'mgrs-ios', '~> 1.1.4'
+    pod 'mgrs-ios', '~> 1.1.6'
 
 Pull from GitHub:
 
     pod 'mgrs-ios', :git => 'https://github.com/ngageoint/mgrs-ios.git', :branch => 'master'
-    pod 'mgrs-ios', :git => 'https://github.com/ngageoint/mgrs-ios.git', :tag => '1.1.4'
+    pod 'mgrs-ios', :git => 'https://github.com/ngageoint/mgrs-ios.git', :tag => '1.1.6'
 
 Include as local project:
 

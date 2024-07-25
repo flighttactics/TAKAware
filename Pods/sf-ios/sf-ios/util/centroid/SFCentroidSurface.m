@@ -203,7 +203,7 @@
         [self addTriangleWithPositive:positive andPoint1:self.base andPoint2:point andPoint3:nextPoint];
     }
     SFPoint *lastPoint = [points objectAtIndex:points.count - 1];
-    if([firstPoint.x doubleValue] != [lastPoint.x doubleValue] || [firstPoint.y doubleValue] != [lastPoint.y doubleValue]){
+    if([firstPoint xValue] != [lastPoint xValue] || [firstPoint yValue] != [lastPoint yValue]){
         [self addTriangleWithPositive:positive andPoint1:self.base andPoint2:lastPoint andPoint3:firstPoint];
     }
 }
@@ -224,8 +224,8 @@
     double sign = (positive) ? 1.0 : -1.0;
     SFPoint *triangleCenter3 = [self centroid3WithPoint1:point1 andPoint2:point2 andPoint3:point3];
     double area2 = [self area2WithPoint1:point1 andPoint2:point2 andPoint3:point3];
-    [self.sum setX:[self.sum.x decimalNumberByAdding:[[NSDecimalNumber alloc] initWithDouble:sign * area2 * [triangleCenter3.x doubleValue]]]];
-    [self.sum setY:[self.sum.y decimalNumberByAdding:[[NSDecimalNumber alloc] initWithDouble:sign * area2 * [triangleCenter3.y doubleValue]]]];
+    [self.sum setX:[self.sum.x decimalNumberByAdding:[[NSDecimalNumber alloc] initWithDouble:sign * area2 * [triangleCenter3 xValue]]]];
+    [self.sum setY:[self.sum.y decimalNumberByAdding:[[NSDecimalNumber alloc] initWithDouble:sign * area2 * [triangleCenter3 yValue]]]];
     self.area += sign * area2;
 }
 
@@ -241,8 +241,8 @@
  * @return 3 times centroid point
  */
 -(SFPoint *) centroid3WithPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2 andPoint3: (SFPoint *) point3{
-    double x = [point1.x doubleValue] + [point2.x doubleValue] + [point3.x doubleValue];
-    double y = [point1.y doubleValue] + [point2.y doubleValue] + [point3.y doubleValue];
+    double x = [point1 xValue] + [point2 xValue] + [point3 xValue];
+    double y = [point1 yValue] + [point2 yValue] + [point3 yValue];
     SFPoint *point = [SFPoint pointWithXValue:x andYValue:y];
     return point;
 }
@@ -259,14 +259,14 @@
  * @return 2 times triangle area
  */
 -(double) area2WithPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2 andPoint3: (SFPoint *) point3{
-    return ([point2.x doubleValue] - [point1.x doubleValue])
-				* ([point3.y doubleValue] - [point1.y doubleValue])
-				- ([point3.x doubleValue] - [point1.x doubleValue])
-				* ([point2.y doubleValue] - [point1.y doubleValue]);
+    return ([point2 xValue] - [point1 xValue])
+				* ([point3 yValue] - [point1 yValue])
+				- ([point3 xValue] - [point1 xValue])
+				* ([point2 yValue] - [point1 yValue]);
 }
 
 -(SFPoint *) centroid{
-    SFPoint *centroid = [SFPoint pointWithXValue:([self.sum.x doubleValue] / 3 / self.area) andYValue:([self.sum.y doubleValue] / 3 / self.area)];
+    SFPoint *centroid = [SFPoint pointWithXValue:([self.sum xValue] / 3 / self.area) andYValue:([self.sum yValue] / 3 / self.area)];
     return centroid;
 }
 

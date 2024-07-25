@@ -92,13 +92,13 @@
             SFPoint *lp2 = [segment2 leftPoint];
             SFPoint *rp2 = [segment2 rightPoint];
             
-            if([lp1.x doubleValue] <= [lp2.x doubleValue]){
+            if([lp1 xValue] <= [lp2 xValue]){
                 double s = [SFSweepLine isPoint:lp2 leftOfSegment:segment1];
                 if(s != 0){
                     compare = [self comparison:s > 0];
                 }else{
                     if([lp1 isEqualXToPoint:rp1]){ // Vertical line
-                        compare = [self comparison:[lp1.y doubleValue] < [lp2.y doubleValue]];
+                        compare = [self comparison:[lp1 yValue] < [lp2 yValue]];
                     }else{
                         compare = [self comparison:[SFSweepLine isPoint:rp2 leftOfSegment:segment1] > 0];
                     }
@@ -259,13 +259,13 @@
 
 +(NSComparisonResult) xyOrderWithPoint: (SFPoint *) point1 andPoint: (SFPoint *) point2{
     NSComparisonResult value = NSOrderedSame;
-    if ([point1.x doubleValue] > [point2.x doubleValue]) {
+    if ([point1 xValue] > [point2 xValue]) {
         value = NSOrderedDescending;
-    } else if ([point1.x doubleValue] < [point2.x doubleValue]) {
+    } else if ([point1 xValue] < [point2 xValue]) {
         value = NSOrderedAscending;
-    } else if ([point1.y doubleValue] > [point2.y doubleValue]) {
+    } else if ([point1 yValue] > [point2 yValue]) {
         value = NSOrderedDescending;
-    } else if ([point1.y doubleValue] < [point2.y doubleValue]) {
+    } else if ([point1 yValue] < [point2 yValue]) {
         value = NSOrderedAscending;
     }
     return value;
@@ -296,10 +296,10 @@
  * @return > 0 if left, 0 if on, < 0 if right
  */
 +(double) isPoint: (SFPoint *) point leftOfPoint1: (SFPoint *) point1 toPoint2: (SFPoint *) point2{
-    return ([point2.x doubleValue] - [point1.x doubleValue])
-    * ([point.y doubleValue] - [point1.y doubleValue])
-    - ([point.x doubleValue] - [point1.x doubleValue])
-    * ([point2.y doubleValue] - [point1.y doubleValue]);
+    return ([point2 xValue] - [point1 xValue])
+    * ([point yValue] - [point1 yValue])
+    - ([point xValue] - [point1 xValue])
+    * ([point2 yValue] - [point1 yValue]);
 }
 
 @end

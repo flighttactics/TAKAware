@@ -136,8 +136,8 @@
  *            Point
  */
 -(void) calculatePoint: (SFPoint *) point{
-    double latitude = [SFGeometryUtils degreesToRadians:[point.y doubleValue]];
-    double longitude = [SFGeometryUtils degreesToRadians:[point.x doubleValue]];
+    double latitude = [SFGeometryUtils degreesToRadians:[point yValue]];
+    double longitude = [SFGeometryUtils degreesToRadians:[point xValue]];
     double cosLatitude = cos(latitude);
     _x += cosLatitude * cos(longitude);
     _y += cosLatitude * sin(longitude);

@@ -82,7 +82,7 @@
 }
 
 -(SFPoint *) centroid{
-    SFPoint *centroid = [SFPoint pointWithXValue:([self.sum.x doubleValue] / self.count) andYValue:([self.sum.y doubleValue] / self.count)];
+    SFPoint *centroid = [SFPoint pointWithXValue:([self.sum xValue] / self.count) andYValue:([self.sum yValue] / self.count)];
     return centroid;
 }
 

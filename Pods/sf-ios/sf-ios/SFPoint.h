@@ -293,11 +293,25 @@
 -(instancetype) initWithPoint: (SFPoint *) point;
 
 /**
+ *  Get the x value
+ *
+ *  @return x coordinate
+ */
+-(double) xValue;
+
+/**
  *  Set the x value
  *
  *  @param x   x coordinate
  */
 -(void) setXValue: (double) x;
+
+/**
+ *  Get the y value
+ *
+ *  @return y coordinate
+ */
+-(double) yValue;
 
 /**
  *  Set the y value
@@ -307,11 +321,25 @@
 -(void) setYValue: (double) y;
 
 /**
+ *  Get the z value
+ *
+ *  @return z coordinate
+ */
+-(double) zValue;
+
+/**
  *  Set the z value
  *
  *  @param z   z coordinate
  */
 -(void) setZValue: (double) z;
+
+/**
+ *  Get the m value
+ *
+ *  @return m coordinate
+ */
+-(double) mValue;
 
 /**
  *  Set the m value

@@ -109,15 +109,15 @@
         double length = [SFGeometryUtils distanceBetweenPoint1:point andPoint2:nextPoint];
         self.totalLength += length;
         
-        double midX = ([point.x doubleValue] + [nextPoint.x doubleValue]) / 2;
+        double midX = ([point xValue] + [nextPoint xValue]) / 2;
         [self.sum setX:[self.sum.x decimalNumberByAdding:[[NSDecimalNumber alloc] initWithDouble:length * midX]]];
-        double midY = ([point.y doubleValue] + [nextPoint.y doubleValue]) / 2;
+        double midY = ([point yValue] + [nextPoint yValue]) / 2;
         [self.sum setY:[self.sum.y decimalNumberByAdding:[[NSDecimalNumber alloc] initWithDouble:length * midY]]];
     }
 }
 
 -(SFPoint *) centroid{
-    SFPoint *centroid = [SFPoint pointWithXValue:([self.sum.x doubleValue] / self.totalLength) andYValue:([self.sum.y doubleValue] / self.totalLength)];
+    SFPoint *centroid = [SFPoint pointWithXValue:([self.sum xValue] / self.totalLength) andYValue:([self.sum yValue] / self.totalLength)];
     return centroid;
 }
 

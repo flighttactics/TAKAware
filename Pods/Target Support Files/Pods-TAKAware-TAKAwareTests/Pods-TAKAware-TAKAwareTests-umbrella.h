@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_TAKTrackerVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_TAKTrackerVersionString[];
+FOUNDATION_EXPORT double Pods_TAKAware_TAKAwareTestsVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_TAKAware_TAKAwareTestsVersionString[];
 

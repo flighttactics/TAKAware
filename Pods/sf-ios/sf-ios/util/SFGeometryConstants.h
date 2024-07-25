@@ -78,6 +78,11 @@ extern double const SF_RADIANS_TO_DEGREES;
  */
 extern double const SF_DEGREES_TO_RADIANS;
 
+/**
+ * Earth radius in meters (WGS84)
+ */
+extern double const SF_EARTH_RADIUS;
+
 @interface SFGeometryConstants : NSObject
 
 @end

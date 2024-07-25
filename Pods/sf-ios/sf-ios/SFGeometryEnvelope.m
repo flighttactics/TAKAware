@@ -178,32 +178,64 @@
     return self;
 }
 
+-(double) minXValue{
+    return [_minX doubleValue];
+}
+
 -(void) setMinXValue: (double) x{
     [self setMinX:[[NSDecimalNumber alloc] initWithDouble:x]];
+}
+
+-(double) maxXValue{
+    return [_maxX doubleValue];
 }
 
 -(void) setMaxXValue: (double) x{
     [self setMaxX:[[NSDecimalNumber alloc] initWithDouble:x]];
 }
 
+-(double) minYValue{
+    return [_minY doubleValue];
+}
+
 -(void) setMinYValue: (double) y{
     [self setMinY:[[NSDecimalNumber alloc] initWithDouble:y]];
+}
+
+-(double) maxYValue{
+    return [_maxY doubleValue];
 }
 
 -(void) setMaxYValue: (double) y{
     [self setMaxY:[[NSDecimalNumber alloc] initWithDouble:y]];
 }
 
+-(double) minZValue{
+    return [_minZ doubleValue];
+}
+
 -(void) setMinZValue: (double) z{
     [self setMinZ:[[NSDecimalNumber alloc] initWithDouble:z]];
+}
+
+-(double) maxZValue{
+    return [_maxZ doubleValue];
 }
 
 -(void) setMaxZValue: (double) z{
     [self setMaxZ:[[NSDecimalNumber alloc] initWithDouble:z]];
 }
 
+-(double) minMValue{
+    return [_minM doubleValue];
+}
+
 -(void) setMinMValue: (double) m{
     [self setMinM:[[NSDecimalNumber alloc] initWithDouble:m]];
+}
+
+-(double) maxMValue{
+    return [_maxM doubleValue];
 }
 
 -(void) setMaxMValue: (double) m{
@@ -219,11 +251,11 @@
 }
 
 -(double) xRange{
-    return [_maxX doubleValue] - [_minX doubleValue];
+    return [self maxXValue] - [self minXValue];
 }
 
 -(double) yRange{
-    return [_maxY doubleValue] - [_minY doubleValue];
+    return [self maxYValue] - [self minYValue];
 }
 
 -(NSDecimalNumber *) zRange{
@@ -262,6 +294,22 @@
     return [SFPoint pointWithX:_maxX andY:_maxY];
 }
 
+-(SFPoint *) leftMid{
+    return [SFPoint pointWithX:_minX andY:[[NSDecimalNumber alloc] initWithDouble:[self midY]]];
+}
+
+-(SFPoint *) bottomMid{
+    return [SFPoint pointWithX:[[NSDecimalNumber alloc] initWithDouble:[self midX]] andY:_minY];
+}
+
+-(SFPoint *) rightMid{
+    return [SFPoint pointWithX:_maxX andY:[[NSDecimalNumber alloc] initWithDouble:[self midY]]];
+}
+
+-(SFPoint *) topMid{
+    return [SFPoint pointWithX:[[NSDecimalNumber alloc] initWithDouble:[self midX]] andY:_maxY];
+}
+
 -(SFLine *) left{
     return [SFLine lineWithPoint1:[self topLeft] andPoint2:[self bottomLeft]];
 }
@@ -279,11 +327,11 @@
 }
 
 -(double) midX{
-    return ([_minX doubleValue] + [_maxX doubleValue]) / 2.0;
+    return ([self minXValue] + [self maxXValue]) / 2.0;
 }
 
 -(double) midY{
-    return ([_minY doubleValue] + [_maxY doubleValue]) / 2.0;
+    return ([self minYValue] + [self maxYValue]) / 2.0;
 }
 
 -(SFPoint *) centroid{
@@ -308,10 +356,10 @@
 
 -(SFGeometryEnvelope *) overlapWithEnvelope: (SFGeometryEnvelope *) envelope withAllowEmpty: (BOOL) allowEmpty{
     
-    double minX = MAX([self.minX doubleValue], [envelope.minX doubleValue]);
-    double maxX = MIN([self.maxX doubleValue], [envelope.maxX doubleValue]);
-    double minY = MAX([self.minY doubleValue], [envelope.minY doubleValue]);
-    double maxY = MIN([self.maxY doubleValue], [envelope.maxY doubleValue]);
+    double minX = MAX([self minXValue], [envelope minXValue]);
+    double maxX = MIN([self maxXValue], [envelope maxXValue]);
+    double minY = MAX([self minYValue], [envelope minYValue]);
+    double maxY = MIN([self maxYValue], [envelope maxYValue]);
     
     SFGeometryEnvelope *overlap = nil;
     
@@ -324,10 +372,10 @@
 
 -(SFGeometryEnvelope *) unionWithEnvelope: (SFGeometryEnvelope *) envelope{
     
-    double minX = MIN([self.minX doubleValue], [envelope.minX doubleValue]);
-    double maxX = MAX([self.maxX doubleValue], [envelope.maxX doubleValue]);
-    double minY = MIN([self.minY doubleValue], [envelope.minY doubleValue]);
-    double maxY = MAX([self.maxY doubleValue], [envelope.maxY doubleValue]);
+    double minX = MIN([self minXValue], [envelope minXValue]);
+    double maxX = MAX([self maxXValue], [envelope maxXValue]);
+    double minY = MIN([self minYValue], [envelope minYValue]);
+    double maxY = MAX([self maxYValue], [envelope maxYValue]);
     
     SFGeometryEnvelope *unionEnvelope = nil;
     
@@ -343,7 +391,7 @@
 }
 
 -(BOOL) containsPoint: (SFPoint *) point withEpsilon: (double) epsilon{
-    return [self containsX:[point.x doubleValue] andY:[point.y doubleValue] withEpsilon:epsilon];
+    return [self containsX:[point xValue] andY:[point yValue] withEpsilon:epsilon];
 }
 
 -(BOOL) containsX: (double) x andY: (double) y{
@@ -351,8 +399,8 @@
 }
 
 -(BOOL) containsX: (double) x andY: (double) y withEpsilon: (double) epsilon{
-    return x >= [_minX doubleValue] - epsilon && x <= [_maxX doubleValue] + epsilon
-        && y >= [_minY doubleValue] - epsilon && y <= [_maxY doubleValue] + epsilon;
+    return x >= [self minXValue] - epsilon && x <= [self maxXValue] + epsilon
+        && y >= [self minYValue] - epsilon && y <= [self maxYValue] + epsilon;
 }
 
 -(BOOL) containsEnvelope: (SFGeometryEnvelope *) envelope{
@@ -360,10 +408,10 @@
 }
 
 -(BOOL) containsEnvelope: (SFGeometryEnvelope *) envelope withEpsilon: (double) epsilon{
-    return [_minX doubleValue] - epsilon <= [envelope.minX doubleValue]
-        && [_maxX doubleValue] + epsilon >= [envelope.maxX doubleValue]
-        && [_minY doubleValue] - epsilon <= [envelope.minY doubleValue]
-        && [_maxY doubleValue] + epsilon >= [envelope.maxY doubleValue];
+    return [self minXValue] - epsilon <= [envelope minXValue]
+        && [self maxXValue] + epsilon >= [envelope maxXValue]
+        && [self minYValue] - epsilon <= [envelope minYValue]
+        && [self maxYValue] + epsilon >= [envelope maxYValue];
 }
 
 -(SFGeometry *) buildGeometry{

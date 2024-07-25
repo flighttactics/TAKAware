@@ -324,11 +324,25 @@
 -(instancetype) initWithGeometryEnvelope: (SFGeometryEnvelope *) geometryEnvelope;
 
 /**
+ *  Get the min x value
+ *
+ *  @return x coordinate
+ */
+-(double) minXValue;
+
+/**
  *  Set the min x value
  *
  *  @param x   x coordinate
  */
 -(void) setMinXValue: (double) x;
+
+/**
+ *  Get the max x value
+ *
+ *  @return x coordinate
+ */
+-(double) maxXValue;
 
 /**
  *  Set the max x value
@@ -338,11 +352,25 @@
 -(void) setMaxXValue: (double) x;
 
 /**
+ *  Get the min y value
+ *
+ *  @return y coordinate
+ */
+-(double) minYValue;
+
+/**
  *  Set the min y value
  *
  *  @param y   y coordinate
  */
 -(void) setMinYValue: (double) y;
+
+/**
+ *  Get the max y value
+ *
+ *  @return y coordinate
+ */
+-(double) maxYValue;
 
 /**
  *  Set the max y value
@@ -352,11 +380,25 @@
 -(void) setMaxYValue: (double) y;
 
 /**
+ *  Get the min z value
+ *
+ *  @return z coordinate
+ */
+-(double) minZValue;
+
+/**
  *  Set the min z value
  *
  *  @param z   z coordinate
  */
 -(void) setMinZValue: (double) z;
+
+/**
+ *  Get the max z value
+ *
+ *  @return z coordinate
+ */
+-(double) maxZValue;
 
 /**
  *  Set the max z value
@@ -366,11 +408,25 @@
 -(void) setMaxZValue: (double) z;
 
 /**
+ *  Get the min m value
+ *
+ *  @return m coordinate
+ */
+-(double) minMValue;
+
+/**
  *  Set the min m value
  *
  *  @param m   m coordinate
  */
 -(void) setMinMValue: (double) m;
+
+/**
+ *  Get the max m value
+ *
+ *  @return m coordinate
+ */
+-(double) maxMValue;
 
 /**
  *  Set the max m value
@@ -455,6 +511,34 @@
  * @return top right point
  */
 -(SFPoint *) topRight;
+
+/**
+ * Get the left mid point
+ *
+ * @return left mid point
+ */
+-(SFPoint *) leftMid;
+
+/**
+ * Get the bottom mid point
+ *
+ * @return bottom mid point
+ */
+-(SFPoint *) bottomMid;
+
+/**
+ * Get the right mid point
+ *
+ * @return right mid point
+ */
+-(SFPoint *) rightMid;
+
+/**
+ * Get the top mid point
+ *
+ * @return top mid point
+ */
+-(SFPoint *) topMid;
 
 /**
  * Get the left line

@@ -49,6 +49,28 @@
 +(double) distanceOfLine: (SFLine *) line;
 
 /**
+ * Get the distance in meters between two points in degrees using the
+ * Haversine formula
+ *
+ * @param point1
+ *            point 1
+ * @param point2
+ *            point 2
+ * @return distance in meters
+ */
++(double) distanceHaversineBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2;
+
+/**
+ * Get the distance in meters between the end points of a line in degrees
+ * using the Haversine formula
+ *
+ * @param line
+ *            line
+ * @return distance in meters
+ */
++(double) distanceHaversineOfLine: (SFLine *) line;
+
+/**
  * Get the bearing heading in degrees between two points in degrees
  *
  * @param point1
@@ -106,6 +128,28 @@
 +(BOOL) isWestBearing: (double) bearing;
 
 /**
+ * Get the geodesic midpoint in degrees between two points in degrees
+ *
+ * @param point1
+ *            point 1
+ * @param point2
+ *            point 2
+ * @return geodesic midpoint in degrees
+ */
++(SFPoint *) geodesicMidpointBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2;
+
+/**
+ * Get the geodesic midpoint in radians between two points in radians
+ *
+ * @param point1
+ *            point 1
+ * @param point2
+ *            point 2
+ * @return geodesic midpoint in radians
+ */
++(SFPoint *) geodesicMidpointRadiansBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2;
+
+/**
  * Convert degrees to radians
  *
  * @param degrees
@@ -122,7 +166,25 @@
  * @return degrees
  */
 +(double) radiansToDegrees: (double) radians;
-    
+
+/**
+ * Convert point in degrees to radians
+ *
+ * @param point
+ *            point in degrees
+ * @return point in radians
+ */
++(SFPoint *) degreesToRadiansWithPoint: (SFPoint *) point;
+
+/**
+ * Convert point in radians to degrees
+ *
+ * @param point
+ *            point in radians
+ * @return point in degrees
+ */
++(SFPoint *) radiansToDegreesWithPoint: (SFPoint *) point;
+
 /**
  * Get the centroid point of a 2 dimensional representation of the Geometry
  * (balancing point of a 2d cutout of the geometry). Only the x and y
@@ -239,7 +301,55 @@
  *            minimum tolerance in meters for consecutive points
  * @return simplified points
  */
-+ (NSArray<SFPoint *> *) simplifyPoints: (NSArray<SFPoint *> *) points withTolerance : (double) tolerance;
++(NSArray<SFPoint *> *) simplifyPoints: (NSArray<SFPoint *> *) points withTolerance : (double) tolerance;
+
+/**
+ * Create a geodesic path of a line string in degrees with a max distance
+ * between any two path points
+ *
+ * @param lineString
+ *            line string in degrees
+ * @param maxDistance
+ *            max distance allowed between path points
+ * @return geodesic path of points
+ */
++(NSArray<SFPoint *> *) geodesicPathOfLine: (SFLineString *) lineString withMaxDistance: (double) maxDistance;
+
+/**
+ * Create a geodesic path of points in degrees with a max distance between
+ * any two path points
+ *
+ * @param points
+ *            points in degrees
+ * @param maxDistance
+ *            max distance allowed between path points
+ * @return geodesic path of points
+ */
++(NSArray<SFPoint *> *) geodesicPathOfPoints: (NSArray<SFPoint *> *) points withMaxDistance: (double) maxDistance;
+
+/**
+ * Create a geodesic path between the two points in degrees with a max
+ * distance between any two path points
+ *
+ * @param point1
+ *            point 1
+ * @param point2
+ *            point 2
+ * @param maxDistance
+ *            max distance allowed between path points
+ * @return geodesic path of points
+ */
++(NSArray<SFPoint *> *) geodesicPathBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2 withMaxDistance: (double) maxDistance;
+
+/**
+ * Expand the vertical bounds of a geometry envelope in degrees by including
+ * geodesic bounds
+ *
+ * @param envelope
+ *            geometry envelope in degrees
+ * @return geodesic expanded geometry envelope in degrees
+ */
++(SFGeometryEnvelope *) geodesicEnvelope: (SFGeometryEnvelope *) envelope;
 
 /**
  * Calculate the perpendicular distance between the point and the line represented by the start and end points.

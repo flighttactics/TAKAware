@@ -14172,20 +14172,20 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 80;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "TAKAware-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "TAK Tracker";
+				INFOPLIST_KEY_CFBundleDisplayName = "TAK Aware";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
-				INFOPLIST_KEY_NSCameraUsageDescription = "TAK Tracker uses the camera to scan QR codes and to capture photos for sharing on the map";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow TAK Tracker to access the local network to broadcast CoT?";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow TAK Tracker to access and share your location with teammates and connected TAK Servers for situational awareness";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "TAK Tracker can continue to share your location in the background with your teammates and connected TAK Servers for situational awareness";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow TAK Tracker to access and share your location with teammates and connected TAK Servers for situational awareness";
+				INFOPLIST_KEY_NSCameraUsageDescription = "TAK Aware uses the camera to scan QR codes and to capture photos for sharing on the map";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow TAK Aware to access the local network to broadcast CoT?";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow TAK Aware to access and share your location with teammates and connected TAK Servers for situational awareness";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "TAK Aware can continue to share your location in the background with your teammates and connected TAK Servers for situational awareness";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow TAK Aware to access and share your location with teammates and connected TAK Servers for situational awareness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
@@ -14195,7 +14195,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -14213,20 +14213,20 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 80;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "TAKAware-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "TAK Tracker";
+				INFOPLIST_KEY_CFBundleDisplayName = "TAK Aware";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
-				INFOPLIST_KEY_NSCameraUsageDescription = "TAK Tracker uses the camera to scan QR codes and to capture photos for sharing on the map";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow TAK Tracker to access the local network to broadcast CoT?";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow TAK Tracker to access and share your location with teammates and connected TAK Servers for situational awareness";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "TAK Tracker can continue to share your location in the background with your teammates and connected TAK Servers for situational awareness";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow TAK Tracker to access and share your location with teammates and connected TAK Servers for situational awareness";
+				INFOPLIST_KEY_NSCameraUsageDescription = "TAK Aware uses the camera to scan QR codes and to capture photos for sharing on the map";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow TAK Aware to access the local network to broadcast CoT?";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allow TAK Aware to access and share your location with teammates and connected TAK Servers for situational awareness";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "TAK Aware can continue to share your location in the background with your teammates and connected TAK Servers for situational awareness";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow TAK Aware to access and share your location with teammates and connected TAK Servers for situational awareness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
@@ -14236,7 +14236,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

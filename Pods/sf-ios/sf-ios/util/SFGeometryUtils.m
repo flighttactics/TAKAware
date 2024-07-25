@@ -59,8 +59,8 @@
 }
 
 +(double) distanceBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2{
-    double diffX = [point1.x doubleValue] - [point2.x doubleValue];
-    double diffY = [point1.y doubleValue] - [point2.y doubleValue];
+    double diffX = [point1 xValue] - [point2 xValue];
+    double diffY = [point1 yValue] - [point2 yValue];
     return sqrt(diffX * diffX + diffY * diffY);
 }
 
@@ -68,10 +68,29 @@
     return [self distanceBetweenPoint1:[line startPoint] andPoint2:[line endPoint]];
 }
 
++(double) distanceHaversineBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2{
+    double lat1 = [point1 yValue];
+    double lon1 = [point1 xValue];
+    double lat2 = [point2 yValue];
+    double lon2 = [point2 xValue];
+    double diffLat = [self degreesToRadians:lat2 - lat1];
+    double diffLon = [self degreesToRadians:lon2 - lon1];
+    double a = sin(diffLat / 2) * sin(diffLat / 2)
+            + cos([self degreesToRadians:lat1])
+                    * cos([self degreesToRadians:lat2])
+                    * sin(diffLon / 2) * sin(diffLon / 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    return SF_EARTH_RADIUS * c;
+}
+
++(double) distanceHaversineOfLine: (SFLine *) line{
+    return [self distanceHaversineBetweenPoint1:[line startPoint] andPoint2:[line endPoint]];
+}
+
 +(double) bearingBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2{
-    double y1 = [self degreesToRadians:[point1.y doubleValue]];
-    double y2 = [self degreesToRadians:[point2.y doubleValue]];
-    double xDiff = [self degreesToRadians:[point2.x doubleValue] - [point1.x doubleValue]];
+    double y1 = [self degreesToRadians:[point1 yValue]];
+    double y2 = [self degreesToRadians:[point2 yValue]];
+    double xDiff = [self degreesToRadians:[point2 xValue] - [point1 xValue]];
     double y = sin(xDiff) * cos(y2);
     double x = cos(y1) * sin(y2) - sin(y1) * cos(y2) * cos(xDiff);
     return fmod([self radiansToDegrees:atan2(y, x)] + 360, 360);
@@ -100,12 +119,49 @@
     return fmod(bearing, 360.0) > SF_BEARING_SOUTH;
 }
 
++(SFPoint *) geodesicMidpointBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2{
+    SFPoint *point1Radians = [self degreesToRadiansWithPoint:point1];
+    SFPoint *point2Radians = [self degreesToRadiansWithPoint:point2];
+    SFPoint *midpointRadians = [self geodesicMidpointRadiansBetweenPoint1:point1Radians andPoint2:point2Radians];
+    return [self radiansToDegreesWithPoint:midpointRadians];
+}
+
++(SFPoint *) geodesicMidpointRadiansBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2{
+    
+    double xDiff = [point2 xValue] - [point1 xValue];
+    double y1 = [point1 yValue];
+    double y2 = [point2 yValue];
+    double x1 = [point1 xValue];
+
+    double bx = cos(y2) * cos(xDiff);
+    double by = cos(y2) * sin(xDiff);
+
+    double y = atan2(sin(y1) + sin(y2),
+            sqrt((cos(y1) + bx) * (cos(y1) + bx) + by * by));
+    double x = x1 + atan2(by, cos(y1) + bx);
+    SFPoint *midpoint = [SFPoint pointWithXValue:x andYValue:y];
+
+    return midpoint;
+}
+
 +(double) degreesToRadians: (double) degrees{
     return degrees * SF_DEGREES_TO_RADIANS;
 }
 
 +(double) radiansToDegrees: (double) radians{
     return radians * SF_RADIANS_TO_DEGREES;
+}
+
++(SFPoint *) degreesToRadiansWithPoint: (SFPoint *) point{
+    double x = [self degreesToRadians:[point xValue]];
+    double y = [self degreesToRadians:[point yValue]];
+    return [SFPoint pointWithXValue:x andYValue:y];
+}
+
++(SFPoint *) radiansToDegreesWithPoint: (SFPoint *) point{
+    double x = [self radiansToDegrees:[point xValue]];
+    double y = [self radiansToDegrees:[point yValue]];
+    return [SFPoint pointWithXValue:x andYValue:y];
 }
 
 +(SFPoint *) centroidOfGeometry: (SFGeometry *) geometry{
@@ -204,12 +260,12 @@
         SFPoint *point = [points objectAtIndex:0];
         for(int i = 1; i < points.count; i++){
             SFPoint *nextPoint = [points objectAtIndex:i];
-            if([point.x doubleValue] < [nextPoint.x doubleValue]){
-                if([nextPoint.x doubleValue] - [point.x doubleValue] > [point.x doubleValue] - [nextPoint.x doubleValue] + (maxX * 2.0)){
+            if([point xValue] < [nextPoint xValue]){
+                if([nextPoint xValue] - [point xValue] > [point xValue] - [nextPoint xValue] + (maxX * 2.0)){
                     [nextPoint setX:[nextPoint.x decimalNumberBySubtracting:[[NSDecimalNumber alloc] initWithDouble: maxX * 2.0]]];
                 }
-            }else if([point.x doubleValue] > [nextPoint.x doubleValue]){
-                if([point.x doubleValue] - [nextPoint.x doubleValue] > [nextPoint.x doubleValue] - [point.x doubleValue] + (maxX * 2.0)){
+            }else if([point xValue] > [nextPoint xValue]){
+                if([point xValue] - [nextPoint xValue] > [nextPoint xValue] - [point xValue] + (maxX * 2.0)){
                     [nextPoint setX:[nextPoint.x decimalNumberByAdding:[[NSDecimalNumber alloc] initWithDouble: maxX * 2.0]]];
                 }
             }
@@ -327,7 +383,7 @@
 }
 
 +(void) normalizePoint: (SFPoint *) point withMaxX: (double) maxX{
-    [point setX:[[NSDecimalNumber alloc] initWithDouble:[self normalizeX:[point.x doubleValue] withMaxX:maxX]]];
+    [point setX:[[NSDecimalNumber alloc] initWithDouble:[self normalizeX:[point xValue] withMaxX:maxX]]];
 }
 
 +(double) normalizeX: (double) x withMaxX: (double) maxX{
@@ -398,7 +454,7 @@
     }
 }
 
-+ (NSArray<SFPoint *> *) simplifyPoints: (NSArray<SFPoint *> *) points withTolerance : (double) tolerance{
++(NSArray<SFPoint *> *) simplifyPoints: (NSArray<SFPoint *> *) points withTolerance : (double) tolerance{
     return [self simplifyPoints:points withTolerance:tolerance andStartIndex:0 andEndIndex:(int)[points count]-1];
 }
 
@@ -438,14 +494,86 @@
     return result;
 }
 
++(NSArray<SFPoint *> *) geodesicPathOfLine: (SFLineString *) lineString withMaxDistance: (double) maxDistance{
+    return [self geodesicPathOfPoints:lineString.points withMaxDistance:maxDistance];
+}
+
++(NSArray<SFPoint *> *) geodesicPathOfPoints: (NSArray<SFPoint *> *) points withMaxDistance: (double) maxDistance{
+    NSMutableArray<SFPoint *> *path = [NSMutableArray array];
+    if(points.count > 0){
+        [path addObject:[points firstObject]];
+        for (int i = 0; i < points.count - 1; i++) {
+            NSArray<SFPoint *> *subPath = [self geodesicPathBetweenPoint1:[points objectAtIndex:i] andPoint2:[points objectAtIndex:i + 1] withMaxDistance:maxDistance];
+            [path addObjectsFromArray:[subPath subarrayWithRange:NSMakeRange(1, subPath.count - 1)]];
+        }
+    }
+    return path;
+}
+
++(NSArray<SFPoint *> *) geodesicPathBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2 withMaxDistance: (double) maxDistance{
+    NSMutableArray<SFPoint *> *path = [NSMutableArray array];
+    [path addObject:point1];
+    [self geodesicPathBetweenPoint1:point1 andPoint2:point2 withMaxDistance:maxDistance andPath:path];
+    [path addObject:point2];
+    return path;
+}
+
+/**
+ * Populate a geodesic path between the two points in degrees with a max
+ * distance between any two path points
+ *
+ * @param point1
+ *            point 1
+ * @param point2
+ *            point 2
+ * @param maxDistance
+ *            max distance allowed between path points
+ * @param path
+ *            geodesic path of points
+ */
++(void) geodesicPathBetweenPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2 withMaxDistance: (double) maxDistance andPath: (NSMutableArray<SFPoint *> *) path{
+    double distance = [self distanceHaversineBetweenPoint1:point1 andPoint2:point2];
+    if (distance > maxDistance) {
+        SFPoint *midpoint = [self geodesicMidpointBetweenPoint1:point1 andPoint2:point2];
+        [self geodesicPathBetweenPoint1:point1 andPoint2:midpoint withMaxDistance:maxDistance andPath:path];
+        [path addObject:midpoint];
+        [self geodesicPathBetweenPoint1:midpoint andPoint2:point2 withMaxDistance:maxDistance andPath:path];
+    }
+}
+
++(SFGeometryEnvelope *) geodesicEnvelope: (SFGeometryEnvelope *) envelope{
+    SFGeometryEnvelope *geodesic = [envelope mutableCopy];
+    if ([envelope minYValue] < 0) {
+        SFPoint *left = [envelope bottomLeft];
+        SFPoint *right = [envelope bottomRight];
+        SFPoint *midpoint = [self geodesicMidpointBetweenPoint1:left andPoint2:right];
+        double y = [midpoint yValue];
+        if (y < [geodesic minYValue]) {
+            [geodesic setMinYValue:y];
+        }
+
+    }
+    if ([envelope maxYValue] > 0) {
+        SFPoint *left = [envelope topLeft];
+        SFPoint *right = [envelope topRight];
+        SFPoint *midpoint = [self geodesicMidpointBetweenPoint1:left andPoint2:right];
+        double y = [midpoint yValue];
+        if (y > [geodesic maxYValue]) {
+            [geodesic setMaxYValue:y];
+        }
+
+    }
+    return geodesic;
+}
+
 +(double) perpendicularDistanceBetweenPoint: (SFPoint *) point lineStart: (SFPoint *) lineStart lineEnd: (SFPoint *) lineEnd {
     
-    double x = [point.x doubleValue];
-    double y = [point.y doubleValue];
-    double startX = [lineStart.x doubleValue];
-    double startY = [lineStart.y doubleValue];
-    double endX = [lineEnd.x doubleValue];
-    double endY = [lineEnd.y doubleValue];
+    double x = [point xValue];
+    double y = [point yValue];
+    double startX = [lineStart xValue];
+    double startY = [lineStart yValue];
+    double endX = [lineEnd xValue];
+    double endY = [lineEnd yValue];
     
     double vX = endX - startX;
     double vY = endY - startY;
@@ -523,11 +651,11 @@
         SFPoint *point1 = [points objectAtIndex:i];
         SFPoint *point2 = [points objectAtIndex:j];
         
-        double px = [point.x doubleValue];
-        double py = [point.y doubleValue];
+        double px = [point xValue];
+        double py = [point yValue];
         
-        double p1x = [point1.x doubleValue];
-        double p1y = [point1.y doubleValue];
+        double p1x = [point1 xValue];
+        double p1y = [point1 yValue];
         
         // Shortcut check if polygon contains the point within tolerance
         if(fabs(p1x - px) <= epsilon && fabs(p1y - py) <= epsilon){
@@ -535,8 +663,8 @@
             break;
         }
         
-        double p2x = [point2.x doubleValue];
-        double p2y = [point2.y doubleValue];
+        double p2x = [point2 xValue];
+        double p2y = [point2 yValue];
         
         if(((p1y > py) != (p2y > py))
            && (px < (p2x - p1x) * (py - p1y) / (p2y - p1y) + p1x)){
@@ -618,12 +746,12 @@
     
     BOOL contains = NO;
     
-    double px = [point.x doubleValue];
-    double py = [point.y doubleValue];
-    double p1x = [point1.x doubleValue];
-    double p1y = [point1.y doubleValue];
-    double p2x = [point2.x doubleValue];
-    double p2y = [point2.y doubleValue];
+    double px = [point xValue];
+    double py = [point yValue];
+    double p1x = [point1 xValue];
+    double p1y = [point1 yValue];
+    double p2x = [point2 xValue];
+    double p2y = [point2 yValue];
     
     double x21 = p2x - p1x;
     double y21 = p2y - p1y;
@@ -674,13 +802,13 @@
 
     SFPoint *intersection = nil;
 
-    double a1 = [line1Point2.y doubleValue] - [line1Point1.y doubleValue];
-    double b1 = [line1Point1.x doubleValue] - [line1Point2.x doubleValue];
-    double c1 = a1 * [line1Point1.x doubleValue] + b1 * [line1Point1.y doubleValue];
+    double a1 = [line1Point2 yValue] - [line1Point1 yValue];
+    double b1 = [line1Point1 xValue] - [line1Point2 xValue];
+    double c1 = a1 * [line1Point1 xValue] + b1 * [line1Point1 yValue];
 
-    double a2 = [line2Point2.y doubleValue] - [line2Point1.y doubleValue];
-    double b2 = [line2Point1.x doubleValue] - [line2Point2.x doubleValue];
-    double c2 = a2 * [line2Point1.x doubleValue] + b2 * [line2Point1.y doubleValue];
+    double a2 = [line2Point2 yValue] - [line2Point1 yValue];
+    double b2 = [line2Point1 xValue] - [line2Point2 xValue];
+    double c2 = a2 * [line2Point1 xValue] + b2 * [line2Point1 yValue];
 
     double determinant = a1 * b2 - a2 * b1;
 
@@ -755,7 +883,7 @@
 }
 
 +(SFPoint *) degreesToMetersWithPoint: (SFPoint *) point{
-    SFPoint *value = [self degreesToMetersWithX:[point.x doubleValue] andY:[point.y doubleValue]];
+    SFPoint *value = [self degreesToMetersWithX:[point xValue] andY:[point yValue]];
     [value setZ:point.z];
     [value setM:point.m];
     return value;
@@ -934,7 +1062,7 @@
 }
 
 +(SFPoint *) metersToDegreesWithPoint: (SFPoint *) point{
-    SFPoint *value = [self metersToDegreesWithX:[point.x doubleValue] andY:[point.y doubleValue]];
+    SFPoint *value = [self metersToDegreesWithX:[point xValue] andY:[point yValue]];
     [value setZ:point.z];
     [value setM:point.m];
     return value;
@@ -1167,11 +1295,11 @@
             BOOL northBearing = [self isNorthBearing:bearing];
             
             SFLine *vertLine = nil;
-            if([point.x doubleValue] > [envelope.maxX doubleValue]){
+            if([point xValue] > [envelope maxXValue]){
                 if(eastBearing){
                     vertLine = right;
                 }
-            }else if([point.x doubleValue] < [envelope.minX doubleValue]){
+            }else if([point xValue] < [envelope minXValue]){
                 if(westBearing){
                     vertLine = left;
                 }
@@ -1182,11 +1310,11 @@
             }
             
             SFLine *horizLine = nil;
-            if([point.y doubleValue] > [envelope.maxY doubleValue]){
+            if([point yValue] > [envelope maxYValue]){
                 if(northBearing){
                     horizLine = top;
                 }
-            }else if([point.y doubleValue] < [envelope.minY doubleValue]){
+            }else if([point yValue] < [envelope minYValue]){
                 if(southBearing){
                     horizLine = bottom;
                 }
@@ -1470,13 +1598,13 @@
 }
 
 +(BOOL) isEqualWithPoint1: (SFPoint *) point1 andPoint2: (SFPoint *) point2 andEpsilon: (double) epsilon{
-    BOOL equal = fabs([point1.x doubleValue] - [point2.x doubleValue]) <= epsilon && fabs([point1.y doubleValue] - [point2.y doubleValue]) <= epsilon && point1.hasZ == point2.hasZ && point1.hasM == point2.hasM;
+    BOOL equal = fabs([point1 xValue] - [point2 xValue]) <= epsilon && fabs([point1 yValue] - [point2 yValue]) <= epsilon && point1.hasZ == point2.hasZ && point1.hasM == point2.hasM;
     if(equal){
         if(point1.hasZ){
-            equal = fabs([point1.z doubleValue] - [point2.z doubleValue]) <= epsilon;
+            equal = fabs([point1 zValue] - [point2 zValue]) <= epsilon;
         }
         if(equal && point1.hasM){
-            equal = fabs([point1.m doubleValue] - [point2.m doubleValue]) <= epsilon;
+            equal = fabs([point1 mValue] - [point2 mValue]) <= epsilon;
         }
     }
     return equal;
@@ -1564,16 +1692,16 @@
 }
 
 +(void) boundPoint: (SFPoint *) point withEnvelope: (SFGeometryEnvelope *) envelope{
-    double x = [point.x doubleValue];
-    double y = [point.y doubleValue];
-    if(x < [envelope.minX doubleValue]){
+    double x = [point xValue];
+    double y = [point yValue];
+    if(x < [envelope minXValue]){
         [point setX:envelope.minX];
-    }else if(x > [envelope.maxX doubleValue]){
+    }else if(x > [envelope maxXValue]){
         [point setX:envelope.maxX];
     }
-    if(y < [envelope.minY doubleValue]){
+    if(y < [envelope minYValue]){
         [point setY:envelope.minY];
-    }else if(y > [envelope.maxY doubleValue]){
+    }else if(y > [envelope maxYValue]){
         [point setY:envelope.maxY];
     }
 }
