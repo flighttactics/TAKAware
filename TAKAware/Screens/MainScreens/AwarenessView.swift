@@ -12,6 +12,7 @@ import MapKit
 final class MapPointAnnotation: NSObject, MKAnnotation {
     var id: String
     dynamic var title: String?
+    dynamic var subtitle: String?
     dynamic var coordinate: CLLocationCoordinate2D
     dynamic var icon: String?
     dynamic var cotType: String?
@@ -33,6 +34,7 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
             self.color = IconData.colorFromArgb(argbVal: Int(mapPoint.iconColor!)!)
         }
         self.remarks = mapPoint.remarks
+        self.subtitle = mapPoint.remarks
     }
 }
 
@@ -187,7 +189,7 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             guard !annotation.isKind(of: MKUserLocation.self) else {
-                // Make a fast exit if the annotation is the `MKUserLocation`, as it's not an annotation view we wish to customize.
+                // We don't customize the self marker
                 return nil
             }
             
@@ -199,22 +201,12 @@ struct MapView: UIViewRepresentable {
             if annotationView == nil {
                 annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: identifier)
                 annotationView!.canShowCallout = true
-                let detailView = UIView()
-                let remarksView = UITextView()
-                remarksView.text = mpAnnotation?.remarks ?? ""
 
-                let widthConstraint = NSLayoutConstraint(item: detailView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
-                detailView.addConstraint(widthConstraint)
-
-                let heightConstraint = NSLayoutConstraint(item: detailView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 20)
-                detailView.addConstraint(heightConstraint)
-                annotationView!.detailCalloutAccessoryView = detailView
                 let icon = IconData.iconFor(type2525: mpAnnotation!.cotType ?? "", iconsetPath: mpAnnotation!.icon ?? "")
                 var pointIcon: UIImage = icon.icon
                 
                 if let pointColor = mpAnnotation!.color {
                     pointIcon = pointIcon.mask(with: pointColor)
-                    //pointIcon = pointIcon.withTintColor(pointColor, renderingMode: .alwaysTemplate)
                 }
                 annotationView!.image = pointIcon
             }
@@ -339,6 +331,66 @@ struct AwarenessView: View {
                     .aspectRatio(contentMode: .fit)
                     .colorMultiply((isAcquiringBloodhoundTarget ? .red : .yellow))
                     .frame(width: 20.0)
+                    .shadow(
+                        color: .yellow,
+                        radius: CGFloat(0.0),
+                        x: CGFloat(0.5), y: CGFloat(0.5))
+            }
+            
+            Button(action: { print("Channels Clicked!") }) {
+                Image("nav_channels")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .colorMultiply(.yellow)
+                    .frame(width: 20.0)
+                    .shadow(
+                        color: .yellow,
+                        radius: CGFloat(0.0),
+                        x: CGFloat(0.5), y: CGFloat(0.5))
+            }
+            
+            Button(action: { print("Packages Clicked!") }) {
+                Image("nav_package")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .colorMultiply(.yellow)
+                    .frame(width: 20.0)
+                    .shadow(
+                        color: .yellow,
+                        radius: CGFloat(0.0),
+                        x: CGFloat(0.5), y: CGFloat(0.5))
+            }
+            
+            Button(action: {
+                print("Orientation Clicked!")
+                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                
+                switch(settingsStore.preferredInterface) {
+                case "portrait":
+                    windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+                    settingsStore.preferredInterface = InterfaceOrientation.landscapeRight.id
+                case "landscapeRight":
+                    windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+                    settingsStore.preferredInterface = InterfaceOrientation.portrait.id
+                default:
+                    if UIDevice.current.orientation.isLandscape {
+                        windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+                        settingsStore.preferredInterface = InterfaceOrientation.portrait.id
+                    } else {
+                        windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+                        settingsStore.preferredInterface = InterfaceOrientation.landscapeRight.id
+                    }
+                }
+            }) {
+                Image("nav_orientation")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .colorMultiply(.yellow)
+                    .frame(width: 20.0)
+                    .shadow(
+                        color: .yellow,
+                        radius: CGFloat(0.0),
+                        x: CGFloat(0.5), y: CGFloat(0.5))
             }
             
             Button(action: { sheet = .emergencySettings }) {

@@ -257,10 +257,18 @@ class SettingsStore: ObservableObject {
             UserDefaults.standard.set(lastAppVersionRun, forKey: "lastAppVersionRun")
         }
     }
+    
+    @Published var preferredInterface: String {
+        didSet {
+            UserDefaults.standard.set(preferredInterface, forKey: "preferredInterface")
+        }
+    }
 
     private init() {
         let defaultSign = SettingsStore.generateDefaultCallSign()
         self.lastAppVersionRun = (UserDefaults.standard.object(forKey: "lastAppVersionRun") == nil ? "" : UserDefaults.standard.object(forKey: "lastAppVersionRun") as! String)
+        
+        self.preferredInterface = (UserDefaults.standard.object(forKey: "preferredInterface") == nil ? "" : UserDefaults.standard.object(forKey: "preferredInterface") as! String)
         
         self.callSign = (UserDefaults.standard.object(forKey: "callSign") == nil ? defaultSign : UserDefaults.standard.object(forKey: "callSign") as! String)
         
