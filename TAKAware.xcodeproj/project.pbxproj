@@ -45,6 +45,9 @@
 		A55CE96E2AB1D8AA0081AF86 /* Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55CE96A2AB1D8860081AF86 /* Converter.swift */; };
 		A56679832C04DACD00C453DC /* NIOSSL in Frameworks */ = {isa = PBXBuildFile; productRef = A56679822C04DACD00C453DC /* NIOSSL */; };
 		A5702A432C205772008E1763 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = A5702A422C205772008E1763 /* CodeScanner */; };
+		A578E42C2C548CFC001978D4 /* DataPackages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E42B2C548CFC001978D4 /* DataPackages.swift */; };
+		A578E42E2C550FD8001978D4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E42D2C550FD8001978D4 /* MapView.swift */; };
+		A578E4362C5590AB001978D4 /* AnnotationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E4352C5590AB001978D4 /* AnnotationDetailView.swift */; };
 		A595F6662C278CBF00E81976 /* TrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6652C278CBF00E81976 /* TrackerView.swift */; };
 		A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6672C278CCD00E81976 /* AwarenessView.swift */; };
 		A595F66A2C278CFE00E81976 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6692C278CFE00E81976 /* Components.swift */; };
@@ -3464,6 +3467,9 @@
 		A55ACD3E2C1A87AF0055A21A /* SwiftTAK */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SwiftTAK; path = ../SwiftTAK; sourceTree = "<group>"; };
 		A55CE96A2AB1D8860081AF86 /* Converter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Converter.swift; sourceTree = "<group>"; };
 		A55CE96C2AB1D8A20081AF86 /* ConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterTests.swift; sourceTree = "<group>"; };
+		A578E42B2C548CFC001978D4 /* DataPackages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackages.swift; sourceTree = "<group>"; };
+		A578E42D2C550FD8001978D4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		A578E4352C5590AB001978D4 /* AnnotationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationDetailView.swift; sourceTree = "<group>"; };
 		A58B372C2A57B0390002B984 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A58B372D2A57B38A0002B984 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		A595F6652C278CBF00E81976 /* TrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerView.swift; sourceTree = "<group>"; };
@@ -6897,6 +6903,7 @@
 				A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */,
 				A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */,
 				A5E2D0BA2C3F1E47009FCD51 /* ChannelOptions.swift */,
+				A578E42B2C548CFC001978D4 /* DataPackages.swift */,
 			);
 			path = SettingsScreens;
 			sourceTree = "<group>";
@@ -6907,6 +6914,8 @@
 				A595F6652C278CBF00E81976 /* TrackerView.swift */,
 				A595F6672C278CCD00E81976 /* AwarenessView.swift */,
 				A595F6692C278CFE00E81976 /* Components.swift */,
+				A578E42D2C550FD8001978D4 /* MapView.swift */,
+				A578E4352C5590AB001978D4 /* AnnotationDetailView.swift */,
 			);
 			path = MainScreens;
 			sourceTree = "<group>";
@@ -13969,7 +13978,9 @@
 				A55ABF472ABDBFEA00195AB7 /* ServerInformation.swift in Sources */,
 				A5BF02022A5EBCA40043065B /* TCPMessage.swift in Sources */,
 				A5E2D0BD2C3F218B009FCD51 /* ChannelManager.swift in Sources */,
+				A578E4362C5590AB001978D4 /* AnnotationDetailView.swift in Sources */,
 				A55ABF452ABDBF9A00195AB7 /* UserInformation.swift in Sources */,
+				A578E42E2C550FD8001978D4 /* MapView.swift in Sources */,
 				A50C5F5F2A6032D2001E52E6 /* EmergencyView.swift in Sources */,
 				A59C08472AACF95100C33B44 /* CertificateManager.swift in Sources */,
 				A50C5F5D2A601CF0001E52E6 /* SettingsView.swift in Sources */,
@@ -13981,6 +13992,7 @@
 				A5E2D0BB2C3F1E47009FCD51 /* ChannelOptions.swift in Sources */,
 				A5B312CE2C39DD38007B3914 /* StreamParser.swift in Sources */,
 				A5B312D62C3AC940007B3914 /* COTUserIcon.swift in Sources */,
+				A578E42C2C548CFC001978D4 /* DataPackages.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -14172,7 +14184,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_PREVIEWS = YES;
@@ -14213,7 +14225,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_PREVIEWS = YES;
@@ -14252,7 +14264,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14274,7 +14286,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14294,7 +14306,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
@@ -14312,7 +14324,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;

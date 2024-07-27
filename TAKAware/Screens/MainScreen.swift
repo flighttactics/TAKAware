@@ -28,7 +28,7 @@ struct MainScreen: View {
     
     var body: some View {
         Group {
-            if(settingsStore.enableAdvancedMode) {
+            if(settingsStore.enableMapDisplay) {
                 AwarenessView(displayUIState: $displayUIState)
             } else {
                 TrackerView(displayUIState: $displayUIState)

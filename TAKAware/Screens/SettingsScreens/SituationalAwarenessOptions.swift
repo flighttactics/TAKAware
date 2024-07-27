@@ -24,7 +24,7 @@ struct SituationalAwarenessScreen: View {
     var body: some View {
         List {
             AdvancedModeToggle()
-            if(settingsStore.enableAdvancedMode) {
+            if(settingsStore.enableMapDisplay) {
                 MapOptions()
             }
         }
