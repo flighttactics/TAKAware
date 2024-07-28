@@ -8,7 +8,7 @@
 import Foundation
 import XCTest
 
-final class IconDataTests: TAKTrackerTestCase {
+final class IconDataTests: TAKAwareTestCase {
     
     var someVar: String?
     

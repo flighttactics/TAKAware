@@ -14,7 +14,7 @@ import XCTest
 import SwiftTAK
 import NIOSSL
 
-final class CertificateSigningRequestTests: TAKTrackerTestCase {
+final class CertificateSigningRequestTests: TAKAwareTestCase {
     
     var certString = ""
     var ca0 = ""

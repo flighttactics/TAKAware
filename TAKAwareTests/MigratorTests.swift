@@ -10,7 +10,7 @@ import NIOSSL
 import SwiftTAK
 import XCTest
 
-final class MigratorTests: TAKTrackerTestCase {
+final class MigratorTests: TAKAwareTestCase {
     let migrator = Migrator()
     var certData: Data? = nil
     var expectedCertChain: [Data] = []

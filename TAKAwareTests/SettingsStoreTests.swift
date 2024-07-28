@@ -8,7 +8,7 @@
 import Foundation
 import XCTest
 
-final class SettingsStoreTests: TAKTrackerTestCase {
+final class SettingsStoreTests: TAKAwareTestCase {
     
     func testGenerateDefaultCallsign() {
         let trackerAppend = AppConstants.getClientID().split(separator: "-").first!
