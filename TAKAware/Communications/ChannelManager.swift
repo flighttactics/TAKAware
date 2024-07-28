@@ -41,7 +41,7 @@ class ChannelManager: NSObject, ObservableObject, URLSessionDelegate {
     
     func retrieveChannels() {
         isLoading = true
-        let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.CHANNELS_LIST_PATH)"
+        let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.CHANNELS_LIST_PATH)?useCache=true&sendLatestSA=true"
         TAKLogger.debug("[ChannelManager] Requesting channels from \(requestURLString)")
         let requestUrl = URL(string: requestURLString)!
         let configuration = URLSessionConfiguration.default
@@ -175,7 +175,47 @@ class ChannelManager: NSObject, ObservableObject, URLSessionDelegate {
         let updatedChannels = activeChannels
         updatedChannels.first(where: {$0 == channel})?.active.toggle()
         activeChannels = updatedChannels
-        // TODO: We need to send the updated channel list back upstream
-        // TODO: We need to update the list from the server after publishing
+        
+        let activeBits: [Int] = activeChannels.filter({ $0.active }).map({ $0.bitpos! })
+        let requestData = try? JSONSerialization.data(
+            withJSONObject: activeBits,
+            options: []
+        )
+        
+        /* HELLO */
+        isLoading = true
+        let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.CHANNELS_BIT_UPDATE_PATH)"
+        TAKLogger.debug("[ChannelManager] Sending updated active channels to \(requestURLString)")
+        let requestUrl = URL(string: requestURLString)!
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 5
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "put"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = requestData
+
+        let session = URLSession(configuration: configuration,
+                                 delegate: self,
+                                 delegateQueue: OperationQueue.main)
+
+        let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
+            TAKLogger.debug("[ChannelManager] Session Data Task Returned...")
+            self.isLoading = false
+            if error != nil {
+                self.logChannelsError(error!.localizedDescription)
+                self.retrieveChannels()
+                return
+            }
+            guard let response = response as? HTTPURLResponse,
+                (200...299).contains(response.statusCode) else {
+                self.logChannelsError("Non success response code \((response as? HTTPURLResponse)?.statusCode.description ?? "UNKNOWN")")
+                self.retrieveChannels()
+                return
+            }
+            TAKLogger.debug("[ChannelManager] Successfully updated channels. Requesting new list")
+            self.retrieveChannels()
+        })
+
+        task.resume()
     }
 }
