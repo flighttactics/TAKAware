@@ -34,11 +34,13 @@ class StreamParser: NSObject {
             }
             
             //Add in the color + usericon
-            let xml = XMLHash.parse(dataStream)
+            let xml = XMLHash.parse(xmlEvent)
             let usericonNode = xml["event"]["detail"]["usericon"].element
             let iconPath = usericonNode?.attribute(by: "iconsetpath")?.text ?? ""
             let colorNode = xml["event"]["detail"]["color"].element
             let iconColor = colorNode?.attribute(by: "argb")?.text ?? ""
+            
+            let archiveElement = xml["event"]["detail"]["archive"]
             
             if var cotDetail = cotEvent.childNodes.first(where: {$0 is COTDetail}) as? COTDetail {
                 if !iconPath.isEmpty {
@@ -49,6 +51,10 @@ class StreamParser: NSObject {
                 if let argb = Int(iconColor) {
                     let cotColor = COTColor(argb: argb)
                     cotDetail.childNodes.append(cotColor)
+                }
+                
+                if(!archiveElement.description.isEmpty) {
+                    cotDetail.childNodes.append(COTArchive())
                 }
                 
                 cotEvent.childNodes.removeAll(where: { $0 is COTDetail })
@@ -80,6 +86,7 @@ class StreamParser: NSObject {
             mapPointData.startDate = cotEvent.start
             mapPointData.updateDate = cotEvent.time
             mapPointData.staleDate = cotEvent.stale
+            mapPointData.archived = cotEvent.cotDetail!.childNodes.contains(where: { $0 is COTArchive })
 
             do {
                 try dataContext.save()

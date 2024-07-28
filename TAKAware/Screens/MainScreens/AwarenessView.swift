@@ -136,7 +136,7 @@ struct AwarenessView: View {
                 navBarImage(imageName: "nav_channels")
             }
             
-            Button(action: { sheet = .dataPackage }) {
+            Button(action: { sheet = .dataSync }) {
                 navBarImage(imageName: "nav_package")
             }
             

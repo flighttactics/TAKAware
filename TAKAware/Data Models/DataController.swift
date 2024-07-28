@@ -21,7 +21,7 @@ class DataController: ObservableObject {
         cotDataContainer.viewContext.automaticallyMergesChangesFromParent = true
         cotDataContainer.loadPersistentStores { description, error in
             if let error = error {
-                TAKLogger.error("[DataController] Core Data failed to load: \(error.localizedDescription)")
+                TAKLogger.error("[DataController]: Core Data failed to load: \(error.localizedDescription)")
             }
         }
     }
@@ -31,15 +31,15 @@ class DataController: ObservableObject {
         cleanUpTimer = Timer.scheduledTimer(withTimeInterval: 15.0, repeats: true) { _ in
             self.cotDataContainer.performBackgroundTask { dataContext in
                 let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: "COTData")
-                let predicate = NSPredicate(format: "staleDate < %@", Date() as CVarArg)
+                let predicate = NSPredicate(format: "staleDate < %@ AND archived <> true", Date() as CVarArg)
                 fetch.predicate = predicate
                 let request = NSBatchDeleteRequest(fetchRequest: fetch)
 
                 do {
-                    print("Cleaning Stales...")
+                    TAKLogger.debug("[DataController]: Cleaning Stales...")
                     try dataContext.execute(request)
                 } catch {
-                    TAKLogger.error("[DataController] Unable to clear stales \(error)")
+                    TAKLogger.error("[DataController]: Unable to clear stales \(error)")
                 }
             }
         }

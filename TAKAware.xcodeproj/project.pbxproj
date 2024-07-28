@@ -45,9 +45,13 @@
 		A55CE96E2AB1D8AA0081AF86 /* Converter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55CE96A2AB1D8860081AF86 /* Converter.swift */; };
 		A56679832C04DACD00C453DC /* NIOSSL in Frameworks */ = {isa = PBXBuildFile; productRef = A56679822C04DACD00C453DC /* NIOSSL */; };
 		A5702A432C205772008E1763 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = A5702A422C205772008E1763 /* CodeScanner */; };
-		A578E42C2C548CFC001978D4 /* DataPackages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E42B2C548CFC001978D4 /* DataPackages.swift */; };
+		A578E42C2C548CFC001978D4 /* DataSyncMissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E42B2C548CFC001978D4 /* DataSyncMissions.swift */; };
 		A578E42E2C550FD8001978D4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E42D2C550FD8001978D4 /* MapView.swift */; };
 		A578E4362C5590AB001978D4 /* AnnotationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E4352C5590AB001978D4 /* AnnotationDetailView.swift */; };
+		A578E4382C55B3E1001978D4 /* DataSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E4372C55B3E1001978D4 /* DataSyncManager.swift */; };
+		A578E4392C55B3E1001978D4 /* DataSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E4372C55B3E1001978D4 /* DataSyncManager.swift */; };
+		A578E43B2C5690EE001978D4 /* COTArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E43A2C5690EE001978D4 /* COTArchive.swift */; };
+		A578E43C2C5690EE001978D4 /* COTArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E43A2C5690EE001978D4 /* COTArchive.swift */; };
 		A595F6662C278CBF00E81976 /* TrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6652C278CBF00E81976 /* TrackerView.swift */; };
 		A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6672C278CCD00E81976 /* AwarenessView.swift */; };
 		A595F66A2C278CFE00E81976 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6692C278CFE00E81976 /* Components.swift */; };
@@ -3467,9 +3471,11 @@
 		A55ACD3E2C1A87AF0055A21A /* SwiftTAK */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SwiftTAK; path = ../SwiftTAK; sourceTree = "<group>"; };
 		A55CE96A2AB1D8860081AF86 /* Converter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Converter.swift; sourceTree = "<group>"; };
 		A55CE96C2AB1D8A20081AF86 /* ConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterTests.swift; sourceTree = "<group>"; };
-		A578E42B2C548CFC001978D4 /* DataPackages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackages.swift; sourceTree = "<group>"; };
+		A578E42B2C548CFC001978D4 /* DataSyncMissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSyncMissions.swift; sourceTree = "<group>"; };
 		A578E42D2C550FD8001978D4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		A578E4352C5590AB001978D4 /* AnnotationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationDetailView.swift; sourceTree = "<group>"; };
+		A578E4372C55B3E1001978D4 /* DataSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSyncManager.swift; sourceTree = "<group>"; };
+		A578E43A2C5690EE001978D4 /* COTArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COTArchive.swift; sourceTree = "<group>"; };
 		A58B372C2A57B0390002B984 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A58B372D2A57B38A0002B984 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		A595F6652C278CBF00E81976 /* TrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerView.swift; sourceTree = "<group>"; };
@@ -6903,7 +6909,7 @@
 				A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */,
 				A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */,
 				A5E2D0BA2C3F1E47009FCD51 /* ChannelOptions.swift */,
-				A578E42B2C548CFC001978D4 /* DataPackages.swift */,
+				A578E42B2C548CFC001978D4 /* DataSyncMissions.swift */,
 			);
 			path = SettingsScreens;
 			sourceTree = "<group>";
@@ -10327,6 +10333,7 @@
 				A5FB4E632A8FE0020034966D /* CSRRequestor.swift */,
 				A59C08462AACF95100C33B44 /* CertificateManager.swift */,
 				A5E2D0BC2C3F218B009FCD51 /* ChannelManager.swift */,
+				A578E4372C55B3E1001978D4 /* DataSyncManager.swift */,
 			);
 			path = Communications;
 			sourceTree = "<group>";
@@ -10361,6 +10368,7 @@
 				A5B312C62C39CAAF007B3914 /* IconData.swift */,
 				A5B312D52C3AC940007B3914 /* COTUserIcon.swift */,
 				A5B312D82C3AC94F007B3914 /* COTColor.swift */,
+				A578E43A2C5690EE001978D4 /* COTArchive.swift */,
 			);
 			path = "Data Models";
 			sourceTree = "<group>";
@@ -13948,6 +13956,7 @@
 				A5BF02002A5EB7440043065B /* UDPMessage.swift in Sources */,
 				A5FB4E662A98D0FF0034966D /* TAKConstants.swift in Sources */,
 				4630FD132B5071A100988ED4 /* ChatView.swift in Sources */,
+				A578E43B2C5690EE001978D4 /* COTArchive.swift in Sources */,
 				4630FD0E2B506EC000988ED4 /* Palette+Color.swift in Sources */,
 				A5B312C12C397AC5007B3914 /* DataController.swift in Sources */,
 				A5FB4E642A8FE0020034966D /* CSRRequestor.swift in Sources */,
@@ -13990,9 +13999,10 @@
 				A55ABF4B2ABDC05800195AB7 /* AdvancedModeToggle.swift in Sources */,
 				4630FD1E2B5072D300988ED4 /* Sheet.swift in Sources */,
 				A5E2D0BB2C3F1E47009FCD51 /* ChannelOptions.swift in Sources */,
+				A578E4382C55B3E1001978D4 /* DataSyncManager.swift in Sources */,
 				A5B312CE2C39DD38007B3914 /* StreamParser.swift in Sources */,
 				A5B312D62C3AC940007B3914 /* COTUserIcon.swift in Sources */,
-				A578E42C2C548CFC001978D4 /* DataPackages.swift in Sources */,
+				A578E42C2C548CFC001978D4 /* DataSyncMissions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -14017,7 +14027,9 @@
 				A5FB4E7C2AAA4B4F0034966D /* SettingsStore.swift in Sources */,
 				A55CE96D2AB1D8A20081AF86 /* ConverterTests.swift in Sources */,
 				A5E2D0C02C3F8D84009FCD51 /* ChannelManagerTests.swift in Sources */,
+				A578E43C2C5690EE001978D4 /* COTArchive.swift in Sources */,
 				A5B312DA2C3AC94F007B3914 /* COTColor.swift in Sources */,
+				A578E4392C55B3E1001978D4 /* DataSyncManager.swift in Sources */,
 				A5B312BC2C38C5A6007B3914 /* COTData.xcdatamodeld in Sources */,
 				A5582CC32AD5CB4600DE0D5C /* TAKAwareTestCase.swift in Sources */,
 				A5E2D0BE2C3F218B009FCD51 /* ChannelManager.swift in Sources */,

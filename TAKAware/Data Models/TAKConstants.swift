@@ -25,6 +25,10 @@ struct AppConstants {
     static let CERT_CONFIG_PATH = "/Marti/api/tls/config"
     static let CSR_PATH = "/Marti/api/tls/signClient/v2?clientUid=$UID&version=$VERSION"
     static let CHANNELS_LIST_PATH = "/Marti/api/groups/all"
+    static let CHANNELS_BIT_UPDATE_PATH = "/Marti/api/groups/activebits"
+    
+    static let DATA_PACKAGE_LIST_PATH = "/Marti/api/missions"
+    static let DATA_PACKAGE_DETAILS_PATH = "/Marti/api/missions/{name}"
     
     static let UDP_BROADCAST_URL = "239.2.3.1"
     
