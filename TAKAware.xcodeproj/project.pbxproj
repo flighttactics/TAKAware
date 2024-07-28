@@ -52,6 +52,7 @@
 		A578E4392C55B3E1001978D4 /* DataSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E4372C55B3E1001978D4 /* DataSyncManager.swift */; };
 		A578E43B2C5690EE001978D4 /* COTArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E43A2C5690EE001978D4 /* COTArchive.swift */; };
 		A578E43C2C5690EE001978D4 /* COTArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E43A2C5690EE001978D4 /* COTArchive.swift */; };
+		A578E43E2C56E97A001978D4 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A578E43D2C56E97A001978D4 /* Launch Screen.storyboard */; };
 		A595F6662C278CBF00E81976 /* TrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6652C278CBF00E81976 /* TrackerView.swift */; };
 		A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6672C278CCD00E81976 /* AwarenessView.swift */; };
 		A595F66A2C278CFE00E81976 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6692C278CFE00E81976 /* Components.swift */; };
@@ -3476,6 +3477,7 @@
 		A578E4352C5590AB001978D4 /* AnnotationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationDetailView.swift; sourceTree = "<group>"; };
 		A578E4372C55B3E1001978D4 /* DataSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSyncManager.swift; sourceTree = "<group>"; };
 		A578E43A2C5690EE001978D4 /* COTArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COTArchive.swift; sourceTree = "<group>"; };
+		A578E43D2C56E97A001978D4 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		A58B372C2A57B0390002B984 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A58B372D2A57B38A0002B984 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		A595F6652C278CBF00E81976 /* TrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerView.swift; sourceTree = "<group>"; };
@@ -10275,6 +10277,7 @@
 				A5A49D912A547378009764C1 /* TAKAware-Info.plist */,
 				A599D66C2A5E45CD00B507D9 /* TAKAware.entitlements */,
 				A5E2F8FF2A791F6B00EDD0B4 /* Utilities */,
+				A578E43D2C56E97A001978D4 /* Launch Screen.storyboard */,
 			);
 			path = TAKAware;
 			sourceTree = "<group>";
@@ -11305,6 +11308,7 @@
 				A5B32A222C3AEBEC007B3914 /* sugpevsp-------.png in Resources */,
 				A5B32BD42C3AEBEC007B3914 /* sugpusxe-------.png in Resources */,
 				A5B3213F2C3AEBEB007B3914 /* sfgpucecm------.png in Resources */,
+				A578E43E2C56E97A001978D4 /* Launch Screen.storyboard in Resources */,
 				A5B3295B2C3AEBEC007B3914 /* snupwmo--------.png in Resources */,
 				A5B323D22C3AEBEC007B3914 /* shgpewdms------.png in Resources */,
 				A5B327AB2C3AEBEC007B3914 /* sngpucech------.png in Resources */,
@@ -14212,6 +14216,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow TAK Aware to access and share your location with teammates and connected TAK Servers for situational awareness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
@@ -14253,6 +14258,7 @@
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow TAK Aware to access and share your location with teammates and connected TAK Servers for situational awareness";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UIRequiresFullScreen = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.4;

@@ -16,12 +16,5 @@
 		<string>fetch</string>
 		<string>location</string>
 	</array>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIColorName</key>
-		<string>launchScreenBackground</string>
-		<key>UIImageName</key>
-		<string>launchScreenImage</string>
-	</dict>
 </dict>
 </plist>
