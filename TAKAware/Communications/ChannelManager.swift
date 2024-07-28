@@ -91,12 +91,19 @@ class ChannelManager: NSObject, ObservableObject, URLSessionDelegate {
                     if(name == ANON_CHANNEL_NAME) {
                         continue
                     }
+                    
                     let active = channelData["active"] as! Int == 1
-                    let direction = channelData["direction"] as! String
+                    var direction = channelData["direction"] as! String
                     let createdString = channelData["created"] as! String
                     let created = dateFormatter.date(from: createdString)
                     let type = channelData["type"] as! String
                     let bitpos = channelData["bitpos"] as? Int
+                    
+                    if let existingChannel = activeChannels.first(where: {$0.name == name}) {
+                        activeChannels.removeAll(where: {$0 == existingChannel})
+                        direction = "BOTH"
+                    }
+                    
                     let channel = TAKChannel(name: name, active: active, direction: direction, created: created, type: type, bitpos: bitpos)
                     activeChannels.append(channel)
                 }
