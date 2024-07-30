@@ -86,7 +86,7 @@ class StreamParser: NSObject {
             mapPointData.startDate = cotEvent.start
             mapPointData.updateDate = cotEvent.time
             mapPointData.staleDate = cotEvent.stale
-            mapPointData.archived = cotEvent.cotDetail!.childNodes.contains(where: { $0 is COTArchive })
+            mapPointData.archived = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
 
             do {
                 try dataContext.save()

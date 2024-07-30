@@ -37,10 +37,13 @@ class TAKChannel: Equatable {
 class ChannelManager: NSObject, ObservableObject, URLSessionDelegate {
     @Published var activeChannels: [TAKChannel] = []
     @Published var isLoading = false
+    @Published var isSendingUpdate = false
     let ANON_CHANNEL_NAME = "__ANON__"
     
     func retrieveChannels() {
-        isLoading = true
+        if !isSendingUpdate {
+            isLoading = true
+        }
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.CHANNELS_LIST_PATH)?useCache=true&sendLatestSA=true"
         TAKLogger.debug("[ChannelManager] Requesting channels from \(requestURLString)")
         let requestUrl = URL(string: requestURLString)!
@@ -56,6 +59,7 @@ class ChannelManager: NSObject, ObservableObject, URLSessionDelegate {
         let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
             TAKLogger.debug("[ChannelManager] Session Data Task Returned...")
             self.isLoading = false
+            self.isSendingUpdate = false
             if error != nil {
                 self.logChannelsError(error!.localizedDescription)
                 return
@@ -115,6 +119,8 @@ class ChannelManager: NSObject, ObservableObject, URLSessionDelegate {
     
     func logChannelsError(_ err: String) {
         TAKLogger.error("[ChannelManager]: Error while trying to retrieve channels \(err)")
+        isLoading = false
+        isSendingUpdate = false
     }
     
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -189,8 +195,7 @@ class ChannelManager: NSObject, ObservableObject, URLSessionDelegate {
             options: []
         )
         
-        /* HELLO */
-        isLoading = true
+        isSendingUpdate = true
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.CHANNELS_BIT_UPDATE_PATH)"
         TAKLogger.debug("[ChannelManager] Sending updated active channels to \(requestURLString)")
         let requestUrl = URL(string: requestURLString)!
@@ -204,6 +209,10 @@ class ChannelManager: NSObject, ObservableObject, URLSessionDelegate {
         let session = URLSession(configuration: configuration,
                                  delegate: self,
                                  delegateQueue: OperationQueue.main)
+        
+        // We'll clear the map of all transient points
+        // The server will flush us updated ones upon the channel update happening
+        DataController.shared.clearTransientItems()
 
         let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
             TAKLogger.debug("[ChannelManager] Session Data Task Returned...")

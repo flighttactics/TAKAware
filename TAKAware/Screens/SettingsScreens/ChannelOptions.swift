@@ -10,27 +10,29 @@ import MapKit
 import SwiftUI
 
 struct ChannelOptionsDetail: View {
+    @Environment(\.dismiss) var dismiss
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
     @StateObject var channelManager: ChannelManager = ChannelManager()
     @State private var isRotating = 0.0
     @State var channelState = true
     
+    var loader: some View {
+        return Image(systemName: "arrowshape.turn.up.right.circle")
+            .rotationEffect(.degrees(isRotating))
+            .onAppear {
+                withAnimation(.linear(duration: 1)
+                        .speed(0.1).repeatForever(autoreverses: false)) {
+                    isRotating = 360.0
+                }
+            }
+    }
+    
     var body: some View {
         List {
-            Text("Server Channels")
-                .font(.system(size: 18, weight: .medium))
-                .foregroundColor(.secondary)
             if(channelManager.isLoading) {
                 HStack {
                     Text("Retrieving Channels")
-                    Image(systemName: "arrowshape.turn.up.right.circle")
-                    .rotationEffect(.degrees(isRotating))
-                    .onAppear {
-                        withAnimation(.linear(duration: 1)
-                                .speed(0.1).repeatForever(autoreverses: false)) {
-                            isRotating = 360.0
-                        }
-                    }
+                    loader
                 }
             } else if(channelManager.activeChannels.isEmpty) {
                 Text("No Channels Available for \(settingsStore.takServerUrl)")
@@ -41,7 +43,9 @@ struct ChannelOptionsDetail: View {
                             Button {
                                 channelManager.toggleChannel(channel: channel)
                             } label: {
-                                if(channel.active) {
+                                if(channelManager.isSendingUpdate) {
+                                    loader
+                                } else if(channel.active) {
                                     Image(systemName: "eye.fill")
                                 } else {
                                     Image(systemName: "eye.slash")
@@ -57,6 +61,15 @@ struct ChannelOptionsDetail: View {
         }
         .onAppear {
             channelManager.retrieveChannels()
+        }
+        .navigationTitle("Channel Options")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Dismiss") {
+                    dismiss()
+                }
+            }
         }
     }
 }

@@ -202,7 +202,7 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, didDeselect annotation: any MKAnnotation) {
-            guard let mpAnnotation = annotation as? MapPointAnnotation? else {
+            guard annotation is MapPointAnnotation? else {
                 TAKLogger.debug("[MapView] Unknown annotation type selected")
                 return
             }
