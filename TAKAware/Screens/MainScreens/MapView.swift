@@ -80,6 +80,40 @@ class SituationalAnnotationView: MKAnnotationView {
     }
 }
 
+class CompassMapView: MKMapView {
+    lazy var compassButton: MKCompassButton = {
+        let compassView = MKCompassButton(mapView: self)
+        compassView.isUserInteractionEnabled = true
+        compassView.compassVisibility = .visible
+        addSubview(compassView)
+        return compassView
+    }()
+    
+    lazy var locateButton: MKUserTrackingButton = {
+        let locateView = MKUserTrackingButton(mapView: self)
+        locateView.isUserInteractionEnabled = true
+        locateView.tintColor = .yellow
+        locateView.backgroundColor = .clear
+        addSubview(locateView)
+        return locateView
+    }()
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        showsCompass = false
+        let safeArea = self.safeAreaInsets
+        var topPadding = safeArea.top + 10
+        if topPadding == 10 { topPadding = 24 }
+        let leftPadding = safeArea.left
+        compassButton.frame = CGRect(
+            origin: CGPoint(x: leftPadding + 24, y: topPadding),
+            size: compassButton.bounds.size)
+        locateButton.frame = CGRect(
+            origin: CGPoint(x: leftPadding + 24, y: topPadding + 55.0),
+            size: compassButton.bounds.size)
+    }
+}
+
 struct MapView: UIViewRepresentable {
     @Binding var region: MKCoordinateRegion
     @Binding var mapType: UInt
@@ -89,35 +123,25 @@ struct MapView: UIViewRepresentable {
     
     @FetchRequest(sortDescriptors: []) var mapPointsData: FetchedResults<COTData>
 
-    @State var mapView: MKMapView = MKMapView()
+    @State var mapView: CompassMapView = CompassMapView()
     @State var activeBloodhound: MKGeodesicPolyline?
     @State var bloodhoundStartAnnotation: MapPointAnnotation?
     @State var bloodhoundEndAnnotation: MapPointAnnotation?
     @State var activeCircle: MKCircle?
+    @State var currentRotation: UIDeviceOrientation = UIDevice.current.orientation
 
     func makeUIView(context: Context) -> MKMapView {
         mapView.delegate = context.coordinator
         mapView.setRegion(region, animated: true)
         mapView.setCenter(region.center, animated: true)
         mapView.showsUserLocation = true
+        mapView.userTrackingMode = .none
         mapView.showsCompass = false
-        mapView.userTrackingMode = .followWithHeading
         mapView.pointOfInterestFilter = .excludingAll
         mapView.mapType = MKMapType(rawValue: UInt(mapType))!
         mapView.layer.borderColor = UIColor.black.cgColor
         mapView.layer.borderWidth = 1.0
         mapView.isHidden = false
-        
-        let compassBtn = MKCompassButton(mapView: mapView)
-        compassBtn.frame.origin = CGPoint(x: 24.0, y: 54.0)
-        compassBtn.compassVisibility = .visible
-        mapView.addSubview(compassBtn)
-        
-//        let locateBtn = MKUserTrackingButton(mapView: mapView)
-//        locateBtn.frame.origin = CGPoint(x: 27.0, y: 114.0)
-//        locateBtn.tintColor = .yellow
-//        locateBtn.backgroundColor = .clear
-//        mapView.addSubview(locateBtn)
 
         return mapView
     }
