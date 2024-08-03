@@ -33,34 +33,6 @@ class StreamParser: NSObject {
                 continue
             }
             
-            //Add in the color + usericon
-            let xml = XMLHash.parse(xmlEvent)
-            let usericonNode = xml["event"]["detail"]["usericon"].element
-            let iconPath = usericonNode?.attribute(by: "iconsetpath")?.text ?? ""
-            let colorNode = xml["event"]["detail"]["color"].element
-            let iconColor = colorNode?.attribute(by: "argb")?.text ?? ""
-            
-            let archiveElement = xml["event"]["detail"]["archive"]
-            
-            if var cotDetail = cotEvent.childNodes.first(where: {$0 is COTDetail}) as? COTDetail {
-                if !iconPath.isEmpty {
-                    let cotIcon = COTUserIcon(iconsetPath: iconPath)
-                    cotDetail.childNodes.append(cotIcon)
-                }
-                
-                if let argb = Int(iconColor) {
-                    let cotColor = COTColor(argb: argb)
-                    cotDetail.childNodes.append(cotColor)
-                }
-                
-                if(!archiveElement.description.isEmpty) {
-                    cotDetail.childNodes.append(COTArchive())
-                }
-                
-                cotEvent.childNodes.removeAll(where: { $0 is COTDetail })
-                cotEvent.childNodes.append(cotDetail)
-            }
-            
             let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
             fetchUser.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
             
@@ -81,12 +53,13 @@ class StreamParser: NSObject {
             mapPointData.longitude = Double(cotEvent.cotPoint?.lon ?? "0.0") ?? 0.0
             mapPointData.remarks = cotEvent.cotDetail?.cotRemarks?.message ?? ""
             mapPointData.cotType = cotEvent.type
-            mapPointData.icon = iconPath
-            mapPointData.iconColor = iconColor
+            mapPointData.icon = cotEvent.cotDetail?.cotUserIcon?.iconsetPath ?? ""
+            mapPointData.iconColor = cotEvent.cotDetail?.cotColor?.argb.description ?? ""
             mapPointData.startDate = cotEvent.start
             mapPointData.updateDate = cotEvent.time
             mapPointData.staleDate = cotEvent.stale
             mapPointData.archived = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
+            mapPointData.rawXml = xmlEvent
 
             do {
                 try dataContext.save()
