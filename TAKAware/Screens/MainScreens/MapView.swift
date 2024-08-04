@@ -20,6 +20,7 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var image: UIImage? = UIImage.init(systemName: "circle.fill")
     dynamic var color: UIColor?
     dynamic var remarks: String?
+    dynamic var videoURL: URL?
     
     var annotationIdentifier: String {
         return icon ?? cotType ?? "pli"
@@ -35,14 +36,17 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
             self.color = IconData.colorFromArgb(argbVal: Int(mapPoint.iconColor!)!)
         }
         self.remarks = mapPoint.remarks
+        self.videoURL = mapPoint.videoURL
     }
 }
 
 class SituationalAnnotationView: MKAnnotationView {
     @Binding var isDetailViewOpen: Bool
+    @Binding var isVideoPlayerOpen: Bool
     
-    init(annotation: MapPointAnnotation, reuseIdentifier: String?, isDetailViewOpen: Binding<Bool>) {
+    init(annotation: MapPointAnnotation, reuseIdentifier: String?, isDetailViewOpen: Binding<Bool>, isVideoPlayerOpen: Binding<Bool>) {
         self._isDetailViewOpen = isDetailViewOpen
+        self._isVideoPlayerOpen = isVideoPlayerOpen
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         self.canShowCallout = true
         setUpMenu()
@@ -53,30 +57,53 @@ class SituationalAnnotationView: MKAnnotationView {
     }
     
     private func setUpMenu() {
-        let detailsAction = UIAction(title: "Details",
-                                                   handler: {_ in
-            self.isDetailViewOpen.toggle()
-            print("Details action")
-        })
+        let actionView = UIStackView()
+        actionView.distribution = .equalCentering
+        actionView.axis = .horizontal
                 
-        let deleteAction = UIAction(title: "Delete",
-                                  handler: {_ in
-          print("Delete action")
-        })
+        let infoButton = UIButton(type: .detailDisclosure)
+        infoButton.addTarget(self, action: #selector(self.detailsPressed), for: .touchUpInside)
+        actionView.addArrangedSubview(infoButton)
         
-        let bloodhoundAction = UIAction(title: "Bloodhound",
-                                  handler: {_ in
-          print("Bloodhound action")
-        })
+        let bloodhoundButton = UIButton.systemButton(with: UIImage(systemName: "dog.circle")!, target: nil, action: nil)
+        bloodhoundButton.addTarget(self, action: #selector(self.bloodhoundPressed), for: .touchUpInside)
+        actionView.addArrangedSubview(bloodhoundButton)
         
-        let menuTitle = self.annotation?.title ?? ""
-                
-        let button = UIButton(type: .detailDisclosure)
-        button.menu = UIMenu(title: menuTitle!,
-                           children: [detailsAction, bloodhoundAction, deleteAction])
-        button.showsMenuAsPrimaryAction = true
+        let deleteButton = UIButton.systemButton(with: UIImage(systemName: "trash")!, target: nil, action: nil)
+        deleteButton.addTarget(self, action: #selector(self.deletePressed), for: .touchUpInside)
+        actionView.addArrangedSubview(deleteButton)
+        
+        let videoButton = UIButton.systemButton(with: UIImage(systemName: "video.circle")!, target: nil, action: nil)
+        videoButton.addTarget(self, action: #selector(self.videoPressed), for: .touchUpInside)
+        actionView.addArrangedSubview(videoButton)
+        
+        let widthConstraint = NSLayoutConstraint(item: actionView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: bloodhoundButton.frame.width * CGFloat(actionView.arrangedSubviews.count))
+        actionView.addConstraint(widthConstraint)
+        
         self.canShowCallout = true
-        self.rightCalloutAccessoryView = button
+        self.detailCalloutAccessoryView = actionView
+    }
+    
+    @objc func videoPressed(sender: UIButton) {
+        print("Video Button Pressed!")
+        if !self.isVideoPlayerOpen {
+            self.isVideoPlayerOpen.toggle()
+        }
+    }
+    
+    @objc func bloodhoundPressed(sender: UIButton) {
+        print("Bloodhound Button Pressed!")
+    }
+    
+    @objc func deletePressed(sender: UIButton) {
+        print("Delete Button Pressed!")
+    }
+    
+    @objc func detailsPressed(sender: UIButton) {
+        print("Details Button Pressed!")
+        if !self.isDetailViewOpen {
+            self.isDetailViewOpen.toggle()
+        }
     }
 }
 
@@ -119,6 +146,7 @@ struct MapView: UIViewRepresentable {
     @Binding var mapType: UInt
     @Binding var isAcquiringBloodhoundTarget: Bool
     @Binding var isDetailViewOpen: Bool
+    @Binding var isVideoPlayerOpen: Bool
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
     
     @FetchRequest(sortDescriptors: []) var mapPointsData: FetchedResults<COTData>
@@ -294,7 +322,8 @@ struct MapView: UIViewRepresentable {
                 annotationView = SituationalAnnotationView(
                     annotation: mpAnnotation,
                     reuseIdentifier: identifier,
-                    isDetailViewOpen: parent.$isDetailViewOpen
+                    isDetailViewOpen: parent.$isDetailViewOpen,
+                    isVideoPlayerOpen: parent.$isVideoPlayerOpen
                 )
 //                annotationView!.canShowCallout = true
 //                let accessoryView = UIView(frame: CGRect(x: 10, y: 100, width: 300, height: 200))

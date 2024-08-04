@@ -47,6 +47,8 @@ class StreamParser: NSObject {
              } else {
                  mapPointData = results?.first
              }
+            
+            let cotVideoURL: URL? = URL(string: cotEvent.cotDetail?.cotVideo?.url ?? "")
 
             mapPointData.callsign = cotEvent.cotDetail?.cotContact?.callsign ?? "UNKNOWN"
             mapPointData.latitude = Double(cotEvent.cotPoint?.lat ?? "0.0") ?? 0.0
@@ -60,6 +62,7 @@ class StreamParser: NSObject {
             mapPointData.staleDate = cotEvent.stale
             mapPointData.archived = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
             mapPointData.rawXml = xmlEvent
+            mapPointData.videoURL = cotVideoURL ?? nil
 
             do {
                 try dataContext.save()

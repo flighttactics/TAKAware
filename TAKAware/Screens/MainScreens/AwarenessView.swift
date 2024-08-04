@@ -36,6 +36,7 @@ struct AwarenessView: View {
     @State private var sheet: Sheet.SheetType?
     @State private var isAcquiringBloodhoundTarget: Bool = false
     @State private var isDetailViewOpen: Bool = false
+    @State private var isVideoPlayerOpen: Bool = false
     @State private var currentSelectedAnnotation: MapPointAnnotation?
     
     func formatOrZero(item: Double?, formatter: String = "%.0f") -> String {
@@ -77,6 +78,12 @@ struct AwarenessView: View {
                 .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
                 .presentationContentInteraction(.scrolls)
         })
+        .sheet(isPresented: $isVideoPlayerOpen, content: {
+            VideoPlayerView(annotation: $currentSelectedAnnotation)
+                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
+                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
+                .presentationContentInteraction(.scrolls)
+        })
         .background(Color.baseMediumGray)
         .ignoresSafeArea()
         .overlay(alignment: .bottomTrailing, content: {
@@ -90,7 +97,8 @@ struct AwarenessView: View {
             region: $manager.region,
             mapType: $settingsStore.mapTypeDisplay,
             isAcquiringBloodhoundTarget: $isAcquiringBloodhoundTarget,
-            isDetailViewOpen: $isDetailViewOpen,
+            isDetailViewOpen: $isDetailViewOpen, 
+            isVideoPlayerOpen: $isVideoPlayerOpen,
             currentSelectedAnnotation: $currentSelectedAnnotation
         )
         .ignoresSafeArea(edges: .all)
