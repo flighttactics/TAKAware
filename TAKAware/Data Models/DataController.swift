@@ -12,19 +12,33 @@ class DataController: ObservableObject {
     
     static let shared = DataController()
     
-    let cotDataContainer = NSPersistentContainer(name: "COTData")
-    var managedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-    var cleanUpTimer: Timer?
-    
-    private init() {
-        cotDataContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
-        cotDataContainer.viewContext.automaticallyMergesChangesFromParent = true
-        cotDataContainer.loadPersistentStores { description, error in
-            if let error = error {
-                TAKLogger.error("[DataController]: Core Data failed to load: \(error.localizedDescription)")
+    lazy var persistentContainer: NSPersistentContainer = {
+        
+        // Pass the data model filename to the container’s initializer.
+        let container = NSPersistentContainer(name: "COTData")
+        
+        let description = NSPersistentStoreDescription()
+        description.url = URL(fileURLWithPath: "/dev/null")
+        container.persistentStoreDescriptions = [description]
+        
+        // Load any persistent stores, which creates a store if none exists.
+        container.loadPersistentStores { persistentStore, error in
+            container.viewContext.automaticallyMergesChangesFromParent = true
+            container.viewContext.mergePolicy = NSMergePolicy.overwrite
+            if let error {
+                // Handle the error appropriately. However, it's useful to use
+                // `fatalError(_:file:line:)` during development.
+                fatalError("Failed to load persistent stores: \(error.localizedDescription)")
             }
         }
-    }
+        return container
+    }()
+    
+    //let cotDataContainer = NSPersistentContainer(name: "COTData")
+    //var managedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+    var cleanUpTimer: Timer?
+    
+    private init() {}
     
     func startCleanUpTimer() {
         guard cleanUpTimer == nil else { return }
@@ -41,12 +55,13 @@ class DataController: ObservableObject {
     
     // Clears all non-archive stale items
     func clearStaleItems() {
-        let predicate = NSPredicate(format: "staleDate < %@ AND archived == NO", Date() as CVarArg)
+        let predicate = NSPredicate(format: "staleDate < %@", Date() as NSDate)
         clearMap(query: predicate)
     }
     
     func clearMap(query: NSPredicate) {
-        self.cotDataContainer.performBackgroundTask { dataContext in
+        self.persistentContainer.performBackgroundTask { dataContext in
+            dataContext.mergePolicy = NSMergePolicy.overwrite
             let fetch = COTData.fetchRequest()
             fetch.predicate = query
             fetch.includesPropertyValues = false

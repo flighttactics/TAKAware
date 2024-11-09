@@ -69,6 +69,8 @@ class IconData {
     static func iconFor(type2525: String, iconsetPath: String) -> Icon {
         var dataBytes = Data()
         
+        TAKLogger.debug("[IconData] Loading icon for \(type2525) and path \(iconsetPath)")
+        
         if iconsetPath.count > 0 {
             //de450cbf-2ffc-47fb-bd2b-ba2db89b035e/Resources/ESF4-FIRE-HAZMAT_Aerial-Apparatus-Ladder.png
             let pathParts = iconsetPath.split(separator: "/")
@@ -78,6 +80,7 @@ class IconData {
                 let imageName = String(pathParts[2]) //filename
                 
                 if iconSetUid == "COT_MAPPING_SPOTMAP" {
+                    TAKLogger.debug("[IconData] Spotmap detected")
                     // This is a unique spotmap
                     // So we'll return a circle
                     // where the imageName is the argb colors
@@ -85,10 +88,10 @@ class IconData {
                     let spotMapImg = UIImage(systemName: "largecircle.fill.circle")!.mask(with: spotColor)
                     return Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: spotMapImg)
                 } else {
-                    let bitMapCol = Expression<Blob>("bitmap")
-                    let iconSetCol = Expression<String>("iconset_uid")
-                    let groupNameCol = Expression<String>("groupName")
-                    let fileNameCol = Expression<String>("filename")
+                    let bitMapCol = SQLite.Expression<Blob>("bitmap")
+                    let iconSetCol = SQLite.Expression<String>("iconset_uid")
+                    let groupNameCol = SQLite.Expression<String>("groupName")
+                    let fileNameCol = SQLite.Expression<String>("filename")
                     
                     let query: QueryType = shared.iconTable
                         .filter(iconSetCol == iconSetUid)
@@ -121,6 +124,9 @@ class IconData {
                     uiImg = img2525!
                 } else {
                     TAKLogger.error("[IconData] mil2525icon with name \(mil2525iconName) for \(type2525) could not be converted into an image!")
+                    let defaultImg = milStdIconWithName(name: "sugp")
+                    print("Trying instead to load \(defaultImg)")
+                    uiImg = UIImage(named: defaultImg)!
                 }
                 
             }

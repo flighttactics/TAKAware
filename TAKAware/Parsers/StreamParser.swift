@@ -13,7 +13,7 @@ import SWXMLHash
 class StreamParser: NSObject {
     
     static let STREAM_DELIMTER = "</event>"
-    var dataContext = DataController.shared.cotDataContainer.newBackgroundContext()
+    var dataController = DataController.shared
     var cotParser: COTXMLParser = COTXMLParser()
     
     func parse(dataStream: Data?) -> Array<String> {
@@ -24,18 +24,12 @@ class StreamParser: NSObject {
             .map { "\($0)\(StreamParser.STREAM_DELIMTER)" }
     }
     
-    func parseCoTStream(dataStream: Data?) {
-        guard let dataStream = dataStream else { return }
-
-        let events = parse(dataStream: dataStream)
-        for xmlEvent in events {
-            guard var cotEvent = cotParser.parse(xmlEvent) else {
-                continue
-            }
-            
-            let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
-            fetchUser.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
-            
+    func parseAtom(cotEvent: COTEvent, rawXml: String) {
+        let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
+        fetchUser.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
+        
+        dataController.persistentContainer.performBackgroundTask { (dataContext) in
+            dataContext.mergePolicy = NSMergePolicy.overwrite
             let results = try? dataContext.fetch(fetchUser)
             
             let mapPointData: COTData!
@@ -61,13 +55,79 @@ class StreamParser: NSObject {
             mapPointData.updateDate = cotEvent.time
             mapPointData.staleDate = cotEvent.stale
             mapPointData.archived = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
-            mapPointData.rawXml = xmlEvent
+            mapPointData.rawXml = rawXml
             mapPointData.videoURL = cotVideoURL ?? nil
 
             do {
                 try dataContext.save()
             } catch {
                 TAKLogger.error("[StreamParser] Invalid Data Context Save \(error)")
+            }
+        }
+    }
+    
+    func parseBit(cotEvent: COTEvent, rawXml: String) {
+        let fetchMarker: NSFetchRequest<COTData> = COTData.fetchRequest()
+        fetchMarker.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
+        
+        dataController.persistentContainer.performBackgroundTask { (dataContext) in
+            dataContext.mergePolicy = NSMergePolicy.overwrite
+            let results = try? dataContext.fetch(fetchMarker)
+            
+            let mapPointData: COTData!
+            
+            if results?.count == 0 {
+                mapPointData = COTData(context: dataContext)
+                mapPointData.id = UUID()
+                mapPointData.cotUid = cotEvent.uid
+             } else {
+                 mapPointData = results?.first
+             }
+
+            mapPointData.callsign = cotEvent.cotDetail?.cotContact?.callsign ?? "UNKNOWN"
+            mapPointData.latitude = Double(cotEvent.cotPoint?.lat ?? "0.0") ?? 0.0
+            mapPointData.longitude = Double(cotEvent.cotPoint?.lon ?? "0.0") ?? 0.0
+            mapPointData.remarks = cotEvent.cotDetail?.cotRemarks?.message ?? ""
+            mapPointData.cotType = cotEvent.type
+            mapPointData.icon = cotEvent.cotDetail?.cotUserIcon?.iconsetPath ?? ""
+            mapPointData.iconColor = cotEvent.cotDetail?.cotColor?.argb.description ?? ""
+            mapPointData.startDate = cotEvent.start
+            mapPointData.updateDate = cotEvent.time
+            mapPointData.staleDate = cotEvent.stale
+            mapPointData.archived = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
+            mapPointData.rawXml = rawXml
+
+            do {
+                try dataContext.save()
+            } catch {
+                TAKLogger.error("[StreamParser] Invalid Data Context Save \(error)")
+            }
+        }
+    }
+    
+    func parseCoTStream(dataStream: Data?) {
+        guard let dataStream = dataStream else { return }
+
+        // t-x-d-d is a delete event
+        // t-x-m-* for when data sync things change
+        // use a different icon when it's a contact / person
+        // make sure we're parsing complete XMLs
+        // fix icon tapping
+        // fix full screen windows that can't be dismissed
+        // make sure channels works with data packages and servers w/o channels enabled?
+        // This could also be an alert
+        // This could also be a chat message
+        // Bloodhound w/bearing and distance
+        let events = parse(dataStream: dataStream)
+        for xmlEvent in events {
+            guard let cotEvent = cotParser.parse(xmlEvent) else {
+                continue
+            }
+            switch(cotEvent.eventType) {
+            case .ATOM, .BIT:
+                parseAtom(cotEvent: cotEvent, rawXml: xmlEvent)
+            default:
+                TAKLogger.debug("[StreamParser] Non-Atom CoT Event received \(cotEvent.type)")
             }
             
         }

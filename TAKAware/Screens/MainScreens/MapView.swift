@@ -43,12 +43,17 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
 class SituationalAnnotationView: MKAnnotationView {
     @Binding var isDetailViewOpen: Bool
     @Binding var isVideoPlayerOpen: Bool
+    var annotationLabel = UILabel()
+    var mapPointAnnotation: MapPointAnnotation
     
     init(annotation: MapPointAnnotation, reuseIdentifier: String?, isDetailViewOpen: Binding<Bool>, isVideoPlayerOpen: Binding<Bool>) {
+        self.mapPointAnnotation = annotation
         self._isDetailViewOpen = isDetailViewOpen
         self._isVideoPlayerOpen = isVideoPlayerOpen
+        self.annotationLabel.text = annotation.title ?? ""
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         self.canShowCallout = true
+        self.addSubview(annotationLabel)
         setUpMenu()
     }
     
@@ -60,6 +65,7 @@ class SituationalAnnotationView: MKAnnotationView {
         let actionView = UIStackView()
         actionView.distribution = .equalCentering
         actionView.axis = .horizontal
+        actionView.spacing = 8.0
                 
         let infoButton = UIButton(type: .detailDisclosure)
         infoButton.addTarget(self, action: #selector(self.detailsPressed), for: .touchUpInside)
@@ -73,11 +79,13 @@ class SituationalAnnotationView: MKAnnotationView {
         deleteButton.addTarget(self, action: #selector(self.deletePressed), for: .touchUpInside)
         actionView.addArrangedSubview(deleteButton)
         
-        let videoButton = UIButton.systemButton(with: UIImage(systemName: "video.circle")!, target: nil, action: nil)
-        videoButton.addTarget(self, action: #selector(self.videoPressed), for: .touchUpInside)
-        actionView.addArrangedSubview(videoButton)
+        if(mapPointAnnotation.videoURL != nil) {
+            let videoButton = UIButton.systemButton(with: UIImage(systemName: "video.circle")!, target: nil, action: nil)
+            videoButton.addTarget(self, action: #selector(self.videoPressed), for: .touchUpInside)
+            actionView.addArrangedSubview(videoButton)
+        }
         
-        let widthConstraint = NSLayoutConstraint(item: actionView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: bloodhoundButton.frame.width * CGFloat(actionView.arrangedSubviews.count))
+        let widthConstraint = NSLayoutConstraint(item: actionView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: (bloodhoundButton.frame.width + 8) * CGFloat(actionView.arrangedSubviews.count))
         actionView.addConstraint(widthConstraint)
         
         self.canShowCallout = true
@@ -325,18 +333,6 @@ struct MapView: UIViewRepresentable {
                     isDetailViewOpen: parent.$isDetailViewOpen,
                     isVideoPlayerOpen: parent.$isVideoPlayerOpen
                 )
-//                annotationView!.canShowCallout = true
-//                let accessoryView = UIView(frame: CGRect(x: 10, y: 100, width: 300, height: 200))
-//                accessoryView.layer.borderWidth = 4
-//                accessoryView.layer.borderColor = UIColor.red.cgColor
-//                let widthConstraint = NSLayoutConstraint(item: accessoryView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 40)
-//                accessoryView.addConstraint(widthConstraint)
-//
-//                let heightConstraint = NSLayoutConstraint(item: accessoryView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 20)
-//                accessoryView.addConstraint(heightConstraint)
-//                annotationView!.detailCalloutAccessoryView = accessoryView
-//                annotationView!.calloutOffset = CGPoint(x: 50.0, y: 50.0)
-//                accessoryView.alpha = 0.0
 
                 let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
                 var pointIcon: UIImage = icon.icon

@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct AnnotationDetailView: View {
+    @Environment(\.dismiss) var dismiss
     @Binding var annotation: MapPointAnnotation?
     
     func iconImage() -> UIImage {
@@ -37,6 +38,9 @@ struct AnnotationDetailView: View {
                     }
                     
                 }
+                Button("Close", action: {
+                    dismiss()
+                })
             }
         }
         .padding()

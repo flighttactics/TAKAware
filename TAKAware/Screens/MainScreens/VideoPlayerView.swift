@@ -8,24 +8,42 @@
 import AVKit
 import Foundation
 import SwiftUI
+import MobileVLCKit
+
+struct PlayerView: UIViewRepresentable {
+    public var url: String
+    let mediaPlayer = VLCMediaPlayer()
+    func makeUIView(context: Context) -> UIView {
+
+        let controller = UIView()
+        mediaPlayer.drawable = controller
+        let uri = URL(string: self.url)
+        let media = VLCMedia(url: uri!)
+        mediaPlayer.media = media
+        mediaPlayer.play()
+        return controller
+    }
+
+    func updateUIView(_ uiView: UIView, context: UIViewRepresentableContext<PlayerView>) {
+    }
+}
 
 struct VideoPlayerView: View {
+    @Environment(\.dismiss) var dismiss
     @Binding var annotation: MapPointAnnotation?
-    @State var currentPlayer: AVPlayer = AVPlayer()
+    @State var currentPlayer: VLCMediaPlayer = VLCMediaPlayer()
 
     var body: some View {
         VStack(alignment: .leading) {
             if annotation == nil || annotation!.videoURL == nil {
                 Text("No Video Source Selected")
             } else {
-                VideoPlayer(player: currentPlayer)
+                PlayerView(url: annotation!.videoURL!.absoluteString)
                     .cornerRadius(10)
-                    .onAppear {
-                        print(annotation!.videoURL!)
-                        currentPlayer = AVPlayer(url: annotation!.videoURL!)
-                        currentPlayer.play()
-                    }
             }
+            Button("Close", action: {
+                dismiss()
+            })
         }
         .padding()
         .padding(.top, 20)
