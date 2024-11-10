@@ -59,6 +59,11 @@ class DataController: ObservableObject {
         clearMap(query: predicate)
     }
     
+    func deleteCot(cotId: String) {
+        let predicate = NSPredicate(format: "id = %@", cotId)
+        clearMap(query: predicate)
+    }
+    
     func clearMap(query: NSPredicate) {
         self.persistentContainer.performBackgroundTask { dataContext in
             dataContext.mergePolicy = NSMergePolicy.overwrite

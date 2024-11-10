@@ -104,7 +104,7 @@ class SituationalAnnotationView: MKAnnotationView {
     }
     
     @objc func deletePressed(sender: UIButton) {
-        print("Delete Button Pressed!")
+        DataController.shared.deleteCot(cotId: mapPointAnnotation.id)
     }
     
     @objc func detailsPressed(sender: UIButton) {
