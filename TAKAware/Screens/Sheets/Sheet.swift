@@ -34,11 +34,11 @@ struct Sheet: View {
     @ViewBuilder private func make() -> some View {
         switch type {
             case .none: EmptyView()
-            case .emergencySettings: EmergencyView()
-            case .settings: SettingsView()
-            case .chat: ChatView()
-            case .dataSync: DataSyncMissionDetail()
-            case .channels: ChannelOptionsDetail()
+            case .emergencySettings: AlertSheet()
+        case .settings: SettingsSheet()
+            case .chat: ChatView() //ChatSheet()
+            case .dataSync: DataSyncSheet()
+            case .channels: ChannelSheet()
         }
     }
     

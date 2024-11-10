@@ -8,7 +8,7 @@
 import SwiftUI
 import MapKit
 
-let navBarAppearence = UINavigationBarAppearance()
+let navBarAppearance = UINavigationBarAppearance()
 
 // A View wrapper to make the modifier easier to use
 extension View {

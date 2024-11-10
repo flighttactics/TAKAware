@@ -47,13 +47,13 @@ struct AwarenessView: View {
     }
     
     init(displayUIState: Binding<DisplayUIState>) {
-        navBarAppearence.configureWithOpaqueBackground()
-        navBarAppearence.backgroundColor = UIColor.baseDarkGray
-        navBarAppearence.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navBarAppearence.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        navBarAppearance.configureWithOpaqueBackground()
+        navBarAppearance.backgroundColor = UIColor.baseDarkGray
+        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         
-        UINavigationBar.appearance().standardAppearance = navBarAppearence
-        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearence
+        UINavigationBar.appearance().standardAppearance = navBarAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
         
         _displayUIState = displayUIState
     }
@@ -105,84 +105,67 @@ struct AwarenessView: View {
     }
 
     var toolbarItemsRight: some View {
-        HStack {
+        HStack(spacing: 2) {
             Spacer()
 
-//            Button(action: {
-//                print("Clearing...")
-//                mapPointsData.forEach { row in
-//                    dataContext.delete(row)
-//                }
-//                do {
-//                    try dataContext.save()
-//                    print("All Clear")
-//                } catch {
-//                    print("ERROR saving deletes: \(error)")
-//                }
-//            }) {
-//                Image(systemName: "clear.fill")
-//            }
-//
-//            Button(action: {
-//                print("Adding...")
-//                let mapPointData = COTData(context: dataContext)
-//                mapPointData.id = UUID()
-//                mapPointData.callsign = "Point \(Int.random(in: 1...1000))"
-//                mapPointData.latitude = Double.random(in: 37.5...37.9)
-//                mapPointData.longitude = -Double.random(in: 122.1...122.5)
-//                try? dataContext.save()
-//            }) {
-//                Image(systemName: "plus")
-//            }
-
-            Button(action: { isAcquiringBloodhoundTarget.toggle() }) {
-                navBarImage(imageName: "bloodhound")
-                    .colorMultiply((isAcquiringBloodhoundTarget ? .red : .yellow))
-            }
-            
-            Button(action: { sheet = .channels }) {
-                navBarImage(imageName: "nav_channels")
-            }
-            
-            Button(action: { sheet = .dataSync }) {
-                navBarImage(imageName: "nav_package")
-            }
-            
-            Button(action: {
-                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+            Group {
+                Button(action: { isAcquiringBloodhoundTarget.toggle() }) {
+                    navBarImage(imageName: "bloodhound")
+                        .colorMultiply((isAcquiringBloodhoundTarget ? .red : .yellow))
+                        .padding(5)
+                }
                 
-                switch(settingsStore.preferredInterface) {
-                case "portrait":
-                    windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
-                    settingsStore.preferredInterface = InterfaceOrientation.landscapeRight.id
-                case "landscapeRight":
-                    windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
-                    settingsStore.preferredInterface = InterfaceOrientation.portrait.id
-                default:
-                    if UIDevice.current.orientation.isLandscape {
-                        windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
-                        settingsStore.preferredInterface = InterfaceOrientation.portrait.id
-                    } else {
+                Button(action: { sheet = .channels }) {
+                    navBarImage(imageName: "nav_channels")
+                        .padding(5)
+                }
+                
+                Button(action: { sheet = .dataSync }) {
+                    navBarImage(imageName: "nav_package")
+                        .padding(5)
+                }
+                
+                Button(action: {
+                    let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                    
+                    switch(settingsStore.preferredInterface) {
+                    case "portrait":
                         windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
                         settingsStore.preferredInterface = InterfaceOrientation.landscapeRight.id
+                    case "landscapeRight":
+                        windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+                        settingsStore.preferredInterface = InterfaceOrientation.portrait.id
+                    default:
+                        if UIDevice.current.orientation.isLandscape {
+                            windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+                            settingsStore.preferredInterface = InterfaceOrientation.portrait.id
+                        } else {
+                            windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+                            settingsStore.preferredInterface = InterfaceOrientation.landscapeRight.id
+                        }
                     }
+                }) {
+                    navBarImage(imageName: "nav_orientation")
+                        .padding(5)
                 }
-            }) {
-                navBarImage(imageName: "nav_orientation")
+                
+                Button(action: { sheet = .emergencySettings }) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .foregroundColor(settingsStore.isAlertActivated ? .red : .yellow)
+                        .padding(5)
+                }
+                
+//                Button(action: { sheet = .chat }) {
+//                    Image(systemName: "bubble.left")
+//                        .padding(5)
+//                }
+                
+                Button(action: { sheet = .settings }) {
+                    Image(systemName: "line.3.horizontal")
+                        .padding(5)
+                }
             }
-            
-            Button(action: { sheet = .emergencySettings }) {
-                Image(systemName: "exclamationmark.triangle")
-                    .foregroundColor(settingsStore.isAlertActivated ? .red : .yellow)
-            }
-            
-            Button(action: { sheet = .chat }) {
-                Image(systemName: "bubble.left")
-            }
-            
-            Button(action: { sheet = .settings }) {
-                Image(systemName: "line.3.horizontal")
-            }
+            .contentShape(Rectangle())
         }
         .padding(.horizontal)
         .padding(.top)

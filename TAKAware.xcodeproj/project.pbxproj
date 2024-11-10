@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,7 +13,6 @@
 		4630FD192B5071BD00988ED4 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD162B5071BD00988ED4 /* String+Extension.swift */; };
 		4630FD1A2B5071BD00988ED4 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD182B5071BD00988ED4 /* ChatViewModel.swift */; };
 		4630FD1C2B5071D200988ED4 /* MessageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD1B2B5071D200988ED4 /* MessageData.swift */; };
-		4630FD1E2B5072D300988ED4 /* Sheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD1D2B5072D300988ED4 /* Sheet.swift */; };
 		4630FD4C2B51A34500988ED4 /* MessageModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD4A2B51A34500988ED4 /* MessageModel.xcdatamodeld */; };
 		479B8B617AB264363ABCD93B /* Pods_TAKAware_TAKAwareTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEFD401A913144B7229D2781 /* Pods_TAKAware_TAKAwareTests.framework */; };
 		A5014F9B2C178C5300BE40C1 /* Migrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5014F9A2C178C5300BE40C1 /* Migrator.swift */; };
@@ -3440,7 +3439,6 @@
 		4630FD162B5071BD00988ED4 /* String+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		4630FD182B5071BD00988ED4 /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4630FD1B2B5071D200988ED4 /* MessageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageData.swift; sourceTree = "<group>"; };
-		4630FD1D2B5072D300988ED4 /* Sheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheet.swift; sourceTree = "<group>"; };
 		4630FD4B2B51A34500988ED4 /* Message.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Message.xcdatamodel; sourceTree = "<group>"; };
 		4B2EC40D21C80BEBE05D29F8 /* Pods-TAKAware.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKAware.debug.xcconfig"; path = "Target Support Files/Pods-TAKAware/Pods-TAKAware.debug.xcconfig"; sourceTree = "<group>"; };
 		94A6A10561B512E86B0E9DC2 /* Pods-TAKAware.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKAware.release.xcconfig"; path = "Target Support Files/Pods-TAKAware/Pods-TAKAware.release.xcconfig"; sourceTree = "<group>"; };
@@ -6813,6 +6811,10 @@
 		CEFD401A913144B7229D2781 /* Pods_TAKAware_TAKAwareTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TAKAware_TAKAwareTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7150D9B3F41CFFF2C34C4A3 /* Pods-TAKAware-TAKAwareTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKAware-TAKAwareTests.release.xcconfig"; path = "Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A5CF82012CE02DB700CBE744 /* Sheets */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Sheets; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A5D8D3772A53B0F9002F0E3E /* Frameworks */ = {
@@ -10338,6 +10340,7 @@
 		A5E2F8FD2A791F3000EDD0B4 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				A5CF82012CE02DB700CBE744 /* Sheets */,
 				A595F6642C278C9A00E81976 /* MainScreens */,
 				4630FD0F2B5071A100988ED4 /* Chat */,
 				4630FD112B5071A100988ED4 /* Message */,
@@ -10373,7 +10376,6 @@
 				A5E7B0172A76AA8B00D9203F /* TAKLogger.swift */,
 				A55CE96A2AB1D8860081AF86 /* Converter.swift */,
 				4630FD0D2B506EC000988ED4 /* Palette+Color.swift */,
-				4630FD1D2B5072D300988ED4 /* Sheet.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -10426,6 +10428,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A5CF82012CE02DB700CBE744 /* Sheets */,
 			);
 			name = TAKAware;
 			packageProductDependencies = (
@@ -13991,7 +13996,6 @@
 				4630FD192B5071BD00988ED4 /* String+Extension.swift in Sources */,
 				4630FD1A2B5071BD00988ED4 /* ChatViewModel.swift in Sources */,
 				A55ABF4B2ABDC05800195AB7 /* AdvancedModeToggle.swift in Sources */,
-				4630FD1E2B5072D300988ED4 /* Sheet.swift in Sources */,
 				A5E2D0BB2C3F1E47009FCD51 /* ChannelOptions.swift in Sources */,
 				A578E4382C55B3E1001978D4 /* DataSyncManager.swift in Sources */,
 				A5B312CE2C39DD38007B3914 /* StreamParser.swift in Sources */,

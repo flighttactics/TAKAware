@@ -108,16 +108,6 @@ class StreamParser: NSObject {
     func parseCoTStream(dataStream: Data?) {
         guard let dataStream = dataStream else { return }
 
-        // t-x-d-d is a delete event
-        // t-x-m-* for when data sync things change
-        // use a different icon when it's a contact / person
-        // make sure we're parsing complete XMLs
-        // fix icon tapping
-        // fix full screen windows that can't be dismissed
-        // make sure channels works with data packages and servers w/o channels enabled?
-        // This could also be an alert
-        // This could also be a chat message
-        // Bloodhound w/bearing and distance
         let events = parse(dataStream: dataStream)
         for xmlEvent in events {
             guard let cotEvent = cotParser.parse(xmlEvent) else {
