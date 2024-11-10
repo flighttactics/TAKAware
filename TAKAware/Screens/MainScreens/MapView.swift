@@ -165,13 +165,17 @@ struct MapView: UIViewRepresentable {
     @State var bloodhoundEndAnnotation: MapPointAnnotation?
     @State var activeCircle: MKCircle?
     @State var currentRotation: UIDeviceOrientation = UIDevice.current.orientation
+    
+    var shouldForceInitialTracking: Bool {
+        return region.center.latitude == 0.0 || region.center.longitude == 0.0
+    }
 
     func makeUIView(context: Context) -> MKMapView {
         mapView.delegate = context.coordinator
         mapView.setRegion(region, animated: true)
         mapView.setCenter(region.center, animated: true)
         mapView.showsUserLocation = true
-        mapView.userTrackingMode = .none
+        mapView.userTrackingMode = shouldForceInitialTracking ? .follow : .none
         mapView.showsCompass = false
         mapView.pointOfInterestFilter = .excludingAll
         mapView.mapType = MKMapType(rawValue: UInt(mapType))!
