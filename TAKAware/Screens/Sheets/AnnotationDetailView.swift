@@ -18,8 +18,8 @@ struct AnnotationDetailView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            ScrollView {
+        NavigationView {
+            List {
                 if annotation == nil {
                     Text("No Map Item Selected")
                 } else {
@@ -36,14 +36,12 @@ struct AnnotationDetailView: View {
                         }
                         Image(uiImage: iconImage())
                     }
-                    
                 }
-                Button("Close", action: {
-                    dismiss()
-                })
             }
+            .navigationBarItems(trailing: Button("Close", action: {
+                dismiss()
+            }))
         }
-        .padding()
-        .padding(.top, 20)
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }

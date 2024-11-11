@@ -14,7 +14,7 @@ struct PlayerView: UIViewRepresentable {
     public var url: String
     let mediaPlayer = VLCMediaPlayer()
     func makeUIView(context: Context) -> UIView {
-
+        TAKLogger.debug("[PlayerView] Attempting to play \(url)")
         let controller = UIView()
         mediaPlayer.drawable = controller
         let uri = URL(string: self.url)
@@ -34,18 +34,19 @@ struct VideoPlayerView: View {
     @State var currentPlayer: VLCMediaPlayer = VLCMediaPlayer()
 
     var body: some View {
-        VStack(alignment: .leading) {
-            if annotation == nil || annotation!.videoURL == nil {
-                Text("No Video Source Selected")
-            } else {
-                PlayerView(url: annotation!.videoURL!.absoluteString)
-                    .cornerRadius(10)
+        NavigationView {
+            VStack(alignment: .leading) {
+                if annotation == nil || annotation!.videoURL == nil {
+                    Text("No Video Source Selected")
+                } else {
+                    PlayerView(url: annotation!.videoURL!.absoluteString)
+                        .cornerRadius(10)
+                }
             }
-            Button("Close", action: {
+            .navigationBarItems(trailing: Button("Close", action: {
                 dismiss()
-            })
+            }))
         }
-        .padding()
-        .padding(.top, 20)
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
