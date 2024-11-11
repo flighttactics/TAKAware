@@ -165,6 +165,8 @@ struct MapView: UIViewRepresentable {
     @State var activeBloodhound: MKGeodesicPolyline?
     @State var bloodhoundStartAnnotation: MapPointAnnotation?
     @State var bloodhoundEndAnnotation: MapPointAnnotation?
+    @State var bloodhoundStartCoordinate: CLLocationCoordinate2D?
+    @State var bloodhoundEndCoordinate: CLLocationCoordinate2D?
     @State var activeCircle: MKCircle?
     @State var currentRotation: UIDeviceOrientation = UIDevice.current.orientation
     
@@ -197,7 +199,12 @@ struct MapView: UIViewRepresentable {
         
         if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
             mapView.removeOverlay(activeBloodhound!)
-            DispatchQueue.main.async { activeBloodhound = nil }
+            DispatchQueue.main.async {
+                activeBloodhound = nil
+                bloodhoundStartCoordinate = nil
+                bloodhoundEndCoordinate = nil
+                bloodhoundEndAnnotation = nil
+            }
         }
         
         let incomingData = mapPointsData
@@ -207,6 +214,7 @@ struct MapView: UIViewRepresentable {
         let new = Set(incomingData.map { $0.id!.uuidString })
         let toRemove = Array(current.symmetricDifference(new))
         let toAdd = Array(new.symmetricDifference(current))
+        let toUpdate = Array(current.intersection(new))
 
         if !toRemove.isEmpty {
             let removableAnnotations = existingAnnotations.filter {
@@ -225,20 +233,26 @@ struct MapView: UIViewRepresentable {
             mpAnnotation.cotType = updatedMp.cotType
             mpAnnotation.coordinate = updatedMp.coordinate
             mpAnnotation.remarks = updatedMp.remarks
-//            if mpAnnotation == bloodhoundEndAnnotation {
-//                TAKLogger.debug("Bloodhound endpoint being updated! \(mpAnnotation.title!)")
-//                let userLocation = mapView.userLocation.coordinate
-//                let endPointLocation = mpAnnotation.coordinate
-//                let newBloodhound = MKGeodesicPolyline(coordinates: [userLocation, endPointLocation], count: 2)
-//                mapView.addOverlay(newBloodhound)
-//                if(activeBloodhound != nil) {
-//                    mapView.removeOverlay(activeBloodhound!)
-//                }
-//                DispatchQueue.main.async {
-//                    activeBloodhound = newBloodhound
-//                    bloodhoundEndAnnotation = mpAnnotation
-//                }
-//            }
+            if mpAnnotation.id == bloodhoundEndAnnotation?.id {
+                let userLocation = mapView.userLocation.coordinate
+                let endPointLocation = mpAnnotation.coordinate
+                if(userLocation.latitude != bloodhoundStartCoordinate?.latitude ||
+                   userLocation.longitude != bloodhoundStartCoordinate?.longitude ||
+                   endPointLocation.latitude != bloodhoundEndCoordinate?.latitude ||
+                   endPointLocation.longitude != bloodhoundEndCoordinate?.longitude
+                ){
+                    TAKLogger.debug("Bloodhound endpoint being updated! \(mpAnnotation.title!)")
+                    DispatchQueue.main.async {
+                        if(activeBloodhound != nil) {
+                            TAKLogger.debug("[MapView] Removing old bloodhound line")
+                            mapView.removeOverlay(activeBloodhound!)
+                        } else {
+                            TAKLogger.debug("[MapView] Updated Bloodhound line by no activeBloodhound")
+                        }
+                        createBloodhound(annotation: updatedMp)
+                    }
+                }
+            }
         }
 
         if !toAdd.isEmpty {
@@ -261,6 +275,8 @@ struct MapView: UIViewRepresentable {
         let userLocation = mapView.userLocation.coordinate
         let endPointLocation = annotation.coordinate
         TAKLogger.debug("[MapView] Adding Bloodhound line to \(annotation.title!)")
+        bloodhoundStartCoordinate = userLocation
+        bloodhoundEndCoordinate = endPointLocation
         bloodhoundEndAnnotation = annotation
         activeBloodhound = MKGeodesicPolyline(coordinates: [userLocation, endPointLocation], count: 2)
         mapView.addOverlay(activeBloodhound!)
@@ -314,12 +330,6 @@ struct MapView: UIViewRepresentable {
             if(parent.isAcquiringBloodhoundTarget &&
                mapReadyForBloodhoundTarget) {
                 parent.createBloodhound(annotation: mpAnnotation!)
-//                TAKLogger.debug("[MapView] Adding Bloodhound line")
-//                parent.bloodhoundEndAnnotation = mpAnnotation
-//                parent.activeBloodhound = MKGeodesicPolyline(coordinates: [userLocation, endPointLocation], count: 2)
-//                
-//                mapView.addOverlay(parent.activeBloodhound!)
-//                mapView.deselectAnnotation(annotation, animated: false)
             }
         }
         

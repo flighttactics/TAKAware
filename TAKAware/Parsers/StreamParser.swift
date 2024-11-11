@@ -66,45 +66,6 @@ class StreamParser: NSObject {
         }
     }
     
-    func parseBit(cotEvent: COTEvent, rawXml: String) {
-        let fetchMarker: NSFetchRequest<COTData> = COTData.fetchRequest()
-        fetchMarker.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
-        
-        dataController.persistentContainer.performBackgroundTask { (dataContext) in
-            dataContext.mergePolicy = NSMergePolicy.overwrite
-            let results = try? dataContext.fetch(fetchMarker)
-            
-            let mapPointData: COTData!
-            
-            if results?.count == 0 {
-                mapPointData = COTData(context: dataContext)
-                mapPointData.id = UUID()
-                mapPointData.cotUid = cotEvent.uid
-             } else {
-                 mapPointData = results?.first
-             }
-
-            mapPointData.callsign = cotEvent.cotDetail?.cotContact?.callsign ?? "UNKNOWN"
-            mapPointData.latitude = Double(cotEvent.cotPoint?.lat ?? "0.0") ?? 0.0
-            mapPointData.longitude = Double(cotEvent.cotPoint?.lon ?? "0.0") ?? 0.0
-            mapPointData.remarks = cotEvent.cotDetail?.cotRemarks?.message ?? ""
-            mapPointData.cotType = cotEvent.type
-            mapPointData.icon = cotEvent.cotDetail?.cotUserIcon?.iconsetPath ?? ""
-            mapPointData.iconColor = cotEvent.cotDetail?.cotColor?.argb.description ?? ""
-            mapPointData.startDate = cotEvent.start
-            mapPointData.updateDate = cotEvent.time
-            mapPointData.staleDate = cotEvent.stale
-            mapPointData.archived = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
-            mapPointData.rawXml = rawXml
-
-            do {
-                try dataContext.save()
-            } catch {
-                TAKLogger.error("[StreamParser] Invalid Data Context Save \(error)")
-            }
-        }
-    }
-    
     func parseCoTStream(dataStream: Data?) {
         guard let dataStream = dataStream else { return }
 
