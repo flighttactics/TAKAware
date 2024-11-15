@@ -10,11 +10,9 @@ import Foundation
 import SwiftTAK
 import SWXMLHash
 
-class StreamParser: NSObject {
+class StreamParser: COTDataParser {
     
     static let STREAM_DELIMTER = "</event>"
-    var dataController = DataController.shared
-    var cotParser: COTXMLParser = COTXMLParser()
     
     func parse(dataStream: Data?) -> Array<String> {
         guard let data = dataStream else { return [] }
@@ -22,48 +20,6 @@ class StreamParser: NSObject {
         return str.components(separatedBy: StreamParser.STREAM_DELIMTER)
             .filter { !$0.isEmpty }
             .map { "\($0)\(StreamParser.STREAM_DELIMTER)" }
-    }
-    
-    func parseAtom(cotEvent: COTEvent, rawXml: String) {
-        let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
-        fetchUser.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
-        
-        dataController.persistentContainer.performBackgroundTask { (dataContext) in
-            dataContext.mergePolicy = NSMergePolicy.overwrite
-            let results = try? dataContext.fetch(fetchUser)
-            
-            let mapPointData: COTData!
-            
-            if results?.count == 0 {
-                mapPointData = COTData(context: dataContext)
-                mapPointData.id = UUID()
-                mapPointData.cotUid = cotEvent.uid
-             } else {
-                 mapPointData = results?.first
-             }
-            
-            let cotVideoURL: URL? = URL(string: cotEvent.cotDetail?.cotVideo?.url ?? "")
-
-            mapPointData.callsign = cotEvent.cotDetail?.cotContact?.callsign ?? "UNKNOWN"
-            mapPointData.latitude = Double(cotEvent.cotPoint?.lat ?? "0.0") ?? 0.0
-            mapPointData.longitude = Double(cotEvent.cotPoint?.lon ?? "0.0") ?? 0.0
-            mapPointData.remarks = cotEvent.cotDetail?.cotRemarks?.message ?? ""
-            mapPointData.cotType = cotEvent.type
-            mapPointData.icon = cotEvent.cotDetail?.cotUserIcon?.iconsetPath ?? ""
-            mapPointData.iconColor = cotEvent.cotDetail?.cotColor?.argb.description ?? ""
-            mapPointData.startDate = cotEvent.start
-            mapPointData.updateDate = cotEvent.time
-            mapPointData.staleDate = cotEvent.stale
-            mapPointData.archived = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
-            mapPointData.rawXml = rawXml
-            mapPointData.videoURL = cotVideoURL ?? nil
-
-            do {
-                try dataContext.save()
-            } catch {
-                TAKLogger.error("[StreamParser] Invalid Data Context Save \(error)")
-            }
-        }
     }
     
     func parseCoTStream(dataStream: Data?) {

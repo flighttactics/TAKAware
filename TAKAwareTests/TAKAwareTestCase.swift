@@ -5,6 +5,7 @@
 //  Created by Cory Foy on 10/10/23.
 //
 
+import CoreData
 import Foundation
 import XCTest
 

@@ -12,6 +12,13 @@ class DataController: ObservableObject {
     
     static let shared = DataController()
     
+    lazy var backgroundContext: NSManagedObjectContext = {
+        let context = persistentContainer.newBackgroundContext()
+        context.automaticallyMergesChangesFromParent = true
+        context.mergePolicy = NSMergePolicy.overwrite
+        return context
+    }()
+    
     lazy var persistentContainer: NSPersistentContainer = {
         
         // Pass the data model filename to the container’s initializer.
@@ -65,8 +72,7 @@ class DataController: ObservableObject {
     }
     
     func clearMap(query: NSPredicate) {
-        self.persistentContainer.performBackgroundTask { dataContext in
-            dataContext.mergePolicy = NSMergePolicy.overwrite
+        backgroundContext.perform {
             let fetch = COTData.fetchRequest()
             fetch.predicate = query
             fetch.includesPropertyValues = false
@@ -75,13 +81,13 @@ class DataController: ObservableObject {
             //request.resultType = .resultTypeObjectIDs
             
             do {
-                let result = try dataContext.fetch(fetch)
+                let result = try self.backgroundContext.fetch(fetch)
                 let count = result.count
                 TAKLogger.debug("[DataController]: This query will impact \(count) records")
                 for row in result {
-                    dataContext.delete(row)
+                    self.backgroundContext.delete(row)
                 }
-                try dataContext.save()
+                try self.backgroundContext.save()
 //                let deleteResult = try dataContext.execute(request) as? NSBatchDeleteResult
 //                if let objectIDs = deleteResult?.result as? [NSManagedObjectID] {
 //                    // Merge the deletions into the app's managed object context.

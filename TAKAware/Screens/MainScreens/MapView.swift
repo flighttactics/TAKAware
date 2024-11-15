@@ -157,7 +157,9 @@ struct MapView: UIViewRepresentable {
     @Binding var isAcquiringBloodhoundTarget: Bool
     @Binding var isDetailViewOpen: Bool
     @Binding var isVideoPlayerOpen: Bool
+    @Binding var isDeconflictionViewOpen: Bool
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    @Binding var conflictedItems: [MapPointAnnotation]
     
     @FetchRequest(sortDescriptors: []) var mapPointsData: FetchedResults<COTData>
 
@@ -182,16 +184,22 @@ struct MapView: UIViewRepresentable {
         mapView.userTrackingMode = shouldForceInitialTracking ? .follow : .none
         mapView.showsCompass = false
         mapView.pointOfInterestFilter = .excludingAll
-        mapView.mapType = MKMapType(rawValue: UInt(mapType))!
+        mapView.mapType = .standard //MKMapType(rawValue: UInt(mapType))!
         mapView.layer.borderColor = UIColor.black.cgColor
         mapView.layer.borderWidth = 1.0
         mapView.isHidden = false
+        
+//        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
+//        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
+//        let googleHybridOverlay = MKTileOverlay(urlTemplate:templateUrl)
+//        googleHybridOverlay.canReplaceMapContent = true
+//        mapView.addOverlay(googleHybridOverlay, level: .aboveLabels)
 
         return mapView
     }
 
     func updateUIView(_ view: MKMapView, context: Context) {
-        view.mapType = MKMapType(rawValue: UInt(mapType))!
+        view.mapType = .standard//MKMapType(rawValue: UInt(mapType))!
         updateAnnotations(from: view)
     }
     
@@ -214,7 +222,6 @@ struct MapView: UIViewRepresentable {
         let new = Set(incomingData.map { $0.id!.uuidString })
         let toRemove = Array(current.symmetricDifference(new))
         let toAdd = Array(new.symmetricDifference(current))
-        let toUpdate = Array(current.intersection(new))
 
         if !toRemove.isEmpty {
             let removableAnnotations = existingAnnotations.filter {
@@ -297,14 +304,19 @@ struct MapView: UIViewRepresentable {
         }
 
         @objc func tapHandler(_ gesture: UITapGestureRecognizer) {
+            let mapView = self.parent.mapView
             // position on the screen, CGPoint
-            let location = gRecognizer.location(in: self.parent.mapView)
+            let location = gRecognizer.location(in: mapView)
             // position on the map, CLLocationCoordinate2D
-            let coordinate = self.parent.mapView.convert(location, toCoordinateFrom: self.parent.mapView)
-            TAKLogger.debug("Map Tapped! \(String(describing: coordinate))")
-            if parent.activeCircle != nil {
-                self.parent.mapView.removeOverlay(parent.activeCircle!)
-                DispatchQueue.main.async { self.parent.activeCircle = nil }
+            let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
+            let tappedLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            TAKLogger.debug("Map Tapped! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta)")
+            let tapRadius = 5000 * mapView.region.span.latitudeDelta
+            let closeMarkers = mapView.annotations.filter { $0 is MapPointAnnotation && tappedLocation.distance(from: CLLocation(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)) < tapRadius }
+            TAKLogger.debug("There are \(closeMarkers.count) markers within \(tapRadius) meters")
+            if(closeMarkers.count > 1) {
+                parent.conflictedItems = closeMarkers as! [MapPointAnnotation]
+                parent.isDeconflictionViewOpen = true
             }
         }
         
@@ -317,6 +329,7 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, didSelect annotation: any MKAnnotation) {
+            guard !parent.isDeconflictionViewOpen else { return }
             guard let mpAnnotation = annotation as? MapPointAnnotation? else {
                 TAKLogger.debug("[MapView] Unknown annotation type selected")
                 return
@@ -334,25 +347,28 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+            if let tileOverlay = overlay as? MKTileOverlay {
+                return MKTileOverlayRenderer(tileOverlay: tileOverlay)
+            }
+
             if let overlay = overlay as? MKCircle {
-                TAKLogger.debug("We have a Circle Overlay!")
                 let circleRenderer = MKCircleRenderer(circle: overlay)
                 print(overlay.coordinate)
                 circleRenderer.strokeColor = .red
                 circleRenderer.fillColor = .blue
                 return circleRenderer
             }
-        
-            guard let polyline = overlay as? MKPolyline else {
-                return MKOverlayRenderer()
+            
+            if let polyline = overlay as? MKPolyline {
+                let renderer = MKPolylineRenderer(polyline: polyline)
+                renderer.lineWidth = 3.0
+                renderer.alpha = 0.8
+                renderer.strokeColor = UIColor(red: 0.729, green: 0.969, blue: 0.2, alpha: 1) // #baf733
+                
+                return renderer
             }
-            
-            let renderer = MKPolylineRenderer(polyline: polyline)
-            renderer.lineWidth = 3.0
-            renderer.alpha = 0.5
-            renderer.strokeColor = UIColor.blue
-            
-            return renderer
+        
+            return MKOverlayRenderer()
         }
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {

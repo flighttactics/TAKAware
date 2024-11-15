@@ -18,6 +18,7 @@ import ZIPFoundation
 final class DataPackageParserTests: TAKAwareTestCase {
     var parser:TAKDataPackageParser? = nil
     var archiveURL:URL? = nil
+    let queue = DispatchQueue(label: "DataPackageParserTests")
 
     override func setUpWithError() throws {
         let bundle = Bundle(for: Self.self)
@@ -69,19 +70,12 @@ final class DataPackageParserTests: TAKAwareTestCase {
         contents.userCertificatePassword = TestConstants.DEFAULT_CERT_PASSWORD
         contents.serverURL = TestConstants.TEST_HOST
         
-        parser!.storeUserCertificate(packageContents: contents)
+        parser!.storeUserCertificate(packageContents: contents, on: queue)
         
-        let getquery: [String: Any] = [kSecClass as String:  kSecClassIdentity,
-                                       kSecAttrLabel as String: TestConstants.TEST_HOST,
-                                       kSecReturnRef as String: kCFBooleanTrue!]
+        // Wait for queue to sync so we know it stored
+        queue.sync {}
         
-        var item: CFTypeRef?
-        let status = SecItemCopyMatching(getquery as CFDictionary, &item)
-        guard status == errSecSuccess else {
-            XCTFail("Identity was not stored in the keychain \(String(describing: status))")
-            return
-        }
-        let identity = item as! SecIdentity
+        let identity = SettingsStore.global.retrieveIdentity(label: TestConstants.TEST_HOST)
 
         XCTAssertNotNil(identity, "Identity was not stored in the Keychain")
     }

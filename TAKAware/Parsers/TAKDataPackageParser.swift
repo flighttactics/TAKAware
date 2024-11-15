@@ -29,10 +29,10 @@ class TAKDataPackageParser: NSObject {
         TAKLogger.debug("[TAKDataPackageParser]: Completed Parsing")
     }
     
-    func storeUserCertificate(packageContents: DataPackageContents) {
+    func storeUserCertificate(packageContents: DataPackageContents, on: DispatchQueue = DispatchQueue.global(qos: .background)) {
         TAKLogger.debug("[TAKDataPackageParser]: Storing User Certificate")
         
-        DispatchQueue.global(qos: .background).async {
+        on.async {
             //Parse the cert file
             let parsedCert = PKCS12(data: packageContents.userCertificate, password: packageContents.userCertificatePassword)
             

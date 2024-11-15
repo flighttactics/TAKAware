@@ -37,12 +37,15 @@ struct AwarenessView: View {
     @State private var isAcquiringBloodhoundTarget: Bool = false
     @State private var isDetailViewOpen: Bool = false
     @State private var isVideoPlayerOpen: Bool = false
+    @State private var isDeconflictionViewOpen: Bool = false
     @State private var currentSelectedAnnotation: MapPointAnnotation?
+    @State private var conflictedItems: [MapPointAnnotation] = []
     
     func formatOrZero(item: Double?, formatter: String = "%.0f") -> String {
         guard let item = item else {
             return "0"
         }
+
         return String(format: formatter, item)
     }
     
@@ -84,6 +87,12 @@ struct AwarenessView: View {
                 .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
                 .presentationContentInteraction(.scrolls)
         })
+        .sheet(isPresented: $isDeconflictionViewOpen, content: {
+            DeconflictionSheet(conflictedItems: $conflictedItems, currentSelectedAnnotation: $currentSelectedAnnotation)
+                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
+                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
+                .presentationContentInteraction(.scrolls)
+        })
         .background(Color.baseMediumGray)
         .ignoresSafeArea()
         .overlay(alignment: .bottomTrailing, content: {
@@ -99,7 +108,9 @@ struct AwarenessView: View {
             isAcquiringBloodhoundTarget: $isAcquiringBloodhoundTarget,
             isDetailViewOpen: $isDetailViewOpen, 
             isVideoPlayerOpen: $isVideoPlayerOpen,
-            currentSelectedAnnotation: $currentSelectedAnnotation
+            isDeconflictionViewOpen: $isDeconflictionViewOpen,
+            currentSelectedAnnotation: $currentSelectedAnnotation,
+            conflictedItems: $conflictedItems
         )
         .ignoresSafeArea(edges: .all)
     }
