@@ -8,7 +8,7 @@
 import SwiftUI
 import MapKit
 
-let navBarAppearence = UINavigationBarAppearance()
+let navBarAppearance = UINavigationBarAppearance()
 
 // A View wrapper to make the modifier easier to use
 extension View {
@@ -28,7 +28,7 @@ struct MainScreen: View {
     
     var body: some View {
         Group {
-            if(settingsStore.enableAdvancedMode) {
+            if(settingsStore.enableMapDisplay) {
                 AwarenessView(displayUIState: $displayUIState)
             } else {
                 TrackerView(displayUIState: $displayUIState)

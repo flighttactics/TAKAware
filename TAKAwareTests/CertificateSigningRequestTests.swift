@@ -13,8 +13,9 @@ import X509
 import XCTest
 import SwiftTAK
 import NIOSSL
+@testable import TAKAware
 
-final class CertificateSigningRequestTests: TAKTrackerTestCase {
+final class CertificateSigningRequestTests: TAKAwareTestCase {
     
     var certString = ""
     var ca0 = ""

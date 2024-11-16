@@ -70,4 +70,15 @@ class UDPMessage: NSObject, ObservableObject {
         TAKLogger.debug("[UDPMessage]: Starting UDP Connection")
         connection!.start(queue: .global())
     }
+    
+    func receive(content: Data?, error: NWError?, connection: NWConnection?) {
+        guard let data = content else { return }
+
+        let parser = StreamParser()
+        parser.parseCoTStream(dataStream: data)
+
+        self.connection?.receive(minimumIncompleteLength: 0, maximumLength: 8000) { content, _, _, error in
+            self.receive(content: content, error: error, connection: connection)
+        }
+    }
 }

@@ -1,0 +1,46 @@
+{
+  "configurations" : [
+    {
+      "id" : "2ACD55B5-9356-4A05-9607-6C7B3C2BB276",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SwiftTAKTests",
+        "name" : "SwiftTAKTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/TAKAware\/TAKAware.xcodeproj",
+        "identifier" : "A5D8D3892A53B0FA002F0E3E",
+        "name" : "TAKAwareTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..\/TAKAware\/TAKAware.xcodeproj",
+        "identifier" : "A5D8D3932A53B0FB002F0E3E",
+        "name" : "TAKAwareUITests"
+      }
+    },
+    {
+      "enabled" : false,
+      "target" : {
+        "containerPath" : "container:..\/swift-nio-ssl",
+        "identifier" : "NIOSSLTests",
+        "name" : "NIOSSLTests"
+      }
+    }
+  ],
+  "version" : 1
+}

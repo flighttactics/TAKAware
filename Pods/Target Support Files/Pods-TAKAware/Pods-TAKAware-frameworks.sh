@@ -180,12 +180,14 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/grid-ios/grid_ios.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/mgrs-ios/mgrs_ios.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/sf-ios/sf_ios.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/MobileVLCKit/MobileVLCKit.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/color-ios/color_ios.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/grid-ios/grid_ios.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/mgrs-ios/mgrs_ios.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/sf-ios/sf_ios.framework"
+  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/MobileVLCKit/MobileVLCKit.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

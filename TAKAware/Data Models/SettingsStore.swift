@@ -139,9 +139,9 @@ class SettingsStore: ObservableObject {
         }
     }
     
-    @Published var enableAdvancedMode: Bool {
+    @Published var enableMapDisplay: Bool {
         didSet {
-            UserDefaults.standard.set(enableAdvancedMode, forKey: "enableAdvancedMode")
+            UserDefaults.standard.set(enableMapDisplay, forKey: "enableMapDisplay")
         }
     }
     
@@ -257,10 +257,18 @@ class SettingsStore: ObservableObject {
             UserDefaults.standard.set(lastAppVersionRun, forKey: "lastAppVersionRun")
         }
     }
+    
+    @Published var preferredInterface: String {
+        didSet {
+            UserDefaults.standard.set(preferredInterface, forKey: "preferredInterface")
+        }
+    }
 
     private init() {
         let defaultSign = SettingsStore.generateDefaultCallSign()
         self.lastAppVersionRun = (UserDefaults.standard.object(forKey: "lastAppVersionRun") == nil ? "" : UserDefaults.standard.object(forKey: "lastAppVersionRun") as! String)
+        
+        self.preferredInterface = (UserDefaults.standard.object(forKey: "preferredInterface") == nil ? "" : UserDefaults.standard.object(forKey: "preferredInterface") as! String)
         
         self.callSign = (UserDefaults.standard.object(forKey: "callSign") == nil ? defaultSign : UserDefaults.standard.object(forKey: "callSign") as! String)
         
@@ -286,7 +294,7 @@ class SettingsStore: ObservableObject {
         
         self.broadcastIntervalSeconds = (UserDefaults.standard.object(forKey: "broadcastIntervalSeconds") == nil ? 10.0 : UserDefaults.standard.object(forKey: "broadcastIntervalSeconds") as! Double)
         
-        self.enableAdvancedMode = (UserDefaults.standard.object(forKey: "enableAdvancedMode") == nil ? false : UserDefaults.standard.object(forKey: "enableAdvancedMode") as! Bool)
+        self.enableMapDisplay = (UserDefaults.standard.object(forKey: "enableMapDisplay") == nil ? true : UserDefaults.standard.object(forKey: "enableMapDisplay") as! Bool)
         
         self.disableScreenSleep = (UserDefaults.standard.object(forKey: "disableScreenSleep") == nil ? true : UserDefaults.standard.object(forKey: "disableScreenSleep") as! Bool)
         

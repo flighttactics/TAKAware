@@ -17,7 +17,7 @@ struct TAKTrackerApp: App {
     @StateObject private var dataController = DataController.shared
     
     init() {
-        TAKLogger.debug("Hello, TAK Tracker!")
+        TAKLogger.debug("Hello, TAK Aware!")
     }
 
     var body: some Scene {
@@ -27,7 +27,7 @@ struct TAKTrackerApp: App {
                     .environmentObject(locationManager)
                     .environmentObject(takManager)
                     .environmentObject(settingsStore)
-                    .environment(\.managedObjectContext, dataController.cotDataContainer.viewContext)
+                    .environment(\.managedObjectContext, dataController.persistentContainer.viewContext)
                     .onAppear {
                         dataController.startCleanUpTimer()
                         settingsStore.isConnectingToServer = false
@@ -42,7 +42,7 @@ struct TAKTrackerApp: App {
                     .environmentObject(locationManager)
                     .environmentObject(takManager)
                     .environmentObject(settingsStore)
-                    .environment(\.managedObjectContext, dataController.cotDataContainer.viewContext)
+                    .environment(\.managedObjectContext, dataController.persistentContainer.viewContext)
                     .onAppear {
                         dataController.startCleanUpTimer()
                         settingsStore.isConnectingToServer = false

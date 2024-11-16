@@ -7,8 +7,9 @@
 
 import Foundation
 import XCTest
+@testable import TAKAware
 
-final class ChannelManagerTests: TAKTrackerTestCase {
+final class ChannelManagerTests: TAKAwareTestCase {
     
     let CHANNEL_CREATION_DATE = "2024-03-01"
     let CHANNEL_CREATION_DATE_FORMAT = "yyyy-MM-dd"

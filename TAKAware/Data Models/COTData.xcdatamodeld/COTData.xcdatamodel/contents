@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="COTData" representedClassName="COTData" syncable="YES" codeGenerationType="class">
+        <attribute name="archived" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="callsign" optional="YES" attributeType="String"/>
         <attribute name="cotHow" optional="YES" attributeType="String"/>
         <attribute name="cotType" optional="YES" attributeType="String"/>
@@ -10,9 +11,11 @@
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="rawXml" optional="YES" attributeType="String"/>
         <attribute name="remarks" optional="YES" attributeType="String"/>
         <attribute name="staleDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="videoURL" optional="YES" attributeType="URI"/>
     </entity>
 </model>

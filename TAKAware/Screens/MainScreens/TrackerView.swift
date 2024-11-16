@@ -24,13 +24,13 @@ struct TrackerView: View {
     }
     
     init(displayUIState: Binding<DisplayUIState>) {
-        navBarAppearence.configureWithOpaqueBackground()
-        navBarAppearence.backgroundColor = UIColor.baseDarkGray
-        navBarAppearence.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navBarAppearence.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        navBarAppearance.configureWithOpaqueBackground()
+        navBarAppearance.backgroundColor = UIColor.baseDarkGray
+        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         
-        UINavigationBar.appearance().standardAppearance = navBarAppearence
-        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearence
+        UINavigationBar.appearance().standardAppearance = navBarAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
         
         _displayUIState = displayUIState
     }

@@ -21,7 +21,7 @@ struct AdvancedModeToggle: View {
                     Spacer()
                 }
 
-                Picker(selection: $settingsStore.enableAdvancedMode, label: Text("Map Display"), content: {
+                Picker(selection: $settingsStore.enableMapDisplay, label: Text("Map Display"), content: {
                     Text("On").tag(true)
                     Text("Off").tag(false)
                 })

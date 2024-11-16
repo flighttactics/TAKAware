@@ -16,6 +16,8 @@ struct Sheet: View {
         case emergencySettings
         case settings
         case chat
+        case dataSync
+        case channels
         
         var id: String {
             switch self {
@@ -23,6 +25,8 @@ struct Sheet: View {
                 case .emergencySettings: return "emergencysettings"
                 case .settings: return "settings"
                 case .chat: return "chat"
+                case .dataSync: return "datapackage"
+                case .channels: return "channels"
             }
         }
     }
@@ -30,9 +34,11 @@ struct Sheet: View {
     @ViewBuilder private func make() -> some View {
         switch type {
             case .none: EmptyView()
-            case .emergencySettings: EmergencyView()
-            case .settings: SettingsView()
-            case .chat: ChatView()
+            case .emergencySettings: AlertSheet()
+        case .settings: SettingsSheet()
+            case .chat: ChatView() //ChatSheet()
+            case .dataSync: DataSyncSheet()
+            case .channels: ChannelSheet()
         }
     }
     

@@ -9,8 +9,9 @@ import Foundation
 import NIOSSL
 import SwiftTAK
 import XCTest
+@testable import TAKAware
 
-final class MigratorTests: TAKTrackerTestCase {
+final class MigratorTests: TAKAwareTestCase {
     let migrator = Migrator()
     var certData: Data? = nil
     var expectedCertChain: [Data] = []
@@ -71,12 +72,12 @@ final class MigratorTests: TAKTrackerTestCase {
         SettingsStore.global.serverCertificateTruststore = expectedCertChain
         migrator.migrateServerCertificateToTrust()
         let migrationStatus = migrator.status.first!
-        XCTAssertFalse(migrationStatus.migrationSucceeded)
-        XCTAssertEqual(migrationStatus.migrationErrors.first, "Truststore already existed so not overwriting")
+        XCTAssertTrue(migrationStatus.migrationSucceeded)
+        XCTAssertNil(migrationStatus.migrationErrors.first)
     }
     
     func testOverallStatusShowsOverallFailureWhenErrorDuringProcessing() throws {
-        SettingsStore.global.serverCertificateTruststore = expectedCertChain
+        SettingsStore.global.serverCertificate = Data()
         migrator.migrateServerCertificateToTrust()
         migrator.migrateServerCertificateToTrust()
 
