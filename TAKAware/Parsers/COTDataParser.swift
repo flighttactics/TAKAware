@@ -17,12 +17,12 @@ class COTDataParser: NSObject {
     func parseAtom(cotEvent: COTEvent, rawXml: String) {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
         fetchUser.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
-        
+
         dataContext.perform {
             let results = try? self.dataContext.fetch(fetchUser)
             
             let mapPointData: COTData!
-            
+
             if results?.count == 0 {
                 mapPointData = COTData(context: self.dataContext)
                 mapPointData.id = UUID()
@@ -30,7 +30,7 @@ class COTDataParser: NSObject {
              } else {
                  mapPointData = results?.first
              }
-            
+
             let cotVideoURL: URL? = URL(string: cotEvent.cotDetail?.cotVideo?.url ?? "")
 
             mapPointData.callsign = cotEvent.cotDetail?.cotContact?.callsign ?? "UNKNOWN"

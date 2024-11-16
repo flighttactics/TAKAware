@@ -22,11 +22,9 @@ final class DataPackageImporterTests: TAKAwareTestCase {
         parser = TAKDataPackageImporter.init(fileLocation: archiveURL!)
     }
     
-    func testImportsCoTMarkersToMap() {
-        let uid = "21c34910-65ad-451d-ad0b-b167507e1ed4"
-        let dataController = DataController.shared
-        let context = dataController.persistentContainer.newBackgroundContext()
-        parser!.dataContext = context
+    func testImportsCoTMarkersToMap() throws {
+        let uid = "5a5185fe-eb27-4b11-99ae-df04d54db10f"
+        let context = DataController.shared.backgroundContext
         parser!.parse()
         context.performAndWait {
             let fetchCoT: NSFetchRequest<COTData> = COTData.fetchRequest()
@@ -37,10 +35,6 @@ final class DataPackageImporterTests: TAKAwareTestCase {
     }
     
     func testTagsImportedMarkersAsBeingWithThisDataPackage() {
-        
-    }
-    
-    func testHandlesNonMarkersInCoTMessages() {
         
     }
 }
