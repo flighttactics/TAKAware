@@ -36,6 +36,7 @@ struct SettingsSheet: View {
                     SituationalAwarenessOptions()
                     AdvancedOptions()
                     ChannelOptions()
+                    DataPackageOptions()
                     AboutInformation()
                 }
             }

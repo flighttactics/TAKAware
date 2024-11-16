@@ -32,7 +32,9 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
         self.icon = mapPoint.icon ?? ""
         self.cotType = mapPoint.cotType ?? "a-U-G"
         self.coordinate = CLLocationCoordinate2D(latitude: mapPoint.latitude, longitude: mapPoint.longitude)
-        if mapPoint.iconColor != nil && mapPoint.iconColor!.isNotEmpty {
+        if mapPoint.iconColor != nil
+            && mapPoint.iconColor!.isNotEmpty
+            && mapPoint.iconColor! != "-1" {
             self.color = IconData.colorFromArgb(argbVal: Int(mapPoint.iconColor!)!)
         }
         self.remarks = mapPoint.remarks
@@ -56,6 +58,7 @@ class SituationalAnnotationView: MKAnnotationView {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         self.canShowCallout = true
         self.addSubview(annotationLabel)
+        self.zPriority = .min
         setUpMenu()
     }
     
@@ -285,8 +288,11 @@ struct MapView: UIViewRepresentable {
         bloodhoundStartCoordinate = userLocation
         bloodhoundEndCoordinate = endPointLocation
         bloodhoundEndAnnotation = annotation
+        if(activeBloodhound != nil) {
+            mapView.removeOverlay(activeBloodhound!)
+        }
         activeBloodhound = MKGeodesicPolyline(coordinates: [userLocation, endPointLocation], count: 2)
-        mapView.addOverlay(activeBloodhound!)
+        mapView.addOverlay(activeBloodhound!, level: .aboveLabels)
         mapView.deselectAnnotation(annotation, animated: false)
     }
 
@@ -364,7 +370,6 @@ struct MapView: UIViewRepresentable {
                 renderer.lineWidth = 3.0
                 renderer.alpha = 0.8
                 renderer.strokeColor = UIColor(red: 0.729, green: 0.969, blue: 0.2, alpha: 1) // #baf733
-                
                 return renderer
             }
         
@@ -383,6 +388,7 @@ struct MapView: UIViewRepresentable {
             var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
             
             if annotationView == nil {
+                NSLog("No annotation view yet, setting...")
                 annotationView = SituationalAnnotationView(
                     mapView: parent,
                     annotation: mpAnnotation,
@@ -395,8 +401,13 @@ struct MapView: UIViewRepresentable {
                 var pointIcon: UIImage = icon.icon
                 
                 if let pointColor = mpAnnotation.color {
-                    pointIcon = pointIcon.mask(with: pointColor)
+                    if pointIcon.isSymbolImage {
+                        pointIcon = pointIcon.maskSymbol(with: pointColor)
+                    } else {
+                        pointIcon = pointIcon.maskImage(with: pointColor)
+                    }
                 }
+                
                 annotationView!.image = pointIcon
             }
             return annotationView

@@ -84,8 +84,7 @@ class IconData {
                     // This is a unique spotmap
                     // So we'll return a circle
                     // where the imageName is the argb colors
-                    let spotColor = IconData.colorFromArgb(argbVal: Int(imageName)!)
-                    let spotMapImg = UIImage(systemName: "largecircle.fill.circle")!.mask(with: spotColor)
+                    let spotMapImg = UIImage(systemName: "smallcircle.filled.circle.fill")!
                     return Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: spotMapImg)
                 } else {
                     let bitMapCol = SQLite.Expression<Blob>("bitmap")
@@ -106,6 +105,8 @@ class IconData {
                         TAKLogger.error("[IconData] Error retrieving iconsetpath \(error)")
                     }
                 }
+            } else {
+                TAKLogger.debug("[IconData] Unknown iconset path split for path \(iconsetPath)")
             }
         }
 
@@ -113,12 +114,15 @@ class IconData {
         var uiImg = UIImage(named: milStdIconWithName(name: "sugp"))!
         
         if !dataBytes.isEmpty {
+            TAKLogger.debug("[IconData] Custom icon located, loading")
             let cgDp = CGDataProvider(data: dataBytes as CFData)!
             let cgImg = CGImage(pngDataProviderSource: cgDp, decode: nil, shouldInterpolate: false, intent: .perceptual)!
             uiImg = UIImage(cgImage: cgImg)
         } else {
+            TAKLogger.debug("[IconData] No custom icon located, attempting 2525 load")
             let mil2525iconName = IconData.mil2525FromCotType(cotType: type2525)
             if !mil2525iconName.isEmpty {
+                TAKLogger.debug("[IconData] Found a 2525 icon for \(type2525) - \(mil2525iconName)")
                 let img2525 = UIImage(named: mil2525iconName)
                 if img2525 != nil {
                     uiImg = img2525!
@@ -131,8 +135,7 @@ class IconData {
                 
             }
         }
-        
-        //let uiImg = UIImage(systemName: "circle.fill")!
+
         return Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: uiImg)
     }
     
@@ -168,7 +171,7 @@ class IconData {
         }
     }
     
-    // Rewritten from the Icon2525cTypeResolver.java
+    // Adapted from the Icon2525cTypeResolver.java
     // found in https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV
     static func mil2525FromCotType(cotType: String) -> String {
         guard cotType.count > 2 && cotType.first == "a" else {
@@ -187,9 +190,9 @@ class IconData {
         case "s", "j", "k", "h":
             s2525C = "sh"
         case "u":
-            s2525C = "u"
+            s2525C = "su"
         default:
-            s2525C = "u"
+            s2525C = "su"
         }
         
         var cotCharacters = Array(cotType)

@@ -45,8 +45,7 @@ class TAKDataPackageImporter: COTDataParser {
         guard !packageFiles.isEmpty else { return }
         packageFiles.forEach {
             if $0.shouldIgnore { return }
-            //if $0.fileLocation.hasSuffix(".cot") {
-            if $0.fileLocation == "5a5185fe-eb27-4b11-99ae-df04d54db10f/5a5185fe-eb27-4b11-99ae-df04d54db10f.cot" {
+            if $0.fileLocation.hasSuffix(".cot") {
                 let cotFile = parser.retrieveFileFromArchive($0)
                 let rawXml = String(decoding: cotFile, as: UTF8.self)
                 guard let cotEvent = cotParser.parse(rawXml) else {
