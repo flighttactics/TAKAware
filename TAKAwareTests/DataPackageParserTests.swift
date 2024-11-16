@@ -14,6 +14,7 @@ import SwiftTAK
 import X509
 import XCTest
 import ZIPFoundation
+@testable import TAKAware
 
 final class DataPackageParserTests: TAKAwareTestCase {
     var parser:TAKDataPackageParser? = nil

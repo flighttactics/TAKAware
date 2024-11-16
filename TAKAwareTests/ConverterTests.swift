@@ -7,6 +7,7 @@
 
 import MapKit
 import XCTest
+@testable import TAKAware
 
 final class ConverterTests: TAKAwareTestCase {
     

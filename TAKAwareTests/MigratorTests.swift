@@ -9,6 +9,7 @@ import Foundation
 import NIOSSL
 import SwiftTAK
 import XCTest
+@testable import TAKAware
 
 final class MigratorTests: TAKAwareTestCase {
     let migrator = Migrator()

@@ -13,6 +13,7 @@ import X509
 import XCTest
 import SwiftTAK
 import NIOSSL
+@testable import TAKAware
 
 final class CertificateSigningRequestTests: TAKAwareTestCase {
     

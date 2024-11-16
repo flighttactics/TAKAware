@@ -55,7 +55,6 @@ class TAKDataPackageImporter: COTDataParser {
                 
                 switch(cotEvent.eventType) {
                 case .ATOM, .BIT:
-                    debugPrint("Attempting to parse \(cotEvent.uid)")
                     parseAtom(cotEvent: cotEvent, rawXml: rawXml)
                 default:
                     TAKLogger.debug("[TAKDataPackageImporter] Non-Atom CoT Event received \(cotEvent.type)")

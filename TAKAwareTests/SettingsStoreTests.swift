@@ -7,6 +7,7 @@
 
 import Foundation
 import XCTest
+@testable import TAKAware
 
 final class SettingsStoreTests: TAKAwareTestCase {
     

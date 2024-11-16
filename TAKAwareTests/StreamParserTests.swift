@@ -8,6 +8,7 @@
 import Foundation
 import XCTest
 import SWXMLHash
+@testable import TAKAware
 
 final class StreamParserTests: TAKAwareTestCase {
     
