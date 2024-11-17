@@ -3371,6 +3371,7 @@
 		A5E2D0C02C3F8D84009FCD51 /* ChannelManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2D0BF2C3F8D84009FCD51 /* ChannelManagerTests.swift */; };
 		A5E7B00B2A70B5FA00D9203F /* TAKDataPackageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E7B00A2A70B5F900D9203F /* TAKDataPackageParser.swift */; };
 		A5E7B0182A76AA8B00D9203F /* TAKLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E7B0172A76AA8B00D9203F /* TAKLogger.swift */; };
+		A5F30A712CE9678700FEA8DA /* QRCodeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F30A702CE9678300FEA8DA /* QRCodeParser.swift */; };
 		A5FB4E622A8FDF430034966D /* X509 in Frameworks */ = {isa = PBXBuildFile; productRef = A5FB4E612A8FDF430034966D /* X509 */; };
 		A5FB4E642A8FE0020034966D /* CSRRequestor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FB4E632A8FE0020034966D /* CSRRequestor.swift */; };
 		A5FB4E662A98D0FF0034966D /* TAKConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FB4E652A98D0FF0034966D /* TAKConstants.swift */; };
@@ -6786,6 +6787,7 @@
 		A5E2D0BF2C3F8D84009FCD51 /* ChannelManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelManagerTests.swift; sourceTree = "<group>"; };
 		A5E7B00A2A70B5F900D9203F /* TAKDataPackageParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKDataPackageParser.swift; sourceTree = "<group>"; };
 		A5E7B0172A76AA8B00D9203F /* TAKLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKLogger.swift; sourceTree = "<group>"; };
+		A5F30A702CE9678300FEA8DA /* QRCodeParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeParser.swift; sourceTree = "<group>"; };
 		A5FB4E632A8FE0020034966D /* CSRRequestor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRRequestor.swift; sourceTree = "<group>"; };
 		A5FB4E652A98D0FF0034966D /* TAKConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKConstants.swift; sourceTree = "<group>"; };
 		A5FB4E6A2AA751890034966D /* CertificateSigningRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSigningRequestTests.swift; sourceTree = "<group>"; };
@@ -10305,6 +10307,7 @@
 		A5E2F8FA2A791EC100EDD0B4 /* Parsers */ = {
 			isa = PBXGroup;
 			children = (
+				A5F30A702CE9678300FEA8DA /* QRCodeParser.swift */,
 				A5CF82252CE6E92900CBE744 /* COTDataParser.swift */,
 				A5CF82222CE6AC1500CBE744 /* TAKDataPackageImporter.swift */,
 				A5E7B00A2A70B5F900D9203F /* TAKDataPackageParser.swift */,
@@ -13991,6 +13994,7 @@
 				A578E4382C55B3E1001978D4 /* DataSyncManager.swift in Sources */,
 				A5B312CE2C39DD38007B3914 /* StreamParser.swift in Sources */,
 				A578E42C2C548CFC001978D4 /* DataSyncMissions.swift in Sources */,
+				A5F30A712CE9678700FEA8DA /* QRCodeParser.swift in Sources */,
 				A5CF82262CE6E92D00CBE744 /* COTDataParser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -11,146 +11,6 @@ import SwiftTAK
 import SwiftUI
 import AVFoundation
 
-struct CertificateEnrollmentParameters: View {
-    @StateObject var settingsStore: SettingsStore = SettingsStore.global
-    
-    @State var requiresIntermediateCertificate: Bool = false
-    @State var isShowingFilePicker: Bool = false
-    @State var certFileName: String = ""
-    
-    var body: some View {
-        List {
-            Group {
-                Section(header:
-                            Text("Server Options")
-                                .font(.system(size: 14, weight: .medium))
-                ) {
-                    VStack {
-                        HStack {
-                            Text("Host Name")
-                                .foregroundColor(.secondary)
-                            TextField("Host Name", text: $settingsStore.takServerUrl)
-                                .autocorrectionDisabled(true)
-                                .textInputAutocapitalization(.never)
-                                .keyboardType(.URL)
-                                .onSubmit {
-                                    SettingsStore.global.takServerChanged = true
-                                }
-                        }
-                    }
-                    VStack {
-                        HStack {
-                            Text("Username")
-                                .foregroundColor(.secondary)
-                            TextField("Username", text: $settingsStore.takServerUsername)
-                                .autocorrectionDisabled(true)
-                                .textInputAutocapitalization(.never)
-                                .keyboardType(.asciiCapable)
-                        }
-                    }
-                    VStack {
-                        HStack {
-                            Text("Password")
-                                .foregroundColor(.secondary)
-                            SecureField("Password", text: $settingsStore.takServerPassword)
-                        }
-                    }
-                }
-                
-                Section(header: 
-                            Text("Advanced Options")
-                                .font(.system(size: 14, weight: .medium))
-                ) {
-                    VStack {
-                        HStack {
-                            Text("Port")
-                                .foregroundColor(.secondary)
-                            TextField("Server Port", text: $settingsStore.takServerPort)
-                                .keyboardType(.numberPad)
-                                .onSubmit {
-                                    SettingsStore.global.takServerChanged = true
-                                }
-                        }
-                    }
-                    
-                    VStack {
-                        HStack {
-                            Text("CSR Port")
-                                .foregroundColor(.secondary)
-                            TextField("CSR Port", text: $settingsStore.takServerCSRPort)
-                                .keyboardType(.numberPad)
-                        }
-                    }
-                }
-            }
-            .multilineTextAlignment(.trailing)
-            
-            // TODO: This is the UI for uploading an intermediate cert
-            // Swift was having issues parsing the TAK provided p12 files
-            // So commenting out for now
-            
-//            Group {
-//                VStack {
-//                    Toggle(isOn: $requiresIntermediateCertificate) {
-//                        Text("Do you have an intermediate certificate?")
-//                    }
-//                }
-//                .padding(.top, 20)
-//            }
-//            if(requiresIntermediateCertificate) {
-//                VStack {
-//                    HStack {
-//                        Text("Server Certificate")
-//                            .font(.system(size: 18, weight: .medium))
-//                            .foregroundColor(.secondary)
-//                        Spacer()
-//                    }
-//                    Button("Upload Certificate", role: .none) {
-//                        isShowingFilePicker.toggle()
-//                    }
-//                    .buttonStyle(.bordered)
-//                    .fileImporter(isPresented: $isShowingFilePicker, allowedContentTypes: [.pkcs12], allowsMultipleSelection: false, onCompletion: { results in
-//
-//                        switch results {
-//                        case .success(let fileurls):
-//                            for fileurl in fileurls {
-//                                if(fileurl.startAccessingSecurityScopedResource()) {
-//                                    TAKLogger.debug("Processing file at \(String(describing: fileurl))")
-//                                    do {
-//                                        settingsStore.serverCertificate = try Data(contentsOf: fileurl)
-//                                        certFileName = fileurl.lastPathComponent
-//                                    } catch {
-//                                        TAKLogger.error("Unable to process file at \(String(describing: fileurl))")
-//                                    }
-//                                    fileurl.stopAccessingSecurityScopedResource()
-//                                } else {
-//                                    TAKLogger.error("Unable to securely access \(String(describing: fileurl))")
-//                                }
-//                            }
-//                        case .failure(let error):
-//                            TAKLogger.debug(String(describing: error))
-//                        }
-//                    })
-//                    if(!certFileName.isEmpty) {
-//                        Text("Cert: \(certFileName)")
-//                    }
-//                }
-//                VStack {
-//                    HStack {
-//                        Text("Certificate Password")
-//                            .font(.system(size: 18, weight: .medium))
-//                            .foregroundColor(.secondary)
-//                        Spacer()
-//                    }
-//                    SecureField("Certificate Password", text: $settingsStore.serverCertificatePassword)
-//                }
-//                .padding(.top, 20)
-//            }
-            
-        }
-    }
-}
-
 func didDismissCertEnrollment() {
     // Clean up the variables
     let settingsStore = SettingsStore.global
@@ -173,7 +33,6 @@ struct DataPackageEnrollment: View {
             VStack(alignment: .center) {
                 HStack {
                     Button {
-                        isProcessingDataPackage = true
                         isShowingFilePicker.toggle()
                     } label: {
                         HStack {
@@ -182,12 +41,11 @@ struct DataPackageEnrollment: View {
                             Image(systemName: "square.and.arrow.up")
                                 .multilineTextAlignment(.trailing)
                         }
+                        .contentShape(Rectangle())
                         
                     }
                     .buttonStyle(.plain)
-                    
                     .fileImporter(isPresented: $isShowingFilePicker, allowedContentTypes: [.zip], allowsMultipleSelection: false, onCompletion: { results in
-                        
                         switch results {
                         case .success(let fileurls):
                             isProcessingDataPackage = true
@@ -209,11 +67,11 @@ struct DataPackageEnrollment: View {
                                 } else {
                                     TAKLogger.error("Unable to securely access  \(String(describing: fileurl))")
                                 }
-                                isProcessingDataPackage = false
                             }
-                        case .failure(let error):
-                            TAKLogger.debug(String(describing: error))
                             isProcessingDataPackage = false
+                        case .failure(let error):
+                            isProcessingDataPackage = false
+                            TAKLogger.debug(String(describing: error))
                         }
                         
                     })
@@ -228,16 +86,96 @@ struct DataPackageEnrollment: View {
 
 struct ConnectionOptions: View {
     @Binding var isProcessingDataPackage: Bool
+    @State var isShowingAlert = false
     
     var body: some View {
-        NavigationLink(destination: ConnectionOptionsScreen(isProcessingDataPackage: $isProcessingDataPackage)) {
-            Text("Connect with credentials")
+        Group {
+            if(SettingsStore.global.takServerUrl != "") {
+                Button(role: .destructive) {
+                    SettingsStore.global.clearConnection()
+                    isShowingAlert = true
+                } label: {
+                    Text("Delete Current TAK Server Connection")
+                }
+                .contentShape(Rectangle())
+            } else {
+                NavigationLink(destination: ConnectionOptionsScreen(isProcessingDataPackage: $isProcessingDataPackage)) {
+                    Text("Connect to a TAK Server")
+                }
+            }
         }
-        DataPackageEnrollment(isProcessingDataPackage: $isProcessingDataPackage)
+        .alert(isPresented: $isShowingAlert) {
+            Alert(title: Text("Server Connection"), message: Text("The TAK Server Connection has been removed"), dismissButton: .default(Text("OK")))
+        }
     }
 }
 
 struct ConnectionOptionsScreen: View {
+    @Binding var isProcessingDataPackage: Bool
+    
+    @State var isShowingFilePicker = false
+    @State var isShowingAlert = false
+    @State var alertText: String = ""
+
+    var body: some View {
+        VStack {
+            Text("Choose a connection method:")
+            Group {
+                NavigationLink(destination: CertEnrollmentScreen(isProcessingDataPackage: $isProcessingDataPackage)) {
+                    Text("Certificate Enrollment")
+                }
+                
+                NavigationLink(destination: CertEnrollmentScreen(
+                    isProcessingDataPackage: $isProcessingDataPackage,
+                    isPresentingQRScanner: true
+                )) {
+                    Text("Scan QR code")
+                }
+
+                Button {
+                    isShowingFilePicker.toggle()
+                } label: {
+                    Text("Upload a Data Package")
+                }
+                .fileImporter(isPresented: $isShowingFilePicker, allowedContentTypes: [.zip], allowsMultipleSelection: false, onCompletion: { results in
+                    switch results {
+                    case .success(let fileurls):
+                        isProcessingDataPackage = true
+                        for fileurl in fileurls {
+                            if(fileurl.startAccessingSecurityScopedResource()) {
+                                TAKLogger.debug("Processing Package at \(String(describing: fileurl))")
+                                let tdpp = TAKDataPackageParser(
+                                    fileLocation: fileurl
+                                )
+                                tdpp.parse()
+                                fileurl.stopAccessingSecurityScopedResource()
+                                isProcessingDataPackage = false
+                                if(tdpp.parsingErrors.isEmpty) {
+                                    alertText = "Data package processed successfully!"
+                                } else {
+                                    alertText = "Data package could not be processed\n\n\(tdpp.parsingErrors.joined(separator: "\n\n"))"
+                                }
+                                isShowingAlert = true
+                            } else {
+                                TAKLogger.error("Unable to securely access  \(String(describing: fileurl))")
+                            }
+                        }
+                        isProcessingDataPackage = false
+                    case .failure(let error):
+                        isProcessingDataPackage = false
+                        TAKLogger.debug(String(describing: error))
+                    }
+                })
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .alert(isPresented: $isShowingAlert) {
+            Alert(title: Text("Data Package"), message: Text(alertText), dismissButton: .default(Text("OK")))
+        }
+    }
+}
+
+struct CertEnrollmentScreen: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
     @StateObject var csrRequest: CSRRequestor = CSRRequestor()
@@ -246,13 +184,14 @@ struct ConnectionOptionsScreen: View {
     @State var isPresentingQRScanner = false
     @State var qrCodeResult: String = ""
     @State var shouldShowQRCodeFailureAlert = false
+    @State var isShowingPassword = false
     
     @State var formServerURL = ""
     @State var formServerPort = ""
-    @State var formSecureAPIPort = ""
     @State var formUsername = ""
     @State var formPassword = ""
     @State var formCSRPort = ""
+    @State var formSecureAPIPort = ""
     
     var isAuthorized: Bool {
         get {
@@ -286,30 +225,30 @@ struct ConnectionOptionsScreen: View {
     
     func processQRCode(_ scannedString: String) {
         TAKLogger.debug("[ConnectionOptions] Parsing QR code \(scannedString)")
-        guard scannedString.count > 0 else {
-            shouldShowQRCodeFailureAlert = true
-            return
-        }
-
-        let codeParts = scannedString.split(separator: ",")
-        guard codeParts.count == 4 else {
-            shouldShowQRCodeFailureAlert = true
-            return
-        }
-
-        let serverName = codeParts[0]
-        let serverURL = codeParts[1]
-        let serverPort = codeParts[2]
-        let serverProtocol = codeParts[3]
-        TAKLogger.debug("[ConnectionOptions]: QR Code complete! \(serverName) at \(serverURL):\(serverPort) (\(serverProtocol))")
-        
-        guard let _ = URL(string: String(serverURL)), let _ = Int(serverPort) else {
+        let response = QRCodeParser.parse(scannedString)
+        if(response.wasInvalidString) {
             shouldShowQRCodeFailureAlert = true
             return
         }
         
-        formServerURL = String(serverURL)
-        formServerPort = String(serverPort)
+        formServerURL = response.serverURL
+        formServerPort = response.serverPort
+        formUsername = response.username
+        formPassword = response.password
+        
+        if(response.shouldAutoSubmit) {
+            submitCertEnrollmentForm()
+        }
+    }
+    
+    func submitCertEnrollmentForm() {
+        settingsStore.takServerUrl = formServerURL
+        settingsStore.takServerPort = formServerPort
+        settingsStore.takServerUsername = formUsername
+        settingsStore.takServerPassword = formPassword
+        settingsStore.takServerCSRPort = formCSRPort
+        settingsStore.takServerSecureAPIPort = formSecureAPIPort
+        csrRequest.beginEnrollment()
     }
     
     var body: some View {
@@ -344,29 +283,44 @@ struct ConnectionOptionsScreen: View {
                             HStack {
                                 Text("Password")
                                     .foregroundColor(.secondary)
-                                SecureField("Password", text: $formPassword)
+                                if isShowingPassword {
+                                    Image(systemName: "eye")
+                                        .onTapGesture {
+                                            isShowingPassword.toggle()
+                                        }
+                                        .foregroundColor(.secondary)
+                                    TextField("Password", text: $formPassword)
+                                } else {
+                                    Image(systemName: "eye.slash")
+                                        .onTapGesture {
+                                            isShowingPassword.toggle()
+                                        }
+                                        .foregroundColor(.secondary)
+                                    SecureField("Password", text: $formPassword)
+                                }
+                                
                             }
                         }
                     }
                     
                     Section(header:
                                 Text("Advanced Options")
-                        .font(.system(size: 14, weight: .medium))
+                                .font(.system(size: 14, weight: .medium))
                     ) {
                         VStack {
                             HStack {
-                                Text("Streaming Port")
+                                Text("Port")
                                     .foregroundColor(.secondary)
-                                TextField("Streaming Port", text: $formServerPort)
+                                TextField("Server Port", text: $formServerPort)
                                     .keyboardType(.numberPad)
                             }
                         }
                         
                         VStack {
                             HStack {
-                                Text("CSR Port")
+                                Text("Cert Enroll Port")
                                     .foregroundColor(.secondary)
-                                TextField("CSR Port", text: $formCSRPort)
+                                TextField("Cert Enroll Port", text: $formCSRPort)
                                     .keyboardType(.numberPad)
                             }
                         }
@@ -390,24 +344,16 @@ struct ConnectionOptionsScreen: View {
                         Button("Close", role: .none) {
                             dismiss()
                         }
-                        .buttonStyle(.borderedProminent)
                     } else {
-                        Button("Start Enrollment", role: .none) {
-                            settingsStore.takServerUrl = formServerURL
-                            settingsStore.takServerPort = formServerPort
-                            settingsStore.takServerUsername = formUsername
-                            settingsStore.takServerPassword = formPassword
-                            settingsStore.takServerCSRPort = formCSRPort
-                            settingsStore.takServerSecureAPIPort = formSecureAPIPort
-                            csrRequest.beginEnrollment()
-                        }
-                        .buttonStyle(.borderedProminent)
                         Button("Scan QR", role: .none) {
                             setUpCaptureSession()
                         }
-                        .buttonStyle(.borderedProminent)
+                        Button("Start Enrollment", role: .none) {
+                            submitCertEnrollmentForm()
+                        }
                     }
                 }
+                .buttonStyle(.borderedProminent)
                 
                 Text("Status: " + csrRequest.enrollmentStatus.description)
                 Text("For Server \(SettingsStore.global.takServerUrl)")

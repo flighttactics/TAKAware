@@ -67,6 +67,18 @@ class SettingsStore: ObservableObject {
         SecItemDelete(cleanUpQuery as CFDictionary)
     }
     
+    func clearConnection() {
+        isConnectedToServer = false
+        isConnectingToServer = false
+        shouldTryReconnect = false
+        connectionStatus = ConnectionStatus.Disconnected.rawValue
+        takServerUrl = ""
+        takServerUsername = ""
+        takServerPassword = ""
+        serverCertificateTruststore = []
+        clearAllIdentities()
+    }
+    
     @Published var callSign: String {
         didSet {
             UserDefaults.standard.set(callSign, forKey: "callSign")
