@@ -63,6 +63,8 @@ struct DataSyncSheet: View {
             .navigationBarItems(trailing: Button("Close", action: {
                 dismiss()
             }))
+            .navigationTitle("Data Sync")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

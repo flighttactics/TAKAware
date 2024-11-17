@@ -41,6 +41,8 @@ struct AnnotationDetailView: View {
             .navigationBarItems(trailing: Button("Close", action: {
                 dismiss()
             }))
+            .navigationTitle(annotation?.title ?? "Item Detail")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

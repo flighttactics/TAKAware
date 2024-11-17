@@ -46,6 +46,8 @@ struct VideoPlayerView: View {
             .navigationBarItems(trailing: Button("Close", action: {
                 dismiss()
             }))
+            .navigationTitle(annotation?.title ?? "Video Player")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

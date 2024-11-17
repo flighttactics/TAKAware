@@ -119,6 +119,8 @@ struct AlertSheet: View {
             .navigationBarItems(trailing: Button("Close", action: {
                 dismiss()
             }))
+            .navigationTitle("Emergency Alert")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

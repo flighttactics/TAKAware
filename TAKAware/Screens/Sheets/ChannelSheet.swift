@@ -66,6 +66,8 @@ struct ChannelSheet: View {
             .navigationBarItems(trailing: Button("Close", action: {
                 dismiss()
             }))
+            .navigationTitle("Channel List")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
