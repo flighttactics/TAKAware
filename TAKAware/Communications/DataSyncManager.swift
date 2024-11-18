@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct DataPackageRole {
+struct DataSyncDataPackageRole {
     var permissions: [String] = []
     var type: String = ""
 }
 
-struct DataPackageUid {
+struct DataSyncDataPackageUid {
     var data: String = ""
     var timestamp: String = ""
     var creatorUid: String = ""
@@ -23,7 +23,7 @@ struct LocationCoordinates {
     var lon: Double
 }
 
-struct DataPackageUidDetail {
+struct DataSyncDataPackageUidDetail {
     var type: String = ""
     var callsign: String = ""
     var iconsetPath: String = ""
@@ -31,14 +31,14 @@ struct DataPackageUidDetail {
     var location: LocationCoordinates
 }
 
-struct DataPackageContent {
-    var data: DataPackageContentData
+struct DataSyncDataPackageContent {
+    var data: DataSyncDataPackageContentData
     var timestamp: String = ""
     var creatorUid: String = ""
-    var details: DataPackageUidDetail?
+    var details: DataSyncDataPackageUidDetail?
 }
 
-struct DataPackageContentData {
+struct DataSyncDataPackageContentData {
     var keywords: [String] = []
     var mimeType: String = ""
     var name: String = ""
@@ -51,7 +51,7 @@ struct DataPackageContentData {
     var expiration: Int = -1
 }
 
-struct DataPackage {
+struct DataSyncDataPackage {
     var name: String = ""
     var description: String = ""
     var chatRoom: String = ""
@@ -67,18 +67,18 @@ struct DataPackage {
     var externalData: [String] = []
     var feeds: [String] = []
     var mapLayers: [String] = []
-    var defaultRole: DataPackageRole = DataPackageRole()
+    var defaultRole: DataSyncDataPackageRole = DataSyncDataPackageRole()
     var inviteOnly: String = ""
     var expiration: Int = -1
     var guid: String = ""
-    var uids: [DataPackageUid] = []
-    var contents: [DataPackageContent] = []
+    var uids: [DataSyncDataPackageUid] = []
+    var contents: [DataSyncDataPackageContent] = []
     var passwordProtected: Bool = false
 }
 
 class DataSyncManager: NSObject, ObservableObject, URLSessionDelegate {
     @Published var isLoading = false
-    @Published var dataPackages: [DataPackage] = []
+    @Published var dataPackages: [DataSyncDataPackage] = []
     
     func retrieveMissions() {
         isLoading = true
@@ -132,7 +132,7 @@ class DataSyncManager: NSObject, ObservableObject, URLSessionDelegate {
                     let description = dataPackageData["description"] as! String
                     let creatorUid = dataPackageData["creatorUid"] as! String
                     let createTime = dataPackageData["createTime"] as! String
-                    let dataPackage = DataPackage(
+                    let dataPackage = DataSyncDataPackage(
                         name: name,
                         description: description,
                         creatorUid: creatorUid,
