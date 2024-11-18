@@ -34,6 +34,18 @@ final class DataPackageImporterTests: TAKAwareTestCase {
         }
     }
     
+    func testCreatesDatabaseEntryForThisPackage() {
+        let uid = "dc772639-f6f2-4bcc-88b5-1d841d91cd14"
+        let context = DataController.shared.backgroundContext
+        parser!.parse()
+        context.performAndWait {
+            let fetchCoT: NSFetchRequest<DataPackage> = DataPackage.fetchRequest()
+            fetchCoT.predicate = NSPredicate(format: "uid = %@", uid)
+            let results = try? context.fetch(fetchCoT)
+            XCTAssertNotNil(results?.first)
+        }
+    }
+    
     func testTagsImportedMarkersAsBeingWithThisDataPackage() {
         
     }

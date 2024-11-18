@@ -16,6 +16,10 @@ struct DataPackageOptionsDetail: View {
     @State var isShowingFilePicker = false
     @State var isShowingAlert = false
     @State var alertText: String = ""
+    var dataContext = DataController.shared.backgroundContext
+    
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt, order: .reverse)])
+    var dataPackages: FetchedResults<DataPackage>
     
     var loader: some View {
         return Image(systemName: "arrowshape.turn.up.right.circle")
@@ -73,6 +77,23 @@ struct DataPackageOptionsDetail: View {
                         }
                         
                     })
+                }
+                ForEach(dataPackages) { dataPackage in
+                    VStack {
+                        HStack {
+                            Image(systemName: "eye.fill")
+                            Image(systemName: "shippingbox")
+                            VStack(alignment: .leading) {
+                                Text(dataPackage.name ?? "Unknown Name")
+                                    .fontWeight(.bold)
+                                Text("\(SettingsStore.global.callSign), 9 items")
+                            }
+                            Spacer()
+                            Image(systemName: "arrow.up.square.fill")
+                            Image(systemName: "trash.square")
+                        }
+                    }
+                    .padding(.top, 20)
                 }
             }
             .alert(isPresented: $isShowingAlert) {

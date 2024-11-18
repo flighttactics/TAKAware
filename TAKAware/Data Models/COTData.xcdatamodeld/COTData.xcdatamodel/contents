@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22758" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
     <entity name="COTData" representedClassName="COTData" syncable="YES" codeGenerationType="class">
         <attribute name="archived" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="callsign" optional="YES" attributeType="String"/>
@@ -17,5 +17,30 @@
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="videoURL" optional="YES" attributeType="URI"/>
+    </entity>
+    <entity name="DataPackage" representedClassName="DataPackage" syncable="YES" codeGenerationType="class">
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="deleteWithPackage" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="onReceiveDelete" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="onReceiveImport" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="remarks" optional="YES" attributeType="String"/>
+        <attribute name="uid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="dataPackageFiles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="DataPackageFile" inverseName="dataPackage" inverseEntity="DataPackageFile"/>
+    </entity>
+    <entity name="DataPackageFile" representedClassName="DataPackageFile" syncable="YES" codeGenerationType="class">
+        <attribute name="contentType" optional="YES" attributeType="String"/>
+        <attribute name="cotUid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="ignore" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isCoT" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="localpath" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="packageUid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="refContent" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="uid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="visible" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="zipEntry" optional="YES" attributeType="String"/>
+        <relationship name="cotData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="COTData"/>
+        <relationship name="dataPackage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DataPackage" inverseName="dataPackageFiles" inverseEntity="DataPackage"/>
     </entity>
 </model>

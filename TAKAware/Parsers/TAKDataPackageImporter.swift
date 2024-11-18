@@ -8,11 +8,13 @@
 import Foundation
 import NIOSSL
 import SwiftTAK
+import CoreData
 
 class TAKDataPackageImporter: COTDataParser {
     var archiveLocation: URL
     var parsingErrors: [String] = []
     var parser: DataPackageParser?
+    var dataPackageStore: DataPackage?
     
     init (fileLocation: URL) {
         TAKLogger.debug("[TAKDataPackageImporter]: Initializing")
@@ -24,7 +26,6 @@ class TAKDataPackageImporter: COTDataParser {
         parser = DataPackageParser(fileLocation: archiveLocation)
         parser!.parse()
         //let packageFiles = parser!.packageFiles
-        //let packageConfiguration = parser!.packageConfiguration
         
         // So now we have the package parsed, a list of the files, and the configuration
         // We need to do a couple of things:
@@ -34,9 +35,40 @@ class TAKDataPackageImporter: COTDataParser {
         // 3) Make sure when we're importing them they're tied to this package
         //    and marked as archived so they don't get wiped out
         
+        storeDataPackage()
         importFiles()
         
         TAKLogger.debug("[TAKDataPackageImporter]: Completed Parsing")
+    }
+    
+    func storeDataPackage() {
+        let packageConfiguration = parser!.packageConfiguration
+        let packageName = packageConfiguration["name"] ?? "Data Package"
+        let packageUid = packageConfiguration["uid"] ?? UUID().uuidString
+        let fetchUser: NSFetchRequest<DataPackage> = DataPackage.fetchRequest()
+        fetchUser.predicate = NSPredicate(format: "uid = %@", packageUid as String)
+
+        dataContext.perform {
+            let results = try? self.dataContext.fetch(fetchUser)
+            
+            let packageData: DataPackage!
+
+            if results?.count == 0 {
+                packageData = DataPackage(context: self.dataContext)
+                packageData.uid = UUID(uuidString: packageUid)
+                packageData.name = packageName
+                packageData.createdAt = Date.now
+             } else {
+                 packageData = results?.first
+             }
+
+            do {
+                try self.dataContext.save()
+                self.dataPackageStore = packageData
+            } catch {
+                TAKLogger.error("[TAKDataPackageImporter] Invalid Data Context Save \(error)")
+            }
+        }
     }
     
     func importFiles() {
