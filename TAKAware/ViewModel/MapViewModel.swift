@@ -19,6 +19,9 @@ class MapViewModel: ObservableObject {
     
     func didSelectAnnotation(_ annotation: MapPointAnnotation) {
         currentSelectedAnnotation = annotation
+        if isDeconflictionViewOpen {
+            isDeconflictionViewOpen = false
+        }
         annotationSelectedCallback(annotation)
     }
     
