@@ -11,26 +11,27 @@ import SwiftUI
 
 struct DeconflictionSheet: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var conflictedItems: [MapPointAnnotation]
-    @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    @ObservedObject var mapViewModel: MapViewModel
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(conflictedItems, id:\.title) { marker in
-                    VStack {
-                        HStack {
-                            Button {
-                                TAKLogger.debug("Setting selected to \(marker.title!)")
-                                currentSelectedAnnotation = marker
-                            } label: {
-                                Text(marker.title!)
+                if(mapViewModel.conflictedItems.isEmpty) {
+                    Text("No Markers Selected")
+                } else {
+                    ForEach(mapViewModel.conflictedItems, id:\.title) { marker in
+                        VStack {
+                            HStack {
+                                Button {
+                                    mapViewModel.didSelectAnnotation(marker)
+                                } label: {
+                                    Text(marker.title!)
+                                }
                             }
-                            
                         }
+                        .padding(.top, 20)
                     }
-                    .padding(.top, 20)
                 }
             }
             .navigationBarItems(trailing: Button("Close", action: {

@@ -43,17 +43,13 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
 }
 
 class SituationalAnnotationView: MKAnnotationView {
-    @Binding var isDetailViewOpen: Bool
-    @Binding var isVideoPlayerOpen: Bool
     var annotationLabel = UILabel()
     var mapView: MapView
     var mapPointAnnotation: MapPointAnnotation
     
-    init(mapView: MapView, annotation: MapPointAnnotation, reuseIdentifier: String?, isDetailViewOpen: Binding<Bool>, isVideoPlayerOpen: Binding<Bool>) {
+    init(mapView: MapView, annotation: MapPointAnnotation, reuseIdentifier: String?) {
         self.mapView = mapView
         self.mapPointAnnotation = annotation
-        self._isDetailViewOpen = isDetailViewOpen
-        self._isVideoPlayerOpen = isVideoPlayerOpen
         self.annotationLabel.text = annotation.title ?? ""
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         self.canShowCallout = true
@@ -98,29 +94,27 @@ class SituationalAnnotationView: MKAnnotationView {
     }
     
     @objc func videoPressed(sender: UIButton) {
-        print("Video Button Pressed!")
-        if !self.isVideoPlayerOpen {
-            self.isVideoPlayerOpen.toggle()
-        }
+        mapView.viewModel.isVideoPlayerOpen = true
     }
     
     @objc func bloodhoundPressed(sender: UIButton) {
-        print("Bloodhound Button Pressed!")
         mapView.createBloodhound(annotation: mapPointAnnotation)
     }
     
     @objc func deletePressed(sender: UIButton) {
-        DataController.shared.deleteCot(cotId: mapPointAnnotation.id)
+        mapView.viewModel.didDeleteAnnotation(mapPointAnnotation)
     }
     
     @objc func detailsPressed(sender: UIButton) {
-        if !self.isDetailViewOpen {
-            self.isDetailViewOpen.toggle()
-        }
+        mapView.viewModel.isDetailViewOpen = true
     }
 }
 
 class CompassMapView: MKMapView {
+    public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
+    }
+
     lazy var compassButton: MKCompassButton = {
         let compassView = MKCompassButton(mapView: self)
         compassView.isUserInteractionEnabled = true
@@ -157,23 +151,16 @@ class CompassMapView: MKMapView {
 struct MapView: UIViewRepresentable {
     @Binding var region: MKCoordinateRegion
     @Binding var mapType: UInt
-    @Binding var isAcquiringBloodhoundTarget: Bool
-    @Binding var isDetailViewOpen: Bool
-    @Binding var isVideoPlayerOpen: Bool
-    @Binding var isDeconflictionViewOpen: Bool
-    @Binding var currentSelectedAnnotation: MapPointAnnotation?
-    @Binding var conflictedItems: [MapPointAnnotation]
+    @Binding var viewModel: MapViewModel
     
-    @FetchRequest(sortDescriptors: []) var mapPointsData: FetchedResults<COTData>
-
     @State var mapView: CompassMapView = CompassMapView()
     @State var activeBloodhound: MKGeodesicPolyline?
     @State var bloodhoundStartAnnotation: MapPointAnnotation?
     @State var bloodhoundEndAnnotation: MapPointAnnotation?
     @State var bloodhoundStartCoordinate: CLLocationCoordinate2D?
     @State var bloodhoundEndCoordinate: CLLocationCoordinate2D?
-    @State var activeCircle: MKCircle?
-    @State var currentRotation: UIDeviceOrientation = UIDevice.current.orientation
+    
+    @FetchRequest(sortDescriptors: []) var mapPointsData: FetchedResults<COTData>
     
     var shouldForceInitialTracking: Bool {
         return region.center.latitude == 0.0 || region.center.longitude == 0.0
@@ -192,6 +179,8 @@ struct MapView: UIViewRepresentable {
         mapView.layer.borderWidth = 1.0
         mapView.isHidden = false
         
+        viewModel.annotationSelectedCallback = annotationSelected(_:)
+        
 //        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
 //        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
 //        let googleHybridOverlay = MKTileOverlay(urlTemplate:templateUrl)
@@ -208,7 +197,7 @@ struct MapView: UIViewRepresentable {
     
     private func updateAnnotations(from mapView: MKMapView) {
         
-        if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
+        if(!viewModel.isAcquiringBloodhoundTarget && activeBloodhound != nil) {
             mapView.removeOverlay(activeBloodhound!)
             DispatchQueue.main.async {
                 activeBloodhound = nil
@@ -281,7 +270,7 @@ struct MapView: UIViewRepresentable {
     }
     
     func createBloodhound(annotation: MapPointAnnotation) {
-        isAcquiringBloodhoundTarget = true
+        viewModel.isAcquiringBloodhoundTarget = true
         let userLocation = mapView.userLocation.coordinate
         let endPointLocation = annotation.coordinate
         TAKLogger.debug("[MapView] Adding Bloodhound line to \(annotation.title!)")
@@ -294,6 +283,28 @@ struct MapView: UIViewRepresentable {
         activeBloodhound = MKGeodesicPolyline(coordinates: [userLocation, endPointLocation], count: 2)
         mapView.addOverlay(activeBloodhound!, level: .aboveLabels)
         mapView.deselectAnnotation(annotation, animated: false)
+    }
+    
+    func annotationSelected(_ annotation: MapPointAnnotation) {
+        annotationSelected(mapView, annotation: annotation)
+    }
+    
+    func annotationSelected(_ mapView: MKMapView, annotation: any MKAnnotation) {
+        mapView.selectAnnotation(annotation, animated: false)
+        guard let mpAnnotation = annotation as? MapPointAnnotation? else {
+            TAKLogger.debug("[MapView] Unknown annotation type selected")
+            return
+        }
+        TAKLogger.debug("[MapView] annotation selected")
+        viewModel.currentSelectedAnnotation = mpAnnotation
+        
+        let mapReadyForBloodhoundTarget = activeBloodhound == nil ||
+        !mapView.overlays.contains(where: { $0.isEqual(activeBloodhound) })
+        
+        if(viewModel.isAcquiringBloodhoundTarget &&
+           mapReadyForBloodhoundTarget) {
+            createBloodhound(annotation: mpAnnotation!)
+        }
     }
 
     class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
@@ -316,13 +327,20 @@ struct MapView: UIViewRepresentable {
             // position on the map, CLLocationCoordinate2D
             let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
             let tappedLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            TAKLogger.debug("Map Tapped! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta)")
+            TAKLogger.debug("Map Tapped! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta) (at \(NSDate().timeIntervalSince1970))")
             let tapRadius = 5000 * mapView.region.span.latitudeDelta
             let closeMarkers = mapView.annotations.filter { $0 is MapPointAnnotation && tappedLocation.distance(from: CLLocation(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)) < tapRadius }
             TAKLogger.debug("There are \(closeMarkers.count) markers within \(tapRadius) meters")
             if(closeMarkers.count > 1) {
-                parent.conflictedItems = closeMarkers as! [MapPointAnnotation]
-                parent.isDeconflictionViewOpen = true
+                parent.viewModel.conflictedItems = closeMarkers as! [MapPointAnnotation]
+                parent.viewModel.isDeconflictionViewOpen = true
+            } else if(closeMarkers.count == 1) {
+                parent.viewModel.isDeconflictionViewOpen = false
+                parent.annotationSelected(mapView, annotation: closeMarkers.first!)
+            } else if(parent.viewModel.currentSelectedAnnotation != nil) {
+                parent.viewModel.isDeconflictionViewOpen = false
+                mapView.deselectAnnotation(parent.viewModel.currentSelectedAnnotation, animated: false)
+                parent.viewModel.currentSelectedAnnotation = nil
             }
         }
         
@@ -331,25 +349,7 @@ struct MapView: UIViewRepresentable {
                 TAKLogger.debug("[MapView] Unknown annotation type selected")
                 return
             }
-            parent.currentSelectedAnnotation = nil
-        }
-        
-        func mapView(_ mapView: MKMapView, didSelect annotation: any MKAnnotation) {
-            guard !parent.isDeconflictionViewOpen else { return }
-            guard let mpAnnotation = annotation as? MapPointAnnotation? else {
-                TAKLogger.debug("[MapView] Unknown annotation type selected")
-                return
-            }
-            TAKLogger.debug("[MapView] annotation selected")
-            parent.currentSelectedAnnotation = mpAnnotation
-            
-            let mapReadyForBloodhoundTarget = parent.activeBloodhound == nil ||
-                !mapView.overlays.contains(where: { $0.isEqual(parent.activeBloodhound) })
-            
-            if(parent.isAcquiringBloodhoundTarget &&
-               mapReadyForBloodhoundTarget) {
-                parent.createBloodhound(annotation: mpAnnotation!)
-            }
+            parent.viewModel.currentSelectedAnnotation = nil
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -388,13 +388,10 @@ struct MapView: UIViewRepresentable {
             var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
             
             if annotationView == nil {
-                NSLog("No annotation view yet, setting...")
                 annotationView = SituationalAnnotationView(
                     mapView: parent,
                     annotation: mpAnnotation,
-                    reuseIdentifier: identifier,
-                    isDetailViewOpen: parent.$isDetailViewOpen,
-                    isVideoPlayerOpen: parent.$isVideoPlayerOpen
+                    reuseIdentifier: identifier
                 )
 
                 let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")

@@ -3372,6 +3372,7 @@
 		A5E7B00B2A70B5FA00D9203F /* TAKDataPackageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E7B00A2A70B5F900D9203F /* TAKDataPackageParser.swift */; };
 		A5E7B0182A76AA8B00D9203F /* TAKLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E7B0172A76AA8B00D9203F /* TAKLogger.swift */; };
 		A5F30A712CE9678700FEA8DA /* QRCodeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F30A702CE9678300FEA8DA /* QRCodeParser.swift */; };
+		A5F30A732CE9853100FEA8DA /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F30A722CE9852B00FEA8DA /* MapViewModel.swift */; };
 		A5FB4E622A8FDF430034966D /* X509 in Frameworks */ = {isa = PBXBuildFile; productRef = A5FB4E612A8FDF430034966D /* X509 */; };
 		A5FB4E642A8FE0020034966D /* CSRRequestor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FB4E632A8FE0020034966D /* CSRRequestor.swift */; };
 		A5FB4E662A98D0FF0034966D /* TAKConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FB4E652A98D0FF0034966D /* TAKConstants.swift */; };
@@ -6788,6 +6789,7 @@
 		A5E7B00A2A70B5F900D9203F /* TAKDataPackageParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKDataPackageParser.swift; sourceTree = "<group>"; };
 		A5E7B0172A76AA8B00D9203F /* TAKLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKLogger.swift; sourceTree = "<group>"; };
 		A5F30A702CE9678300FEA8DA /* QRCodeParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeParser.swift; sourceTree = "<group>"; };
+		A5F30A722CE9852B00FEA8DA /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		A5FB4E632A8FE0020034966D /* CSRRequestor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRRequestor.swift; sourceTree = "<group>"; };
 		A5FB4E652A98D0FF0034966D /* TAKConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKConstants.swift; sourceTree = "<group>"; };
 		A5FB4E6A2AA751890034966D /* CertificateSigningRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSigningRequestTests.swift; sourceTree = "<group>"; };
@@ -6877,6 +6879,7 @@
 		4630FD172B5071BD00988ED4 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				A5F30A722CE9852B00FEA8DA /* MapViewModel.swift */,
 				4630FD182B5071BD00988ED4 /* ChatViewModel.swift */,
 			);
 			path = ViewModel;
@@ -13969,6 +13972,7 @@
 				A5AA510A2AC33488006696B2 /* OnboardingView.swift in Sources */,
 				A5E7B0182A76AA8B00D9203F /* TAKLogger.swift in Sources */,
 				A508213F2AB3D19B00E0CBD8 /* TAKCAConfigResponseParser.swift in Sources */,
+				A5F30A732CE9853100FEA8DA /* MapViewModel.swift in Sources */,
 				A5CF822B2CE8423500CBE744 /* DataPackageOptions.swift in Sources */,
 				A55ABF492ABDC02200195AB7 /* ConnectionOptions.swift in Sources */,
 				A51B12EC2BB1E29800C25239 /* SituationalAwarenessOptions.swift in Sources */,

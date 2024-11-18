@@ -34,12 +34,7 @@ struct AwarenessView: View {
     
     @State private var tracking:MapUserTrackingMode = .none
     @State private var sheet: Sheet.SheetType?
-    @State private var isAcquiringBloodhoundTarget: Bool = false
-    @State private var isDetailViewOpen: Bool = false
-    @State private var isVideoPlayerOpen: Bool = false
-    @State private var isDeconflictionViewOpen: Bool = false
-    @State private var currentSelectedAnnotation: MapPointAnnotation?
-    @State private var conflictedItems: [MapPointAnnotation] = []
+    @State private var mapViewModel: MapViewModel = MapViewModel()
     
     func formatOrZero(item: Double?, formatter: String = "%.0f") -> String {
         guard let item = item else {
@@ -75,20 +70,20 @@ struct AwarenessView: View {
                 .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
                 .presentationContentInteraction(.scrolls)
         })
-        .sheet(isPresented: $isDetailViewOpen, content: {
-            AnnotationDetailView(annotation: $currentSelectedAnnotation)
+        .sheet(isPresented: $mapViewModel.isDetailViewOpen, content: {
+            AnnotationDetailView(annotation: $mapViewModel.currentSelectedAnnotation)
                 .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
                 .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
                 .presentationContentInteraction(.scrolls)
         })
-        .sheet(isPresented: $isVideoPlayerOpen, content: {
-            VideoPlayerView(annotation: $currentSelectedAnnotation)
+        .sheet(isPresented: $mapViewModel.isVideoPlayerOpen, content: {
+            VideoPlayerView(annotation: $mapViewModel.currentSelectedAnnotation)
                 .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
                 .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
                 .presentationContentInteraction(.scrolls)
         })
-        .sheet(isPresented: $isDeconflictionViewOpen, content: {
-            DeconflictionSheet(conflictedItems: $conflictedItems, currentSelectedAnnotation: $currentSelectedAnnotation)
+        .sheet(isPresented: $mapViewModel.isDeconflictionViewOpen, content: {
+            DeconflictionSheet(mapViewModel: mapViewModel)
                 .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
                 .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
                 .presentationContentInteraction(.scrolls)
@@ -105,12 +100,7 @@ struct AwarenessView: View {
         MapView(
             region: $manager.region,
             mapType: $settingsStore.mapTypeDisplay,
-            isAcquiringBloodhoundTarget: $isAcquiringBloodhoundTarget,
-            isDetailViewOpen: $isDetailViewOpen, 
-            isVideoPlayerOpen: $isVideoPlayerOpen,
-            isDeconflictionViewOpen: $isDeconflictionViewOpen,
-            currentSelectedAnnotation: $currentSelectedAnnotation,
-            conflictedItems: $conflictedItems
+            viewModel: $mapViewModel
         )
         .ignoresSafeArea(edges: .all)
     }
@@ -120,9 +110,9 @@ struct AwarenessView: View {
             Spacer()
 
             Group {
-                Button(action: { isAcquiringBloodhoundTarget.toggle() }) {
+                Button(action: { mapViewModel.isAcquiringBloodhoundTarget.toggle() }) {
                     navBarImage(imageName: "bloodhound")
-                        .colorMultiply((isAcquiringBloodhoundTarget ? .red : .yellow))
+                        .colorMultiply((mapViewModel.isAcquiringBloodhoundTarget ? .red : .yellow))
                         .padding(5)
                 }
                 
