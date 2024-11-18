@@ -32,7 +32,7 @@ struct OnboardingView: View {
                 case .AskPermissions:
                     HStack {
                         Spacer()
-                        Text("Welcome to TAK Tracker!")
+                        Text("Welcome to TAK Aware!")
                             .bold()
                             .listRowSeparator(.hidden)
                         Spacer()
