@@ -19,7 +19,7 @@ extension View {
 
 struct MainScreen: View {
     @EnvironmentObject var takManager: TAKManager
-    @EnvironmentObject var manager: LocationManager
+    @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var settingsStore: SettingsStore
     
     @State private var displayUIState = DisplayUIState()
@@ -43,7 +43,7 @@ struct MainScreen: View {
             }
         }
         .onRotate { newOrientation in
-            manager.deviceUpdatedOrientation(orientation: newOrientation)
+            locationManager.deviceUpdatedOrientation(orientation: newOrientation)
         }
         .alert(isPresented: $isShowingAlert) {
             Alert(
@@ -55,6 +55,6 @@ struct MainScreen: View {
     }
     
     func broadcastLocation() {
-        takManager.broadcastLocation(locationManager: manager)
+        takManager.broadcastLocation(locationManager: locationManager)
     }
 }

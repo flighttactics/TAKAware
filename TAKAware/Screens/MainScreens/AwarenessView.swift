@@ -25,7 +25,7 @@ private extension AwarenessView {
 
 struct AwarenessView: View {
     @EnvironmentObject var settingsStore: SettingsStore
-    @EnvironmentObject var manager: LocationManager
+    @EnvironmentObject var locationManager: LocationManager
     @Environment(\.managedObjectContext) var dataContext
     
     @Binding var displayUIState: DisplayUIState
@@ -98,7 +98,7 @@ struct AwarenessView: View {
     
     var trackerStatus: some View {
         MapView(
-            region: $manager.region,
+            region: $locationManager.region,
             mapType: $settingsStore.mapTypeDisplay,
             viewModel: $mapViewModel
         )
@@ -216,7 +216,7 @@ struct AwarenessView: View {
             
             Text(settingsStore.callSign)
             
-            ForEach(displayUIState.coordinateValue(location: manager.lastLocation).lines, id: \.id) { line in
+            ForEach(displayUIState.coordinateValue(location: locationManager.lastLocation).lines, id: \.id) { line in
                 HStack {
                     if(line.hasLineTitle()) {
                         Text(line.lineTitle)
@@ -228,11 +228,11 @@ struct AwarenessView: View {
             HStack {
                 Text(displayUIState.headingValue(
                     unit: displayUIState.currentHeadingUnit,
-                    heading: manager.lastHeading))
+                    heading: locationManager.lastHeading))
                 Spacer()
                 HStack {
                     Text(displayUIState.speedValue(
-                        location: manager.lastLocation))
+                        location: locationManager.lastLocation))
                     Text("\(displayUIState.speedText())")
                 }.multilineTextAlignment(.trailing)
             }
