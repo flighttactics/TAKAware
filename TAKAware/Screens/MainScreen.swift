@@ -52,7 +52,7 @@ struct MainScreen: View {
         .alert(isPresented: $isShowingAlert) {
             Alert(
                 title: Text("App Migration"),
-                message: Text("This version of TAK Tracker requires the use of server certificates. We attempted to migrate your existing connection but were unable to. Please reconnect or upload your data package again to connect to your TAK server"),
+                message: Text("This version of TAK Aware requires the use of server certificates. We attempted to migrate your existing connection but were unable to. Please reconnect or upload your data package again to connect to your TAK server"),
                 dismissButton: .default(Text("OK"))
             )
         }
