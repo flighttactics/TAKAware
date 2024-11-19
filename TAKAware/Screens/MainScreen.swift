@@ -28,11 +28,7 @@ struct MainScreen: View {
     
     var body: some View {
         Group {
-            if(settingsStore.enableMapDisplay) {
-                AwarenessView(displayUIState: $displayUIState)
-            } else {
-                TrackerView(displayUIState: $displayUIState)
-            }
+            AwarenessView(displayUIState: $displayUIState)
         }
         .onAppear {
             if(AppConstants.getAppReleaseVersion() != SettingsStore.global.lastAppVersionRun) {

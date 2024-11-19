@@ -174,7 +174,7 @@ struct MapView: UIViewRepresentable {
         mapView.userTrackingMode = shouldForceInitialTracking ? .follow : .none
         mapView.showsCompass = false
         mapView.pointOfInterestFilter = .excludingAll
-        mapView.mapType = .standard //MKMapType(rawValue: UInt(mapType))!
+        mapView.mapType = MKMapType(rawValue: UInt(mapType))!
         mapView.layer.borderColor = UIColor.black.cgColor
         mapView.layer.borderWidth = 1.0
         mapView.isHidden = false
@@ -191,7 +191,7 @@ struct MapView: UIViewRepresentable {
     }
 
     func updateUIView(_ view: MKMapView, context: Context) {
-        view.mapType = .standard//MKMapType(rawValue: UInt(mapType))!
+        view.mapType = MKMapType(rawValue: UInt(mapType))!
         updateAnnotations(from: view)
     }
     

@@ -151,12 +151,6 @@ class SettingsStore: ObservableObject {
         }
     }
     
-    @Published var enableMapDisplay: Bool {
-        didSet {
-            UserDefaults.standard.set(enableMapDisplay, forKey: "enableMapDisplay")
-        }
-    }
-    
     @Published var disableScreenSleep: Bool {
         didSet {
             UserDefaults.standard.set(disableScreenSleep, forKey: "disableScreenSleep")
@@ -305,8 +299,6 @@ class SettingsStore: ObservableObject {
         self.staleTimeMinutes = (UserDefaults.standard.object(forKey: "staleTimeMinutes") == nil ? 5.0 : UserDefaults.standard.object(forKey: "staleTimeMinutes") as! Double)
         
         self.broadcastIntervalSeconds = (UserDefaults.standard.object(forKey: "broadcastIntervalSeconds") == nil ? 10.0 : UserDefaults.standard.object(forKey: "broadcastIntervalSeconds") as! Double)
-        
-        self.enableMapDisplay = (UserDefaults.standard.object(forKey: "enableMapDisplay") == nil ? true : UserDefaults.standard.object(forKey: "enableMapDisplay") as! Bool)
         
         self.disableScreenSleep = (UserDefaults.standard.object(forKey: "disableScreenSleep") == nil ? true : UserDefaults.standard.object(forKey: "disableScreenSleep") as! Bool)
         
