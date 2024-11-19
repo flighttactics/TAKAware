@@ -114,6 +114,30 @@ class CompassMapView: MKMapView {
     public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return false
     }
+    
+    // TODO: Allow staying locked on user location
+    // We effectively want a two or three stage option here
+    // * If map is not centered on the user, center them *without zooming*
+    //   (MapKit will auto-zoom as it decides when you set userTrackingMode)
+    // * If map is centered on the user, lock on to their location
+    //    Even if they move the map, snap back to their location when done moving
+    // * If they are locked on to their location, unlock and stop tracking
+    @objc func centerOnUser(sender: UIButton) {
+        self.setCenter(self.userLocation.coordinate, animated: true)
+    }
+    
+    lazy var centerOnUserButton: UIButton = {
+        let largeTitle = UIImage.SymbolConfiguration(textStyle: .title1)
+        let black = UIImage.SymbolConfiguration(weight: .medium)
+        let combined = largeTitle.applying(black)
+        
+        var buttonConfig = UIButton.Configuration.borderless()
+        buttonConfig.image = UIImage(systemName: "scope", withConfiguration: combined)?.withTintColor(.systemYellow, renderingMode: .alwaysOriginal)
+        let centerOnUserButton = UIButton(configuration: buttonConfig)
+        centerOnUserButton.addTarget(self, action: #selector(self.centerOnUser), for: .touchUpInside)
+        addSubview(centerOnUserButton)
+        return centerOnUserButton
+    }()
 
     lazy var compassButton: MKCompassButton = {
         let compassView = MKCompassButton(mapView: self)
@@ -121,15 +145,6 @@ class CompassMapView: MKMapView {
         compassView.compassVisibility = .visible
         addSubview(compassView)
         return compassView
-    }()
-    
-    lazy var locateButton: MKUserTrackingButton = {
-        let locateView = MKUserTrackingButton(mapView: self)
-        locateView.isUserInteractionEnabled = true
-        locateView.tintColor = .yellow
-        locateView.backgroundColor = .clear
-        addSubview(locateView)
-        return locateView
     }()
     
     override func layoutSubviews() {
@@ -142,7 +157,7 @@ class CompassMapView: MKMapView {
         compassButton.frame = CGRect(
             origin: CGPoint(x: leftPadding + 24, y: topPadding),
             size: compassButton.bounds.size)
-        locateButton.frame = CGRect(
+        centerOnUserButton.frame = CGRect(
             origin: CGPoint(x: leftPadding + 24, y: topPadding + 55.0),
             size: compassButton.bounds.size)
     }
