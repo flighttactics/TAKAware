@@ -76,7 +76,7 @@ class IconData {
             let pathParts = iconsetPath.split(separator: "/")
             if pathParts.count == 3 {
                 let iconSetUid = String(pathParts[0]) //iconset_uid
-                let groupName = String(pathParts[1]) //groupName
+                //let iconsetName = String(pathParts[1]) //iconsetName
                 let imageName = String(pathParts[2]) //filename
                 
                 if iconSetUid == "COT_MAPPING_SPOTMAP" {
@@ -89,12 +89,10 @@ class IconData {
                 } else {
                     let bitMapCol = SQLite.Expression<Blob>("bitmap")
                     let iconSetCol = SQLite.Expression<String>("iconset_uid")
-                    let groupNameCol = SQLite.Expression<String>("groupName")
                     let fileNameCol = SQLite.Expression<String>("filename")
                     
                     let query: QueryType = shared.iconTable
                         .filter(iconSetCol == iconSetUid)
-                        .filter(groupNameCol == groupName)
                         .filter(fileNameCol == imageName)
                     let conn = shared.connection
                     do {

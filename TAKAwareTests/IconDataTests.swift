@@ -76,4 +76,13 @@ final class IconDataTests: TAKAwareTestCase {
         let expected = "su-------------"
         XCTAssertEqual(IconData.mil2525FromCotType(cotType: cotType), expected)
     }
+    
+    func testParseCustomIconWithSpaceInName() {
+        let hostileGroundImgData = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAIRlWElmTU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAIdpAAQAAAABAAAAWgAAAAAAAABIAAAAAQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACCgAwAEAAAAAQAAACAAAAAAX7wP8AAAAAlwSFlzAAALEwAACxMBAJqcGAAAABxpRE9UAAAAAgAAAAAAAAAQAAAAKAAAABAAAAAQAAABPNYItl0AAAEISURBVFgJ7JRdCoMwEITFGPAwBuNlin3xpzfQE+hRq7HXSHfTbBG1RFv1qYEQYWlndvZjPe9/vk+AwU8Le/H71MNDxrI0ivqrECrkvAB1fpYDH8WzOB66qtKqrnUh5QNMlGDg8CQCDuK5lD2K67Y1twcTtyRRUEMTwVFJGHHoXN1JvGm0xgtGOkriIBM+dr4oPjKBSZRSDjCiXcfBKfZZ5yROLyQxGcfPYDICzik+MbEHmIw6fwNHIq53nsRmMF+0LwHnEqe6BXPExOpxuIEjEddrk4BxrAZzPXAucarPx/Exie3AkYjrteMYgbnIRH6B3Y4LxWw4159urYMJXNupEANsStwT5jwBAAD//8q1LRoAAAEbSURBVN2UXQ6CMBCECaUJh8FQLqO8KMUbyAngqPLjNeou2aZQ1ILUF0kaKIR+s7PTBoG5imOSdO3tplTTKFXXfges2VeVyg+HAZClwZonFjN2vqTpcPctAuAtwGWaPmLOJSAjg50/RZyxi8yy1psIgHcAvwrRw9pYOZ8jl7MQRYAT/W4RBJdCPMBdhIdL3Os3oxPFHhFkeynEQHBn5bYUptuxOZhL29/23IbacwwmtmN9MKlyChzazuxFt845OlEI0TkzQfAtgVsrZgzmx0yQ7ZOe767cFjcG8+Xu0LabtH/dcxtqz5fnBFU+sf1ncC0m1MHE3YHHq8/AaYjrzlHEKUn6HAYcrwX8sHmfuyCu7xgyScN74Fzw//n+BJokCCgQid0kAAAAAElFTkSuQmCC"
+        let expectedIcon = buildTestIconFromBase64String(hostileGroundImgData)
+        
+        let iconString = "83198b4872a8c34eb9c549da8a4de5a28f07821185b39a2277948f66c24ac17a/GeoOps/Fire Location.png"
+        let actualIcon = IconData.iconFor(type2525: "a-H-G", iconsetPath: iconString)
+        XCTAssertNotEqual(actualIcon.icon.pngData(), expectedIcon.icon.pngData())
+    }
 }
