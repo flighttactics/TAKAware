@@ -43,18 +43,14 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
 }
 
 class SituationalAnnotationView: MKAnnotationView {
-    var annotationLabel = UILabel()
     var mapView: MapView
     var mapPointAnnotation: MapPointAnnotation
     
     init(mapView: MapView, annotation: MapPointAnnotation, reuseIdentifier: String?) {
         self.mapView = mapView
         self.mapPointAnnotation = annotation
-        self.annotationLabel.text = annotation.title ?? ""
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         self.canShowCallout = true
-        self.addSubview(annotationLabel)
-        self.zPriority = .min
         setUpMenu()
     }
     
@@ -393,8 +389,12 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             guard !annotation.isKind(of: MKUserLocation.self) else {
-                // We don't customize the self marker
-                return nil
+                var selfView = mapView.dequeueReusableAnnotationView(withIdentifier: "UserLocation")
+                if selfView == nil {
+                    selfView = MKUserLocationView(annotation: annotation, reuseIdentifier: "UserLocation")
+                }
+                selfView!.zPriority = .max
+                return selfView
             }
             
             guard let mpAnnotation = annotation as? MapPointAnnotation else { return nil }
