@@ -22,9 +22,6 @@ struct SituationalAwarenessScreen: View {
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
     
     var body: some View {
-        List {
-            MapOptions()
-        }
-        .navigationTitle("Situational Awareness")
+        MapOptions()
     }
 }
