@@ -81,12 +81,17 @@ class TAKDataPackageImporter: COTDataParser {
                 let cotFile = parser.retrieveFileFromArchive($0)
                 let rawXml = String(decoding: cotFile, as: UTF8.self)
                 guard let cotEvent = cotParser.parse(rawXml) else {
+                    TAKLogger.error("[TAKDataPackageImporter] Unable to parse COT XML for \($0.fileLocation). Skipping.")
                     return
                 }
                 
                 switch(cotEvent.eventType) {
-                case .ATOM, .BIT:
+                case .ATOM:
                     parseAtom(cotEvent: cotEvent, rawXml: rawXml)
+                case .BIT:
+                    parseAtom(cotEvent: cotEvent, rawXml: rawXml)
+                case .CUSTOM:
+                    parseCustom(cotEvent: cotEvent, rawXml: rawXml)
                 default:
                     TAKLogger.debug("[TAKDataPackageImporter] Non-Atom CoT Event received \(cotEvent.type)")
                 }

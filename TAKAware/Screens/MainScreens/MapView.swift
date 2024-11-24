@@ -8,7 +8,132 @@
 import CoreData
 import Foundation
 import MapKit
+import SwiftTAK
 import SwiftUI
+
+class COTMapObject: NSObject {
+    static let RECTANGLE_TYPES: [String] = ["u-d-f", "u-d-r"]
+    static let CIRCLE_TYPES: [String] = ["u-d-c-c"]
+    static let LINE_TYPES: [String] = ["b-m-r"]
+    static let OVERLAY_TYPES: [String] = RECTANGLE_TYPES + CIRCLE_TYPES + LINE_TYPES
+    
+    var cotData: COTData
+    var cotEvent: COTEvent?
+    
+    var cotType: String {
+        cotData.cotType ?? ""
+    }
+    
+    var isAnnotation: Bool {
+        return !COTMapObject.OVERLAY_TYPES.contains(cotType)
+    }
+    
+    var isShape: Bool {
+        COTMapObject.OVERLAY_TYPES.contains(cotType)
+    }
+    
+    var annotation: MapPointAnnotation {
+        return MapPointAnnotation(mapPoint: cotData)
+    }
+    
+    func buildRectangle() -> MKPolygon {
+        let pointLinks = cotEvent?.cotDetail?.cotLinks ?? []
+        let strokeColor = cotEvent?.cotDetail?.cotStrokeColor?.value ?? -1
+        let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
+        let fillColor = cotEvent?.cotDetail?.cotFillColor?.value ?? -1
+        let labelsOn = cotEvent?.cotDetail?.cotLabelsOn?.value ?? true
+        let coordinates: [CLLocationCoordinate2D] = pointLinks.map { pointLink in
+            let points = pointLink.point.split(separator: ",")
+            guard points.count >= 2 else {
+                return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+            }
+            let lat = Double(String(points[0])) ?? 0.0
+            let lon = Double(String(points[1])) ?? 0.0
+            return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+        }
+        let polygon = COTMapPolygon(coordinates: coordinates, count: coordinates.count)
+        polygon.strokeColor = strokeColor
+        polygon.strokeWeight = strokeWeight
+        polygon.fillColor = fillColor
+        polygon.labelsOn = labelsOn
+        return polygon
+    }
+    
+    func buildPolyline() -> MKPolyline {
+        let pointLinks = cotEvent?.cotDetail?.cotLinks ?? []
+        let strokeColor = cotEvent?.cotDetail?.cotStrokeColor?.value ?? -1
+        let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
+        let fillColor = cotEvent?.cotDetail?.cotFillColor?.value ?? -1
+        let labelsOn = cotEvent?.cotDetail?.cotLabelsOn?.value ?? true
+        let coordinates: [CLLocationCoordinate2D] = pointLinks.map { pointLink in
+            let points = pointLink.point.split(separator: ",")
+            guard points.count >= 2 else {
+                return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+            }
+            let lat = Double(String(points[0])) ?? 0.0
+            let lon = Double(String(points[1])) ?? 0.0
+            return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+        }
+        let polyline = COTMapPolyline(coordinates: coordinates, count: coordinates.count)
+        polyline.strokeColor = strokeColor
+        polyline.strokeWeight = strokeWeight
+        polyline.fillColor = fillColor
+        polyline.labelsOn = labelsOn
+        return polyline
+    }
+    
+    func buildEllipse() -> MKCircle {
+        let cotShape = cotEvent?.cotDetail?.cotShape
+        let strokeColor = cotEvent?.cotDetail?.cotStrokeColor?.value ?? -1
+        let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
+        let fillColor = cotEvent?.cotDetail?.cotFillColor?.value ?? -1
+        let labelsOn = cotEvent?.cotDetail?.cotLabelsOn?.value ?? true
+        let circle = COTMapCircle(center: CLLocationCoordinate2D(latitude: cotData.latitude, longitude: cotData.longitude), radius: cotShape?.major ?? 0.0)
+        circle.strokeColor = strokeColor
+        circle.strokeWeight = strokeWeight
+        circle.fillColor = fillColor
+        circle.labelsOn = labelsOn
+        return circle
+    }
+    
+    var shape: MKOverlay {
+        // Shapes: Circle, Polygon, Polyline
+        self.cotEvent = COTXMLParser().parse(cotData.rawXml ?? "")
+        if COTMapObject.RECTANGLE_TYPES.contains(cotType) {
+            return buildRectangle()
+        } else if COTMapObject.CIRCLE_TYPES.contains(cotType) {
+            return buildEllipse() //but this might actually only be a circle
+        } else if COTMapObject.LINE_TYPES.contains(cotType) {
+            return buildPolyline()
+        }
+        return buildEllipse()
+    }
+    
+    init(mapPoint: COTData) {
+        self.cotData = mapPoint
+    }
+}
+
+class COTMapCircle: MKCircle {
+    var strokeColor: Double = -1
+    var strokeWeight: Double = -1
+    var fillColor: Double = -1
+    var labelsOn: Bool = true
+}
+
+class COTMapPolygon: MKPolygon {
+    var strokeColor: Double = -1
+    var strokeWeight: Double = -1
+    var fillColor: Double = -1
+    var labelsOn: Bool = true
+}
+
+class COTMapPolyline: MKPolyline {
+    var strokeColor: Double = -1
+    var strokeWeight: Double = -1
+    var fillColor: Double = -1
+    var labelsOn: Bool = true
+}
 
 final class MapPointAnnotation: NSObject, MKAnnotation {
     var id: String
@@ -236,7 +361,7 @@ struct MapView: UIViewRepresentable {
         for annotation in mapView.annotations.filter({ $0 is MapPointAnnotation }) {
             guard let mpAnnotation = annotation as? MapPointAnnotation else { continue }
             guard let node = incomingData.first(where: {$0.id?.uuidString == mpAnnotation.id}) else { continue }
-            let updatedMp = MapPointAnnotation(mapPoint: node)
+            let updatedMp = COTMapObject(mapPoint: node).annotation
             mpAnnotation.title = updatedMp.title
             mpAnnotation.color = updatedMp.color
             mpAnnotation.icon = updatedMp.icon
@@ -257,7 +382,7 @@ struct MapView: UIViewRepresentable {
                             TAKLogger.debug("[MapView] Removing old bloodhound line")
                             mapView.removeOverlay(activeBloodhound!)
                         } else {
-                            TAKLogger.debug("[MapView] Updated Bloodhound line by no activeBloodhound")
+                            TAKLogger.debug("[MapView] Updated Bloodhound line but no activeBloodhound")
                         }
                         createBloodhound(annotation: updatedMp)
                     }
@@ -267,8 +392,12 @@ struct MapView: UIViewRepresentable {
 
         if !toAdd.isEmpty {
             let insertingAnnotations = incomingData.filter { toAdd.contains($0.id!.uuidString)}
-            let newAnnotations = insertingAnnotations.map { MapPointAnnotation(mapPoint: $0) }
+            let newMapPoints = insertingAnnotations.map { COTMapObject(mapPoint: $0) }
+            let newAnnotations = newMapPoints.filter { $0.isAnnotation }.map { $0.annotation }
             mapView.addAnnotations(newAnnotations)
+            
+            let newOverlays = newMapPoints.filter { $0.isShape }.map { $0.shape }
+            mapView.addOverlays(newOverlays)
         }
     }
     
@@ -368,19 +497,27 @@ struct MapView: UIViewRepresentable {
                 return MKTileOverlayRenderer(tileOverlay: tileOverlay)
             }
 
-            if let overlay = overlay as? MKCircle {
-                let circleRenderer = MKCircleRenderer(circle: overlay)
-                print(overlay.coordinate)
-                circleRenderer.strokeColor = .red
-                circleRenderer.fillColor = .blue
+            if let circle = overlay as? COTMapCircle {
+                let circleRenderer = MKCircleRenderer(circle: circle)
+                circleRenderer.lineWidth = circle.strokeWeight
+                circleRenderer.strokeColor = IconData.colorFromArgb(argbVal: Int(circle.strokeColor))
+                circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(circle.fillColor))
                 return circleRenderer
             }
             
-            if let polyline = overlay as? MKPolyline {
+            if let polyline = overlay as? COTMapPolyline {
                 let renderer = MKPolylineRenderer(polyline: polyline)
-                renderer.lineWidth = 3.0
-                renderer.alpha = 0.8
-                renderer.strokeColor = UIColor(red: 0.729, green: 0.969, blue: 0.2, alpha: 1) // #baf733
+                renderer.lineWidth = polyline.strokeWeight
+                renderer.strokeColor = IconData.colorFromArgb(argbVal: Int(polyline.strokeColor))
+                renderer.fillColor = IconData.colorFromArgb(argbVal: Int(polyline.fillColor))
+                return renderer
+            }
+            
+            if let polygon = overlay as? COTMapPolygon {
+                let renderer = MKPolygonRenderer(overlay: polygon)
+                renderer.lineWidth = polygon.strokeWeight
+                renderer.strokeColor = IconData.colorFromArgb(argbVal: Int(polygon.strokeColor))
+                renderer.fillColor = IconData.colorFromArgb(argbVal: Int(polygon.fillColor))
                 return renderer
             }
         

@@ -33,6 +33,8 @@ class StreamParser: COTDataParser {
             switch(cotEvent.eventType) {
             case .ATOM, .BIT:
                 parseAtom(cotEvent: cotEvent, rawXml: xmlEvent)
+            case .CUSTOM:
+                parseCustom(cotEvent: cotEvent, rawXml: xmlEvent)
             default:
                 TAKLogger.debug("[StreamParser] Non-Atom CoT Event received \(cotEvent.type)")
             }
