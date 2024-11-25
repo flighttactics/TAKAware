@@ -135,6 +135,9 @@ class COTMapPolyline: MKPolyline {
     var labelsOn: Bool = true
 }
 
+class COTMapBloodhoundLine: MKGeodesicPolyline {
+}
+
 final class MapPointAnnotation: NSObject, MKAnnotation {
     var id: String
     dynamic var title: String?
@@ -184,31 +187,48 @@ class SituationalAnnotationView: MKAnnotationView {
     }
     
     private func setUpMenu() {
+        let ICON_SIZE = 23.0
+        let VERTICAL_SPACING = 5.0
+        let HORIZONTAL_SPACING = 10.0
         let actionView = UIStackView()
-        actionView.distribution = .equalCentering
+        actionView.translatesAutoresizingMaskIntoConstraints = false
+        actionView.distribution = .fillEqually
         actionView.axis = .horizontal
-        actionView.spacing = 8.0
+        actionView.spacing = HORIZONTAL_SPACING
+        
+        let bloodhoundImage = UIImage(named: "bloodhound")!
+        let infoImage = UIImage(named: "details")!
+        let trashImage = UIImage(named: "ic_menu_delete")!
+        let videoImage = UIImage(named: "video")!
                 
-        let infoButton = UIButton(type: .detailDisclosure)
+        let infoButton = UIButton.systemButton(with: infoImage, target: nil, action: nil)
         infoButton.addTarget(self, action: #selector(self.detailsPressed), for: .touchUpInside)
+        infoButton.contentMode = .scaleAspectFit
         actionView.addArrangedSubview(infoButton)
         
-        let bloodhoundButton = UIButton.systemButton(with: UIImage(systemName: "dog.circle")!, target: nil, action: nil)
+        let bloodhoundButton = UIButton.systemButton(with: bloodhoundImage, target: nil, action: nil)
         bloodhoundButton.addTarget(self, action: #selector(self.bloodhoundPressed), for: .touchUpInside)
+        bloodhoundButton.contentMode = .scaleAspectFit
         actionView.addArrangedSubview(bloodhoundButton)
         
-        let deleteButton = UIButton.systemButton(with: UIImage(systemName: "trash")!, target: nil, action: nil)
+        let deleteButton = UIButton.systemButton(with: trashImage, target: nil, action: nil)
         deleteButton.addTarget(self, action: #selector(self.deletePressed), for: .touchUpInside)
+        deleteButton.contentMode = .scaleAspectFit
         actionView.addArrangedSubview(deleteButton)
         
         if(mapPointAnnotation.videoURL != nil) {
-            let videoButton = UIButton.systemButton(with: UIImage(systemName: "video.circle")!, target: nil, action: nil)
+            //let videoButton = UIButton.systemButton(with: UIImage(systemName: "video.circle")!, target: nil, action: nil)
+            let videoButton = UIButton.systemButton(with: videoImage, target: nil, action: nil)
             videoButton.addTarget(self, action: #selector(self.videoPressed), for: .touchUpInside)
+            videoButton.contentMode = .scaleAspectFit
             actionView.addArrangedSubview(videoButton)
         }
         
-        let widthConstraint = NSLayoutConstraint(item: actionView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: (bloodhoundButton.frame.width + 8) * CGFloat(actionView.arrangedSubviews.count))
+        let widthConstraint = NSLayoutConstraint(item: actionView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: (ICON_SIZE+HORIZONTAL_SPACING) * CGFloat(actionView.arrangedSubviews.count))
         actionView.addConstraint(widthConstraint)
+        
+        let heightConstraint = NSLayoutConstraint(item: actionView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: (ICON_SIZE+VERTICAL_SPACING))
+        actionView.addConstraint(heightConstraint)
         
         self.canShowCallout = true
         self.detailCalloutAccessoryView = actionView
@@ -290,7 +310,7 @@ struct MapView: UIViewRepresentable {
     @Binding var viewModel: MapViewModel
     
     @State var mapView: CompassMapView = CompassMapView()
-    @State var activeBloodhound: MKGeodesicPolyline?
+    @State var activeBloodhound: COTMapBloodhoundLine?
     @State var bloodhoundStartAnnotation: MapPointAnnotation?
     @State var bloodhoundEndAnnotation: MapPointAnnotation?
     @State var bloodhoundStartCoordinate: CLLocationCoordinate2D?
@@ -316,6 +336,7 @@ struct MapView: UIViewRepresentable {
         mapView.isHidden = false
         
         viewModel.annotationSelectedCallback = annotationSelected(_:)
+        viewModel.bloodhoundDeselectedCallback = bloodhoundDeselected
         
 //        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
 //        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
@@ -418,15 +439,29 @@ struct MapView: UIViewRepresentable {
         bloodhoundEndCoordinate = endPointLocation
         bloodhoundEndAnnotation = annotation
         if(activeBloodhound != nil) {
-            mapView.removeOverlay(activeBloodhound!)
+            let bloodhoundLines = mapView.overlays.filter { $0 is MKGeodesicPolyline }
+            mapView.removeOverlays(bloodhoundLines)
         }
-        activeBloodhound = MKGeodesicPolyline(coordinates: [userLocation, endPointLocation], count: 2)
+        activeBloodhound = COTMapBloodhoundLine(coordinates: [userLocation, endPointLocation], count: 2)
         mapView.addOverlay(activeBloodhound!, level: .aboveLabels)
         mapView.deselectAnnotation(annotation, animated: false)
     }
     
     func annotationSelected(_ annotation: MapPointAnnotation) {
         annotationSelected(mapView, annotation: annotation)
+    }
+    
+    func bloodhoundDeselected() {
+        if(!viewModel.isAcquiringBloodhoundTarget && activeBloodhound != nil) {
+            let bloodhoundLines = mapView.overlays.filter { $0 is MKGeodesicPolyline }
+            mapView.removeOverlays(bloodhoundLines)
+            DispatchQueue.main.async {
+                activeBloodhound = nil
+                bloodhoundStartCoordinate = nil
+                bloodhoundEndCoordinate = nil
+                bloodhoundEndAnnotation = nil
+            }
+        }
     }
     
     func annotationSelected(_ mapView: MKMapView, annotation: any MKAnnotation) {
@@ -518,6 +553,21 @@ struct MapView: UIViewRepresentable {
                 renderer.lineWidth = polygon.strokeWeight
                 renderer.strokeColor = IconData.colorFromArgb(argbVal: Int(polygon.strokeColor))
                 renderer.fillColor = IconData.colorFromArgb(argbVal: Int(polygon.fillColor))
+                return renderer
+            }
+            
+            // Bloodhound Line
+            if let polyline = overlay as? COTMapBloodhoundLine {
+                let renderer = MKPolylineRenderer(polyline: polyline)
+                renderer.lineWidth = 3.0
+                renderer.strokeColor = UIColor(red: 0.729, green: 0.969, blue: 0.2, alpha: 1) // #baf733
+                return renderer
+            }
+            
+            if let polyline = overlay as? MKGeodesicPolyline {
+                let renderer = MKPolylineRenderer(polyline: polyline)
+                renderer.lineWidth = 3.0
+                renderer.strokeColor = UIColor(red: 0.729, green: 0.969, blue: 0.2, alpha: 1) // #baf733
                 return renderer
             }
         

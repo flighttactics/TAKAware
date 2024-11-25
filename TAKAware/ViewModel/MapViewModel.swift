@@ -16,6 +16,7 @@ class MapViewModel: ObservableObject {
     @Published var currentSelectedAnnotation: MapPointAnnotation? = nil
     @Published var conflictedItems: [MapPointAnnotation] = []
     var annotationSelectedCallback: (MapPointAnnotation) -> Void = { (_) in }
+    var bloodhoundDeselectedCallback: () -> Void = { () in }
     
     func didSelectAnnotation(_ annotation: MapPointAnnotation) {
         currentSelectedAnnotation = annotation
@@ -34,5 +35,12 @@ class MapViewModel: ObservableObject {
         DispatchQueue.main.async {
             DataController.shared.deleteCot(cotId: annotation.id)
         }        
+    }
+    
+    func toggleBloodhound() {
+        if(isAcquiringBloodhoundTarget) {
+            bloodhoundDeselectedCallback()
+        }
+        isAcquiringBloodhoundTarget.toggle()
     }
 }
