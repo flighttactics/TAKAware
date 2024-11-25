@@ -110,8 +110,8 @@ struct AwarenessView: View {
             Spacer()
 
             Group {
-                Button(action: { mapViewModel.isAcquiringBloodhoundTarget.toggle() }) {
-                    navBarImage(imageName: "bloodhound")
+                Button(action: { mapViewModel.toggleBloodhound() }) {
+                    navBarImage(imageName: "bloodhoundsvg")
                         .colorMultiply((mapViewModel.isAcquiringBloodhoundTarget ? .red : .yellow))
                         .padding(5)
                 }
