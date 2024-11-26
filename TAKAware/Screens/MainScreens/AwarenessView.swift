@@ -63,7 +63,7 @@ struct AwarenessView: View {
                 toolbarItemsRight
             }
         }
-        .navigationViewStyle(.columns)
+        .navigationViewStyle(.stack)
         .sheet(item: $sheet, content: {
             Sheet(type: $0)
                 .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
@@ -166,7 +166,6 @@ struct AwarenessView: View {
                         .padding(5)
                 }
             }
-            .contentShape(Rectangle())
         }
         .padding(.horizontal)
         .padding(.top)
