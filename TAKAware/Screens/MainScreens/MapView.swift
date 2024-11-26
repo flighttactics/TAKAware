@@ -368,7 +368,7 @@ struct MapView: UIViewRepresentable {
         
         let existingAnnotations = mapView.annotations.filter { $0 is MapPointAnnotation }
         let current = Set(existingAnnotations.map { ($0 as! MapPointAnnotation).id })
-        let new = Set(incomingData.map { $0.id!.uuidString })
+        let new = Set(incomingData.map { $0.id?.uuidString ?? "" }.filter { !$0.isEmpty })
         let toRemove = Array(current.symmetricDifference(new))
         let toAdd = Array(new.symmetricDifference(current))
 
