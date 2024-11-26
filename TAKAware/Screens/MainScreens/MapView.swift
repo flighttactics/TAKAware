@@ -460,6 +460,7 @@ struct MapView: UIViewRepresentable {
                 bloodhoundStartCoordinate = nil
                 bloodhoundEndCoordinate = nil
                 bloodhoundEndAnnotation = nil
+                viewModel.isAcquiringBloodhoundTarget = false
             }
         }
     }
@@ -595,20 +596,21 @@ struct MapView: UIViewRepresentable {
                     annotation: mpAnnotation,
                     reuseIdentifier: identifier
                 )
-
-                let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
-                var pointIcon: UIImage = icon.icon
-                
-                if let pointColor = mpAnnotation.color {
-                    if pointIcon.isSymbolImage {
-                        pointIcon = pointIcon.maskSymbol(with: pointColor)
-                    } else {
-                        pointIcon = pointIcon.maskImage(with: pointColor)
-                    }
-                }
-                
-                annotationView!.image = pointIcon
             }
+
+            let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
+            var pointIcon: UIImage = icon.icon
+            
+            if let pointColor = mpAnnotation.color {
+                if pointIcon.isSymbolImage {
+                    pointIcon = pointIcon.maskSymbol(with: pointColor)
+                } else {
+                    pointIcon = pointIcon.maskImage(with: pointColor)
+                }
+            }
+            
+            annotationView!.image = pointIcon
+            annotationView!.annotation = mpAnnotation
             return annotationView
         }
     }
