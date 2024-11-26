@@ -121,7 +121,7 @@ struct AwarenessView: View {
                         .padding(5)
                 }
                 
-                Button(action: { sheet = .dataSync }) {
+                Button(action: { sheet = .dataPackage }) {
                     navBarImage(imageName: "nav_package")
                         .padding(5)
                 }

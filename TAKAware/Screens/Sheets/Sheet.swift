@@ -17,6 +17,7 @@ struct Sheet: View {
         case settings
         case chat
         case dataSync
+        case dataPackage
         case channels
         
         var id: String {
@@ -25,7 +26,8 @@ struct Sheet: View {
                 case .emergencySettings: return "emergencysettings"
                 case .settings: return "settings"
                 case .chat: return "chat"
-                case .dataSync: return "datapackage"
+                case .dataSync: return "datasync"
+                case .dataPackage: return "datapackage"
                 case .channels: return "channels"
             }
         }
@@ -35,9 +37,10 @@ struct Sheet: View {
         switch type {
             case .none: EmptyView()
             case .emergencySettings: AlertSheet()
-        case .settings: SettingsSheet()
+            case .settings: SettingsSheet()
             case .chat: ChatView() //ChatSheet()
             case .dataSync: DataSyncSheet()
+            case .dataPackage: DataPackageSheet()
             case .channels: ChannelSheet()
         }
     }
