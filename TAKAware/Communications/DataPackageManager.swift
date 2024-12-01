@@ -62,6 +62,8 @@ class DataPackageManager: NSObject, ObservableObject, URLSessionDelegate {
     @Published var dataPackages: [TAKMissionPackage] = []
     @Published var isLoading = false
     @Published var isSendingUpdate = false
+    @Published var isFinishedProcessingRemotePackage = false
+    @Published var remotePackageProcessStatus: String = ""
     let ANON_CHANNEL_NAME = "__ANON__"
     
     func retrieveDataPackages() {
@@ -157,6 +159,8 @@ class DataPackageManager: NSObject, ObservableObject, URLSessionDelegate {
     }
     
     func importRemotePackage(missionPackage: TAKMissionPackage) {
+        remotePackageProcessStatus = ""
+        isFinishedProcessingRemotePackage = false
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.MISSION_PACKAGE_FILE_PATH)/\(missionPackage.hash)"
         TAKLogger.debug("[DataPackageManager] Requesting file from \(requestURLString)")
         let requestUrl = URL(string: requestURLString)!
@@ -175,9 +179,12 @@ class DataPackageManager: NSObject, ObservableObject, URLSessionDelegate {
                 TAKLogger.debug("[DataPackageManager] File downloaded, starting import")
                 let parser = TAKDataPackageImporter(fileLocation: localURL, missionPackage: missionPackage)
                 parser.parse()
+                self.remotePackageProcessStatus = "Data package processed successfully!"
             } else {
                 self.logDataPackageManagerError(error.debugDescription)
+                self.remotePackageProcessStatus = "Data package could not be processed \(error.debugDescription)"
             }
+            self.isFinishedProcessingRemotePackage = true
         }
         task.resume()
     }

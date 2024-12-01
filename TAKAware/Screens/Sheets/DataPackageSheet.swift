@@ -61,8 +61,8 @@ struct DataPackageDownloader: View {
         .onAppear {
             dataPackageManager.retrieveDataPackages()
         }
-        .alert(isPresented: $isShowingAlert) {
-            Alert(title: Text("Data Package"), message: Text(alertText), dismissButton: .default(Text("OK")))
+        .alert(isPresented: $dataPackageManager.isFinishedProcessingRemotePackage) {
+            Alert(title: Text("Data Package"), message: Text(dataPackageManager.remotePackageProcessStatus), dismissButton: .default(Text("OK")))
         }
     }
 }
