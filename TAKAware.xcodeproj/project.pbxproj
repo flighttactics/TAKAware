@@ -43,6 +43,7 @@
 		A578E42E2C550FD8001978D4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E42D2C550FD8001978D4 /* MapView.swift */; };
 		A578E4382C55B3E1001978D4 /* DataSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E4372C55B3E1001978D4 /* DataSyncManager.swift */; };
 		A578E43E2C56E97A001978D4 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A578E43D2C56E97A001978D4 /* Launch Screen.storyboard */; };
+		A59530FC2CF7EFB00078C1E8 /* DataPackageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59530FB2CF7EFA30078C1E8 /* DataPackageManager.swift */; };
 		A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6672C278CCD00E81976 /* AwarenessView.swift */; };
 		A595F66A2C278CFE00E81976 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6692C278CFE00E81976 /* Components.swift */; };
 		A59C08472AACF95100C33B44 /* CertificateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59C08462AACF95100C33B44 /* CertificateManager.swift */; };
@@ -3455,6 +3456,7 @@
 		A578E43D2C56E97A001978D4 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		A58B372C2A57B0390002B984 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A58B372D2A57B38A0002B984 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		A59530FB2CF7EFA30078C1E8 /* DataPackageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackageManager.swift; sourceTree = "<group>"; };
 		A595F6672C278CCD00E81976 /* AwarenessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwarenessView.swift; sourceTree = "<group>"; };
 		A595F6692C278CFE00E81976 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		A599D66C2A5E45CD00B507D9 /* TAKAware.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TAKAware.entitlements; sourceTree = "<group>"; };
@@ -10317,6 +10319,7 @@
 		A5E2F8FC2A791F0600EDD0B4 /* Communications */ = {
 			isa = PBXGroup;
 			children = (
+				A59530FB2CF7EFA30078C1E8 /* DataPackageManager.swift */,
 				A5BF02012A5EBCA40043065B /* TCPMessage.swift */,
 				A5BF01FF2A5EB63F0043065B /* UDPMessage.swift */,
 				A5FB4E632A8FE0020034966D /* CSRRequestor.swift */,
@@ -13954,6 +13957,7 @@
 				A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */,
 				A55ABF532ABDC11900195AB7 /* AboutInformation.swift in Sources */,
 				A55ABF512ABDC0E900195AB7 /* MapOptions.swift in Sources */,
+				A59530FC2CF7EFB00078C1E8 /* DataPackageManager.swift in Sources */,
 				A5D8D37E2A53B0F9002F0E3E /* TAKAwareApp.swift in Sources */,
 				A5B312BB2C38C5A6007B3914 /* COTData.xcdatamodeld in Sources */,
 				A5E7B00B2A70B5FA00D9203F /* TAKDataPackageParser.swift in Sources */,
@@ -14167,7 +14171,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14211,7 +14215,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14251,7 +14255,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14272,7 +14276,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14291,7 +14295,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
@@ -14308,7 +14312,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;

@@ -27,8 +27,11 @@ struct AppConstants {
     static let CHANNELS_LIST_PATH = "/Marti/api/groups/all"
     static let CHANNELS_BIT_UPDATE_PATH = "/Marti/api/groups/activebits"
     
-    static let DATA_PACKAGE_LIST_PATH = "/Marti/api/missions"
-    static let DATA_PACKAGE_DETAILS_PATH = "/Marti/api/missions/{name}"
+    static let DATA_SYNC_MISSION_LIST_PATH = "/Marti/api/missions"
+    static let DATA_SYNC_MISSION_DETAILS_PATH = "/Marti/api/missions/{name}"
+    
+    static let MISSION_PACKAGE_LIST_PATH = "/Marti/api/files/metadata?missionPackage=true"
+    static let MISSION_PACKAGE_FILE_PATH = "/Marti/api/files" // Must append the hash to the end
     
     static let UDP_BROADCAST_URL = "239.2.3.1"
     
