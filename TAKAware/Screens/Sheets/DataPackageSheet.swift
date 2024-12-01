@@ -67,6 +67,39 @@ struct DataPackageDownloader: View {
     }
 }
 
+struct DataPackageFilesList: View {
+    @StateObject var dataPackageManager: DataPackageManager = DataPackageManager()
+    var dataPackage: DataPackage
+    var dataPackageFiles: [DataPackageFile] {
+        dataPackage.dataPackageFiles?.allObjects as! [DataPackageFile]
+    }
+    
+    func fileName(dataPackageFile: DataPackageFile) -> String {
+        dataPackageFile.cotData?.callsign ??
+            String(dataPackageFile.zipEntry?.split(separator: "/").last ?? "No Name")
+    }
+
+    var body: some View {
+        List {
+            Section(header: Text("Files for \(dataPackage.name ?? "Unknown Data Package")")) {
+                if dataPackageFiles.isEmpty {
+                    Text("No Data Package Files")
+                } else {
+                    ForEach(dataPackageFiles) { dataPackageFile in
+                        HStack {
+                            Text(
+                                fileName(dataPackageFile: dataPackageFile)
+                            )
+                            Spacer()
+                            Image(systemName: (dataPackageFile.isCoT ? "target" : "doc"))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct DataPackageSheet: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
@@ -79,7 +112,7 @@ struct DataPackageSheet: View {
     var dataPackages: FetchedResults<DataPackage>
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 NavigationLink(destination: DataPackageDownloader()) {
                     Text("Download from servers")
@@ -128,19 +161,24 @@ struct DataPackageSheet: View {
                         Text("No Data Packages Imported")
                     } else {
                         ForEach(dataPackages) { dataPackage in
-                            HStack {
-                                Image(systemName: "shippingbox")
-                                VStack(alignment: .leading) {
-                                    Text(dataPackage.name ?? "Unknown Name")
-                                        .fontWeight(.bold)
-                                    Text("\(dataPackage.user!), \(dataPackage.dataPackageFiles!.count) item(s)")
-                                        .font(.system(size: 8))
+                            NavigationLink {
+                                DataPackageFilesList(dataPackage: dataPackage)
+                            } label: {
+                                HStack {
+                                    Image(systemName: "shippingbox")
+                                    VStack(alignment: .leading) {
+                                        Text(dataPackage.name ?? "Unknown Name")
+                                            .fontWeight(.bold)
+                                        Text("\(dataPackage.user!), \(dataPackage.dataPackageFiles!.count) item(s)")
+                                            .font(.system(size: 8))
+                                    }
                                 }
-                                Spacer()
-                                Button {
+                            }
+                            .swipeActions(allowsFullSwipe: false) {
+                                Button(role: .destructive) {
                                     dataPackageManager.deletePackage(dataPackage: dataPackage)
                                 } label: {
-                                    Image(systemName: "trash.square")
+                                    Label("Delete", systemImage: "trash.fill")
                                 }
                             }
                         }
@@ -160,6 +198,5 @@ struct DataPackageSheet: View {
                 }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
