@@ -12,13 +12,34 @@ import CoreData
 
 class TAKDataPackageImporter: COTDataParser {
     var archiveLocation: URL
+    var fileHash: String = ""
     var parsingErrors: [String] = []
     var parser: DataPackageParser?
     var dataPackageStore: DataPackage?
+    var missionPackage: TAKMissionPackage
     
-    init (fileLocation: URL) {
+    init(fileLocation: URL) {
         TAKLogger.debug("[TAKDataPackageImporter]: Initializing")
         archiveLocation = fileLocation
+        self.missionPackage = TAKMissionPackage(
+            creator: SettingsStore.global.callSign,
+            expiration: nil,
+            groups: "",
+            hash: "",
+            keywords: "",
+            mimeType: "application/zip",
+            name: fileLocation.lastPathComponent,
+            size: "",
+            time: Date.now,
+            user: SettingsStore.global.callSign)
+        super.init()
+    }
+    
+    init (fileLocation: URL, missionPackage: TAKMissionPackage) {
+        TAKLogger.debug("[TAKDataPackageImporter]: Initializing")
+        archiveLocation = fileLocation
+        self.missionPackage = missionPackage
+        self.fileHash = missionPackage.hash
         super.init()
     }
     
@@ -43,7 +64,7 @@ class TAKDataPackageImporter: COTDataParser {
     
     func storeDataPackage() {
         let packageConfiguration = parser!.packageConfiguration
-        let packageName = packageConfiguration["name"] ?? "Data Package"
+        let packageName = packageConfiguration["name"] ?? missionPackage.name
         let packageUid = packageConfiguration["uid"] ?? UUID().uuidString
         let fetchUser: NSFetchRequest<DataPackage> = DataPackage.fetchRequest()
         fetchUser.predicate = NSPredicate(format: "uid = %@", packageUid as String)
@@ -57,7 +78,9 @@ class TAKDataPackageImporter: COTDataParser {
                 packageData = DataPackage(context: self.dataContext)
                 packageData.uid = UUID(uuidString: packageUid)
                 packageData.name = packageName
-                packageData.createdAt = Date.now
+                packageData.user = self.missionPackage.user
+                packageData.originalFileHash = self.missionPackage.hash
+                packageData.createdAt = self.missionPackage.time ?? Date.now
              } else {
                  packageData = results?.first
              }
@@ -75,25 +98,35 @@ class TAKDataPackageImporter: COTDataParser {
         guard let parser = parser else { return }
         let packageFiles = parser.packageFiles
         guard !packageFiles.isEmpty else { return }
-        packageFiles.forEach {
-            if $0.shouldIgnore { return }
-            if $0.fileLocation.hasSuffix(".cot") {
-                let cotFile = parser.retrieveFileFromArchive($0)
-                let rawXml = String(decoding: cotFile, as: UTF8.self)
-                guard let cotEvent = cotParser.parse(rawXml) else {
-                    TAKLogger.error("[TAKDataPackageImporter] Unable to parse COT XML for \($0.fileLocation). Skipping.")
+        dataContext.perform {
+            packageFiles.forEach {
+                let packageDataFile = DataPackageFile(context: self.dataContext)
+                packageDataFile.dataPackage = self.dataPackageStore
+                packageDataFile.zipEntry = $0.fileLocation
+                if $0.shouldIgnore {
+                    packageDataFile.ignore = true
                     return
-                }
-                
-                switch(cotEvent.eventType) {
-                case .ATOM:
-                    parseAtom(cotEvent: cotEvent, rawXml: rawXml)
-                case .BIT:
-                    parseAtom(cotEvent: cotEvent, rawXml: rawXml)
-                case .CUSTOM:
-                    parseCustom(cotEvent: cotEvent, rawXml: rawXml)
-                default:
-                    TAKLogger.debug("[TAKDataPackageImporter] Non-Atom CoT Event received \(cotEvent.type)")
+                } else {
+                    if $0.fileLocation.hasSuffix(".cot") {
+                        packageDataFile.isCoT = true
+                        let cotFile = parser.retrieveFileFromArchive($0)
+                        let rawXml = String(decoding: cotFile, as: UTF8.self)
+                        guard let cotEvent = self.cotParser.parse(rawXml) else {
+                            TAKLogger.error("[TAKDataPackageImporter] Unable to parse COT XML for \($0.fileLocation). Skipping.")
+                            return
+                        }
+                        
+                        switch(cotEvent.eventType) {
+                        case .ATOM:
+                            self.parseAtom(cotEvent: cotEvent, rawXml: rawXml, forceArchive: true, dataPackageFile: packageDataFile)
+                        case .BIT:
+                            self.parseAtom(cotEvent: cotEvent, rawXml: rawXml, forceArchive: true, dataPackageFile: packageDataFile)
+                        case .CUSTOM:
+                            self.parseCustom(cotEvent: cotEvent, rawXml: rawXml, forceArchive: true, dataPackageFile: packageDataFile)
+                        default:
+                            TAKLogger.debug("[TAKDataPackageImporter] Non-Atom CoT Event received \(cotEvent.type)")
+                        }
+                    }
                 }
             }
         }

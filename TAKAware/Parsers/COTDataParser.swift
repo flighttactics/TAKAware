@@ -14,7 +14,7 @@ class COTDataParser: NSObject {
     var dataContext = DataController.shared.backgroundContext
     var cotParser: COTXMLParser = COTXMLParser()
     
-    func parseCustom(cotEvent: COTEvent, rawXml: String) {
+    func parseCustom(cotEvent: COTEvent, rawXml: String, forceArchive: Bool = false, dataPackageFile: DataPackageFile? = nil) {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
         fetchUser.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
         
@@ -32,6 +32,8 @@ class COTDataParser: NSObject {
              }
 
             let cotVideoURL: URL? = URL(string: cotEvent.cotDetail?.cotVideo?.url ?? "")
+            
+            let cotShouldArchive = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
 
             mapPointData.callsign = cotEvent.cotDetail?.cotContact?.callsign ?? "UNKNOWN"
             mapPointData.latitude = Double(cotEvent.cotPoint?.lat ?? "0.0") ?? 0.0
@@ -43,9 +45,12 @@ class COTDataParser: NSObject {
             mapPointData.startDate = cotEvent.start
             mapPointData.updateDate = cotEvent.time
             mapPointData.staleDate = cotEvent.stale
-            mapPointData.archived = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
+            mapPointData.archived = if(forceArchive) { true } else { cotShouldArchive }
             mapPointData.rawXml = rawXml
             mapPointData.videoURL = cotVideoURL ?? nil
+            if dataPackageFile != nil {
+                dataPackageFile?.cotData = mapPointData
+            }
 
             do {
                 try self.dataContext.save()
@@ -55,7 +60,7 @@ class COTDataParser: NSObject {
         }
     }
     
-    func parseAtom(cotEvent: COTEvent, rawXml: String) {
+    func parseAtom(cotEvent: COTEvent, rawXml: String, forceArchive: Bool = false, dataPackageFile: DataPackageFile? = nil) {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
         fetchUser.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
 
@@ -73,6 +78,8 @@ class COTDataParser: NSObject {
              }
 
             let cotVideoURL: URL? = URL(string: cotEvent.cotDetail?.cotVideo?.url ?? "")
+            
+            let cotShouldArchive = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
 
             mapPointData.callsign = cotEvent.cotDetail?.cotContact?.callsign ?? "UNKNOWN"
             mapPointData.latitude = Double(cotEvent.cotPoint?.lat ?? "0.0") ?? 0.0
@@ -84,9 +91,13 @@ class COTDataParser: NSObject {
             mapPointData.startDate = cotEvent.start
             mapPointData.updateDate = cotEvent.time
             mapPointData.staleDate = cotEvent.stale
-            mapPointData.archived = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
+            mapPointData.archived = if(forceArchive) { true } else { cotShouldArchive }
             mapPointData.rawXml = rawXml
             mapPointData.videoURL = cotVideoURL ?? nil
+            
+            if dataPackageFile != nil {
+                dataPackageFile?.cotData = mapPointData
+            }
 
             do {
                 try self.dataContext.save()

@@ -82,7 +82,7 @@ class DataSyncManager: NSObject, ObservableObject, URLSessionDelegate {
     
     func retrieveMissions() {
         isLoading = true
-        let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.DATA_PACKAGE_LIST_PATH)"
+        let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.DATA_SYNC_MISSION_LIST_PATH)"
         TAKLogger.debug("[DataSyncManager] Requesting data packages from \(requestURLString)")
         let requestUrl = URL(string: requestURLString)!
         let configuration = URLSessionConfiguration.default

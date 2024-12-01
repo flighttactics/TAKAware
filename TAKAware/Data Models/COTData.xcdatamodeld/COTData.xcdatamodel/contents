@@ -28,8 +28,10 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="onReceiveDelete" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="onReceiveImport" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="originalFileHash" optional="YES" attributeType="String"/>
         <attribute name="remarks" optional="YES" attributeType="String"/>
         <attribute name="uid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="user" optional="YES" attributeType="String"/>
         <relationship name="dataPackageFiles" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="DataPackageFile" inverseName="dataPackage" inverseEntity="DataPackageFile"/>
     </entity>
     <entity name="DataPackageFile" representedClassName="DataPackageFile" syncable="YES" codeGenerationType="class">

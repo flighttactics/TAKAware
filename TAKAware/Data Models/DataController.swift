@@ -61,8 +61,38 @@ class DataController: ObservableObject {
     
     // Clears all non-archive stale items
     func clearStaleItems() {
-        let predicate = NSPredicate(format: "staleDate < %@", Date() as NSDate)
+        let staleDatePredictate = NSPredicate(format: "staleDate < %@", Date() as NSDate)
+        let archiveFlagPredicate = NSPredicate(format: "archived == false")
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [staleDatePredictate, archiveFlagPredicate])
         clearMap(query: predicate)
+    }
+    
+    func dataPackageFilesFromDataPackage(_ dataPackage: DataPackage) -> [DataPackageFile] {
+        let packageFiles = dataPackage.dataPackageFiles as? Set<DataPackageFile> ?? []
+        return packageFiles.sorted {
+            $0.isCoT.description < $1.isCoT.description
+        }
+    }
+    
+    func deletePackage(dataPackage: DataPackage, deleteAssociatedCoT: Bool = true) {
+        let dataContext = dataPackage.managedObjectContext ?? backgroundContext
+        dataContext.perform {
+            let packageFiles = self.dataPackageFilesFromDataPackage(dataPackage)
+            packageFiles.forEach { dataPackageFile in
+                if deleteAssociatedCoT && dataPackageFile.cotData != nil {
+                    dataContext.delete(dataPackageFile.cotData!)
+                } else {
+                    NSLog("***No associated COTData object to delete! \(dataPackageFile.cotUid?.uuidString ?? "NO UUID")")
+                }
+                dataContext.delete(dataPackageFile)
+            }
+            dataContext.delete(dataPackage)
+            do {
+                try dataContext.save()
+            } catch {
+                TAKLogger.error("[DataController]: Unable to delete package \(error)")
+            }
+        }
     }
     
     func deleteCot(cotId: String) {
@@ -75,7 +105,6 @@ class DataController: ObservableObject {
             let fetch = COTData.fetchRequest()
             fetch.predicate = query
             fetch.includesPropertyValues = false
-            
             //let request = NSBatchDeleteRequest(fetchRequest: fetch)
             //request.resultType = .resultTypeObjectIDs
             
