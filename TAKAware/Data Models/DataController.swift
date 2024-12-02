@@ -7,6 +7,7 @@
 
 import CoreData
 import Foundation
+import SwiftTAK
 
 class DataController: ObservableObject {
     
@@ -62,8 +63,8 @@ class DataController: ObservableObject {
     // Clears all non-archive stale items
     func clearStaleItems() {
         let staleDatePredictate = NSPredicate(format: "staleDate < %@", Date() as NSDate)
-        let archiveFlagPredicate = NSPredicate(format: "archived == false")
-        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [staleDatePredictate, archiveFlagPredicate])
+        let archiveFalseFlagPredicate = NSPredicate(format: "archived == NO")
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [staleDatePredictate, archiveFalseFlagPredicate])
         clearMap(query: predicate)
     }
     

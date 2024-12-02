@@ -33,7 +33,7 @@ class COTDataParser: NSObject {
 
             let cotVideoURL: URL? = URL(string: cotEvent.cotDetail?.cotVideo?.url ?? "")
             
-            let cotShouldArchive = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
+            let cotShouldArchive = cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive }) ?? false
 
             mapPointData.callsign = cotEvent.cotDetail?.cotContact?.callsign ?? "UNKNOWN"
             mapPointData.latitude = Double(cotEvent.cotPoint?.lat ?? "0.0") ?? 0.0
@@ -79,7 +79,7 @@ class COTDataParser: NSObject {
 
             let cotVideoURL: URL? = URL(string: cotEvent.cotDetail?.cotVideo?.url ?? "")
             
-            let cotShouldArchive = ((cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive })) != nil)
+            let cotShouldArchive = cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive }) ?? false
 
             mapPointData.callsign = cotEvent.cotDetail?.cotContact?.callsign ?? "UNKNOWN"
             mapPointData.latitude = Double(cotEvent.cotPoint?.lat ?? "0.0") ?? 0.0
