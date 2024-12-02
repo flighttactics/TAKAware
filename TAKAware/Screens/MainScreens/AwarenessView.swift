@@ -15,11 +15,19 @@ private extension AwarenessView {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .colorMultiply(.yellow)
-                .frame(width: 20.0)
+                .frame(width: 25.0)
                 .shadow(
                     color: .yellow,
                     radius: CGFloat(0.0),
                     x: CGFloat(0.5), y: CGFloat(0.5))
+    }
+    
+    func navBarImage(systemName: String) -> some View {
+        return Image(systemName: systemName)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .colorMultiply(.yellow)
+                .frame(width: 25.0)
     }
 }
 
@@ -151,18 +159,18 @@ struct AwarenessView: View {
                 }
                 
                 Button(action: { sheet = .emergencySettings }) {
-                    Image(systemName: "exclamationmark.triangle")
+                    navBarImage(systemName: "exclamationmark.triangle")
                         .foregroundColor(settingsStore.isAlertActivated ? .red : .yellow)
                         .padding(5)
                 }
                 
 //                Button(action: { sheet = .chat }) {
-//                    Image(systemName: "bubble.left")
+//                    navBarImage(systemName: "bubble.left")
 //                        .padding(5)
 //                }
                 
                 Button(action: { sheet = .settings }) {
-                    Image(systemName: "line.3.horizontal")
+                    navBarImage(systemName: "line.3.horizontal")
                         .padding(5)
                 }
             }
