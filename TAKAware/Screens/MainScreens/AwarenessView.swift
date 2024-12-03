@@ -79,7 +79,7 @@ struct AwarenessView: View {
                 .presentationContentInteraction(.scrolls)
         })
         .sheet(isPresented: $mapViewModel.isDetailViewOpen, content: {
-            AnnotationDetailView(annotation: $mapViewModel.currentSelectedAnnotation)
+            AnnotationDetailView(annotation: $mapViewModel.currentSelectedAnnotation, viewModel: $mapViewModel)
                 .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
                 .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
                 .presentationContentInteraction(.scrolls)

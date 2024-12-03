@@ -17,6 +17,11 @@ class MapViewModel: ObservableObject {
     @Published var conflictedItems: [MapPointAnnotation] = []
     var annotationSelectedCallback: (MapPointAnnotation) -> Void = { (_) in }
     var bloodhoundDeselectedCallback: () -> Void = { () in }
+    var annotationUpdatedCallback: (MapPointAnnotation) -> Void = { (_) in }
+    
+    func annotationUpdated(_ annotation: MapPointAnnotation) {
+        annotationUpdatedCallback(annotation)
+    }
     
     func didSelectAnnotation(_ annotation: MapPointAnnotation) {
         currentSelectedAnnotation = annotation

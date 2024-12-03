@@ -151,7 +151,13 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var videoURL: URL?
     
     var annotationIdentifier: String {
-        return icon ?? cotType ?? "pli"
+        if icon != nil && !icon!.isEmpty {
+            return icon!
+        }
+        if cotType != nil && !cotType!.isEmpty {
+            return cotType!
+        }
+        return "pli"
     }
     
     init(mapPoint: COTData) {
@@ -337,6 +343,7 @@ struct MapView: UIViewRepresentable {
         
         viewModel.annotationSelectedCallback = annotationSelected(_:)
         viewModel.bloodhoundDeselectedCallback = bloodhoundDeselected
+        viewModel.annotationUpdatedCallback = annotationUpdatedCallback
         
 //        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
 //        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
@@ -345,6 +352,22 @@ struct MapView: UIViewRepresentable {
 //        mapView.addOverlay(googleHybridOverlay, level: .aboveLabels)
 
         return mapView
+    }
+    
+    func annotationUpdatedCallback(annotation: MapPointAnnotation) {
+        guard let annotationView = mapView.view(for: annotation) else { return }
+        let icon = IconData.iconFor(type2525: annotation.cotType ?? "", iconsetPath: annotation.icon ?? "")
+        var pointIcon: UIImage = icon.icon
+        
+        if let pointColor = annotation.color {
+            if pointIcon.isSymbolImage {
+                pointIcon = pointIcon.maskSymbol(with: pointColor)
+            } else {
+                pointIcon = pointIcon.maskImage(with: pointColor)
+            }
+        }
+        
+        annotationView.image = pointIcon
     }
 
     func updateUIView(_ view: MKMapView, context: Context) {
@@ -383,6 +406,7 @@ struct MapView: UIViewRepresentable {
             guard let mpAnnotation = annotation as? MapPointAnnotation else { continue }
             guard let node = incomingData.first(where: {$0.id?.uuidString == mpAnnotation.id}) else { continue }
             let updatedMp = COTMapObject(mapPoint: node).annotation
+            var willNeedIconUpdate = (mpAnnotation.cotType != updatedMp.cotType || mpAnnotation.icon != updatedMp.icon)
             mpAnnotation.title = updatedMp.title
             mpAnnotation.color = updatedMp.color
             mpAnnotation.icon = updatedMp.icon
@@ -409,6 +433,9 @@ struct MapView: UIViewRepresentable {
                     }
                 }
             }
+            if willNeedIconUpdate {
+                annotationUpdatedCallback(annotation: mpAnnotation)
+            }
         }
 
         if !toAdd.isEmpty {
@@ -420,6 +447,11 @@ struct MapView: UIViewRepresentable {
             let newOverlays = newMapPoints.filter { $0.isShape }.map { $0.shape }
             mapView.addOverlays(newOverlays)
         }
+    }
+    
+    func addMarker(at: CLLocationCoordinate2D) {
+        DataController.shared.createMarker(latitude: at.latitude, longitude: at.longitude)
+        mapView.setNeedsDisplay()
     }
     
     func resetMap() {
@@ -482,31 +514,88 @@ struct MapView: UIViewRepresentable {
             createBloodhound(annotation: mpAnnotation!)
         }
     }
+    
+    func initializeOrUpdateAnnotationView(mapView: MKMapView, annotation: MKAnnotation) -> MKAnnotationView? {
+        guard !annotation.isKind(of: MKUserLocation.self) else {
+            var selfView = mapView.dequeueReusableAnnotationView(withIdentifier: "UserLocation")
+            if selfView == nil {
+                selfView = MKUserLocationView(annotation: annotation, reuseIdentifier: "UserLocation")
+            }
+            selfView!.zPriority = .max
+            return selfView
+        }
+        
+        guard let mpAnnotation = annotation as? MapPointAnnotation else { return nil }
+        
+        let identifier = mpAnnotation.annotationIdentifier
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        
+        if annotationView == nil {
+            annotationView = SituationalAnnotationView(
+                mapView: self,
+                annotation: mpAnnotation,
+                reuseIdentifier: identifier
+            )
+        }
+
+        let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
+        var pointIcon: UIImage = icon.icon
+        
+        if let pointColor = mpAnnotation.color {
+            if pointIcon.isSymbolImage {
+                pointIcon = pointIcon.maskSymbol(with: pointColor)
+            } else {
+                pointIcon = pointIcon.maskImage(with: pointColor)
+            }
+        }
+        
+        annotationView!.image = pointIcon
+        annotationView!.annotation = mpAnnotation
+        return annotationView
+    }
 
     class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
         var parent: MapView
 
-        var gRecognizer = UITapGestureRecognizer()
+        var mapTapRecognizer = UITapGestureRecognizer()
+        var longPressRecognizer = UILongPressGestureRecognizer()
 
         init(_ parent: MapView) {
             self.parent = parent
             super.init()
-            self.gRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapHandler))
-            self.gRecognizer.delegate = self
-            self.parent.mapView.addGestureRecognizer(gRecognizer)
+            self.mapTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapHandler))
+            self.mapTapRecognizer.delegate = self
+            self.parent.mapView.addGestureRecognizer(mapTapRecognizer)
+            
+            self.longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressHandler))
+            self.longPressRecognizer.delegate = self
+            self.parent.mapView.addGestureRecognizer(longPressRecognizer)
+        }
+        
+        @objc func longPressHandler(_ gesture: UILongPressGestureRecognizer) {
+            if gesture.state == .began {
+                let impactHeavy = UINotificationFeedbackGenerator()
+                impactHeavy.notificationOccurred(.success)
+                let mapView = self.parent.mapView
+                let location = mapTapRecognizer.location(in: mapView)
+                let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
+                let tappedLocation = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
+                self.parent.addMarker(at: tappedLocation)
+                NSLog("[MapView] Map Long Pressed! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta)")
+            }
         }
 
         @objc func tapHandler(_ gesture: UITapGestureRecognizer) {
             let mapView = self.parent.mapView
             // position on the screen, CGPoint
-            let location = gRecognizer.location(in: mapView)
+            let location = mapTapRecognizer.location(in: mapView)
             // position on the map, CLLocationCoordinate2D
             let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
             let tappedLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            TAKLogger.debug("Map Tapped! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta) (at \(NSDate().timeIntervalSince1970))")
+            TAKLogger.debug("[MapView] Map Tapped! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta)")
             let tapRadius = 5000 * mapView.region.span.latitudeDelta
             let closeMarkers = mapView.annotations.filter { $0 is MapPointAnnotation && tappedLocation.distance(from: CLLocation(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)) < tapRadius }
-            TAKLogger.debug("There are \(closeMarkers.count) markers within \(tapRadius) meters")
+            TAKLogger.debug("[MapView] There are \(closeMarkers.count) markers within \(tapRadius) meters")
             if(closeMarkers.count > 1) {
                 parent.viewModel.conflictedItems = closeMarkers as! [MapPointAnnotation]
                 parent.viewModel.isDeconflictionViewOpen = true
@@ -576,42 +665,43 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-            guard !annotation.isKind(of: MKUserLocation.self) else {
-                var selfView = mapView.dequeueReusableAnnotationView(withIdentifier: "UserLocation")
-                if selfView == nil {
-                    selfView = MKUserLocationView(annotation: annotation, reuseIdentifier: "UserLocation")
-                }
-                selfView!.zPriority = .max
-                return selfView
-            }
-            
-            guard let mpAnnotation = annotation as? MapPointAnnotation else { return nil }
-            
-            let identifier = mpAnnotation.annotationIdentifier
-            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-            
-            if annotationView == nil {
-                annotationView = SituationalAnnotationView(
-                    mapView: parent,
-                    annotation: mpAnnotation,
-                    reuseIdentifier: identifier
-                )
-            }
-
-            let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
-            var pointIcon: UIImage = icon.icon
-            
-            if let pointColor = mpAnnotation.color {
-                if pointIcon.isSymbolImage {
-                    pointIcon = pointIcon.maskSymbol(with: pointColor)
-                } else {
-                    pointIcon = pointIcon.maskImage(with: pointColor)
-                }
-            }
-            
-            annotationView!.image = pointIcon
-            annotationView!.annotation = mpAnnotation
-            return annotationView
+            return parent.initializeOrUpdateAnnotationView(mapView: mapView, annotation: annotation)
+//            guard !annotation.isKind(of: MKUserLocation.self) else {
+//                var selfView = mapView.dequeueReusableAnnotationView(withIdentifier: "UserLocation")
+//                if selfView == nil {
+//                    selfView = MKUserLocationView(annotation: annotation, reuseIdentifier: "UserLocation")
+//                }
+//                selfView!.zPriority = .max
+//                return selfView
+//            }
+//            
+//            guard let mpAnnotation = annotation as? MapPointAnnotation else { return nil }
+//            
+//            let identifier = mpAnnotation.annotationIdentifier
+//            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+//            
+//            if annotationView == nil {
+//                annotationView = SituationalAnnotationView(
+//                    mapView: parent,
+//                    annotation: mpAnnotation,
+//                    reuseIdentifier: identifier
+//                )
+//            }
+//
+//            let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
+//            var pointIcon: UIImage = icon.icon
+//            
+//            if let pointColor = mpAnnotation.color {
+//                if pointIcon.isSymbolImage {
+//                    pointIcon = pointIcon.maskSymbol(with: pointColor)
+//                } else {
+//                    pointIcon = pointIcon.maskImage(with: pointColor)
+//                }
+//            }
+//            
+//            annotationView!.image = pointIcon
+//            annotationView!.annotation = mpAnnotation
+//            return annotationView
         }
     }
 }

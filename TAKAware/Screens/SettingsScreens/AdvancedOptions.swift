@@ -22,6 +22,13 @@ struct AdvancedOptionsScreen: View {
         List {
             DeviceOptions()
             TAKOptions()
+            Section(header: Text("Destructive Options")) {
+                Button(role: .destructive) {
+                    DataController.shared.clearAllMarkers()
+                } label: {
+                    Text("Clear All Markers")
+                }
+            }
         }
         .navigationTitle("Advanced Options")
     }
