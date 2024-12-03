@@ -178,6 +178,15 @@ class TCPMessage: NSObject, ObservableObject {
                 // Try again
                 isValidCertificate = SecTrustEvaluateWithError(secTrust, &error)
                 
+                // If this is still invalid, see if this is a standards compliant issue
+                // This is because certs longer than 1 year are being rejected by Apple
+                if error != nil && error.debugDescription.contains("not standards compliant") {
+                    TAKLogger.debug("[TCPMessage] Fixing up for standards compliant SSL Apple Issue")
+                    let errDataRef = SecTrustCopyExceptions(secTrust)
+                    SecTrustSetExceptions(secTrust, errDataRef)
+                    isValidCertificate = SecTrustEvaluateWithError(secTrust, &error)
+                }
+                
                 if let error {
                     TAKLogger.error("[TCPConnection] SecTrustEvaluate failed with error: \(error)")
                 }
@@ -203,8 +212,10 @@ class TCPMessage: NSObject, ObservableObject {
         let parser = StreamParser()
         parser.parseCoTStream(dataStream: data)
 
-        self.connection?.receive(minimumIncompleteLength: 0, maximumLength: 8000) { content, _, _, error in
-            self.receive(content: content, error: error, connection: connection)
+        if SettingsStore.global.isConnectedToServer {
+            self.connection?.receive(minimumIncompleteLength: 0, maximumLength: 8000) { content, _, _, error in
+                self.receive(content: content, error: error, connection: connection)
+            }
         }
         
       }
