@@ -54,6 +54,11 @@ class DataController: ObservableObject {
         }
     }
     
+    func clearAllMarkers() {
+        let predicate = NSPredicate(format: "1=1", Date() as CVarArg)
+        clearMap(query: predicate)
+    }
+    
     // Clears everything not archived, regardless of stale
     func clearTransientItems() {
         let predicate = NSPredicate(format: "1=1", Date() as CVarArg)
@@ -66,6 +71,69 @@ class DataController: ObservableObject {
         let archiveFalseFlagPredicate = NSPredicate(format: "archived == NO")
         let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [staleDatePredictate, archiveFalseFlagPredicate])
         clearMap(query: predicate)
+    }
+
+    func updateMarker(id: String, title: String, remarks: String, cotType: String) {
+        let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
+        fetchUser.predicate = NSPredicate(format: "id = %@", id)
+        backgroundContext.perform {
+            let results = try? self.backgroundContext.fetch(fetchUser)
+            if results?.count == 0 {
+                TAKLogger.error("[DataController] Unable to locate marker with id \(id) for editing")
+                return
+            } else {
+                let mapPointData: COTData = results!.first!
+                mapPointData.callsign = title
+                mapPointData.remarks = remarks
+                mapPointData.cotType = cotType
+                if(mapPointData.hasChanges) {
+                    do {
+                        try self.backgroundContext.save()
+                    } catch {
+                        TAKLogger.error("[DataController] Invalid Data Context Save \(error)")
+                    }
+                }
+            }
+        }
+    }
+    
+    func createMarker(latitude: Double, longitude: Double) {
+        let defaultCallsign = "UNKNOWN \(CGFloat.random(in: 1...1000))"
+        let defaultType = "a-U-G"
+        
+        // First create a COTEvent
+        var cotEvent = COTEvent(version: COTMessage.COT_EVENT_VERSION, uid: UUID().uuidString, type: defaultType, how: HowType.MachineGPSDerived.rawValue, time: Date.now, start: Date.now, stale: Date.distantFuture)
+        let cotPoint = COTPoint(lat: latitude.description, lon: longitude.description, hae: COTPoint.DEFAULT_ERROR_VALUE.description, ce: COTPoint.DEFAULT_ERROR_VALUE.description, le: COTPoint.DEFAULT_ERROR_VALUE.description)
+        
+        var cotDetail = COTDetail()
+        
+        cotDetail.childNodes.append(COTContact(callsign: defaultCallsign))
+        cotDetail.childNodes.append(COTArchive())
+        
+        cotEvent.childNodes.append(cotPoint)
+        cotEvent.childNodes.append(cotDetail)
+        
+        backgroundContext.perform {
+            let mapPointData: COTData!
+            mapPointData = COTData(context: self.backgroundContext)
+            mapPointData.id = UUID()
+            mapPointData.cotUid = UUID().uuidString
+            mapPointData.callsign = defaultCallsign
+            mapPointData.latitude = latitude
+            mapPointData.longitude = longitude
+            mapPointData.remarks = ""
+            mapPointData.cotType = defaultType
+            mapPointData.startDate = Date.now
+            mapPointData.updateDate = Date.now
+            mapPointData.archived = true
+            mapPointData.rawXml = cotEvent.toXml()
+
+            do {
+                try self.backgroundContext.save()
+            } catch {
+                TAKLogger.error("[DataController] Invalid Data Context Save \(error)")
+            }
+        }
     }
     
     func dataPackageFilesFromDataPackage(_ dataPackage: DataPackage) -> [DataPackageFile] {
