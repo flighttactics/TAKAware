@@ -322,7 +322,15 @@ struct MapView: UIViewRepresentable {
     @State var bloodhoundStartCoordinate: CLLocationCoordinate2D?
     @State var bloodhoundEndCoordinate: CLLocationCoordinate2D?
     
-    @FetchRequest(sortDescriptors: []) var mapPointsData: FetchedResults<COTData>
+    private static var mapPointsFetchRequest: NSFetchRequest<COTData> {
+        let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
+        fetchUser.sortDescriptors = []
+        fetchUser.predicate = NSPredicate(format: "visible == YES")
+        return fetchUser
+    }
+    
+    @FetchRequest(fetchRequest: mapPointsFetchRequest)
+    private var mapPointsData: FetchedResults<COTData>
     
     var shouldForceInitialTracking: Bool {
         return region.center.latitude == 0.0 || region.center.longitude == 0.0
@@ -399,6 +407,10 @@ struct MapView: UIViewRepresentable {
             let removableAnnotations = existingAnnotations.filter {
                 toRemove.contains(($0 as! MapPointAnnotation).id)
             }
+
+            if(bloodhoundEndAnnotation != nil && toRemove.contains(bloodhoundEndAnnotation!.id)) {
+                bloodhoundDeselected()
+            }
             mapView.removeAnnotations(removableAnnotations)
         }
         
@@ -406,7 +418,7 @@ struct MapView: UIViewRepresentable {
             guard let mpAnnotation = annotation as? MapPointAnnotation else { continue }
             guard let node = incomingData.first(where: {$0.id?.uuidString == mpAnnotation.id}) else { continue }
             let updatedMp = COTMapObject(mapPoint: node).annotation
-            var willNeedIconUpdate = (mpAnnotation.cotType != updatedMp.cotType || mpAnnotation.icon != updatedMp.icon)
+            let willNeedIconUpdate = (mpAnnotation.cotType != updatedMp.cotType || mpAnnotation.icon != updatedMp.icon)
             mpAnnotation.title = updatedMp.title
             mpAnnotation.color = updatedMp.color
             mpAnnotation.icon = updatedMp.icon
@@ -451,7 +463,6 @@ struct MapView: UIViewRepresentable {
     
     func addMarker(at: CLLocationCoordinate2D) {
         DataController.shared.createMarker(latitude: at.latitude, longitude: at.longitude)
-        mapView.setNeedsDisplay()
     }
     
     func resetMap() {
@@ -484,7 +495,7 @@ struct MapView: UIViewRepresentable {
     }
     
     func bloodhoundDeselected() {
-        if(!viewModel.isAcquiringBloodhoundTarget && activeBloodhound != nil) {
+        if(activeBloodhound != nil) {
             let bloodhoundLines = mapView.overlays.filter { $0 is MKGeodesicPolyline }
             mapView.removeOverlays(bloodhoundLines)
             DispatchQueue.main.async {
@@ -581,7 +592,7 @@ struct MapView: UIViewRepresentable {
                 let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
                 let tappedLocation = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
                 self.parent.addMarker(at: tappedLocation)
-                NSLog("[MapView] Map Long Pressed! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta)")
+                TAKLogger.debug("[MapView] Map Long Pressed! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta)")
             }
         }
 

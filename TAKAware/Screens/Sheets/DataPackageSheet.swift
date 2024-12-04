@@ -15,6 +15,7 @@ struct DataPackageDownloader: View {
     @State private var isRotating = 0.0
     @State var isShowingAlert = false
     @State var alertText: String = ""
+    @State private var searchText = ""
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt, order: .reverse)])
     var dataPackages: FetchedResults<DataPackage>
     
@@ -29,12 +30,20 @@ struct DataPackageDownloader: View {
             }
     }
     
+    var searchResults: [TAKMissionPackage] {
+        if searchText.isEmpty {
+            return dataPackageManager.dataPackages
+        } else {
+            return dataPackageManager.dataPackages.filter { $0.name.contains(searchText) }
+        }
+    }
+    
     var body: some View {
         List {
             if dataPackageManager.isLoading {
                 loader
             } else {
-                ForEach(dataPackageManager.dataPackages, id:\.hash) { package in
+                ForEach(searchResults, id:\.hash) { package in
                     HStack {
                         VStack(alignment: .leading) {
                             Text(package.name)
@@ -58,6 +67,7 @@ struct DataPackageDownloader: View {
                 }
             }
         }
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always))
         .onAppear {
             dataPackageManager.retrieveDataPackages()
         }
@@ -100,8 +110,15 @@ struct DataPackageFilesList: View {
     }
 }
 
-struct DataPackageSheet: View {
-    @Environment(\.dismiss) var dismiss
+struct DataPackageOptions: View {
+    var body: some View {
+        NavigationLink(destination: DataPackageDetail()) {
+            Text("Data Packages")
+        }
+    }
+}
+
+struct DataPackageDetail: View {
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
     @StateObject var dataPackageManager: DataPackageManager = DataPackageManager()
     @State var isShowingFilePicker = false
@@ -112,82 +129,104 @@ struct DataPackageSheet: View {
     var dataPackages: FetchedResults<DataPackage>
 
     var body: some View {
-        NavigationStack {
-            List {
-                NavigationLink(destination: DataPackageDownloader()) {
-                    Text("Download from servers")
+        List {
+            NavigationLink(destination: DataPackageDownloader()) {
+                Text("Download from servers")
+            }
+            Button {
+                isShowingFilePicker.toggle()
+            } label: {
+                HStack {
+                    Text("Import a Data Package")
+                    Spacer()
+                    Image(systemName: "square.and.arrow.up")
+                        .multilineTextAlignment(.trailing)
                 }
-                Button {
-                    isShowingFilePicker.toggle()
-                } label: {
-                    HStack {
-                        Text("Import a Data Package")
-                        Spacer()
-                        Image(systemName: "square.and.arrow.up")
-                            .multilineTextAlignment(.trailing)
-                    }
-                    
-                }
-                .buttonStyle(.plain)
-                .fileImporter(isPresented: $isShowingFilePicker, allowedContentTypes: [.zip], allowsMultipleSelection: false, onCompletion: { results in
-                    
-                    switch results {
-                    case .success(let fileurls):
-                        for fileurl in fileurls {
-                            if(fileurl.startAccessingSecurityScopedResource()) {
-                                TAKLogger.debug("Processing Package at \(String(describing: fileurl))")
-                                let tdpi = TAKDataPackageImporter(
-                                    fileLocation: fileurl
-                                )
-                                tdpi.parse()
-                                fileurl.stopAccessingSecurityScopedResource()
-                                if(tdpi.parsingErrors.isEmpty) {
-                                    alertText = "Data package processed successfully!"
-                                } else {
-                                    alertText = "Data package could not be processed\n\n\(tdpi.parsingErrors.joined(separator: "\n\n"))"
-                                }
-                                isShowingAlert = true
+                
+            }
+            .buttonStyle(.plain)
+            .contentShape(Rectangle())
+            .fileImporter(isPresented: $isShowingFilePicker, allowedContentTypes: [.zip], allowsMultipleSelection: false, onCompletion: { results in
+                
+                switch results {
+                case .success(let fileurls):
+                    for fileurl in fileurls {
+                        if(fileurl.startAccessingSecurityScopedResource()) {
+                            TAKLogger.debug("Processing Package at \(String(describing: fileurl))")
+                            let tdpi = TAKDataPackageImporter(
+                                fileLocation: fileurl
+                            )
+                            tdpi.parse()
+                            fileurl.stopAccessingSecurityScopedResource()
+                            if(tdpi.parsingErrors.isEmpty) {
+                                alertText = "Data package processed successfully!"
                             } else {
-                                TAKLogger.error("Unable to securely access  \(String(describing: fileurl))")
+                                alertText = "Data package could not be processed\n\n\(tdpi.parsingErrors.joined(separator: "\n\n"))"
                             }
+                            isShowingAlert = true
+                        } else {
+                            TAKLogger.error("Unable to securely access  \(String(describing: fileurl))")
                         }
-                    case .failure(let error):
-                        TAKLogger.debug(String(describing: error))
                     }
-                    
-                })
-                Section(header: Text("Imported Packages")) {
-                    if dataPackages.isEmpty {
-                        Text("No Data Packages Imported")
-                    } else {
-                        ForEach(dataPackages) { dataPackage in
-                            NavigationLink {
-                                DataPackageFilesList(dataPackage: dataPackage)
-                            } label: {
-                                HStack {
-                                    Image(systemName: "shippingbox")
-                                    VStack(alignment: .leading) {
-                                        Text(dataPackage.name ?? "Unknown Name")
-                                            .fontWeight(.bold)
-                                        Text("\(dataPackage.user!), \(dataPackage.dataPackageFiles!.count) item(s)")
-                                            .font(.system(size: 8))
-                                    }
+                case .failure(let error):
+                    TAKLogger.debug(String(describing: error))
+                }
+                
+            })
+            Section(header: Text("Imported Packages"), footer: Text("Swipe a package to manage")) {
+                if dataPackages.isEmpty {
+                    Text("No Data Packages Imported")
+                } else {
+                    ForEach(dataPackages) { dataPackage in
+                        NavigationLink {
+                            DataPackageFilesList(dataPackage: dataPackage)
+                        } label: {
+                            HStack {
+                                Image(systemName: "shippingbox")
+                                VStack(alignment: .leading) {
+                                    Text(dataPackage.name ?? "Unknown Name")
+                                        .fontWeight(.bold)
+                                    Text("\(dataPackage.user!), \(dataPackage.dataPackageFiles!.count) item(s)")
+                                        .font(.system(size: 8))
                                 }
                             }
-                            .swipeActions(allowsFullSwipe: false) {
-                                Button(role: .destructive) {
-                                    dataPackageManager.deletePackage(dataPackage: dataPackage)
-                                } label: {
-                                    Label("Delete", systemImage: "trash.fill")
+                        }
+                        .swipeActions(allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                dataPackageManager.deletePackage(dataPackage: dataPackage)
+                            } label: {
+                                Label("Delete", systemImage: "trash.fill")
+                            }
+                            Button {
+                                if dataPackage.contentsVisible {
+                                    dataPackageManager.hidePackage(dataPackage: dataPackage)
+                                } else {
+                                    dataPackageManager.showPackage(dataPackage: dataPackage)
+                                }
+                            } label: {
+                                if dataPackage.contentsVisible {
+                                    Label("Shown", systemImage: "eye.fill")
+                                } else {
+                                    Label("Hidden", systemImage: "eye.slash.fill")
                                 }
                             }
                         }
                     }
                 }
             }
-            .alert(isPresented: $isShowingAlert) {
-                Alert(title: Text("Data Package"), message: Text(alertText), dismissButton: .default(Text("OK")))
-            }
+        }
+        .alert(isPresented: $isShowingAlert) {
+            Alert(title: Text("Data Package"), message: Text(alertText), dismissButton: .default(Text("OK")))
+        }
+    }
+}
+
+struct DataPackageSheet: View {
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        NavigationStack {
+            DataPackageDetail()
             .navigationTitle("Data Packages")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
