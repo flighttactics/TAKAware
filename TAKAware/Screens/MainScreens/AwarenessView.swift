@@ -108,6 +108,7 @@ struct AwarenessView: View {
         MapView(
             region: $locationManager.region,
             mapType: $settingsStore.mapTypeDisplay,
+            enableTrafficDisplay: $settingsStore.enableTrafficDisplay,
             viewModel: $mapViewModel
         )
         .ignoresSafeArea(edges: .all)

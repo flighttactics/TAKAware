@@ -269,10 +269,18 @@ class SettingsStore: ObservableObject {
             UserDefaults.standard.set(preferredInterface, forKey: "preferredInterface")
         }
     }
+    
+    @Published var enableTrafficDisplay: Bool {
+        didSet {
+            UserDefaults.standard.set(enableTrafficDisplay, forKey: "enableTrafficDisplay")
+        }
+    }
 
     private init() {
         let defaultSign = SettingsStore.generateDefaultCallSign()
         self.lastAppVersionRun = (UserDefaults.standard.object(forKey: "lastAppVersionRun") == nil ? "" : UserDefaults.standard.object(forKey: "lastAppVersionRun") as! String)
+        
+        self.enableTrafficDisplay = (UserDefaults.standard.object(forKey: "enableTrafficDisplay") == nil ? true : UserDefaults.standard.object(forKey: "enableTrafficDisplay") as! Bool)
         
         self.preferredInterface = (UserDefaults.standard.object(forKey: "preferredInterface") == nil ? "" : UserDefaults.standard.object(forKey: "preferredInterface") as! String)
         

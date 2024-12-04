@@ -335,6 +335,7 @@ class CompassMapView: MKMapView {
 struct MapView: UIViewRepresentable {
     @Binding var region: MKCoordinateRegion
     @Binding var mapType: UInt
+    @Binding var enableTrafficDisplay: Bool
     @Binding var viewModel: MapViewModel
     
     @State var mapView: CompassMapView = CompassMapView()
@@ -371,6 +372,7 @@ struct MapView: UIViewRepresentable {
         mapView.layer.borderColor = UIColor.black.cgColor
         mapView.layer.borderWidth = 1.0
         mapView.isHidden = false
+        mapView.showsTraffic = enableTrafficDisplay
         
         viewModel.annotationSelectedCallback = annotationSelected(_:)
         viewModel.bloodhoundDeselectedCallback = bloodhoundDeselected
@@ -405,6 +407,7 @@ struct MapView: UIViewRepresentable {
 
     func updateUIView(_ view: MKMapView, context: Context) {
         view.mapType = MKMapType(rawValue: UInt(mapType))!
+        view.showsTraffic = enableTrafficDisplay
         updateAnnotations(from: view)
     }
     
@@ -572,6 +575,8 @@ struct MapView: UIViewRepresentable {
                 annotation: mpAnnotation,
                 reuseIdentifier: identifier
             )
+        } else {
+            annotationView!.annotation = annotation
         }
 
         let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
@@ -605,12 +610,16 @@ struct MapView: UIViewRepresentable {
     func didUpdateRegion() {
         let latDelta = mapView.region.span.latitudeDelta
         if latDelta > 0.25 && showingAnnotationLabels {
-            showingAnnotationLabels.toggle()
+            DispatchQueue.main.async {
+                showingAnnotationLabels.toggle()
+            }
             mapView.annotations.forEach { annotation in
                 (mapView.view(for: annotation) as? SituationalAnnotationView)?.annotationLabel.isHidden = true
             }
         } else if latDelta <= 0.25 && !showingAnnotationLabels {
-            showingAnnotationLabels.toggle()
+            DispatchQueue.main.async {
+                showingAnnotationLabels.toggle()
+            }
             mapView.annotations.forEach { annotation in
                 (mapView.view(for: annotation) as? SituationalAnnotationView)?.annotationLabel.isHidden = false
             }

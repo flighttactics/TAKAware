@@ -74,6 +74,12 @@ struct MapOptions: View {
                     }
                 }
                 
+                Section(header: Text("Traffic Display")) {
+                    List {
+                        Toggle("Show traffic when available", isOn: $settingsStore.enableTrafficDisplay)
+                    }
+                }
+                
                 Section(header:
                     HStack {
                         Text("Custom Map Overlays")
