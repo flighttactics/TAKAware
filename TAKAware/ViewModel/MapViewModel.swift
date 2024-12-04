@@ -46,6 +46,5 @@ class MapViewModel: ObservableObject {
         if(isAcquiringBloodhoundTarget) {
             bloodhoundDeselectedCallback()
         }
-        isAcquiringBloodhoundTarget.toggle()
     }
 }

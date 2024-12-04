@@ -23,19 +23,17 @@ class DataController: ObservableObject {
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "COTData")
         
-        let description = NSPersistentStoreDescription()
-        description.url = URL(fileURLWithPath: "/dev/null")
-        container.persistentStoreDescriptions = [description]
+        // Enable memory-only store by enabling these lines
+        //let description = NSPersistentStoreDescription()
+        //description.url = URL(fileURLWithPath: "/dev/null")
+        //container.persistentStoreDescriptions = [description]
         
         // Load any persistent stores, which creates a store if none exists.
         container.loadPersistentStores { persistentStore, error in
             container.viewContext.automaticallyMergesChangesFromParent = true
             container.viewContext.mergePolicy = NSMergePolicy.overwrite
             if let error {
-                // Handle the error appropriately. However, it's useful to use
-                // `fatalError(_:file:line:)` during development.
-                // TODO: Not this
-                fatalError("Failed to load persistent stores: \(error.localizedDescription)")
+                TAKLogger.error("[DataController]: **FATAL ERROR** Failed to load persistent stores: \(error.localizedDescription)")
             }
         }
         return container
@@ -45,7 +43,9 @@ class DataController: ObservableObject {
     //var managedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
     var cleanUpTimer: Timer?
     
-    private init() {}
+    private init() {
+        clearTransientItems()
+    }
     
     func startCleanUpTimer() {
         guard cleanUpTimer == nil else { return }
@@ -61,8 +61,8 @@ class DataController: ObservableObject {
     
     // Clears everything not archived, regardless of stale
     func clearTransientItems() {
-        let predicate = NSPredicate(format: "1=1", Date() as CVarArg)
-        clearMap(query: predicate)
+        let archiveFalseFlagPredicate = NSPredicate(format: "archived == NO")
+        clearMap(query: archiveFalseFlagPredicate)
     }
     
     // Clears all non-archive stale items
@@ -140,6 +140,24 @@ class DataController: ObservableObject {
         let packageFiles = dataPackage.dataPackageFiles as? Set<DataPackageFile> ?? []
         return packageFiles.sorted {
             $0.isCoT.description < $1.isCoT.description
+        }
+    }
+    
+    func changePackageVisibility(dataPackage: DataPackage, makeVisible: Bool) {
+        let dataContext = dataPackage.managedObjectContext ?? backgroundContext
+        dataContext.perform {
+            let packageFiles = self.dataPackageFilesFromDataPackage(dataPackage)
+            packageFiles.forEach { dataPackageFile in
+                if dataPackageFile.cotData != nil {
+                    dataPackageFile.cotData!.visible = makeVisible
+                }
+            }
+            dataPackage.contentsVisible = makeVisible
+            do {
+                try dataContext.save()
+            } catch {
+                TAKLogger.error("[DataController]: Unable to change visibility of package \(error)")
+            }
         }
     }
     

@@ -46,6 +46,7 @@ class COTDataParser: NSObject {
             mapPointData.updateDate = cotEvent.time
             mapPointData.staleDate = cotEvent.stale
             mapPointData.archived = if(forceArchive) { true } else { cotShouldArchive }
+            mapPointData.visible = true
             mapPointData.rawXml = rawXml
             mapPointData.videoURL = cotVideoURL ?? nil
             if dataPackageFile != nil {
@@ -92,6 +93,7 @@ class COTDataParser: NSObject {
             mapPointData.updateDate = cotEvent.time
             mapPointData.staleDate = cotEvent.stale
             mapPointData.archived = if(forceArchive) { true } else { cotShouldArchive }
+            mapPointData.visible = true
             mapPointData.rawXml = rawXml
             mapPointData.videoURL = cotVideoURL ?? nil
             

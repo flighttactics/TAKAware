@@ -79,6 +79,7 @@ class TAKDataPackageImporter: COTDataParser {
                 packageData.uid = UUID(uuidString: packageUid)
                 packageData.name = packageName
                 packageData.user = self.missionPackage.user
+                packageData.contentsVisible = true
                 packageData.originalFileHash = self.missionPackage.hash
                 packageData.createdAt = self.missionPackage.time ?? Date.now
              } else {

@@ -158,6 +158,14 @@ class DataPackageManager: NSObject, ObservableObject, URLSessionDelegate {
         DataController.shared.deletePackage(dataPackage: dataPackage)
     }
     
+    func hidePackage(dataPackage: DataPackage) {
+        DataController.shared.changePackageVisibility(dataPackage: dataPackage, makeVisible: false)
+    }
+    
+    func showPackage(dataPackage: DataPackage) {
+        DataController.shared.changePackageVisibility(dataPackage: dataPackage, makeVisible: true)
+    }
+    
     func importRemotePackage(missionPackage: TAKMissionPackage) {
         remotePackageProcessStatus = ""
         isFinishedProcessingRemotePackage = false
