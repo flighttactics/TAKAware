@@ -179,17 +179,34 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
 class SituationalAnnotationView: MKAnnotationView {
     var mapView: MapView
     var mapPointAnnotation: MapPointAnnotation
+    let annotationLabel: UILabel = UILabel.init(frame:CGRect(x:0, y:-10, width:70, height:10))
     
     init(mapView: MapView, annotation: MapPointAnnotation, reuseIdentifier: String?) {
         self.mapView = mapView
         self.mapPointAnnotation = annotation
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         self.canShowCallout = true
+        setUpLabel()
         setUpMenu()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setUpLabel() {
+        annotationLabel.text = mapPointAnnotation.title
+        annotationLabel.backgroundColor = .black
+        annotationLabel.textColor = .white
+        annotationLabel.font = .systemFont(ofSize: 10)
+        annotationLabel.lineBreakMode = .byTruncatingTail
+        annotationLabel.sizeToFit()
+        annotationLabel.preferredMaxLayoutWidth = 70
+        let afterReframe = annotationLabel.frame
+        let newWidth = (afterReframe.width > 70) ? 70 : afterReframe.width
+        let xPos = -(newWidth/2) + 15
+        annotationLabel.frame = CGRect(x: xPos, y: -10, width: newWidth, height: afterReframe.height)
+        self.addSubview(annotationLabel)
     }
     
     private func setUpMenu() {
@@ -326,6 +343,7 @@ struct MapView: UIViewRepresentable {
     @State var bloodhoundEndAnnotation: MapPointAnnotation?
     @State var bloodhoundStartCoordinate: CLLocationCoordinate2D?
     @State var bloodhoundEndCoordinate: CLLocationCoordinate2D?
+    @State var showingAnnotationLabels: Bool = true
     
     private static var mapPointsFetchRequest: NSFetchRequest<COTData> {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
@@ -357,6 +375,8 @@ struct MapView: UIViewRepresentable {
         viewModel.annotationSelectedCallback = annotationSelected(_:)
         viewModel.bloodhoundDeselectedCallback = bloodhoundDeselected
         viewModel.annotationUpdatedCallback = annotationUpdatedCallback
+        
+        didUpdateRegion()
         
 //        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
 //        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
@@ -581,6 +601,21 @@ struct MapView: UIViewRepresentable {
             mapView.centerOnUserButton.setImage(UIImage(systemName: "lock.circle", withConfiguration: combined)?.withTintColor(.systemYellow, renderingMode: .alwaysOriginal), for: .normal)
         }
     }
+    
+    func didUpdateRegion() {
+        let latDelta = mapView.region.span.latitudeDelta
+        if latDelta > 0.25 && showingAnnotationLabels {
+            showingAnnotationLabels.toggle()
+            mapView.annotations.forEach { annotation in
+                (mapView.view(for: annotation) as? SituationalAnnotationView)?.annotationLabel.isHidden = true
+            }
+        } else if latDelta <= 0.25 && !showingAnnotationLabels {
+            showingAnnotationLabels.toggle()
+            mapView.annotations.forEach { annotation in
+                (mapView.view(for: annotation) as? SituationalAnnotationView)?.annotationLabel.isHidden = false
+            }
+        }
+    }
 
     class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
         var parent: MapView
@@ -635,6 +670,10 @@ struct MapView: UIViewRepresentable {
                 mapView.deselectAnnotation(parent.viewModel.currentSelectedAnnotation, animated: false)
                 parent.viewModel.currentSelectedAnnotation = nil
             }
+        }
+        
+        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+            parent.didUpdateRegion()
         }
         
         func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
