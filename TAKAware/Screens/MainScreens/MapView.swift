@@ -270,7 +270,8 @@ class CompassMapView: MKMapView {
     //    Even if they move the map, snap back to their location when done moving
     // * If they are locked on to their location, unlock and stop tracking
     @objc func centerOnUser(sender: UIButton) {
-        self.setCenter(self.userLocation.coordinate, animated: true)
+        //self.setCenter(self.userLocation.coordinate, animated: true)
+        self.userTrackingMode = .follow
     }
     
     lazy var centerOnUserButton: UIButton = {
@@ -279,7 +280,11 @@ class CompassMapView: MKMapView {
         let combined = largeTitle.applying(black)
         
         var buttonConfig = UIButton.Configuration.borderless()
-        buttonConfig.image = UIImage(systemName: "scope", withConfiguration: combined)?.withTintColor(.systemYellow, renderingMode: .alwaysOriginal)
+        if self.userTrackingMode == .none {
+            buttonConfig.image = UIImage(systemName: "scope", withConfiguration: combined)?.withTintColor(.systemYellow, renderingMode: .alwaysOriginal)
+        } else {
+            buttonConfig.image = UIImage(systemName: "lock.circle", withConfiguration: combined)?.withTintColor(.systemYellow, renderingMode: .alwaysOriginal)
+        }
         let centerOnUserButton = UIButton(configuration: buttonConfig)
         centerOnUserButton.addTarget(self, action: #selector(self.centerOnUser), for: .touchUpInside)
         addSubview(centerOnUserButton)
@@ -564,6 +569,18 @@ struct MapView: UIViewRepresentable {
         annotationView!.annotation = mpAnnotation
         return annotationView
     }
+    
+    func didUpdateTrackingMode() {
+        let largeTitle = UIImage.SymbolConfiguration(textStyle: .title1)
+        let black = UIImage.SymbolConfiguration(weight: .medium)
+        let combined = largeTitle.applying(black)
+
+        if(mapView.userTrackingMode == .none) {
+            mapView.centerOnUserButton.setImage(UIImage(systemName: "scope", withConfiguration: combined)?.withTintColor(.systemYellow, renderingMode: .alwaysOriginal), for: .normal)
+        } else {
+            mapView.centerOnUserButton.setImage(UIImage(systemName: "lock.circle", withConfiguration: combined)?.withTintColor(.systemYellow, renderingMode: .alwaysOriginal), for: .normal)
+        }
+    }
 
     class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
         var parent: MapView
@@ -618,6 +635,10 @@ struct MapView: UIViewRepresentable {
                 mapView.deselectAnnotation(parent.viewModel.currentSelectedAnnotation, animated: false)
                 parent.viewModel.currentSelectedAnnotation = nil
             }
+        }
+        
+        func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool) {
+            parent.didUpdateTrackingMode()
         }
         
         func mapView(_ mapView: MKMapView, didDeselect annotation: any MKAnnotation) {
