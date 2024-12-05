@@ -15,9 +15,28 @@ class MapViewModel: ObservableObject {
     @Published var isDeconflictionViewOpen: Bool = false
     @Published var currentSelectedAnnotation: MapPointAnnotation? = nil
     @Published var conflictedItems: [MapPointAnnotation] = []
+    @Published var selectedSheet: Sheet.SheetType? = nil
     var annotationSelectedCallback: (MapPointAnnotation) -> Void = { (_) in }
     var bloodhoundDeselectedCallback: () -> Void = { () in }
     var annotationUpdatedCallback: (MapPointAnnotation) -> Void = { (_) in }
+    
+    func openDetailView() {
+        selectedSheet = .detail
+    }
+    
+    func openVideoPlayer() {
+        selectedSheet = .videoPlayer
+    }
+    
+    func openDeconflictionView() {
+        selectedSheet = .deconflictionView
+    }
+    
+    func closeDeconflictionView() {
+        if selectedSheet == .deconflictionView {
+            selectedSheet = nil
+        }
+    }
     
     func annotationUpdated(_ annotation: MapPointAnnotation) {
         annotationUpdatedCallback(annotation)

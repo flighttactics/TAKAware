@@ -55,8 +55,11 @@ enum BaseCot2525Mapping: String, CaseIterable, Identifiable, CustomStringConvert
 
 struct AnnotationDetailReadOnly: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var annotation: MapPointAnnotation?
     @Binding var viewModel: MapViewModel
+    
+    var annotation: MapPointAnnotation? {
+        viewModel.currentSelectedAnnotation
+    }
     
     var iconImage: UIImage {
         let icon = IconData.iconFor(type2525: annotation?.cotType ?? "", iconsetPath: annotation?.icon ?? "")
@@ -88,9 +91,12 @@ struct AnnotationDetailReadOnly: View {
 
 struct AnnotationDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var annotation: MapPointAnnotation?
     @Binding var viewModel: MapViewModel
     @State var isEditing: Bool = false
+    
+    var annotation: MapPointAnnotation? {
+        viewModel.currentSelectedAnnotation
+    }
     
     var iconImage: UIImage {
         let icon = IconData.iconFor(type2525: annotation?.cotType ?? "", iconsetPath: annotation?.icon ?? "")
@@ -103,9 +109,9 @@ struct AnnotationDetailView: View {
                 if annotation == nil {
                     Text("No Map Item Selected")
                 } else if(isEditing) {
-                    AnnotationEditView(annotation: $annotation, viewModel: $viewModel)
+                    AnnotationEditView(viewModel: $viewModel)
                 } else {
-                    AnnotationDetailReadOnly(annotation: $annotation, viewModel: $viewModel)
+                    AnnotationDetailReadOnly(viewModel: $viewModel)
                 }
             }
             .navigationBarItems(trailing: HStack {
@@ -130,13 +136,16 @@ struct AnnotationDetailView: View {
 
 struct AnnotationEditView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var annotation: MapPointAnnotation?
     @Binding var viewModel: MapViewModel
     @State var title: String = ""
     @State var remarks: String = ""
     @State var cotType: String = ""
     @State private var selectedCotType: BaseCot2525Mapping = .UnknownGroundTrack
     @State var icon: String = ""
+    
+    var annotation: MapPointAnnotation? {
+        viewModel.currentSelectedAnnotation
+    }
     
     var annotationId: String {
         annotation?.id ?? UUID().uuidString

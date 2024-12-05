@@ -41,7 +41,6 @@ struct AwarenessView: View {
     @FetchRequest(sortDescriptors: []) var mapPointsData: FetchedResults<COTData>
     
     @State private var tracking:MapUserTrackingMode = .none
-    @State private var sheet: Sheet.SheetType?
     @State private var mapViewModel: MapViewModel = MapViewModel()
     
     func formatOrZero(item: Double?, formatter: String = "%.0f") -> String {
@@ -72,30 +71,30 @@ struct AwarenessView: View {
             }
         }
         .navigationViewStyle(.stack)
-        .sheet(item: $sheet, content: {
-            Sheet(type: $0)
+        .sheet(item: $mapViewModel.selectedSheet, content: {
+            Sheet(type: $0, mapViewModel: $mapViewModel)
                 .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
                 .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
                 .presentationContentInteraction(.scrolls)
         })
-        .sheet(isPresented: $mapViewModel.isDetailViewOpen, content: {
-            AnnotationDetailView(annotation: $mapViewModel.currentSelectedAnnotation, viewModel: $mapViewModel)
-                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
-                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
-                .presentationContentInteraction(.scrolls)
-        })
-        .sheet(isPresented: $mapViewModel.isVideoPlayerOpen, content: {
-            VideoPlayerView(annotation: $mapViewModel.currentSelectedAnnotation)
-                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
-                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
-                .presentationContentInteraction(.scrolls)
-        })
-        .sheet(isPresented: $mapViewModel.isDeconflictionViewOpen, content: {
-            DeconflictionSheet(mapViewModel: mapViewModel)
-                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
-                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
-                .presentationContentInteraction(.scrolls)
-        })
+//        .sheet(isPresented: $mapViewModel.isDetailViewOpen, content: {
+//            AnnotationDetailView(annotation: $mapViewModel.currentSelectedAnnotation, viewModel: $mapViewModel)
+//                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
+//                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
+//                .presentationContentInteraction(.scrolls)
+//        })
+//        .sheet(isPresented: $mapViewModel.isVideoPlayerOpen, content: {
+//            VideoPlayerView(annotation: $mapViewModel.currentSelectedAnnotation)
+//                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
+//                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
+//                .presentationContentInteraction(.scrolls)
+//        })
+//        .sheet(isPresented: $mapViewModel.isDeconflictionViewOpen, content: {
+//            DeconflictionSheet(mapViewModel: mapViewModel)
+//                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
+//                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
+//                .presentationContentInteraction(.scrolls)
+//        })
         .background(Color.baseMediumGray)
         .ignoresSafeArea()
         .overlay(alignment: .bottomTrailing, content: {
@@ -125,12 +124,12 @@ struct AwarenessView: View {
                         .padding(5)
                 }
                 
-                Button(action: { sheet = .channels }) {
+                Button(action: { mapViewModel.selectedSheet = .channels }) {
                     navBarImage(imageName: "nav_channels")
                         .padding(5)
                 }
                 
-                Button(action: { sheet = .dataPackage }) {
+                Button(action: { mapViewModel.selectedSheet = .dataPackage }) {
                     navBarImage(imageName: "nav_package")
                         .padding(5)
                 }
@@ -159,7 +158,7 @@ struct AwarenessView: View {
                         .padding(5)
                 }
                 
-                Button(action: { sheet = .emergencySettings }) {
+                Button(action: { mapViewModel.selectedSheet = .emergencySettings }) {
                     navBarImage(systemName: "exclamationmark.triangle")
                         .foregroundColor(settingsStore.isAlertActivated ? .red : .yellow)
                         .padding(5)
@@ -170,7 +169,7 @@ struct AwarenessView: View {
 //                        .padding(5)
 //                }
                 
-                Button(action: { sheet = .settings }) {
+                Button(action: { mapViewModel.selectedSheet = .settings }) {
                     navBarImage(systemName: "line.3.horizontal")
                         .padding(5)
                 }

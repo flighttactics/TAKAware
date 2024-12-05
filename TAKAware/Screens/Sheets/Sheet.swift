@@ -10,6 +10,7 @@ import SwiftUI
 
 struct Sheet: View {
     let type: SheetType
+    @Binding var mapViewModel: MapViewModel
     
     enum SheetType: Identifiable {
         case none
@@ -19,6 +20,9 @@ struct Sheet: View {
         case dataSync
         case dataPackage
         case channels
+        case detail
+        case videoPlayer
+        case deconflictionView
         
         var id: String {
             switch self {
@@ -29,6 +33,9 @@ struct Sheet: View {
                 case .dataSync: return "datasync"
                 case .dataPackage: return "datapackage"
                 case .channels: return "channels"
+                case .detail: return "detail"
+                case .videoPlayer: return "videoPlayer"
+                case .deconflictionView: return "deconflictionView"
             }
         }
     }
@@ -42,6 +49,9 @@ struct Sheet: View {
             case .dataSync: DataSyncSheet()
             case .dataPackage: DataPackageSheet()
             case .channels: ChannelSheet()
+            case .detail: AnnotationDetailView(viewModel: $mapViewModel)
+            case .videoPlayer: VideoPlayerView(viewModel: $mapViewModel)
+            case .deconflictionView: DeconflictionSheet(viewModel: $mapViewModel)
         }
     }
     

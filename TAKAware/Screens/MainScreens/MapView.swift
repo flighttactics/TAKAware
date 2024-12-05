@@ -264,7 +264,7 @@ class SituationalAnnotationView: MKAnnotationView {
     }
     
     @objc func videoPressed(sender: UIButton) {
-        mapView.viewModel.isVideoPlayerOpen = true
+        mapView.viewModel.openVideoPlayer()
     }
     
     @objc func bloodhoundPressed(sender: UIButton) {
@@ -276,7 +276,7 @@ class SituationalAnnotationView: MKAnnotationView {
     }
     
     @objc func detailsPressed(sender: UIButton) {
-        mapView.viewModel.isDetailViewOpen = true
+        mapView.viewModel.openDetailView()
     }
 }
 
@@ -397,6 +397,10 @@ struct MapView: UIViewRepresentable {
     
     func annotationUpdatedCallback(annotation: MapPointAnnotation) {
         guard let annotationView = mapView.view(for: annotation) else { return }
+        prepareAnnotationView(annotation: annotation, annotationView: annotationView)
+    }
+    
+    func prepareAnnotationView(annotation: MapPointAnnotation, annotationView: MKAnnotationView) {
         let icon = IconData.iconFor(type2525: annotation.cotType ?? "", iconsetPath: annotation.icon ?? "")
         var pointIcon: UIImage = icon.icon
         
@@ -409,6 +413,10 @@ struct MapView: UIViewRepresentable {
         }
         
         annotationView.image = pointIcon
+        annotationView.annotation = annotation
+        if let awarenessAnnotationView = annotationView as? SituationalAnnotationView {
+            awarenessAnnotationView.updateForAnnotation(annotation: annotation)
+        }
     }
 
     func updateUIView(_ view: MKMapView, context: Context) {
@@ -582,23 +590,8 @@ struct MapView: UIViewRepresentable {
                 reuseIdentifier: identifier
             )
         }
-
-        let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
-        var pointIcon: UIImage = icon.icon
         
-        if let pointColor = mpAnnotation.color {
-            if pointIcon.isSymbolImage {
-                pointIcon = pointIcon.maskSymbol(with: pointColor)
-            } else {
-                pointIcon = pointIcon.maskImage(with: pointColor)
-            }
-        }
-        
-        annotationView!.image = pointIcon
-        annotationView!.annotation = mpAnnotation
-        if let awarenessAnnotationView = annotationView! as? SituationalAnnotationView {
-            awarenessAnnotationView.updateForAnnotation(annotation: mpAnnotation)
-        }
+        prepareAnnotationView(annotation: mpAnnotation, annotationView: annotationView!)
         return annotationView
     }
     
@@ -677,12 +670,12 @@ struct MapView: UIViewRepresentable {
             TAKLogger.debug("[MapView] There are \(closeMarkers.count) markers within \(tapRadius) meters")
             if(closeMarkers.count > 1) {
                 parent.viewModel.conflictedItems = closeMarkers as! [MapPointAnnotation]
-                parent.viewModel.isDeconflictionViewOpen = true
+                parent.viewModel.openDeconflictionView()
             } else if(closeMarkers.count == 1) {
-                parent.viewModel.isDeconflictionViewOpen = false
+                parent.viewModel.closeDeconflictionView()
                 parent.annotationSelected(mapView, annotation: closeMarkers.first!)
             } else if(parent.viewModel.currentSelectedAnnotation != nil) {
-                parent.viewModel.isDeconflictionViewOpen = false
+                parent.viewModel.closeDeconflictionView()
                 mapView.deselectAnnotation(parent.viewModel.currentSelectedAnnotation, animated: false)
                 parent.viewModel.currentSelectedAnnotation = nil
             }
