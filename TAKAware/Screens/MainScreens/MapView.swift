@@ -264,7 +264,7 @@ class SituationalAnnotationView: MKAnnotationView {
     }
     
     @objc func videoPressed(sender: UIButton) {
-        mapView.viewModel.openVideoPlayer()
+        mapView.parentView.openVideoPlayer()
     }
     
     @objc func bloodhoundPressed(sender: UIButton) {
@@ -272,11 +272,18 @@ class SituationalAnnotationView: MKAnnotationView {
     }
     
     @objc func deletePressed(sender: UIButton) {
-        mapView.viewModel.didDeleteAnnotation(mapPointAnnotation)
+        mapView.parentView.conflictedItems.removeAll(where: {$0.id == mapPointAnnotation.id})
+        if(mapView.parentView.conflictedItems.isEmpty) {
+            mapView.parentView.closeDeconflictionView()
+        }
+        mapView.parentView.currentSelectedAnnotation = nil
+        DispatchQueue.main.async {
+            DataController.shared.deleteCot(cotId: self.mapPointAnnotation.id)
+        }
     }
     
     @objc func detailsPressed(sender: UIButton) {
-        mapView.viewModel.openDetailView()
+        mapView.parentView.openDetailView()
     }
 }
 
@@ -342,7 +349,10 @@ struct MapView: UIViewRepresentable {
     @Binding var region: MKCoordinateRegion
     @Binding var mapType: UInt
     @Binding var enableTrafficDisplay: Bool
-    @Binding var viewModel: MapViewModel
+    @Binding var isAcquiringBloodhoundTarget: Bool
+    @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    @Binding var conflictedItems: [MapPointAnnotation]
+    var parentView: AwarenessView
     
     @State var mapView: CompassMapView = CompassMapView()
     @State var activeBloodhound: COTMapBloodhoundLine?
@@ -380,10 +390,10 @@ struct MapView: UIViewRepresentable {
         mapView.isHidden = false
         mapView.showsTraffic = enableTrafficDisplay
         
-        viewModel.annotationSelectedCallback = annotationSelected(_:)
-        viewModel.bloodhoundDeselectedCallback = bloodhoundDeselected
-        viewModel.annotationUpdatedCallback = annotationUpdatedCallback
-        
+        parentView.bloodhoundDeselectedCallback = bloodhoundDeselected
+        parentView.annotationUpdatedCallback = annotationUpdatedCallback
+        parentView.annotationSelectedCallback = annotationSelected(_:)
+
         didUpdateRegion()
         
 //        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
@@ -427,7 +437,7 @@ struct MapView: UIViewRepresentable {
     
     private func updateAnnotations(from mapView: MKMapView) {
         
-        if(!viewModel.isAcquiringBloodhoundTarget && activeBloodhound != nil) {
+        if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
             mapView.removeOverlay(activeBloodhound!)
             DispatchQueue.main.async {
                 activeBloodhound = nil
@@ -516,7 +526,7 @@ struct MapView: UIViewRepresentable {
     }
     
     func createBloodhound(annotation: MapPointAnnotation) {
-        viewModel.isAcquiringBloodhoundTarget = true
+        isAcquiringBloodhoundTarget = true
         let userLocation = mapView.userLocation.coordinate
         let endPointLocation = annotation.coordinate
         TAKLogger.debug("[MapView] Adding Bloodhound line to \(annotation.title!)")
@@ -545,7 +555,7 @@ struct MapView: UIViewRepresentable {
                 bloodhoundStartCoordinate = nil
                 bloodhoundEndCoordinate = nil
                 bloodhoundEndAnnotation = nil
-                viewModel.isAcquiringBloodhoundTarget = false
+                isAcquiringBloodhoundTarget = false
             }
         }
     }
@@ -557,12 +567,12 @@ struct MapView: UIViewRepresentable {
             return
         }
         TAKLogger.debug("[MapView] annotation selected")
-        viewModel.currentSelectedAnnotation = mpAnnotation
+        parentView.currentSelectedAnnotation = mpAnnotation
         
         let mapReadyForBloodhoundTarget = activeBloodhound == nil ||
         !mapView.overlays.contains(where: { $0.isEqual(activeBloodhound) })
         
-        if(viewModel.isAcquiringBloodhoundTarget &&
+        if(isAcquiringBloodhoundTarget &&
            mapReadyForBloodhoundTarget) {
             createBloodhound(annotation: mpAnnotation!)
         }
@@ -608,17 +618,18 @@ struct MapView: UIViewRepresentable {
     }
     
     func didUpdateRegion() {
+        let BORDER_POINT = 0.60
         let latDelta = mapView.region.span.latitudeDelta
-        if latDelta > 0.25 && showingAnnotationLabels {
+        if latDelta > BORDER_POINT {
             DispatchQueue.main.async {
-                showingAnnotationLabels.toggle()
+                showingAnnotationLabels = false
             }
             mapView.annotations.forEach { annotation in
                 (mapView.view(for: annotation) as? SituationalAnnotationView)?.annotationLabel.isHidden = true
             }
-        } else if latDelta <= 0.25 && !showingAnnotationLabels {
+        } else if latDelta <= BORDER_POINT {
             DispatchQueue.main.async {
-                showingAnnotationLabels.toggle()
+                showingAnnotationLabels = true
             }
             mapView.annotations.forEach { annotation in
                 (mapView.view(for: annotation) as? SituationalAnnotationView)?.annotationLabel.isHidden = false
@@ -669,15 +680,15 @@ struct MapView: UIViewRepresentable {
             let closeMarkers = mapView.annotations.filter { $0 is MapPointAnnotation && tappedLocation.distance(from: CLLocation(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)) < tapRadius }
             TAKLogger.debug("[MapView] There are \(closeMarkers.count) markers within \(tapRadius) meters")
             if(closeMarkers.count > 1) {
-                parent.viewModel.conflictedItems = closeMarkers as! [MapPointAnnotation]
-                parent.viewModel.openDeconflictionView()
+                parent.conflictedItems = closeMarkers as! [MapPointAnnotation]
+                parent.parentView.openDeconflictionView()
             } else if(closeMarkers.count == 1) {
-                parent.viewModel.closeDeconflictionView()
+                parent.parentView.closeDeconflictionView()
                 parent.annotationSelected(mapView, annotation: closeMarkers.first!)
-            } else if(parent.viewModel.currentSelectedAnnotation != nil) {
-                parent.viewModel.closeDeconflictionView()
-                mapView.deselectAnnotation(parent.viewModel.currentSelectedAnnotation, animated: false)
-                parent.viewModel.currentSelectedAnnotation = nil
+            } else if(parent.currentSelectedAnnotation != nil) {
+                parent.parentView.closeDeconflictionView()
+                mapView.deselectAnnotation(parent.currentSelectedAnnotation, animated: false)
+                parent.currentSelectedAnnotation = nil
             }
         }
         
@@ -694,7 +705,7 @@ struct MapView: UIViewRepresentable {
                 TAKLogger.debug("[MapView] Unknown annotation type selected")
                 return
             }
-            parent.viewModel.currentSelectedAnnotation = nil
+            parent.currentSelectedAnnotation = nil
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {

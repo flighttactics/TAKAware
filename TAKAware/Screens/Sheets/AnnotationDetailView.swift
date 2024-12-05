@@ -55,10 +55,10 @@ enum BaseCot2525Mapping: String, CaseIterable, Identifiable, CustomStringConvert
 
 struct AnnotationDetailReadOnly: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var viewModel: MapViewModel
+    @Binding var currentSelectedAnnotation: MapPointAnnotation?
     
     var annotation: MapPointAnnotation? {
-        viewModel.currentSelectedAnnotation
+        currentSelectedAnnotation
     }
     
     var iconImage: UIImage {
@@ -91,11 +91,12 @@ struct AnnotationDetailReadOnly: View {
 
 struct AnnotationDetailView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var viewModel: MapViewModel
     @State var isEditing: Bool = false
+    @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    let parentView: AwarenessView
     
     var annotation: MapPointAnnotation? {
-        viewModel.currentSelectedAnnotation
+        currentSelectedAnnotation
     }
     
     var iconImage: UIImage {
@@ -109,9 +110,9 @@ struct AnnotationDetailView: View {
                 if annotation == nil {
                     Text("No Map Item Selected")
                 } else if(isEditing) {
-                    AnnotationEditView(viewModel: $viewModel)
+                    AnnotationEditView(currentSelectedAnnotation: $currentSelectedAnnotation, parentView: parentView)
                 } else {
-                    AnnotationDetailReadOnly(viewModel: $viewModel)
+                    AnnotationDetailReadOnly(currentSelectedAnnotation: $currentSelectedAnnotation)
                 }
             }
             .navigationBarItems(trailing: HStack {
@@ -136,7 +137,8 @@ struct AnnotationDetailView: View {
 
 struct AnnotationEditView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var viewModel: MapViewModel
+    @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    var parentView: AwarenessView
     @State var title: String = ""
     @State var remarks: String = ""
     @State var cotType: String = ""
@@ -144,7 +146,7 @@ struct AnnotationEditView: View {
     @State var icon: String = ""
     
     var annotation: MapPointAnnotation? {
-        viewModel.currentSelectedAnnotation
+        currentSelectedAnnotation
     }
     
     var annotationId: String {
@@ -154,7 +156,7 @@ struct AnnotationEditView: View {
     func updateAnnotation() {
         DataController.shared.updateMarker(id: annotationId, title: title, remarks: remarks, cotType: selectedCotType.rawValue)
         if(annotation != nil) {
-            viewModel.annotationUpdated(annotation!)
+            parentView.annotationUpdatedCallback(annotation!)
         }
     }
     

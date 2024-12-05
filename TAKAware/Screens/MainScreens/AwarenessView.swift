@@ -41,7 +41,14 @@ struct AwarenessView: View {
     @FetchRequest(sortDescriptors: []) var mapPointsData: FetchedResults<COTData>
     
     @State private var tracking:MapUserTrackingMode = .none
-    @State private var mapViewModel: MapViewModel = MapViewModel()
+    @State var selectedSheet: Sheet.SheetType? = nil
+    @State var isAcquiringBloodhoundTarget: Bool = false
+    @State var currentSelectedAnnotation: MapPointAnnotation? = nil
+    @State var conflictedItems: [MapPointAnnotation] = []
+
+    @State var bloodhoundDeselectedCallback: () -> Void = { () in }
+    @State var annotationUpdatedCallback: (MapPointAnnotation) -> Void = { (_) in }
+    @State var annotationSelectedCallback: (MapPointAnnotation) -> Void = { (_) in }
     
     func formatOrZero(item: Double?, formatter: String = "%.0f") -> String {
         guard let item = item else {
@@ -49,6 +56,30 @@ struct AwarenessView: View {
         }
 
         return String(format: formatter, item)
+    }
+    
+    func openDetailView() {
+        selectedSheet = .detail
+    }
+    
+    func openVideoPlayer() {
+        selectedSheet = .videoPlayer
+    }
+    
+    func openDeconflictionView() {
+        selectedSheet = .deconflictionView
+    }
+    
+    func closeDeconflictionView() {
+        if selectedSheet == .deconflictionView {
+            selectedSheet = nil
+        }
+    }
+    
+    func didSelectAnnotation(_ annotation: MapPointAnnotation) {
+        currentSelectedAnnotation = annotation
+        closeDeconflictionView()
+        annotationSelectedCallback(annotation)
     }
     
     init(displayUIState: Binding<DisplayUIState>) {
@@ -71,30 +102,12 @@ struct AwarenessView: View {
             }
         }
         .navigationViewStyle(.stack)
-        .sheet(item: $mapViewModel.selectedSheet, content: {
-            Sheet(type: $0, mapViewModel: $mapViewModel)
+        .sheet(item: $selectedSheet, content: {
+            Sheet(parentView: self, type: $0, conflictedItems: $conflictedItems, currentSelectedAnnotation: $currentSelectedAnnotation)
                 .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
                 .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
                 .presentationContentInteraction(.scrolls)
         })
-//        .sheet(isPresented: $mapViewModel.isDetailViewOpen, content: {
-//            AnnotationDetailView(annotation: $mapViewModel.currentSelectedAnnotation, viewModel: $mapViewModel)
-//                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
-//                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
-//                .presentationContentInteraction(.scrolls)
-//        })
-//        .sheet(isPresented: $mapViewModel.isVideoPlayerOpen, content: {
-//            VideoPlayerView(annotation: $mapViewModel.currentSelectedAnnotation)
-//                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
-//                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
-//                .presentationContentInteraction(.scrolls)
-//        })
-//        .sheet(isPresented: $mapViewModel.isDeconflictionViewOpen, content: {
-//            DeconflictionSheet(mapViewModel: mapViewModel)
-//                .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
-//                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
-//                .presentationContentInteraction(.scrolls)
-//        })
         .background(Color.baseMediumGray)
         .ignoresSafeArea()
         .overlay(alignment: .bottomTrailing, content: {
@@ -108,9 +121,11 @@ struct AwarenessView: View {
             region: $locationManager.region,
             mapType: $settingsStore.mapTypeDisplay,
             enableTrafficDisplay: $settingsStore.enableTrafficDisplay,
-            viewModel: $mapViewModel
-        )
-        .ignoresSafeArea(edges: .all)
+            isAcquiringBloodhoundTarget: $isAcquiringBloodhoundTarget,
+            currentSelectedAnnotation: $currentSelectedAnnotation,
+            conflictedItems: $conflictedItems,
+            parentView: self
+        ).ignoresSafeArea(edges: .all)
     }
 
     var toolbarItemsRight: some View {
@@ -118,18 +133,18 @@ struct AwarenessView: View {
             Spacer()
 
             Group {
-                Button(action: { mapViewModel.toggleBloodhound() }) {
+                Button(action: { bloodhoundDeselectedCallback() }) {
                     navBarImage(imageName: "bloodhoundsvg")
-                        .colorMultiply((mapViewModel.isAcquiringBloodhoundTarget ? .red : .yellow))
+                        .colorMultiply((isAcquiringBloodhoundTarget ? .red : .yellow))
                         .padding(5)
                 }
                 
-                Button(action: { mapViewModel.selectedSheet = .channels }) {
+                Button(action: { selectedSheet = .channels }) {
                     navBarImage(imageName: "nav_channels")
                         .padding(5)
                 }
                 
-                Button(action: { mapViewModel.selectedSheet = .dataPackage }) {
+                Button(action: { selectedSheet = .dataPackage }) {
                     navBarImage(imageName: "nav_package")
                         .padding(5)
                 }
@@ -158,7 +173,7 @@ struct AwarenessView: View {
                         .padding(5)
                 }
                 
-                Button(action: { mapViewModel.selectedSheet = .emergencySettings }) {
+                Button(action: { selectedSheet = .emergencySettings }) {
                     navBarImage(systemName: "exclamationmark.triangle")
                         .foregroundColor(settingsStore.isAlertActivated ? .red : .yellow)
                         .padding(5)
@@ -169,7 +184,7 @@ struct AwarenessView: View {
 //                        .padding(5)
 //                }
                 
-                Button(action: { mapViewModel.selectedSheet = .settings }) {
+                Button(action: { selectedSheet = .settings }) {
                     navBarImage(systemName: "line.3.horizontal")
                         .padding(5)
                 }

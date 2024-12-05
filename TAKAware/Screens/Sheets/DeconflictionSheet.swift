@@ -11,7 +11,8 @@ import SwiftUI
 
 struct DeconflictionSheet: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var viewModel: MapViewModel
+    @Binding var conflictedItems: [MapPointAnnotation]
+    let parentView: AwarenessView
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
     
     func iconImage(_ annotation: MapPointAnnotation) -> UIImage {
@@ -22,17 +23,17 @@ struct DeconflictionSheet: View {
     var body: some View {
         NavigationView {
             List {
-                if(viewModel.conflictedItems.isEmpty) {
+                if(conflictedItems.isEmpty) {
                     Text("No Markers Selected")
                 } else {
-                    ForEach(viewModel.conflictedItems, id:\.title) { marker in
+                    ForEach(conflictedItems, id:\.title) { item in
                         VStack {
                             HStack {
-                                Image(uiImage: iconImage(marker))
+                                Image(uiImage: iconImage(item))
                                 Button {
-                                    viewModel.didSelectAnnotation(marker)
+                                    parentView.didSelectAnnotation(item)
                                 } label: {
-                                    Text(marker.title!)
+                                    Text(item.title!)
                                 }
                             }
                         }

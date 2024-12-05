@@ -9,8 +9,10 @@ import Foundation
 import SwiftUI
 
 struct Sheet: View {
+    let parentView: AwarenessView
     let type: SheetType
-    @Binding var mapViewModel: MapViewModel
+    @Binding var conflictedItems: [MapPointAnnotation]
+    @Binding var currentSelectedAnnotation: MapPointAnnotation?
     
     enum SheetType: Identifiable {
         case none
@@ -49,9 +51,9 @@ struct Sheet: View {
             case .dataSync: DataSyncSheet()
             case .dataPackage: DataPackageSheet()
             case .channels: ChannelSheet()
-            case .detail: AnnotationDetailView(viewModel: $mapViewModel)
-            case .videoPlayer: VideoPlayerView(viewModel: $mapViewModel)
-            case .deconflictionView: DeconflictionSheet(viewModel: $mapViewModel)
+            case .detail: AnnotationDetailView(currentSelectedAnnotation: $currentSelectedAnnotation, parentView: parentView)
+            case .videoPlayer: VideoPlayerView(currentSelectedAnnotation: $currentSelectedAnnotation)
+            case .deconflictionView: DeconflictionSheet(conflictedItems: $conflictedItems, parentView: parentView)
         }
     }
     

@@ -30,11 +30,11 @@ struct PlayerView: UIViewRepresentable {
 
 struct VideoPlayerView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var viewModel: MapViewModel
     @State var currentPlayer: VLCMediaPlayer = VLCMediaPlayer()
+    @Binding var currentSelectedAnnotation: MapPointAnnotation?
     
     var annotation: MapPointAnnotation? {
-        viewModel.currentSelectedAnnotation
+        currentSelectedAnnotation
     }
 
     var body: some View {
