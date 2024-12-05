@@ -190,6 +190,12 @@ class SituationalAnnotationView: MKAnnotationView {
         setUpMenu()
     }
     
+    func updateForAnnotation(annotation: MapPointAnnotation) {
+        self.mapPointAnnotation = annotation
+        setUpLabel()
+        setUpMenu()
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -575,8 +581,6 @@ struct MapView: UIViewRepresentable {
                 annotation: mpAnnotation,
                 reuseIdentifier: identifier
             )
-        } else {
-            annotationView!.annotation = annotation
         }
 
         let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
@@ -592,6 +596,9 @@ struct MapView: UIViewRepresentable {
         
         annotationView!.image = pointIcon
         annotationView!.annotation = mpAnnotation
+        if let awarenessAnnotationView = annotationView! as? SituationalAnnotationView {
+            awarenessAnnotationView.updateForAnnotation(annotation: mpAnnotation)
+        }
         return annotationView
     }
     
