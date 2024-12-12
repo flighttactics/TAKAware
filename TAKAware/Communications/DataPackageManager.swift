@@ -132,18 +132,18 @@ class DataPackageManager: NSObject, ObservableObject, URLSessionDelegate {
             if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 guard let packageList = json["data"] as? [[String: Any]] else { return }
                 for dataPackage in packageList {
-                    let creator: String = dataPackage["Creator"] as! String
-                    let expirationString: String = dataPackage["Expiration"] as! String
+                    let creator: String = dataPackage["Creator"] as? String ?? "UNKNOWN CREATOR"
+                    let expirationString: String = dataPackage["Expiration"] as? String ?? "none"
                     let expiration: Date? = dateFormatter.date(from: expirationString)
-                    let groups: String = dataPackage["Groups"] as! String
-                    let hash: String = dataPackage["Hash"] as! String
-                    let keywords: String = dataPackage["Keywords"] as! String
-                    let mimeType: String = dataPackage["MimeType"] as! String
-                    let name: String = dataPackage["Name"] as! String
-                    let size: String = dataPackage["Size"] as! String
-                    let timeString: String = dataPackage["Time"] as! String
+                    let groups: String = dataPackage["Groups"] as? String ?? ""
+                    let hash: String = dataPackage["Hash"] as? String ?? UUID().uuidString
+                    let keywords: String = dataPackage["Keywords"] as? String ?? ""
+                    let mimeType: String = dataPackage["MimeType"] as? String ?? ""
+                    let name: String = dataPackage["Name"] as? String ?? "UNKNOWN NAME"
+                    let size: String = dataPackage["Size"] as? String ?? "0"
+                    let timeString: String = dataPackage["Time"] as? String ?? "none"
                     let time: Date? = dateFormatter.date(from: timeString)
-                    let user: String = dataPackage["User"] as! String
+                    let user: String = dataPackage["User"] as? String ?? "UNKNOWN USER"
                     
                     let dp = TAKMissionPackage(creator: creator, expiration: expiration, groups: groups, hash: hash, keywords: keywords, mimeType: mimeType, name: name, size: size, time: time, user: user)
                     dataPackages.append(dp)
