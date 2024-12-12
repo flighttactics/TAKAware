@@ -80,43 +80,43 @@ struct MapOptions: View {
                     }
                 }
                 
-                Section(header:
-                    HStack {
-                        Text("Custom Map Overlays")
-                        Spacer()
-                    Button(action: { isShowingFilePicker.toggle() }, label: {
-                        Image(systemName: "plus")
-                            .font(.title)
-                    }).buttonStyle(.plain)
-                    }
-                ) {
-                    Text("No Custom Maps Loaded")
-                }
-                .fileImporter(isPresented: $isShowingFilePicker, allowedContentTypes: [.zip, .xml], allowsMultipleSelection: false, onCompletion: { results in
-                    switch results {
-                    case .success(let fileurls):
-                        for fileurl in fileurls {
-                            if(fileurl.startAccessingSecurityScopedResource()) {
-                                TAKLogger.debug("Processing file at \(String(describing: fileurl))")
-    //                                    let tdpi = TAKDataPackageImporter(
-    //                                        fileLocation: fileurl
-    //                                    )
-    //                                    tdpi.parse()
-    //                                    fileurl.stopAccessingSecurityScopedResource()
-    //                                    if(tdpi.parsingErrors.isEmpty) {
-    //                                        alertText = "Data package processed successfully!"
-    //                                    } else {
-    //                                        alertText = "Data package could not be processed\n\n\(tdpi.parsingErrors.joined(separator: "\n\n"))"
-    //                                    }
-    //                                    isShowingAlert = true
-                            } else {
-                                TAKLogger.error("Unable to securely access  \(String(describing: fileurl))")
-                            }
-                        }
-                    case .failure(let error):
-                        TAKLogger.debug(String(describing: error))
-                    }
-                })
+//                Section(header:
+//                    HStack {
+//                        Text("Custom Map Overlays")
+//                        Spacer()
+//                    Button(action: { isShowingFilePicker.toggle() }, label: {
+//                        Image(systemName: "plus")
+//                            .font(.title)
+//                    }).buttonStyle(.plain)
+//                    }
+//                ) {
+//                    Text("No Custom Maps Loaded")
+//                }
+//                .fileImporter(isPresented: $isShowingFilePicker, allowedContentTypes: [.zip, .xml], allowsMultipleSelection: false, onCompletion: { results in
+//                    switch results {
+//                    case .success(let fileurls):
+//                        for fileurl in fileurls {
+//                            if(fileurl.startAccessingSecurityScopedResource()) {
+//                                TAKLogger.debug("Processing file at \(String(describing: fileurl))")
+//    //                                    let tdpi = TAKDataPackageImporter(
+//    //                                        fileLocation: fileurl
+//    //                                    )
+//    //                                    tdpi.parse()
+//    //                                    fileurl.stopAccessingSecurityScopedResource()
+//    //                                    if(tdpi.parsingErrors.isEmpty) {
+//    //                                        alertText = "Data package processed successfully!"
+//    //                                    } else {
+//    //                                        alertText = "Data package could not be processed\n\n\(tdpi.parsingErrors.joined(separator: "\n\n"))"
+//    //                                    }
+//    //                                    isShowingAlert = true
+//                            } else {
+//                                TAKLogger.error("Unable to securely access  \(String(describing: fileurl))")
+//                            }
+//                        }
+//                    case .failure(let error):
+//                        TAKLogger.debug(String(describing: error))
+//                    }
+//                })
             }
         }
     }

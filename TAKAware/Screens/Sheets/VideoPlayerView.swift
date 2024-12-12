@@ -10,6 +10,30 @@ import Foundation
 import SwiftUI
 import MobileVLCKit
 
+struct VideoView: UIViewRepresentable {
+    @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    @State var mediaPlayer = VLCMediaPlayer()
+
+    typealias UIViewType = UIView
+
+    func makeUIView(context: Context) -> UIView {
+        let uiView = UIView()
+        mediaPlayer.drawable = uiView
+        return uiView
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {
+        if let url = currentSelectedAnnotation?.videoURL {
+            TAKLogger.debug("[VideoView] Attempting to play \(url)")
+            mediaPlayer.media = VLCMedia(url: url)
+            mediaPlayer.play()
+        }
+        else {
+            mediaPlayer.stop()
+        }
+    }
+}
+
 struct PlayerView: UIViewRepresentable {
     public var url: String
     let mediaPlayer = VLCMediaPlayer()
@@ -43,7 +67,7 @@ struct VideoPlayerView: View {
                 if annotation == nil || annotation!.videoURL == nil {
                     Text("No Video Source Selected")
                 } else {
-                    PlayerView(url: annotation!.videoURL!.absoluteString)
+                    VideoView(currentSelectedAnnotation: $currentSelectedAnnotation)
                         .cornerRadius(10)
                 }
             }

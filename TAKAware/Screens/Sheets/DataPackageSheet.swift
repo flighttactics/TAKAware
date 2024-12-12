@@ -42,6 +42,8 @@ struct DataPackageDownloader: View {
         List {
             if dataPackageManager.isLoading {
                 loader
+            } else if searchResults.isEmpty {
+                Text("No Data Packages available to download")
             } else {
                 ForEach(searchResults, id:\.hash) { package in
                     HStack {
@@ -173,7 +175,10 @@ struct DataPackageDetail: View {
                 }
                 
             })
-            Section(header: Text("Imported Packages"), footer: Text("Swipe a package to manage")) {
+            Section(
+                header: Text("Imported Packages"),
+                footer: Text("Swipe a package to manage. Note that KML/KMZ import is not supported at this time")
+            ) {
                 if dataPackages.isEmpty {
                     Text("No Data Packages Imported")
                 } else {

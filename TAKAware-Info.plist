@@ -9,7 +9,7 @@
 	</dict>
 	<key>NSBonjourServices</key>
 	<array>
-		<string>_taktracker_udp</string>
+		<string>_takaware_udp</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

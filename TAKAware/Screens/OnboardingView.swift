@@ -42,7 +42,7 @@ struct OnboardingView: View {
                             .listRowSeparator(.hidden)
                         HStack {
                             Spacer()
-                            Button("Set Location Permissions") {
+                            Button("Next") {
                                 locationManager.requestAlwaysAuthorization()
                                 hasAskedPermissions = true
                             }
@@ -56,11 +56,11 @@ struct OnboardingView: View {
                             Text("Requesting permissions")
                                 .listRowSeparator(.hidden)
                         case "authorizedWhenInUse":
-                            Text("We also need to request to always track your location so it will continue to work in the background")
+                            Text("You can also grant permissions for TAK Aware to continue to broadcast your information in the background")
                                 .listRowSeparator(.hidden)
                             HStack {
                                 Spacer()
-                                Button("Enable Background Tracking") {
+                                Button("Enable") {
                                     locationManager.requestAlwaysAuthorization()
                                 }
                                 .buttonStyle(.borderedProminent)
@@ -76,7 +76,7 @@ struct OnboardingView: View {
                         
                         HStack {
                             Spacer()
-                            Button("Next") {
+                            Button("Skip") {
                                 currentStep = OnboardingStep.SetUserInformation
                             }
                             .buttonStyle(.borderedProminent)
@@ -117,6 +117,8 @@ struct OnboardingView: View {
                         Text("Processing Data Package...")
                     } else if(!SettingsStore.global.takServerUrl.isEmpty) {
                         Text("Configured TAK Server \(SettingsStore.global.takServerUrl)")
+                    } else {
+                        Text("You can add a server later in Settings")
                     }
                     
                     HStack {
@@ -125,14 +127,26 @@ struct OnboardingView: View {
                         }
                         .buttonStyle(.bordered)
                         Spacer()
-                        Button("Next") {
-                            currentStep = OnboardingStep.Finished
+                        if(isProcessingDataPackage) {
+                            Button("Next") {
+                                currentStep = OnboardingStep.Finished
+                            }
+                            .buttonStyle(.borderedProminent)
+                        } else if(!SettingsStore.global.takServerUrl.isEmpty) {
+                            Button("Next") {
+                                currentStep = OnboardingStep.Finished
+                            }
+                            .buttonStyle(.borderedProminent)
+                        } else {
+                            Button("Skip") {
+                                currentStep = OnboardingStep.Finished
+                            }
+                            .buttonStyle(.borderedProminent)
                         }
-                        .buttonStyle(.borderedProminent)
                     }
                     .padding(.bottom, 20)
                 case .Finished:
-                    Text("And we're all done! You can update these settings at any time by clicking on the gear/wheel icon from the main screen. You'll also find the support contact information there if you have any problems. Happy TAK'ing!")
+                    Text("And we're all done! You can update these settings at any time through the menu on the main screen. You'll also find the support contact information there if you have any problems. Happy TAK'ing!")
                         .listRowSeparator(.hidden)
                     HStack {
                         Spacer()

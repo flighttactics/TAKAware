@@ -624,15 +624,20 @@ struct MapView: UIViewRepresentable {
             DispatchQueue.main.async {
                 showingAnnotationLabels = false
             }
+            //mapView.annotations(in: mapView.visibleMapRect).forEach { annotation in
             mapView.annotations.forEach { annotation in
-                (mapView.view(for: annotation) as? SituationalAnnotationView)?.annotationLabel.isHidden = true
+                if let mpAnnotation = annotation as? MapPointAnnotation {
+                    (mapView.view(for: mpAnnotation) as? SituationalAnnotationView)?.annotationLabel.isHidden = true
+                }
             }
         } else if latDelta <= BORDER_POINT {
             DispatchQueue.main.async {
                 showingAnnotationLabels = true
             }
             mapView.annotations.forEach { annotation in
-                (mapView.view(for: annotation) as? SituationalAnnotationView)?.annotationLabel.isHidden = false
+                if let mpAnnotation = annotation as? MapPointAnnotation {
+                    (mapView.view(for: mpAnnotation) as? SituationalAnnotationView)?.annotationLabel.isHidden = false
+                }
             }
         }
     }

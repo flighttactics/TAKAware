@@ -14,7 +14,9 @@ class UDPMessage: NSObject, ObservableObject {
     var host: NWEndpoint.Host = "239.2.3.1"
     var port: NWEndpoint.Port = 6969
     
-    @Published var connected: Bool?
+    let parser = StreamParser()
+    
+    @Published var connected: Bool = false
     
     func send(_ payload: Data) {
         TAKLogger.debug("[UDPMessage]: Sending UDP Data")
@@ -24,6 +26,7 @@ class UDPMessage: NSObject, ObservableObject {
             } else {
                 TAKLogger.debug("[UDPMessage]: Data has been sent")
             }
+            self.receive()
         }))
     }
     
@@ -39,6 +42,7 @@ class UDPMessage: NSObject, ObservableObject {
             case .ready:
                 TAKLogger.debug("[UDPMessage]: Entered state: ready")
                 self.connected = true
+                // self.receive()
             case .setup:
                 TAKLogger.debug("[UDPMessage]: Entered state: setup")
             case .cancelled:
@@ -71,14 +75,44 @@ class UDPMessage: NSObject, ObservableObject {
         connection!.start(queue: .global())
     }
     
-    func receive(content: Data?, error: NWError?, connection: NWConnection?) {
-        guard let data = content else { return }
-
-        let parser = StreamParser()
-        parser.parseCoTStream(dataStream: data)
-
-        self.connection?.receive(minimumIncompleteLength: 0, maximumLength: 8000) { content, _, _, error in
-            self.receive(content: content, error: error, connection: connection)
+    func receive() {
+        TAKLogger.debug("[UDPMessage-R] Attempting to receive data")
+        self.connection!.receive(minimumIncompleteLength: 1, maximumLength: 8192) { data, context, isComplete, error in
+        //self.connection!.receiveMessage { data, context, isComplete, error in
+            TAKLogger.debug("[UDPMessage-R] Attempting to receive message")
+            if let unwrappedError = error {
+                TAKLogger.error("[UDPMessage-R]: NWError received in \(#function) - \(unwrappedError)")
+                self.receive()
+                return
+            }
+            NSLog("UDPMessage-R Here1")
+            guard isComplete, let data = data else {
+                TAKLogger.error("[UDPMessage-R]: Received nil Data with context - \(String(describing: context))")
+                self.receive()
+                return
+            }
+            TAKLogger.debug("[UDPMessage-R] Message received! Processing...")
+            self.parser.parseCoTStream(dataStream: data)
+            TAKLogger.debug("[UDPMessage-R] Let's listen some more...")
+            self.receive()
         }
+        TAKLogger.debug("[UDPMessage-R] All done receiving data")
+    }
+    
+    func receive1() {
+        TAKLogger.debug("[UDPMessage] Attempting to receive data")
+        self.connection?.receiveMessage { (data, context, isComplete, error) in
+            if (isComplete) {
+                TAKLogger.debug("[UDPMessage] Receiving data...")
+                if (data != nil) {
+                    TAKLogger.debug("[UDPMessage] Message received! Processing...")
+                    self.parser.parseCoTStream(dataStream: data)
+                } else {
+                    TAKLogger.debug("[UDPMessage] No data received")
+                }
+                self.receive()
+            }
+        }
+        TAKLogger.debug("[UDPMessage] All done receiving data")
     }
 }

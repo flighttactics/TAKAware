@@ -30,7 +30,9 @@ struct ChannelSheet: View {
     var body: some View {
         NavigationView {
             List {
-                if(channelManager.isLoading) {
+                if(settingsStore.takServerUrl.isEmpty) {
+                    Text("Not connected to a server")
+                } else if(channelManager.isLoading) {
                     HStack {
                         Text("Retrieving Channels")
                         loader
