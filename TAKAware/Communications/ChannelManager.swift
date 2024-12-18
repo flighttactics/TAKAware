@@ -34,7 +34,7 @@ class TAKChannel: Equatable {
     }
 }
 
-class ChannelManager: NSObject, ObservableObject, URLSessionDelegate {
+class ChannelManager: APIRequestObject, ObservableObject {
     @Published var activeChannels: [TAKChannel] = []
     @Published var isLoading = false
     @Published var isSendingUpdate = false
@@ -121,66 +121,6 @@ class ChannelManager: NSObject, ObservableObject, URLSessionDelegate {
         TAKLogger.error("[ChannelManager]: Error while trying to retrieve channels \(err)")
         isLoading = false
         isSendingUpdate = false
-    }
-    
-    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-        
-        let authenticationMethod = challenge.protectionSpace.authenticationMethod
-
-        if authenticationMethod == NSURLAuthenticationMethodClientCertificate {
-            TAKLogger.error("[ChannelManager]: Server requesting identity challenge")
-            guard let clientIdentity = SettingsStore.global.retrieveIdentity(label: SettingsStore.global.takServerUrl) else {
-                TAKLogger.error("[ChannelManager]: Identity was not stored in the keychain")
-                completionHandler(.performDefaultHandling, nil)
-                return
-            }
-            
-            TAKLogger.error("[ChannelManager]: Using client identity")
-            let credential = URLCredential(identity: clientIdentity,
-                                               certificates: nil,
-                                                persistence: .none)
-            challenge.sender?.use(credential, for: challenge)
-            completionHandler(.useCredential, credential)
-
-        } else if authenticationMethod == NSURLAuthenticationMethodServerTrust {
-            TAKLogger.debug("[ChannelManager]: Server not trusted with default certs, seeing if we have custom ones")
-            
-            var optionalTrust: SecTrust?
-            var customCerts: [SecCertificate] = []
-
-            let trustCerts = SettingsStore.global.serverCertificateTruststore
-            TAKLogger.debug("[ChannelManager]: Truststore contains \(trustCerts.count) cert(s)")
-            if !trustCerts.isEmpty {
-                TAKLogger.debug("[ChannelManager]: Loading Trust Store Certs")
-                trustCerts.forEach { cert in
-                    if let convertedCert = SecCertificateCreateWithData(nil, cert as CFData) {
-                        customCerts.append(convertedCert)
-                    }
-                }
-            }
-            
-            if !customCerts.isEmpty {
-                TAKLogger.debug("[ChannelManager]: We have custom certs, so disable hostname validation")
-                let sslWithoutHostnamePolicy = SecPolicyCreateSSL(true, nil)
-                let status = SecTrustCreateWithCertificates(customCerts as AnyObject,
-                                                            sslWithoutHostnamePolicy,
-                                                            &optionalTrust)
-                guard status == errSecSuccess else {
-                    completionHandler(.performDefaultHandling, nil)
-                    return
-                }
-            }
-
-            if optionalTrust != nil {
-                TAKLogger.debug("[ChannelManager]: Retrying with local truststore")
-                let credential = URLCredential(trust: optionalTrust!)
-                challenge.sender?.use(credential, for: challenge)
-                completionHandler(.useCredential, credential)
-            } else {
-                TAKLogger.debug("[ChannelManager]: No custom truststore ultimately found")
-                completionHandler(.performDefaultHandling, nil)
-            }
-        }
     }
     
     func toggleChannel(channel: TAKChannel) {

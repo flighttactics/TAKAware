@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -25,6 +25,17 @@
 		A50C5F5F2A6032D2001E52E6 /* EmergencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50C5F5E2A6032D2001E52E6 /* EmergencyView.swift */; };
 		A51B12EA2BB1E28800C25239 /* AdvancedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */; };
 		A51B12EC2BB1E29800C25239 /* SituationalAwarenessOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */; };
+		A52BE8ED2D132C3E00E82414 /* APIRequestObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE8EC2D132C3A00E82414 /* APIRequestObject.swift */; };
+		A53F59E52D0FD58900DFD794 /* AlertSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DA2D0FD58900DFD794 /* AlertSheet.swift */; };
+		A53F59E62D0FD58900DFD794 /* AnnotationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DB2D0FD58900DFD794 /* AnnotationDetailView.swift */; };
+		A53F59E72D0FD58900DFD794 /* ChannelSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DC2D0FD58900DFD794 /* ChannelSheet.swift */; };
+		A53F59E82D0FD58900DFD794 /* ChatSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DD2D0FD58900DFD794 /* ChatSheet.swift */; };
+		A53F59E92D0FD58900DFD794 /* DataPackageSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DE2D0FD58900DFD794 /* DataPackageSheet.swift */; };
+		A53F59EA2D0FD58900DFD794 /* DataSyncSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DF2D0FD58900DFD794 /* DataSyncSheet.swift */; };
+		A53F59EB2D0FD58900DFD794 /* DeconflictionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59E02D0FD58900DFD794 /* DeconflictionSheet.swift */; };
+		A53F59EC2D0FD58900DFD794 /* SettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59E12D0FD58900DFD794 /* SettingsSheet.swift */; };
+		A53F59ED2D0FD58900DFD794 /* Sheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59E22D0FD58900DFD794 /* Sheet.swift */; };
+		A53F59EE2D0FD58900DFD794 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59E32D0FD58900DFD794 /* VideoPlayerView.swift */; };
 		A54F70872AB0AEA400D8C541 /* DataPackageParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F70862AB0AEA400D8C541 /* DataPackageParserTests.swift */; };
 		A54F70892AB0C40B00D8C541 /* TCPMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F70882AB0C40B00D8C541 /* TCPMessageTests.swift */; };
 		A5582CC32AD5CB4600DE0D5C /* TAKAwareTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5582CC22AD5CB4600DE0D5C /* TAKAwareTestCase.swift */; };
@@ -3435,6 +3446,17 @@
 		A50C5F5E2A6032D2001E52E6 /* EmergencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyView.swift; sourceTree = "<group>"; };
 		A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedOptions.swift; sourceTree = "<group>"; };
 		A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SituationalAwarenessOptions.swift; sourceTree = "<group>"; };
+		A52BE8EC2D132C3A00E82414 /* APIRequestObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequestObject.swift; sourceTree = "<group>"; };
+		A53F59DA2D0FD58900DFD794 /* AlertSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSheet.swift; sourceTree = "<group>"; };
+		A53F59DB2D0FD58900DFD794 /* AnnotationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationDetailView.swift; sourceTree = "<group>"; };
+		A53F59DC2D0FD58900DFD794 /* ChannelSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSheet.swift; sourceTree = "<group>"; };
+		A53F59DD2D0FD58900DFD794 /* ChatSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSheet.swift; sourceTree = "<group>"; };
+		A53F59DE2D0FD58900DFD794 /* DataPackageSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackageSheet.swift; sourceTree = "<group>"; };
+		A53F59DF2D0FD58900DFD794 /* DataSyncSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSyncSheet.swift; sourceTree = "<group>"; };
+		A53F59E02D0FD58900DFD794 /* DeconflictionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeconflictionSheet.swift; sourceTree = "<group>"; };
+		A53F59E12D0FD58900DFD794 /* SettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheet.swift; sourceTree = "<group>"; };
+		A53F59E22D0FD58900DFD794 /* Sheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheet.swift; sourceTree = "<group>"; };
+		A53F59E32D0FD58900DFD794 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
 		A54F70862AB0AEA400D8C541 /* DataPackageParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackageParserTests.swift; sourceTree = "<group>"; };
 		A54F70882AB0C40B00D8C541 /* TCPMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPMessageTests.swift; sourceTree = "<group>"; };
 		A5582CC22AD5CB4600DE0D5C /* TAKAwareTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKAwareTestCase.swift; sourceTree = "<group>"; };
@@ -6798,10 +6820,6 @@
 		E7150D9B3F41CFFF2C34C4A3 /* Pods-TAKAware-TAKAwareTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKAware-TAKAwareTests.release.xcconfig"; path = "Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		A5CF82012CE02DB700CBE744 /* Sheets */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Sheets; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		A5D8D3772A53B0F9002F0E3E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -6876,6 +6894,23 @@
 				4630FD182B5071BD00988ED4 /* ChatViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		A53F59E42D0FD58900DFD794 /* Sheets */ = {
+			isa = PBXGroup;
+			children = (
+				A53F59DA2D0FD58900DFD794 /* AlertSheet.swift */,
+				A53F59DB2D0FD58900DFD794 /* AnnotationDetailView.swift */,
+				A53F59DC2D0FD58900DFD794 /* ChannelSheet.swift */,
+				A53F59DD2D0FD58900DFD794 /* ChatSheet.swift */,
+				A53F59DE2D0FD58900DFD794 /* DataPackageSheet.swift */,
+				A53F59DF2D0FD58900DFD794 /* DataSyncSheet.swift */,
+				A53F59E02D0FD58900DFD794 /* DeconflictionSheet.swift */,
+				A53F59E12D0FD58900DFD794 /* SettingsSheet.swift */,
+				A53F59E22D0FD58900DFD794 /* Sheet.swift */,
+				A53F59E32D0FD58900DFD794 /* VideoPlayerView.swift */,
+			);
+			path = Sheets;
 			sourceTree = "<group>";
 		};
 		A55ABF432ABDBF7600195AB7 /* SettingsScreens */ = {
@@ -10313,6 +10348,7 @@
 		A5E2F8FC2A791F0600EDD0B4 /* Communications */ = {
 			isa = PBXGroup;
 			children = (
+				A52BE8EC2D132C3A00E82414 /* APIRequestObject.swift */,
 				A59530FB2CF7EFA30078C1E8 /* DataPackageManager.swift */,
 				A5BF02012A5EBCA40043065B /* TCPMessage.swift */,
 				A5BF01FF2A5EB63F0043065B /* UDPMessage.swift */,
@@ -10327,7 +10363,7 @@
 		A5E2F8FD2A791F3000EDD0B4 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				A5CF82012CE02DB700CBE744 /* Sheets */,
+				A53F59E42D0FD58900DFD794 /* Sheets */,
 				A595F6642C278C9A00E81976 /* MainScreens */,
 				4630FD0F2B5071A100988ED4 /* Chat */,
 				4630FD112B5071A100988ED4 /* Message */,
@@ -10416,9 +10452,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				A5CF82012CE02DB700CBE744 /* Sheets */,
 			);
 			name = TAKAware;
 			packageProductDependencies = (
@@ -13958,6 +13991,17 @@
 				A595F66A2C278CFE00E81976 /* Components.swift in Sources */,
 				A5A49D902A5459B5009764C1 /* TAKManager.swift in Sources */,
 				4630FD4C2B51A34500988ED4 /* MessageModel.xcdatamodeld in Sources */,
+				A53F59E52D0FD58900DFD794 /* AlertSheet.swift in Sources */,
+				A53F59E62D0FD58900DFD794 /* AnnotationDetailView.swift in Sources */,
+				A53F59E72D0FD58900DFD794 /* ChannelSheet.swift in Sources */,
+				A53F59E82D0FD58900DFD794 /* ChatSheet.swift in Sources */,
+				A53F59E92D0FD58900DFD794 /* DataPackageSheet.swift in Sources */,
+				A53F59EA2D0FD58900DFD794 /* DataSyncSheet.swift in Sources */,
+				A52BE8ED2D132C3E00E82414 /* APIRequestObject.swift in Sources */,
+				A53F59EB2D0FD58900DFD794 /* DeconflictionSheet.swift in Sources */,
+				A53F59EC2D0FD58900DFD794 /* SettingsSheet.swift in Sources */,
+				A53F59ED2D0FD58900DFD794 /* Sheet.swift in Sources */,
+				A53F59EE2D0FD58900DFD794 /* VideoPlayerView.swift in Sources */,
 				A5B312C72C39CAAF007B3914 /* IconData.swift in Sources */,
 				4630FD142B5071A100988ED4 /* MessageView.swift in Sources */,
 				A5AA510A2AC33488006696B2 /* OnboardingView.swift in Sources */,
@@ -14163,7 +14207,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14187,7 +14231,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -14207,7 +14251,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14231,7 +14275,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -14247,7 +14291,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14268,7 +14312,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14287,7 +14331,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
@@ -14304,7 +14348,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
