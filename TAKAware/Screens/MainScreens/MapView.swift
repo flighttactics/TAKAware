@@ -24,19 +24,29 @@ class COTMapObject: NSObject {
         cotData.cotType ?? ""
     }
     
-    var isAnnotation: Bool {
-        return !COTMapObject.OVERLAY_TYPES.contains(cotType)
-    }
-    
     var isShape: Bool {
         COTMapObject.OVERLAY_TYPES.contains(cotType)
     }
     
-    var annotation: MapPointAnnotation {
-        return MapPointAnnotation(mapPoint: cotData)
+    var isLine: Bool {
+        COTMapObject.LINE_TYPES.contains(cotType)
     }
     
-    func buildRectangle() -> MKPolygon {
+    var annotation: MapPointAnnotation {
+        if isLine {
+            let line = self.shape as! COTMapPolyline
+            let centerPoint = line.coordinate
+            cotData.latitude = centerPoint.latitude
+            cotData.longitude = centerPoint.longitude
+            return MapPointAnnotation(mapPoint: cotData, shape: self.shape)
+        } else if isShape {
+            return MapPointAnnotation(mapPoint: cotData, shape: self.shape)
+        } else {
+            return MapPointAnnotation(mapPoint: cotData)
+        }
+    }
+    
+    func buildRectangle() -> COTMapPolygon {
         let pointLinks = cotEvent?.cotDetail?.cotLinks ?? []
         let strokeColor = cotEvent?.cotDetail?.cotStrokeColor?.value ?? -1
         let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
@@ -59,7 +69,7 @@ class COTMapObject: NSObject {
         return polygon
     }
     
-    func buildPolyline() -> MKPolyline {
+    func buildPolyline() -> COTMapPolyline {
         let pointLinks = cotEvent?.cotDetail?.cotLinks ?? []
         let strokeColor = cotEvent?.cotDetail?.cotStrokeColor?.value ?? -1
         let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
@@ -82,7 +92,7 @@ class COTMapObject: NSObject {
         return polyline
     }
     
-    func buildEllipse() -> MKCircle {
+    func buildEllipse() -> COTMapCircle {
         let cotShape = cotEvent?.cotDetail?.cotShape
         let strokeColor = cotEvent?.cotDetail?.cotStrokeColor?.value ?? -1
         let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
@@ -96,7 +106,7 @@ class COTMapObject: NSObject {
         return circle
     }
     
-    var shape: MKOverlay {
+    var shape: MKOverlay? {
         // Shapes: Circle, Polygon, Polyline
         self.cotEvent = COTXMLParser().parse(cotData.rawXml ?? "")
         if COTMapObject.RECTANGLE_TYPES.contains(cotType) {
@@ -106,7 +116,7 @@ class COTMapObject: NSObject {
         } else if COTMapObject.LINE_TYPES.contains(cotType) {
             return buildPolyline()
         }
-        return buildEllipse()
+        return nil
     }
     
     init(mapPoint: COTData) {
@@ -135,8 +145,7 @@ class COTMapPolyline: MKPolyline {
     var labelsOn: Bool = true
 }
 
-class COTMapBloodhoundLine: MKGeodesicPolyline {
-}
+class COTMapBloodhoundLine: MKGeodesicPolyline {}
 
 final class MapPointAnnotation: NSObject, MKAnnotation {
     var id: String
@@ -149,6 +158,7 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var color: UIColor?
     dynamic var remarks: String?
     dynamic var videoURL: URL?
+    dynamic var shape: MKOverlay?
     
     var annotationIdentifier: String {
         if icon != nil && !icon!.isEmpty {
@@ -160,7 +170,8 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
         return "pli"
     }
     
-    init(mapPoint: COTData) {
+    init(mapPoint: COTData, shape: MKOverlay? = nil) {
+        self.shape = shape
         self.id = mapPoint.id?.uuidString ?? UUID().uuidString
         self.title = mapPoint.callsign ?? "NO CALLSIGN"
         self.icon = mapPoint.icon ?? ""
@@ -186,13 +197,17 @@ class SituationalAnnotationView: MKAnnotationView {
         self.mapPointAnnotation = annotation
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         self.canShowCallout = true
-        setUpLabel()
+        if annotation.shape == nil {
+            setUpLabel()
+        }
         setUpMenu()
     }
     
     func updateForAnnotation(annotation: MapPointAnnotation) {
         self.mapPointAnnotation = annotation
-        setUpLabel()
+        if annotation.shape == nil {
+            setUpLabel()
+        }
         setUpMenu()
     }
     
@@ -275,6 +290,9 @@ class SituationalAnnotationView: MKAnnotationView {
         mapView.parentView.conflictedItems.removeAll(where: {$0.id == mapPointAnnotation.id})
         if(mapView.parentView.conflictedItems.isEmpty) {
             mapView.parentView.closeDeconflictionView()
+        }
+        if mapView.parentView.currentSelectedAnnotation?.shape != nil {
+            mapView.mapView.removeOverlay(mapView.parentView.currentSelectedAnnotation!.shape!)
         }
         mapView.parentView.currentSelectedAnnotation = nil
         DispatchQueue.main.async {
@@ -411,18 +429,23 @@ struct MapView: UIViewRepresentable {
     }
     
     func prepareAnnotationView(annotation: MapPointAnnotation, annotationView: MKAnnotationView) {
-        let icon = IconData.iconFor(type2525: annotation.cotType ?? "", iconsetPath: annotation.icon ?? "")
-        var pointIcon: UIImage = icon.icon
-        
-        if let pointColor = annotation.color {
-            if pointIcon.isSymbolImage {
-                pointIcon = pointIcon.maskSymbol(with: pointColor)
-            } else {
-                pointIcon = pointIcon.maskImage(with: pointColor)
+        if annotation.shape == nil {
+            let iconSetPath = annotation.icon ?? ""
+            let icon = IconData.iconFor(type2525: annotation.cotType ?? "", iconsetPath: iconSetPath)
+            var pointIcon: UIImage = icon.icon
+            
+            if let pointColor = annotation.color {
+                if pointIcon.isSymbolImage {
+                    pointIcon = pointIcon.maskSymbol(with: pointColor)
+                } else {
+                    pointIcon = pointIcon.maskImage(with: pointColor)
+                }
             }
+            annotationView.image = pointIcon
+        } else {
+            annotationView.image = nil
         }
         
-        annotationView.image = pointIcon
         annotationView.annotation = annotation
         if let awarenessAnnotationView = annotationView as? SituationalAnnotationView {
             awarenessAnnotationView.updateForAnnotation(annotation: annotation)
@@ -463,6 +486,10 @@ struct MapView: UIViewRepresentable {
             if(bloodhoundEndAnnotation != nil && toRemove.contains(bloodhoundEndAnnotation!.id)) {
                 bloodhoundDeselected()
             }
+            
+            let overlaysToRemove = removableAnnotations.map { ($0 as! MapPointAnnotation).shape }.filter { $0 != nil } as! [MKOverlay]
+            mapView.removeOverlays(overlaysToRemove)
+            
             mapView.removeAnnotations(removableAnnotations)
         }
         
@@ -505,10 +532,10 @@ struct MapView: UIViewRepresentable {
         if !toAdd.isEmpty {
             let insertingAnnotations = incomingData.filter { toAdd.contains($0.id!.uuidString)}
             let newMapPoints = insertingAnnotations.map { COTMapObject(mapPoint: $0) }
-            let newAnnotations = newMapPoints.filter { $0.isAnnotation }.map { $0.annotation }
+            let newAnnotations = newMapPoints.map { $0.annotation }
             mapView.addAnnotations(newAnnotations)
             
-            let newOverlays = newMapPoints.filter { $0.isShape }.map { $0.shape }
+            let newOverlays = newAnnotations.map { $0.shape }.filter { $0 != nil } as! [MKOverlay]
             mapView.addOverlays(newOverlays)
         }
     }
@@ -588,7 +615,10 @@ struct MapView: UIViewRepresentable {
             return selfView
         }
         
-        guard let mpAnnotation = annotation as? MapPointAnnotation else { return nil }
+        guard let mpAnnotation = annotation as? MapPointAnnotation else {
+            TAKLogger.error("[MapView] Unknown Annotation present on map \(annotation.debugDescription ?? "")")
+            return nil
+        }
         
         let identifier = mpAnnotation.annotationIdentifier
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)

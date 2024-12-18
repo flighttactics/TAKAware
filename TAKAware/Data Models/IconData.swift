@@ -84,7 +84,7 @@ class IconData {
                     // This is a unique spotmap
                     // So we'll return a circle
                     // where the imageName is the argb colors
-                    let spotMapImg = UIImage(systemName: "smallcircle.filled.circle.fill")!
+                    let spotMapImg = UIImage(systemName: "circle.inset.filled")!
                     return Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: spotMapImg)
                 } else {
                     let bitMapCol = SQLite.Expression<Blob>("bitmap")
