@@ -10,9 +10,8 @@ import UIKit
 
 class TAKLogger: NSObject {
     static func debug(_ message: String) {
-        NSLog(message)
         message.enumerateLines { (line, _) in
-            print(line)
+            NSLog(line)
         }
     }
     
