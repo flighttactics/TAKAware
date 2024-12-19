@@ -44,6 +44,7 @@ struct AwarenessView: View {
     @State var selectedSheet: Sheet.SheetType? = nil
     @State var isAcquiringBloodhoundTarget: Bool = false
     @State var currentSelectedAnnotation: MapPointAnnotation? = nil
+    @State var bloodhoundEndPoint: MapPointAnnotation? = nil
     @State var conflictedItems: [MapPointAnnotation] = []
 
     @State var bloodhoundDeselectedCallback: () -> Void = { () in }
@@ -112,6 +113,10 @@ struct AwarenessView: View {
         .ignoresSafeArea()
         .overlay(alignment: .bottomTrailing, content: {
             serverAndUserInfo
+                .padding(.horizontal)
+        })
+        .overlay(alignment: .bottomLeading, content: {
+            bloodhoundInfo
                 .padding(.horizontal)
         })
     }
@@ -223,6 +228,84 @@ struct AwarenessView: View {
         }
     }
     
+    func degreesToRadians(degrees: Double) -> Double { return degrees * .pi / 180.0 }
+    func radiansToDegrees(radians: Double) -> Double { return radians * 180.0 / .pi }
+
+    func bearingToBloodhoundTarget(from: CLLocationCoordinate2D?, to: CLLocationCoordinate2D?) -> Double {
+
+        guard let point1 = from,
+              let point2 = to else {
+            return 0.0
+        }
+        
+        let lat1 = degreesToRadians(degrees: point1.latitude)
+        let lon1 = degreesToRadians(degrees: point1.longitude)
+
+        let lat2 = degreesToRadians(degrees: point2.latitude)
+        let lon2 = degreesToRadians(degrees: point2.longitude)
+
+        let dLon = lon2 - lon1
+
+        let y = sin(dLon) * cos(lat2)
+        let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
+        let radiansBearing = atan2(y, x)
+
+        return radiansToDegrees(radians: radiansBearing)
+    }
+    
+    func distanceToBloodhoundTarget(from: CLLocationCoordinate2D?, to: CLLocationCoordinate2D?) -> Double {
+        guard let point1 = from,
+              let point2 = to else {
+            return 0.0
+        }
+        let startLocation = CLLocation(latitude: point1.latitude, longitude: point1.longitude)
+        let bloodhoundLocation = CLLocation(latitude: point2.latitude, longitude: point2.longitude)
+        return startLocation.distance(from: bloodhoundLocation)
+    }
+    
+    var bloodhoundInfo: some View {
+        Group {
+            if bloodhoundEndPoint != nil {
+                VStack(alignment: .leading) {
+                    Text(bloodhoundEndPoint?.title ?? "")
+                    
+                    Group {
+                        ForEach(displayUIState.coordinateValue(location: locationManager.lastLocation).lines, id: \.id) { line in
+                            HStack {
+                                if(line.hasLineTitle()) {
+                                    Text(line.lineTitle)
+                                }
+                                Text(line.lineContents)
+                            }
+                        }
+                    }
+                    .onTapGesture {
+                        displayUIState.nextLocationUnit()
+                    }
+                    
+                    HStack {
+                        Text("\(String(format: "%.0f", bearingToBloodhoundTarget(from: locationManager.lastLocation?.coordinate, to: bloodhoundEndPoint?.coordinate)))°")
+                        Spacer()
+                        HStack {
+                            Text(displayUIState.distanceValue(distanceMeters: distanceToBloodhoundTarget(from: locationManager.lastLocation?.coordinate, to: bloodhoundEndPoint?.coordinate)))
+                        }.multilineTextAlignment(.trailing)
+                    }
+                    .onTapGesture {
+                        displayUIState.nextDistanceUnit()
+                    }
+                }
+                .font(.system(size: 10, weight: .bold))
+                .padding(.all, 5)
+                .background(
+                    RoundedRectangle(cornerRadius: 5, style: .continuous)
+                        .fill(Color.black)
+                        .opacity(0.7)
+                )
+                .frame(width: 150)
+            }
+        }
+    }
+    
     var serverAndUserInfo: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -238,13 +321,18 @@ struct AwarenessView: View {
             
             Text(settingsStore.callSign)
             
-            ForEach(displayUIState.coordinateValue(location: locationManager.lastLocation).lines, id: \.id) { line in
-                HStack {
-                    if(line.hasLineTitle()) {
-                        Text(line.lineTitle)
+            Group {
+                ForEach(displayUIState.coordinateValue(location: locationManager.lastLocation).lines, id: \.id) { line in
+                    HStack {
+                        if(line.hasLineTitle()) {
+                            Text(line.lineTitle)
+                        }
+                        Text(line.lineContents)
                     }
-                    Text(line.lineContents)
                 }
+            }
+            .onTapGesture {
+                displayUIState.nextLocationUnit()
             }
             
             HStack {
@@ -256,7 +344,11 @@ struct AwarenessView: View {
                     Text(displayUIState.speedValue(
                         location: locationManager.lastLocation))
                     Text("\(displayUIState.speedText())")
-                }.multilineTextAlignment(.trailing)
+                }
+                .multilineTextAlignment(.trailing)
+                .onTapGesture {
+                    displayUIState.nextSpeedUnit()
+                }
             }
         }
         .font(.system(size: 10, weight: .bold))
@@ -267,8 +359,5 @@ struct AwarenessView: View {
                 .opacity(0.7)
         )
         .frame(width: 150)
-        .onTapGesture {
-            displayUIState.nextLocationUnit()
-        }
     }
 }

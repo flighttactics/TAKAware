@@ -28,6 +28,7 @@ struct DisplayUIState {
     var currentSpeedUnit = SpeedUnit.MetersPerSecond
     var currentCompassUnit = DirectionUnit.MN
     var currentHeadingUnit = DirectionUnit.TN
+    var currentDistanceUnit = DistanceUnit.Metric
     
     mutating func nextHeadingUnit() {
         currentHeadingUnit = UnitOrder.nextDirectionUnit(unit: currentHeadingUnit)
@@ -43,6 +44,10 @@ struct DisplayUIState {
     
     mutating func nextLocationUnit() {
         currentLocationUnit = UnitOrder.nextLocationUnit(unit: currentLocationUnit)
+    }
+    
+    mutating func nextDistanceUnit() {
+        currentDistanceUnit = UnitOrder.nextDistanceUnit(unit: currentDistanceUnit)
     }
     
     func headingText(unit:DirectionUnit) -> String {
@@ -86,6 +91,10 @@ struct DisplayUIState {
             return "--"
         }
         return Converter.convertToSpeedUnit(unit: currentSpeedUnit, location: location)
+    }
+    
+    func distanceValue(distanceMeters: Double) -> String {
+        return Converter.convertToDistanceUnit(unit: currentDistanceUnit, distanceMeters: distanceMeters)
     }
     
     func coordinateText() -> String {

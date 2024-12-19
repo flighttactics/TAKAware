@@ -556,6 +556,7 @@ struct MapView: UIViewRepresentable {
         isAcquiringBloodhoundTarget = true
         let userLocation = mapView.userLocation.coordinate
         let endPointLocation = annotation.coordinate
+        parentView.bloodhoundEndPoint = annotation
         TAKLogger.debug("[MapView] Adding Bloodhound line to \(annotation.title!)")
         bloodhoundStartCoordinate = userLocation
         bloodhoundEndCoordinate = endPointLocation
@@ -583,6 +584,7 @@ struct MapView: UIViewRepresentable {
                 bloodhoundEndCoordinate = nil
                 bloodhoundEndAnnotation = nil
                 isAcquiringBloodhoundTarget = false
+                parentView.bloodhoundEndPoint = nil
             }
         }
     }

@@ -67,6 +67,30 @@ final class ConverterTests: TAKAwareTestCase {
         XCTAssertEqual("67", Converter.convertToSpeedUnit(unit: SpeedUnit.MilesPerHour, location: location))
     }
     
+    func testSmallDistanceToFeetNoDecimal() {
+        XCTAssertEqual("280ft", Converter.convertToDistanceUnit(unit: DistanceUnit.Imperial, distanceMeters: 85.344))
+    }
+    
+    func testSmallDistanceToFeetWithDecimal() {
+        XCTAssertEqual("278.87ft", Converter.convertToDistanceUnit(unit: DistanceUnit.Imperial, distanceMeters: 85.0))
+    }
+    
+    func testSmallDistanceToMetersNoDecimal() {
+        XCTAssertEqual("85m", Converter.convertToDistanceUnit(unit: DistanceUnit.Metric, distanceMeters: 85.0))
+    }
+    
+    func testSmallDistanceToMetersWithDecimal() {
+        XCTAssertEqual("85.4m", Converter.convertToDistanceUnit(unit: DistanceUnit.Metric, distanceMeters: 85.4))
+    }
+    
+    func testLargeDistanceToMiles() {
+        XCTAssertEqual("1.03mi", Converter.convertToDistanceUnit(unit: DistanceUnit.Imperial, distanceMeters: 1650.0))
+    }
+    
+    func testLargeDistanceToKilometers() {
+        XCTAssertEqual("1.65km", Converter.convertToDistanceUnit(unit: DistanceUnit.Metric, distanceMeters: 1650.0))
+    }
+    
     //DMS -> MGRS -> Decimal
     
     func testTogglingDMStoMGRS() {
@@ -103,5 +127,13 @@ final class ConverterTests: TAKAwareTestCase {
     
     func testTogglingSpeedUnitMPHtoMS() {
         XCTAssertEqual(SpeedUnit.MetersPerSecond, UnitOrder.nextSpeedUnit(unit: SpeedUnit.MilesPerHour))
+    }
+    
+    func testTogglingDistanceUnitFromImperial() {
+        XCTAssertEqual(DistanceUnit.Metric, UnitOrder.nextDistanceUnit(unit: DistanceUnit.Imperial))
+    }
+    
+    func testTogglingDistanceUnitFromMetric() {
+        XCTAssertEqual(DistanceUnit.Imperial, UnitOrder.nextDistanceUnit(unit: DistanceUnit.Metric))
     }
 }

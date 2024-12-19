@@ -27,6 +27,11 @@ enum DirectionUnit {
     case TN
 }
 
+enum DistanceUnit {
+    case Metric
+    case Imperial
+}
+
 struct UnitOrder {
     static func nextSpeedUnit(unit:SpeedUnit) -> SpeedUnit {
         let order = [SpeedUnit.MetersPerSecond,
@@ -61,6 +66,15 @@ struct UnitOrder {
             return DirectionUnit.TN
         case DirectionUnit.TN:
             return DirectionUnit.MN
+        }
+    }
+    
+    static func nextDistanceUnit(unit: DistanceUnit) -> DistanceUnit {
+        switch unit {
+        case .Imperial:
+            return .Metric
+        case .Metric:
+            return .Imperial
         }
     }
 }
@@ -141,5 +155,33 @@ class Converter {
         let seconds = 3600 * (absDegrees - floorAbsDegrees) - (60 * minutes)
         return String(format: "%02.0f° %02.0f' %06.3f\"",
                              degrees, minutes, seconds)
+    }
+    
+    static func convertToDistanceUnit(unit: DistanceUnit, distanceMeters: Double) -> String {
+        let FEET_IN_ONE_METER = 3.28084
+        let FEET_IN_ONE_MILE = 5280.0
+        
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        
+        if unit == .Metric {
+            if distanceMeters > 1000 {
+                let number = NSNumber(value: distanceMeters/1000)
+                return "\(formatter.string(from: number)!)km"
+            } else {
+                let number = NSNumber(value: distanceMeters)
+                return "\(formatter.string(from: number)!)m"
+            }
+        } else {
+            let feet = distanceMeters * FEET_IN_ONE_METER
+            if feet > FEET_IN_ONE_MILE {
+                let number = NSNumber(value: feet / FEET_IN_ONE_MILE)
+                return "\(formatter.string(from: number)!)mi"
+            } else {
+                let number = NSNumber(value: feet)
+                return "\(formatter.string(from: number)!)ft"
+            }
+        }
     }
 }
