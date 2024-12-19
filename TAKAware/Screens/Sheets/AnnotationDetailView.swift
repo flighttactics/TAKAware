@@ -186,17 +186,19 @@ struct AnnotationEditView: View {
                     .keyboardType(.asciiCapable)
                     .multilineTextAlignment(.trailing)
             }
-            HStack {
-                Picker("Type", selection: $selectedCotType) {
-                    ForEach(BaseCot2525Mapping.allCases) { option in
-                        Text(String(describing: option))
+            if annotation != nil && !annotation!.isShape {
+                HStack {
+                    Picker("Type", selection: $selectedCotType) {
+                        ForEach(BaseCot2525Mapping.allCases) { option in
+                            Text(String(describing: option))
 
+                        }
                     }
-                }
-                .pickerStyle(.menu)
-                .onChange(of: selectedCotType) { _ in
-                    annotation?.cotType = selectedCotType.rawValue
-                    updateAnnotation()
+                    .pickerStyle(.menu)
+                    .onChange(of: selectedCotType) { _ in
+                        annotation?.cotType = selectedCotType.rawValue
+                        updateAnnotation()
+                    }
                 }
             }
         }

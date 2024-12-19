@@ -170,6 +170,10 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
         return "pli"
     }
     
+    var isShape: Bool {
+        shape != nil
+    }
+    
     init(mapPoint: COTData, shape: MKOverlay? = nil) {
         self.shape = shape
         self.id = mapPoint.id?.uuidString ?? UUID().uuidString
