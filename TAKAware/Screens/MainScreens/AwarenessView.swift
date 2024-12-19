@@ -250,7 +250,12 @@ struct AwarenessView: View {
         let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
         let radiansBearing = atan2(y, x)
 
-        return radiansToDegrees(radians: radiansBearing)
+        let bearing = radiansToDegrees(radians: radiansBearing)
+        if bearing.isLess(than: 0.0) {
+            return 360 + bearing
+        } else {
+            return bearing
+        }
     }
     
     func distanceToBloodhoundTarget(from: CLLocationCoordinate2D?, to: CLLocationCoordinate2D?) -> Double {
