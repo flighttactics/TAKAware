@@ -14,8 +14,9 @@ import SwiftUI
 class COTMapObject: NSObject {
     static let RECTANGLE_TYPES: [String] = ["u-d-f", "u-d-r"]
     static let CIRCLE_TYPES: [String] = ["u-d-c-c"]
+    static let ELLIPSE_TYPES: [String] = ["u-d-c-e"]
     static let LINE_TYPES: [String] = ["b-m-r"]
-    static let OVERLAY_TYPES: [String] = RECTANGLE_TYPES + CIRCLE_TYPES + LINE_TYPES
+    static let OVERLAY_TYPES: [String] = RECTANGLE_TYPES + CIRCLE_TYPES + LINE_TYPES + ELLIPSE_TYPES
     
     var cotData: COTData
     var cotEvent: COTEvent?
@@ -92,18 +93,44 @@ class COTMapObject: NSObject {
         return polyline
     }
     
-    func buildEllipse() -> COTMapCircle {
+    func buildCircle() -> COTMapCircle {
         let cotShape = cotEvent?.cotDetail?.cotShape
         let strokeColor = cotEvent?.cotDetail?.cotStrokeColor?.value ?? -1
         let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
         let fillColor = cotEvent?.cotDetail?.cotFillColor?.value ?? -1
         let labelsOn = cotEvent?.cotDetail?.cotLabelsOn?.value ?? true
-        let circle = COTMapCircle(center: CLLocationCoordinate2D(latitude: cotData.latitude, longitude: cotData.longitude), radius: cotShape?.major ?? 0.0)
+        let major = cotShape?.major ?? 0.0
+        let minor = cotShape?.minor ?? 0.0
+        let angle = cotShape?.angle ?? 360
+        let circle = COTMapCircle(center: CLLocationCoordinate2D(latitude: cotData.latitude, longitude: cotData.longitude), radius: major)
+        circle.major = major
+        circle.minor = minor
+        circle.angle = angle
         circle.strokeColor = strokeColor
         circle.strokeWeight = strokeWeight
         circle.fillColor = fillColor
         circle.labelsOn = labelsOn
         return circle
+    }
+    
+    func buildEllipse() -> COTMapEllipse {
+        let cotShape = cotEvent?.cotDetail?.cotShape
+        let strokeColor = cotEvent?.cotDetail?.cotStrokeColor?.value ?? -1
+        let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
+        let fillColor = cotEvent?.cotDetail?.cotFillColor?.value ?? -1
+        let labelsOn = cotEvent?.cotDetail?.cotLabelsOn?.value ?? true
+        let major = cotShape?.major ?? 0.0
+        let minor = cotShape?.minor ?? 0.0
+        let angle = cotShape?.angle ?? 360
+        let ellipse = COTMapEllipse(center: CLLocationCoordinate2D(latitude: cotData.latitude, longitude: cotData.longitude), radius: major)
+        ellipse.major = major
+        ellipse.minor = minor
+        ellipse.angle = angle
+        ellipse.strokeColor = strokeColor
+        ellipse.strokeWeight = strokeWeight
+        ellipse.fillColor = fillColor
+        ellipse.labelsOn = labelsOn
+        return ellipse
     }
     
     var shape: MKOverlay? {
@@ -112,7 +139,9 @@ class COTMapObject: NSObject {
         if COTMapObject.RECTANGLE_TYPES.contains(cotType) {
             return buildRectangle()
         } else if COTMapObject.CIRCLE_TYPES.contains(cotType) {
-            return buildEllipse() //but this might actually only be a circle
+            return buildCircle()
+        } else if COTMapObject.ELLIPSE_TYPES.contains(cotType) {
+            return buildEllipse()
         } else if COTMapObject.LINE_TYPES.contains(cotType) {
             return buildPolyline()
         }
@@ -125,6 +154,21 @@ class COTMapObject: NSObject {
 }
 
 class COTMapCircle: MKCircle {
+    var major: Double = 0.0
+    var minor: Double = 0.0
+    var angle: Double = 0.0
+    var strokeColor: Double = -1
+    var strokeWeight: Double = -1
+    var fillColor: Double = -1
+    var labelsOn: Bool = true
+}
+
+// TODO: We'll need a custom renderer for this
+// Rendering as a circle for now
+class COTMapEllipse: MKCircle {
+    var major: Double = 0.0
+    var minor: Double = 0.0
+    var angle: Double = 0.0
     var strokeColor: Double = -1
     var strokeWeight: Double = -1
     var fillColor: Double = -1
@@ -750,50 +794,47 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-            if let tileOverlay = overlay as? MKTileOverlay {
-                return MKTileOverlayRenderer(tileOverlay: tileOverlay)
-            }
-
-            if let circle = overlay as? COTMapCircle {
-                let circleRenderer = MKCircleRenderer(circle: circle)
-                circleRenderer.lineWidth = circle.strokeWeight
-                circleRenderer.strokeColor = IconData.colorFromArgb(argbVal: Int(circle.strokeColor))
-                circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(circle.fillColor))
+            switch overlay {
+            case let overlay as MKTileOverlay:
+                return MKTileOverlayRenderer(tileOverlay: overlay)
+            case let overlay as COTMapCircle:
+                let circleRenderer = MKCircleRenderer(circle: overlay)
+                circleRenderer.lineWidth = overlay.strokeWeight
+                circleRenderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
+                circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
                 return circleRenderer
-            }
-            
-            if let polyline = overlay as? COTMapPolyline {
-                let renderer = MKPolylineRenderer(polyline: polyline)
-                renderer.lineWidth = polyline.strokeWeight
-                renderer.strokeColor = IconData.colorFromArgb(argbVal: Int(polyline.strokeColor))
-                renderer.fillColor = IconData.colorFromArgb(argbVal: Int(polyline.fillColor))
+            case let overlay as COTMapEllipse:
+                // TODO: Render as an ellipse, not a circle
+                let circleRenderer = MKCircleRenderer(circle: overlay)
+                circleRenderer.lineWidth = overlay.strokeWeight
+                circleRenderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
+                circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
+                return circleRenderer
+            case let overlay as COTMapPolygon:
+                let renderer = MKPolygonRenderer(overlay: overlay)
+                renderer.lineWidth = overlay.strokeWeight
+                renderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
+                renderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
                 return renderer
-            }
-            
-            if let polygon = overlay as? COTMapPolygon {
-                let renderer = MKPolygonRenderer(overlay: polygon)
-                renderer.lineWidth = polygon.strokeWeight
-                renderer.strokeColor = IconData.colorFromArgb(argbVal: Int(polygon.strokeColor))
-                renderer.fillColor = IconData.colorFromArgb(argbVal: Int(polygon.fillColor))
+            case let overlay as COTMapPolyline:
+                let renderer = MKPolylineRenderer(polyline: overlay)
+                renderer.lineWidth = overlay.strokeWeight
+                renderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
+                renderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
                 return renderer
-            }
-            
-            // Bloodhound Line
-            if let polyline = overlay as? COTMapBloodhoundLine {
-                let renderer = MKPolylineRenderer(polyline: polyline)
+            case let overlay as COTMapBloodhoundLine:
+                let renderer = MKPolylineRenderer(polyline: overlay)
                 renderer.lineWidth = 3.0
                 renderer.strokeColor = UIColor(red: 0.729, green: 0.969, blue: 0.2, alpha: 1) // #baf733
                 return renderer
-            }
-            
-            if let polyline = overlay as? MKGeodesicPolyline {
-                let renderer = MKPolylineRenderer(polyline: polyline)
+            case let overlay as MKGeodesicPolyline:
+                let renderer = MKPolylineRenderer(polyline: overlay)
                 renderer.lineWidth = 3.0
                 renderer.strokeColor = UIColor(red: 0.729, green: 0.969, blue: 0.2, alpha: 1) // #baf733
                 return renderer
+            default:
+                return MKOverlayRenderer()
             }
-        
-            return MKOverlayRenderer()
         }
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
