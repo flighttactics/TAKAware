@@ -55,15 +55,28 @@ enum BaseCot2525Mapping: String, CaseIterable, Identifiable, CustomStringConvert
 
 struct AnnotationDetailReadOnly: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var takManager: TAKManager
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    @Binding var isEditing: Bool
+    @State private var showingAlert = false
     
     var annotation: MapPointAnnotation? {
         currentSelectedAnnotation
     }
     
     var iconImage: UIImage {
-        let icon = IconData.iconFor(type2525: annotation?.cotType ?? "", iconsetPath: annotation?.icon ?? "")
-        return icon.icon
+        if annotation != nil && annotation!.isShape {
+            return UIImage(named: "nav_draw")!
+        } else {
+            let icon = IconData.iconFor(type2525: annotation?.cotType ?? "", iconsetPath: annotation?.icon ?? "")
+            return icon.icon
+        }
+    }
+    
+    func broadcastPoint() {
+        guard currentSelectedAnnotation != nil else { return }
+        takManager.broadcastPoint(annotation: currentSelectedAnnotation!)
+        showingAlert = true
     }
 
     var body: some View {
@@ -83,8 +96,30 @@ struct AnnotationDetailReadOnly: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     Image(uiImage: iconImage)
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                }
+                HStack {
+                    Spacer()
+                    Button(action: { isEditing = true }) {
+                        HStack {
+                            Text("Edit")
+                            Image(systemName: "square.and.pencil")
+                        }
+                    }
+                    .buttonStyle(BorderedProminentButtonStyle())
+                    Button(action: { broadcastPoint() }) {
+                        HStack {
+                            Text("Broadcast")
+                            Image(systemName: "square.and.arrow.up.fill")
+                        }
+                    }
+                    .buttonStyle(BorderedProminentButtonStyle())
                 }
             }
+        }
+        .alert("Marker broadcast to server", isPresented: $showingAlert) {
+            Button("OK", role: .cancel) { }
         }
     }
 }
@@ -112,20 +147,21 @@ struct AnnotationDetailView: View {
                 } else if(isEditing) {
                     AnnotationEditView(currentSelectedAnnotation: $currentSelectedAnnotation, parentView: parentView)
                 } else {
-                    AnnotationDetailReadOnly(currentSelectedAnnotation: $currentSelectedAnnotation)
+                    AnnotationDetailReadOnly(currentSelectedAnnotation: $currentSelectedAnnotation, isEditing: $isEditing)
                 }
             }
             .navigationBarItems(trailing: HStack {
-                if annotation != nil {
-                    if !isEditing {
-                        Button("Edit", action: { isEditing.toggle() })
-                    }
-                }
-                Button("Close", action: {
+                Button(action: {
                     if isEditing {
                         isEditing.toggle()
                     } else {
                         dismiss()
+                    }
+                }, label: {
+                    if isEditing {
+                        Text("Save")
+                    } else {
+                        Text("Close")
                     }
                 })
             })

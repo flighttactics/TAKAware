@@ -16,8 +16,12 @@ struct DeconflictionSheet: View {
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
     
     func iconImage(_ annotation: MapPointAnnotation) -> UIImage {
-        let icon = IconData.iconFor(type2525: annotation.cotType ?? "", iconsetPath: annotation.icon ?? "")
-        return icon.icon
+        if annotation.isShape {
+            return UIImage(named: "nav_draw")!
+        } else {
+            let icon = IconData.iconFor(type2525: annotation.cotType ?? "", iconsetPath: annotation.icon ?? "")
+            return icon.icon
+        }
     }
 
     var body: some View {
@@ -30,6 +34,8 @@ struct DeconflictionSheet: View {
                         VStack {
                             HStack {
                                 Image(uiImage: iconImage(item))
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
                                 Button {
                                     parentView.didSelectAnnotation(item)
                                 } label: {

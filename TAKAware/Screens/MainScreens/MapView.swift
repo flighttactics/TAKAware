@@ -99,9 +99,10 @@ class COTMapObject: NSObject {
         let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
         let fillColor = cotEvent?.cotDetail?.cotFillColor?.value ?? -1
         let labelsOn = cotEvent?.cotDetail?.cotLabelsOn?.value ?? true
-        let major = cotShape?.major ?? 0.0
-        let minor = cotShape?.minor ?? 0.0
-        let angle = cotShape?.angle ?? 360
+        let ellipseNode = cotShape?.cotEllipse
+        let major = ellipseNode?.major ?? 0.0
+        let minor = ellipseNode?.minor ?? 0.0
+        let angle = ellipseNode?.angle ?? 360
         let circle = COTMapCircle(center: CLLocationCoordinate2D(latitude: cotData.latitude, longitude: cotData.longitude), radius: major)
         circle.major = major
         circle.minor = minor
@@ -119,9 +120,10 @@ class COTMapObject: NSObject {
         let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
         let fillColor = cotEvent?.cotDetail?.cotFillColor?.value ?? -1
         let labelsOn = cotEvent?.cotDetail?.cotLabelsOn?.value ?? true
-        let major = cotShape?.major ?? 0.0
-        let minor = cotShape?.minor ?? 0.0
-        let angle = cotShape?.angle ?? 360
+        let ellipseNode = cotShape?.cotEllipse
+        let major = ellipseNode?.major ?? 0.0
+        let minor = ellipseNode?.minor ?? 0.0
+        let angle = ellipseNode?.angle ?? 360
         let ellipse = COTMapEllipse(center: CLLocationCoordinate2D(latitude: cotData.latitude, longitude: cotData.longitude), radius: major)
         ellipse.major = major
         ellipse.minor = minor
@@ -157,9 +159,9 @@ class COTMapCircle: MKCircle {
     var major: Double = 0.0
     var minor: Double = 0.0
     var angle: Double = 0.0
-    var strokeColor: Double = -1
+    var strokeColor: Int = -1
     var strokeWeight: Double = -1
-    var fillColor: Double = -1
+    var fillColor: Int = -1
     var labelsOn: Bool = true
 }
 
@@ -169,23 +171,23 @@ class COTMapEllipse: MKCircle {
     var major: Double = 0.0
     var minor: Double = 0.0
     var angle: Double = 0.0
-    var strokeColor: Double = -1
+    var strokeColor: Int = -1
     var strokeWeight: Double = -1
-    var fillColor: Double = -1
+    var fillColor: Int = -1
     var labelsOn: Bool = true
 }
 
 class COTMapPolygon: MKPolygon {
-    var strokeColor: Double = -1
+    var strokeColor: Int = -1
     var strokeWeight: Double = -1
-    var fillColor: Double = -1
+    var fillColor: Int = -1
     var labelsOn: Bool = true
 }
 
 class COTMapPolyline: MKPolyline {
-    var strokeColor: Double = -1
+    var strokeColor: Int = -1
     var strokeWeight: Double = -1
-    var fillColor: Double = -1
+    var fillColor: Int = -1
     var labelsOn: Bool = true
 }
 
