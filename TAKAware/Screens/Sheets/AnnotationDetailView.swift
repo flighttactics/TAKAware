@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import WebKit
 
 enum BaseCot2525Mapping: String, CaseIterable, Identifiable, CustomStringConvertible {
     var id: Self { self }
@@ -53,6 +54,18 @@ enum BaseCot2525Mapping: String, CaseIterable, Identifiable, CustomStringConvert
     }
 }
 
+struct HTMLView: UIViewRepresentable {
+    let htmlString: String
+
+    func makeUIView(context: Context) -> WKWebView {
+        return WKWebView()
+    }
+
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        webView.loadHTMLString(htmlString, baseURL: nil)
+    }
+}
+
 struct AnnotationDetailReadOnly: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var takManager: TAKManager
@@ -88,7 +101,13 @@ struct AnnotationDetailReadOnly: View {
                     VStack {
                         Group {
                             Text(annotation!.title ?? "")
-                            Text(annotation!.remarks ?? "")
+                            // TODO: Be smarter about when to show HTML (check for CDATA)
+                            if annotation!.isKML {
+                                HTMLView(htmlString: annotation!.remarks!)
+                                    .frame(height: 200)
+                            } else {
+                                Text("Remarks: \(annotation!.remarks!)")
+                            }
                             Text("Type: \(annotation!.cotType ?? "")")
                             Text("Latitude: \(annotation!.coordinate.latitude.description)")
                             Text("Longitude: \(annotation!.coordinate.longitude.description)")

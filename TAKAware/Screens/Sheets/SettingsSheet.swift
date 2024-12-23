@@ -37,6 +37,7 @@ struct SettingsSheet: View {
                     AdvancedOptions()
                     ChannelOptions()
                     DataPackageOptions()
+                    KMLOptions()
                     AboutInformation()
                 }
             }

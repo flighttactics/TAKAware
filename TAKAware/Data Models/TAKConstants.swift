@@ -35,6 +35,10 @@ struct AppConstants {
     
     static let UDP_BROADCAST_URL = "239.2.3.1"
     
+    static let NOTIFY_KML_FILE_ADDED = "KMLFileAdded"
+    static let NOTIFY_KML_FILE_UPDATED = "KMLFileUpdated"
+    static let NOTIFY_KML_FILE_REMOVED = "KMLFileRemoved"
+    
     // Helper Functions
     static func certificateSigningPath(clientUid: String, appVersion: String) -> String {
         return AppConstants.CSR_PATH

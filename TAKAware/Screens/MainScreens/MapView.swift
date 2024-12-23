@@ -205,6 +205,8 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var remarks: String?
     dynamic var videoURL: URL?
     dynamic var shape: MKOverlay?
+    dynamic var isKML: Bool = false
+    dynamic var groupID: UUID?
     
     var annotationIdentifier: String {
         if icon != nil && !icon!.isEmpty {
@@ -234,6 +236,15 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
         }
         self.remarks = mapPoint.remarks
         self.videoURL = mapPoint.videoURL
+    }
+    
+    init(id: String, title: String, icon: String, coordinate: CLLocationCoordinate2D, remarks: String) {
+        self.id = id
+        self.title = title
+        self.icon = icon
+        self.cotType = "a-U-G"
+        self.coordinate = coordinate
+        self.remarks = remarks
     }
 }
 
@@ -421,6 +432,7 @@ struct MapView: UIViewRepresentable {
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
     @Binding var conflictedItems: [MapPointAnnotation]
     var parentView: AwarenessView
+    var dataContext = DataController.shared.backgroundContext
     
     @State var mapView: CompassMapView = CompassMapView()
     @State var activeBloodhound: COTMapBloodhoundLine?
@@ -429,11 +441,12 @@ struct MapView: UIViewRepresentable {
     @State var bloodhoundStartCoordinate: CLLocationCoordinate2D?
     @State var bloodhoundEndCoordinate: CLLocationCoordinate2D?
     @State var showingAnnotationLabels: Bool = true
+    @State var loadedKmlAnnotations: [String] = []
     
     private static var mapPointsFetchRequest: NSFetchRequest<COTData> {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
         fetchUser.sortDescriptors = []
-        fetchUser.predicate = NSPredicate(format: "visible == YES")
+        fetchUser.predicate = NSPredicate(format: "visible = YES")
         return fetchUser
     }
     
@@ -463,6 +476,17 @@ struct MapView: UIViewRepresentable {
         parentView.annotationSelectedCallback = annotationSelected(_:)
 
         didUpdateRegion()
+        updateKmlOverlays()
+        
+        let nc = NotificationCenter.default
+        
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_ADDED), object: nil, queue: nil, using: kmlChangeNotified)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_UPDATED), object: nil, queue: nil, using: kmlChangeNotified)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_REMOVED), object: nil, queue: nil, using: kmlChangeNotified)
+        
+//        nc.addObserver(self, selector: updateKmlOverlays, name: Notification.Name(AppConstants.NOTIFY_KML_FILE_ADDED), object: nil)
+//        nc.addObserver(self, selector: #selector(updateKmlOverlays), name: Notification.Name(AppConstants.NOTIFY_KML_FILE_UPDATED), object: nil)
+//        nc.addObserver(self, selector: #selector(updateKmlOverlays), name: Notification.Name(AppConstants.NOTIFY_KML_FILE_REMOVED), object: nil)
         
 //        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
 //        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
@@ -508,6 +532,112 @@ struct MapView: UIViewRepresentable {
         updateAnnotations(from: view)
     }
     
+    private func kmlChangeNotified(notification: Notification) {
+        TAKLogger.debug("[MapView] Notified of a KML change \(notification.debugDescription)")
+        updateKmlOverlays()
+    }
+    
+    private func updateKmlOverlays() {
+        var processedKmlFiles: [String] = []
+        
+        dataContext.perform {
+            let fetchKml: NSFetchRequest<KMLFile> = KMLFile.fetchRequest()
+            fetchKml.predicate = NSPredicate(format: "visible = YES")
+            let fetchedKml = try? dataContext.fetch(fetchKml)
+            let incomingKml = (fetchedKml == nil) ? [] : fetchedKml!
+
+            incomingKml.forEach { kmlRecord in
+                guard let filePath = kmlRecord.filePath,
+                        let fileId = kmlRecord.id else {
+                    TAKLogger.debug("[MapView] KMLRecord had no name or file path")
+                    return
+                }
+                processedKmlFiles.append(fileId.uuidString)
+                
+                if loadedKmlAnnotations.contains(fileId.uuidString) {
+                    let existingAnnotations: [MapPointAnnotation] = mapView.annotations.filter {
+                        ($0 as? MapPointAnnotation)?.groupID == fileId
+                    } as! [MapPointAnnotation]
+                    TAKLogger.debug("[MapView] Found \(existingAnnotations.count) existing annotations for this KML")
+                    if !kmlRecord.visible {
+                        let overlaysToRemove = existingAnnotations.map { $0.shape }.filter { $0 != nil } as! [MKOverlay]
+                        TAKLogger.debug("[MapView] KML marked as not visible, removing \(existingAnnotations.count) annotations and \(overlaysToRemove.count) overlays")
+                        DispatchQueue.main.async {
+                            mapView.removeOverlays(overlaysToRemove)
+                            mapView.removeAnnotations(existingAnnotations)
+                        }
+                        return
+                    } else {
+                        if !existingAnnotations.isEmpty {
+                            TAKLogger.debug("[MapView] KML marked as visible, but annotations exist, so ignoring")
+                            // We don't need to recreate them
+                            return
+                        }
+                        TAKLogger.debug("[MapView] KML marked as visible, but no annotations exist. Continuing")
+                    }
+                }
+                
+                // TODO: Delete annotations
+                
+                DispatchQueue.main.async {
+                    loadedKmlAnnotations.append(fileId.uuidString)
+                }
+                
+                if !kmlRecord.visible {
+                    TAKLogger.debug("[MapView] KMLRecord marked as not visible. Skipping.")
+                }
+
+                guard let data = try? Data(contentsOf: filePath) else {
+                    // TODO: Maybe notify the user or update the KML UI?
+                    // This is a rare case, usually only during development
+                    TAKLogger.debug("[MapView] Unable to load KML from \(filePath)")
+                    return
+                }
+                
+                if let string = String(data: data, encoding: .utf8) {
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        let parser = KMLParser()
+                        parser.parse(kmlString: string)
+                        parser.placemarks.forEach { placemark in
+                            guard let shape = placemark.mapKitShape else {
+                                return
+                            }
+                            let mpa = MapPointAnnotation(id: UUID().uuidString, title: placemark.name, icon: "", coordinate: shape.coordinate, remarks: placemark.description)
+                            mpa.isKML = true
+                            mpa.groupID = fileId
+                            DispatchQueue.main.async {
+                                mapView.addAnnotation(mpa)
+                                if let overlayShape = shape as? MKOverlay {
+                                    mpa.shape = overlayShape
+                                    mapView.addOverlay(mpa.shape!)
+                                }
+                                annotationUpdatedCallback(annotation: mpa)
+                            }
+                        }
+                    }
+                } else {
+                    TAKLogger.error("[MapView] Unable to decode KML from file")
+                }
+            }
+            
+            let current = Set(loadedKmlAnnotations)
+            let incoming = Set(processedKmlFiles)
+            let toRemove = current.filter { !incoming.contains($0) }
+            TAKLogger.debug("[MapView] Found \(toRemove.count) KMLs that need cleaned up")
+            toRemove.forEach { fileId in
+                let existingAnnotations: [MapPointAnnotation] = mapView.annotations.filter {
+                    ($0 as? MapPointAnnotation)?.groupID?.uuidString == fileId
+                } as! [MapPointAnnotation]
+                let overlaysToRemove = existingAnnotations.map { $0.shape }.filter { $0 != nil } as! [MKOverlay]
+                TAKLogger.debug("[MapView] Loaded KML file deleted. Removing \(existingAnnotations.count) annotations and \(overlaysToRemove.count) overlays")
+                DispatchQueue.main.async {
+                    mapView.removeOverlays(overlaysToRemove)
+                    mapView.removeAnnotations(existingAnnotations)
+                }
+            }
+        }
+    }
+    
     private func updateAnnotations(from mapView: MKMapView) {
         
         if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
@@ -530,17 +660,20 @@ struct MapView: UIViewRepresentable {
 
         if !toRemove.isEmpty {
             let removableAnnotations = existingAnnotations.filter {
+                !($0 as! MapPointAnnotation).isKML &&
                 toRemove.contains(($0 as! MapPointAnnotation).id)
             }
-
-            if(bloodhoundEndAnnotation != nil && toRemove.contains(bloodhoundEndAnnotation!.id)) {
-                bloodhoundDeselected()
+            
+            if !removableAnnotations.isEmpty {
+                if(bloodhoundEndAnnotation != nil && toRemove.contains(bloodhoundEndAnnotation!.id)) {
+                    bloodhoundDeselected()
+                }
+                
+                let overlaysToRemove = removableAnnotations.map { ($0 as! MapPointAnnotation).shape }.filter { $0 != nil } as! [MKOverlay]
+                mapView.removeOverlays(overlaysToRemove)
+                
+                mapView.removeAnnotations(removableAnnotations)
             }
-            
-            let overlaysToRemove = removableAnnotations.map { ($0 as! MapPointAnnotation).shape }.filter { $0 != nil } as! [MKOverlay]
-            mapView.removeOverlays(overlaysToRemove)
-            
-            mapView.removeAnnotations(removableAnnotations)
         }
         
         for annotation in mapView.annotations.filter({ $0 is MapPointAnnotation }) {
@@ -833,6 +966,16 @@ struct MapView: UIViewRepresentable {
                 let renderer = MKPolylineRenderer(polyline: overlay)
                 renderer.lineWidth = 3.0
                 renderer.strokeColor = UIColor(red: 0.729, green: 0.969, blue: 0.2, alpha: 1) // #baf733
+                return renderer
+            case let overlay as MKPolyline:
+                let renderer = MKPolylineRenderer(polyline: overlay)
+                renderer.lineWidth = 3.0
+                renderer.strokeColor = UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1)
+                return renderer
+            case let overlay as MKPolygon:
+                let renderer = MKPolygonRenderer(overlay: overlay)
+                renderer.lineWidth = 1.0
+                renderer.strokeColor = UIColor(red: 1.0, green: 1.0, blue: 0.0, alpha: 1)
                 return renderer
             default:
                 return MKOverlayRenderer()

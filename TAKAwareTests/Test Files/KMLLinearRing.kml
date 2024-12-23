@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+<Placemark>
+    <description>Hello, World</description>
+    <name>RootPlacemark</name>
+    <LinearRing id="1234LR">
+        <extrude>1</extrude>
+        <altitudeMode>absolute</altitudeMode>
+        <coordinates>-78.34,26.45,97.5 -78.45,26.55,97.5 -78.64,26.65,97.5</coordinates>
+        <tessellate>0</tessellate>
+    </LinearRing>
+</Placemark>
+</kml>

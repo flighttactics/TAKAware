@@ -26,6 +26,16 @@
 		A51B12EA2BB1E28800C25239 /* AdvancedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */; };
 		A51B12EC2BB1E29800C25239 /* SituationalAwarenessOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */; };
 		A52BE8ED2D132C3E00E82414 /* APIRequestObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE8EC2D132C3A00E82414 /* APIRequestObject.swift */; };
+		A52BE8F52D15AAB900E82414 /* KMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE8F42D15AAB600E82414 /* KMLParser.swift */; };
+		A52BE8F72D15AACA00E82414 /* KMLParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE8F62D15AAC500E82414 /* KMLParserTests.swift */; };
+		A52BE8F92D15F6F900E82414 /* KMLOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE8F82D15F6F400E82414 /* KMLOptions.swift */; };
+		A52BE8FB2D15FAAC00E82414 /* KMLImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE8FA2D15FAA600E82414 /* KMLImporter.swift */; };
+		A52BE8FD2D16076200E82414 /* KMLImporterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE8FC2D16075C00E82414 /* KMLImporterTests.swift */; };
+		A52BE8FF2D160C9600E82414 /* KMLLinearRing.kml in Resources */ = {isa = PBXBuildFile; fileRef = A52BE8FE2D160C8900E82414 /* KMLLinearRing.kml */; };
+		A52BE9032D160D3A00E82414 /* KMLPolygon.kml in Resources */ = {isa = PBXBuildFile; fileRef = A52BE9022D160D3A00E82414 /* KMLPolygon.kml */; };
+		A52BE9042D160D3A00E82414 /* KMLLineString.kml in Resources */ = {isa = PBXBuildFile; fileRef = A52BE9002D160D3A00E82414 /* KMLLineString.kml */; };
+		A52BE9052D160D3A00E82414 /* KMLPoint.kml in Resources */ = {isa = PBXBuildFile; fileRef = A52BE9012D160D3A00E82414 /* KMLPoint.kml */; };
+		A52BE9092D17E01500E82414 /* KMLFile+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE9082D17E01000E82414 /* KMLFile+Extension.swift */; };
 		A53F59E52D0FD58900DFD794 /* AlertSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DA2D0FD58900DFD794 /* AlertSheet.swift */; };
 		A53F59E62D0FD58900DFD794 /* AnnotationDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DB2D0FD58900DFD794 /* AnnotationDetailView.swift */; };
 		A53F59E72D0FD58900DFD794 /* ChannelSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DC2D0FD58900DFD794 /* ChannelSheet.swift */; };
@@ -3447,6 +3457,16 @@
 		A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedOptions.swift; sourceTree = "<group>"; };
 		A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SituationalAwarenessOptions.swift; sourceTree = "<group>"; };
 		A52BE8EC2D132C3A00E82414 /* APIRequestObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequestObject.swift; sourceTree = "<group>"; };
+		A52BE8F42D15AAB600E82414 /* KMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLParser.swift; sourceTree = "<group>"; };
+		A52BE8F62D15AAC500E82414 /* KMLParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLParserTests.swift; sourceTree = "<group>"; };
+		A52BE8F82D15F6F400E82414 /* KMLOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLOptions.swift; sourceTree = "<group>"; };
+		A52BE8FA2D15FAA600E82414 /* KMLImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLImporter.swift; sourceTree = "<group>"; };
+		A52BE8FC2D16075C00E82414 /* KMLImporterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLImporterTests.swift; sourceTree = "<group>"; };
+		A52BE8FE2D160C8900E82414 /* KMLLinearRing.kml */ = {isa = PBXFileReference; lastKnownFileType = text; path = KMLLinearRing.kml; sourceTree = "<group>"; };
+		A52BE9002D160D3A00E82414 /* KMLLineString.kml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KMLLineString.kml; sourceTree = "<group>"; };
+		A52BE9012D160D3A00E82414 /* KMLPoint.kml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KMLPoint.kml; sourceTree = "<group>"; };
+		A52BE9022D160D3A00E82414 /* KMLPolygon.kml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KMLPolygon.kml; sourceTree = "<group>"; };
+		A52BE9082D17E01000E82414 /* KMLFile+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KMLFile+Extension.swift"; sourceTree = "<group>"; };
 		A53F59DA2D0FD58900DFD794 /* AlertSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertSheet.swift; sourceTree = "<group>"; };
 		A53F59DB2D0FD58900DFD794 /* AnnotationDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationDetailView.swift; sourceTree = "<group>"; };
 		A53F59DC2D0FD58900DFD794 /* ChannelSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSheet.swift; sourceTree = "<group>"; };
@@ -6882,6 +6902,7 @@
 		4630FD152B5071BD00988ED4 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				A52BE9082D17E01000E82414 /* KMLFile+Extension.swift */,
 				4630FD162B5071BD00988ED4 /* String+Extension.swift */,
 				A5B1FF632C3B86D600C7F546 /* UIImage+Extension.swift */,
 			);
@@ -6916,6 +6937,7 @@
 		A55ABF432ABDBF7600195AB7 /* SettingsScreens */ = {
 			isa = PBXGroup;
 			children = (
+				A52BE8F82D15F6F400E82414 /* KMLOptions.swift */,
 				A55ABF442ABDBF9A00195AB7 /* UserInformation.swift */,
 				A55ABF462ABDBFEA00195AB7 /* ServerInformation.swift */,
 				A55ABF482ABDC02200195AB7 /* ConnectionOptions.swift */,
@@ -10306,6 +10328,8 @@
 		A5D8D38D2A53B0FB002F0E3E /* TAKAwareTests */ = {
 			isa = PBXGroup;
 			children = (
+				A52BE8FC2D16075C00E82414 /* KMLImporterTests.swift */,
+				A52BE8F62D15AAC500E82414 /* KMLParserTests.swift */,
 				A5CF821E2CE67CC800CBE744 /* DataPackageImporterTests.swift */,
 				A5FB4E6C2AAA483B0034966D /* Test Files */,
 				A5FB4E6A2AA751890034966D /* CertificateSigningRequestTests.swift */,
@@ -10335,6 +10359,8 @@
 		A5E2F8FA2A791EC100EDD0B4 /* Parsers */ = {
 			isa = PBXGroup;
 			children = (
+				A52BE8FA2D15FAA600E82414 /* KMLImporter.swift */,
+				A52BE8F42D15AAB600E82414 /* KMLParser.swift */,
 				A5F30A702CE9678300FEA8DA /* QRCodeParser.swift */,
 				A5CF82252CE6E92900CBE744 /* COTDataParser.swift */,
 				A5CF82222CE6AC1500CBE744 /* TAKDataPackageImporter.swift */,
@@ -10414,6 +10440,10 @@
 		A5FB4E6C2AAA483B0034966D /* Test Files */ = {
 			isa = PBXGroup;
 			children = (
+				A52BE9002D160D3A00E82414 /* KMLLineString.kml */,
+				A52BE9012D160D3A00E82414 /* KMLPoint.kml */,
+				A52BE9022D160D3A00E82414 /* KMLPolygon.kml */,
+				A52BE8FE2D160C8900E82414 /* KMLLinearRing.kml */,
 				A5CF82202CE67D7B00CBE744 /* datapackage-cot-importer.zip */,
 				A5FB4E872AACF2830034966D /* foyc.p12 */,
 				A5FB4E862AACF2820034966D /* itak-do-foyc.zip */,
@@ -13871,7 +13901,11 @@
 				A5CF82212CE67D7B00CBE744 /* datapackage-cot-importer.zip in Resources */,
 				A5FB4E8C2AACF2830034966D /* foyc.p12 in Resources */,
 				A5FB4E8A2AACF2830034966D /* manifest.xml in Resources */,
+				A52BE8FF2D160C9600E82414 /* KMLLinearRing.kml in Resources */,
 				A5FB4E882AACF2830034966D /* tak-server.pref in Resources */,
+				A52BE9032D160D3A00E82414 /* KMLPolygon.kml in Resources */,
+				A52BE9042D160D3A00E82414 /* KMLLineString.kml in Resources */,
+				A52BE9052D160D3A00E82414 /* KMLPoint.kml in Resources */,
 				A5FB4E892AACF2830034966D /* truststore-intermediate.p12 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13973,6 +14007,7 @@
 			files = (
 				A5D8D3802A53B0F9002F0E3E /* MainScreen.swift in Sources */,
 				A55ABF4F2ABDC0A800195AB7 /* TAKOptions.swift in Sources */,
+				A52BE9092D17E01500E82414 /* KMLFile+Extension.swift in Sources */,
 				A5014F9B2C178C5300BE40C1 /* Migrator.swift in Sources */,
 				A5BF02002A5EB7440043065B /* UDPMessage.swift in Sources */,
 				A5FB4E662A98D0FF0034966D /* TAKConstants.swift in Sources */,
@@ -13983,6 +14018,7 @@
 				A5B1FF642C3B86D600C7F546 /* UIImage+Extension.swift in Sources */,
 				A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */,
 				A55ABF532ABDC11900195AB7 /* AboutInformation.swift in Sources */,
+				A52BE8FB2D15FAAC00E82414 /* KMLImporter.swift in Sources */,
 				A55ABF512ABDC0E900195AB7 /* MapOptions.swift in Sources */,
 				A59530FC2CF7EFB00078C1E8 /* DataPackageManager.swift in Sources */,
 				A5D8D37E2A53B0F9002F0E3E /* TAKAwareApp.swift in Sources */,
@@ -13994,6 +14030,7 @@
 				A53F59E52D0FD58900DFD794 /* AlertSheet.swift in Sources */,
 				A53F59E62D0FD58900DFD794 /* AnnotationDetailView.swift in Sources */,
 				A53F59E72D0FD58900DFD794 /* ChannelSheet.swift in Sources */,
+				A52BE8F52D15AAB900E82414 /* KMLParser.swift in Sources */,
 				A53F59E82D0FD58900DFD794 /* ChatSheet.swift in Sources */,
 				A53F59E92D0FD58900DFD794 /* DataPackageSheet.swift in Sources */,
 				A53F59EA2D0FD58900DFD794 /* DataSyncSheet.swift in Sources */,
@@ -14028,6 +14065,7 @@
 				4630FD1A2B5071BD00988ED4 /* ChatViewModel.swift in Sources */,
 				A5E2D0BB2C3F1E47009FCD51 /* ChannelOptions.swift in Sources */,
 				A578E4382C55B3E1001978D4 /* DataSyncManager.swift in Sources */,
+				A52BE8F92D15F6F900E82414 /* KMLOptions.swift in Sources */,
 				A5B312CE2C39DD38007B3914 /* StreamParser.swift in Sources */,
 				A578E42C2C548CFC001978D4 /* DataSyncMissions.swift in Sources */,
 				A5F30A712CE9678700FEA8DA /* QRCodeParser.swift in Sources */,
@@ -14045,12 +14083,14 @@
 				A54F70892AB0C40B00D8C541 /* TCPMessageTests.swift in Sources */,
 				A54F70872AB0AEA400D8C541 /* DataPackageParserTests.swift in Sources */,
 				A5CF821F2CE67CCF00CBE744 /* DataPackageImporterTests.swift in Sources */,
+				A52BE8FD2D16076200E82414 /* KMLImporterTests.swift in Sources */,
 				A55CE96D2AB1D8A20081AF86 /* ConverterTests.swift in Sources */,
 				A5E2D0C02C3F8D84009FCD51 /* ChannelManagerTests.swift in Sources */,
 				A5582CC32AD5CB4600DE0D5C /* TAKAwareTestCase.swift in Sources */,
 				A5FB4E782AAA49D30034966D /* TestConstants.swift in Sources */,
 				A5FB4E6B2AA751890034966D /* CertificateSigningRequestTests.swift in Sources */,
 				A5B312CA2C39D1F0007B3914 /* IconDataTests.swift in Sources */,
+				A52BE8F72D15AACA00E82414 /* KMLParserTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -14207,7 +14247,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 53;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14251,7 +14291,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 53;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14291,7 +14331,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14312,7 +14352,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14331,7 +14371,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
@@ -14348,7 +14388,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 62;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;

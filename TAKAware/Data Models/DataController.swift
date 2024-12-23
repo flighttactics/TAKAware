@@ -182,6 +182,30 @@ class DataController: ObservableObject {
         }
     }
     
+    func deleteKMLFile(kmlFile: KMLFile, deleteStoredFile: Bool = true) {
+        let dataContext = kmlFile.managedObjectContext ?? backgroundContext
+        dataContext.perform {
+            dataContext.delete(kmlFile)
+            do {
+                try dataContext.save()
+            } catch {
+                TAKLogger.error("[DataController]: Unable to delete KML File \(error)")
+            }
+        }
+    }
+    
+    func changeKMLFileVisibility(kmlFile: KMLFile, visible: Bool) {
+        let dataContext = kmlFile.managedObjectContext ?? backgroundContext
+        dataContext.perform {
+            kmlFile.visible = visible
+            do {
+                try dataContext.save()
+            } catch {
+                TAKLogger.error("[DataController]: Unable to change visibility of KML File \(error)")
+            }
+        }
+    }
+    
     func deleteCot(cotId: String) {
         let predicate = NSPredicate(format: "id = %@", cotId)
         clearMap(query: predicate)
