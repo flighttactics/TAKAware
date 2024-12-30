@@ -175,6 +175,14 @@ class COTMapEllipse: MKCircle {
     var strokeWeight: Double = -1
     var fillColor: Int = -1
     var labelsOn: Bool = true
+    
+    var height: Double {
+        major * 2.0
+    }
+    
+    var width: Double {
+        minor * 2.0
+    }
 }
 
 class COTMapPolygon: MKPolygon {
@@ -484,10 +492,6 @@ struct MapView: UIViewRepresentable {
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_UPDATED), object: nil, queue: nil, using: kmlChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_REMOVED), object: nil, queue: nil, using: kmlChangeNotified)
         
-//        nc.addObserver(self, selector: updateKmlOverlays, name: Notification.Name(AppConstants.NOTIFY_KML_FILE_ADDED), object: nil)
-//        nc.addObserver(self, selector: #selector(updateKmlOverlays), name: Notification.Name(AppConstants.NOTIFY_KML_FILE_UPDATED), object: nil)
-//        nc.addObserver(self, selector: #selector(updateKmlOverlays), name: Notification.Name(AppConstants.NOTIFY_KML_FILE_REMOVED), object: nil)
-        
 //        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
 //        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
 //        let googleHybridOverlay = MKTileOverlay(urlTemplate:templateUrl)
@@ -576,8 +580,6 @@ struct MapView: UIViewRepresentable {
                         TAKLogger.debug("[MapView] KML marked as visible, but no annotations exist. Continuing")
                     }
                 }
-                
-                // TODO: Delete annotations
                 
                 DispatchQueue.main.async {
                     loadedKmlAnnotations.append(fileId.uuidString)
@@ -928,6 +930,10 @@ struct MapView: UIViewRepresentable {
             parent.currentSelectedAnnotation = nil
         }
         
+        func degreesToRadians(_ degrees: Double) -> Double {
+            degrees * .pi / 180
+        }
+        
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             switch overlay {
             case let overlay as MKTileOverlay:
@@ -939,12 +945,30 @@ struct MapView: UIViewRepresentable {
                 circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
                 return circleRenderer
             case let overlay as COTMapEllipse:
-                // TODO: Render as an ellipse, not a circle
-                let circleRenderer = MKCircleRenderer(circle: overlay)
-                circleRenderer.lineWidth = overlay.strokeWeight
-                circleRenderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
-                circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
-                return circleRenderer
+                let ellipseRenderer = MKCircleRenderer(circle: overlay)
+                
+                let mapPointsPerMeter = MKMapPointsPerMeterAtLatitude(overlay.coordinate.latitude)
+                let width = overlay.minor * mapPointsPerMeter
+                let height = overlay.major * mapPointsPerMeter
+                let rect = CGRectMake(0, 0, width, height)
+                
+                let center = ellipseRenderer.path.boundingBox
+                let y = (center.height-height)/2
+                let x = (center.width-width)/2
+
+                var transform: CGAffineTransform = .identity
+                transform = transform.translatedBy(x: x, y: y)
+                transform = transform.translatedBy(x: rect.midX, y: rect.midY)
+                transform = transform.rotated(by: degreesToRadians(overlay.angle))
+                transform = transform.translatedBy(x: -rect.midX, y: -rect.midY)
+
+                let path = CGPath(ellipseIn: rect, transform: &transform)
+                ellipseRenderer.path = path
+
+                ellipseRenderer.lineWidth = overlay.strokeWeight
+                ellipseRenderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
+                ellipseRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
+                return ellipseRenderer
             case let overlay as COTMapPolygon:
                 let renderer = MKPolygonRenderer(overlay: overlay)
                 renderer.lineWidth = overlay.strokeWeight
@@ -984,42 +1008,6 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             return parent.initializeOrUpdateAnnotationView(mapView: mapView, annotation: annotation)
-//            guard !annotation.isKind(of: MKUserLocation.self) else {
-//                var selfView = mapView.dequeueReusableAnnotationView(withIdentifier: "UserLocation")
-//                if selfView == nil {
-//                    selfView = MKUserLocationView(annotation: annotation, reuseIdentifier: "UserLocation")
-//                }
-//                selfView!.zPriority = .max
-//                return selfView
-//            }
-//            
-//            guard let mpAnnotation = annotation as? MapPointAnnotation else { return nil }
-//            
-//            let identifier = mpAnnotation.annotationIdentifier
-//            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-//            
-//            if annotationView == nil {
-//                annotationView = SituationalAnnotationView(
-//                    mapView: parent,
-//                    annotation: mpAnnotation,
-//                    reuseIdentifier: identifier
-//                )
-//            }
-//
-//            let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
-//            var pointIcon: UIImage = icon.icon
-//            
-//            if let pointColor = mpAnnotation.color {
-//                if pointIcon.isSymbolImage {
-//                    pointIcon = pointIcon.maskSymbol(with: pointColor)
-//                } else {
-//                    pointIcon = pointIcon.maskImage(with: pointColor)
-//                }
-//            }
-//            
-//            annotationView!.image = pointIcon
-//            annotationView!.annotation = mpAnnotation
-//            return annotationView
         }
     }
 }
