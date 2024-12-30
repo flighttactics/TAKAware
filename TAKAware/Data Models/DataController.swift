@@ -184,10 +184,22 @@ class DataController: ObservableObject {
     
     func deleteKMLFile(kmlFile: KMLFile, deleteStoredFile: Bool = true) {
         let dataContext = kmlFile.managedObjectContext ?? backgroundContext
+        let filePath = kmlFile.filePath!
+        let fileID = kmlFile.id!
+        let isKmz = kmlFile.isCompressed
         dataContext.perform {
             dataContext.delete(kmlFile)
             do {
                 try dataContext.save()
+                if deleteStoredFile {
+                    let fileManager = FileManager()
+                    if isKmz {
+                        let kmzSubdirectory = AppConstants.appDirectoryFor(.OVERLAYS).appendingPathComponent(fileID.uuidString)
+                        TAKLogger.debug("[DataController] Deleting KMZ directory at \(kmzSubdirectory.path())")
+                        try fileManager.removeItem(at: kmzSubdirectory)
+                    }
+                    try fileManager.removeItem(at: filePath)
+                }
             } catch {
                 TAKLogger.error("[DataController]: Unable to delete KML File \(error)")
             }

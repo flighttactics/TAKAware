@@ -84,8 +84,9 @@ class KMLImporter: COTDataParser {
             return
         }
         let fileManager = FileManager()
-        var extractLocation = overlaysURL.appendingPathComponent(fileUUID.uuidString)
+        let extractLocation = overlaysURL.appendingPathComponent(fileUUID.uuidString)
         do {
+            TAKLogger.debug("[KMLImporter] Extracting KMZ to \(extractLocation.path())")
             try fileManager.createDirectory(at: extractLocation, withIntermediateDirectories: true, attributes: nil)
             try fileManager.unzipItem(at: savedLocation, to: extractLocation)
             let extractedFiles: [String] = try fileManager.contentsOfDirectory(atPath: extractLocation.path())
@@ -127,6 +128,7 @@ class KMLImporter: COTDataParser {
             TAKLogger.error("[KMLImporter] kmlFile was nil when attempting to store the final result")
             return
         }
+        kmlFile.id = fileUUID
         kmlFile.fileName = self.savedLocation!.lastPathComponent
         kmlFile.filePath = self.savedLocation!
         kmlFile.isCompressed = self.savedLocation!.lastPathComponent.hasSuffix(".kmz")
