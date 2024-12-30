@@ -8,6 +8,11 @@
 import Foundation
 import UIKit
 
+enum AppDirectories: String {
+    case OVERLAYS = "overlays"
+    case DATA_PACKAGES = "datapackages"
+}
+
 struct AppConstants {
     // App Information
     static let TAK_PLATFORM = "iTAK-Tracker-CIV"    
@@ -38,6 +43,14 @@ struct AppConstants {
     static let NOTIFY_KML_FILE_ADDED = "KMLFileAdded"
     static let NOTIFY_KML_FILE_UPDATED = "KMLFileUpdated"
     static let NOTIFY_KML_FILE_REMOVED = "KMLFileRemoved"
+    
+    static let DIRECTORY_OVERLAYS = "overlays"
+    static let DIRECTORY_DATA_PACKAGES = "datapackages"
+    
+    static func appDirectoryFor(_ directory: AppDirectories) -> URL {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return documentsURL.appendingPathComponent(directory.rawValue)
+    }
     
     // Helper Functions
     static func certificateSigningPath(clientUid: String, appVersion: String) -> String {

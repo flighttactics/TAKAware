@@ -48,12 +48,18 @@ struct KMLOptionsDetail: View {
                         if(fileurl.startAccessingSecurityScopedResource()) {
                             TAKLogger.debug("Processing KML at \(String(describing: fileurl))")
                             let kmlImporter = KMLImporter(archiveLocation: fileurl)
-                            kmlImporter.process()
+                            Task {
+                                let didSucceed = await kmlImporter.process()
+                                if didSucceed {
+                                    alertText = "Data package processed successfully!"
+                                } else {
+                                    alertText = "Data package processing failed"
+                                }
+                            }
                             fileurl.stopAccessingSecurityScopedResource()
-                            alertText = "Data package processed successfully!"
                             isShowingAlert = true
                         } else {
-                            TAKLogger.error("Unable to securely access  \(String(describing: fileurl))")
+                            TAKLogger.error("Unable to securely access \(String(describing: fileurl))")
                         }
                     }
                 case .failure(let error):
