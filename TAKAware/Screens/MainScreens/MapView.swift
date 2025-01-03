@@ -588,37 +588,24 @@ struct MapView: UIViewRepresentable {
                 if !kmlRecord.visible {
                     TAKLogger.debug("[MapView] KMLRecord marked as not visible. Skipping.")
                 }
-
-                guard let data = try? Data(contentsOf: filePath) else {
-                    // TODO: Maybe notify the user or update the KML UI?
-                    // This is a rare case, usually only during development
-                    TAKLogger.debug("[MapView] Unable to load KML from \(filePath)")
-                    return
-                }
                 
-                if let string = String(data: data, encoding: .utf8) {
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        let parser = KMLParser()
-                        parser.parse(kmlString: string)
-                        parser.placemarks.forEach { placemark in
-                            guard let shape = placemark.mapKitShape else {
-                                return
-                            }
-                            let mpa = MapPointAnnotation(id: UUID().uuidString, title: placemark.name, icon: "", coordinate: shape.coordinate, remarks: placemark.description)
-                            mpa.isKML = true
-                            mpa.groupID = fileId
-                            DispatchQueue.main.async {
-                                mapView.addAnnotation(mpa)
-                                if let overlayShape = shape as? MKOverlay {
-                                    mpa.shape = overlayShape
-                                    mapView.addOverlay(mpa.shape!)
-                                }
-                                annotationUpdatedCallback(annotation: mpa)
-                            }
-                        }
+                let kmlData = KMLData(kmlRecord: kmlRecord)
+                
+                kmlData.placemarks.forEach { placemark in
+                    guard let shape = placemark.mapKitShape else {
+                        return
                     }
-                } else {
-                    TAKLogger.error("[MapView] Unable to decode KML from file")
+                    let mpa = MapPointAnnotation(id: UUID().uuidString, title: placemark.name, icon: "", coordinate: shape.coordinate, remarks: placemark.description)
+                    mpa.isKML = true
+                    mpa.groupID = fileId
+                    DispatchQueue.main.async {
+                        mapView.addAnnotation(mpa)
+                        if let overlayShape = shape as? MKOverlay {
+                            mpa.shape = overlayShape
+                            mapView.addOverlay(mpa.shape!)
+                        }
+                        annotationUpdatedCallback(annotation: mpa)
+                    }
                 }
             }
             

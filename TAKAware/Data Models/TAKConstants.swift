@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 enum AppDirectories: String {
-    case OVERLAYS = "overlays"
-    case DATA_PACKAGES = "datapackages"
+    case overlays = "overlays"
+    case dataPackages = "datapackages"
 }
 
 struct AppConstants {

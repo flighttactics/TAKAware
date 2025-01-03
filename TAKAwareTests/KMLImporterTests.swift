@@ -46,39 +46,45 @@ final class KMLImporterTests: TAKAwareTestCase {
         self.linearRingURL = linearRingURL
     }
     
-    func testCreatesDatabaseEntryForThisFile() {
+    func testCreatesDatabaseEntryForThisFile() async {
         let context = DataController.shared.backgroundContext
         importer = KMLImporter(archiveLocation: pointURL)
-        importer.process()
+        let processResult = await importer.process()
+        XCTAssertTrue(processResult)
         context.performAndWait {
             let fetchCoT: NSFetchRequest<KMLFile> = KMLFile.fetchRequest()
+            fetchCoT.predicate = NSPredicate(format: "filePath = %@", importer.savedLocation! as NSURL)
             let results = try? context.fetch(fetchCoT)
             let actual = results?.first
-            XCTAssertEqual(importer.savedLocation, actual?.filePath)
+            XCTAssertNotNil(actual)
         }
     }
     
-    func testImportPointKML() throws {
+    func testImportPointKML() async throws {
         importer = KMLImporter(archiveLocation: pointURL)
-        importer.process()
+        let processResult = await importer.process()
+        XCTAssertTrue(processResult)
         XCTAssertEqual(importer.kmlParser.placemarks.count, 1)
     }
     
-    func testImportLineStringKML() throws {
+    func testImportLineStringKML() async throws {
         importer = KMLImporter(archiveLocation: lineStringURL)
-        importer.process()
+        let processResult = await importer.process()
+        XCTAssertTrue(processResult)
         XCTAssertEqual(importer.kmlParser.placemarks.count, 1)
     }
     
-    func testImportPolygonKML() throws {
+    func testImportPolygonKML() async throws {
         importer = KMLImporter(archiveLocation: polygonURL)
-        importer.process()
+        let processResult = await importer.process()
+        XCTAssertTrue(processResult)
         XCTAssertEqual(importer.kmlParser.placemarks.count, 1)
     }
     
-    func testImportLinearRingKML() throws {
+    func testImportLinearRingKML() async throws {
         importer = KMLImporter(archiveLocation: linearRingURL)
-        importer.process()
+        let processResult = await importer.process()
+        XCTAssertTrue(processResult)
         XCTAssertEqual(importer.kmlParser.placemarks.count, 1)
     }
 }

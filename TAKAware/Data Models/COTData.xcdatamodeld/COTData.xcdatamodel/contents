@@ -27,6 +27,7 @@
         <attribute name="contentsVisible" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="deleteWithPackage" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="extractLocation" optional="YES" attributeType="URI"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="onReceiveDelete" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="onReceiveImport" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>

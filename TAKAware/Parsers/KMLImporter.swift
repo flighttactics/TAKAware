@@ -10,17 +10,27 @@ import CoreData
 import ZIPFoundation
 
 class KMLImporter: COTDataParser {
-    var archiveLocation: URL
+    var archiveLocation: URL?
+    var fileName: String
+    var fileData: Data?
     var savedLocation: URL?
     var fileUUID: UUID
     var kmlParser: KMLParser
     var kmlFile: KMLFile?
     var rootFile: URL?
-    let overlaysURL = AppConstants.appDirectoryFor(.OVERLAYS)
+    let overlaysURL = AppConstants.appDirectoryFor(.overlays)
     var hasFailure = false
     
     init(archiveLocation: URL) {
         self.archiveLocation = archiveLocation
+        fileName = archiveLocation.lastPathComponent
+        kmlParser = KMLParser()
+        fileUUID = UUID()
+    }
+    
+    init(fileName: String, fileData: Data) {
+        self.fileName = fileName
+        self.fileData = fileData
         kmlParser = KMLParser()
         fileUUID = UUID()
     }
@@ -35,14 +45,14 @@ class KMLImporter: COTDataParser {
             self.parseFile()
             self.storeFile()
         }
-        NSLog("***ALL DONE PROCESSING***")
+        TAKLogger.debug("[KMLImporter] Completed KML processing")
         return !self.hasFailure
     }
     
     private func createOrLoadDataStore() {
         guard !hasFailure else { return }
         let fetchKml: NSFetchRequest<KMLFile> = KMLFile.fetchRequest()
-        fetchKml.predicate = NSPredicate(format: "fileName = %@", archiveLocation.lastPathComponent)
+        fetchKml.predicate = NSPredicate(format: "fileName = %@", fileName)
         let results = try? self.dataContext.fetch(fetchKml)
 
         if results?.count == 0 {
@@ -56,23 +66,40 @@ class KMLImporter: COTDataParser {
     
     private func copyFile() {
         guard !hasFailure else { return }
-        TAKLogger.debug("[KMLImporter] Preparing to copy file")
-        do {
-            if archiveLocation.startAccessingSecurityScopedResource() {
-                let fileName = archiveLocation.lastPathComponent
-                let overlayFileURL = overlaysURL.appendingPathComponent(fileName)
-                let data = try Data(contentsOf: archiveLocation)
-                try data.write(to: overlayFileURL)
-                savedLocation = overlayFileURL
-            } else {
+        TAKLogger.debug("[KMLImporter] Preparing to copy file \(fileName)")
+        
+        var data: Data!
+        
+        if fileData != nil {
+            TAKLogger.debug("[KMLImporter] We have data of \(fileData!.debugDescription) - writing directly")
+            data = fileData
+        } else if archiveLocation != nil {
+            TAKLogger.debug("[KMLImporter] We have an archiveLocation of \(archiveLocation!.path()) - copying")
+            do {
+                if archiveLocation!.startAccessingSecurityScopedResource() {
+                    fileName = archiveLocation!.lastPathComponent
+                    data = try Data(contentsOf: archiveLocation!)
+                } else {
+                    hasFailure = true
+                    TAKLogger.error("[KMLImporter] Error copying file from \(archiveLocation!.path()): Unable to access")
+                }
+            } catch {
                 hasFailure = true
-                TAKLogger.error("[KMLImporter] Error copying file from \(archiveLocation.path()): Unable to access")
+                TAKLogger.error("[KMLImporter] Error copying file from \(archiveLocation!.path()): \(error)")
             }
+            archiveLocation!.stopAccessingSecurityScopedResource()
+        }
+        
+        let overlayFileURL = overlaysURL.appendingPathComponent(fileName)
+        
+        do {
+            try data.write(to: overlayFileURL)
+            savedLocation = overlayFileURL
         } catch {
             hasFailure = true
-            TAKLogger.error("[KMLImporter] Error copying file from \(archiveLocation.path()): \(error)")
+            TAKLogger.error("[KMLImporter] Error writing file to \(overlayFileURL.path()): \(error)")
         }
-        archiveLocation.stopAccessingSecurityScopedResource()
+
         TAKLogger.debug("[KMLImporter] File copy complete")
     }
     
