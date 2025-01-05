@@ -72,9 +72,8 @@ class TAKDataPackageImporter: COTDataParser {
     func storeDataPackage() {
         let packageConfiguration = parser!.packageConfiguration
         let packageName = packageConfiguration["name"] ?? missionPackage.name
-        let packageUid = UUID(uuidString: packageConfiguration["uid"] ?? "")?.uuidString ?? UUID().uuidString
         let fetchPackage: NSFetchRequest<DataPackage> = DataPackage.fetchRequest()
-        fetchPackage.predicate = NSPredicate(format: "uid = %@", packageUid as String)
+        fetchPackage.predicate = NSPredicate(format: "uid = %@", packageUUID.uuidString as String)
 
         dataContext.perform {
             let results = try? self.dataContext.fetch(fetchPackage)
@@ -83,7 +82,8 @@ class TAKDataPackageImporter: COTDataParser {
 
             if results?.count == 0 {
                 packageData = DataPackage(context: self.dataContext)
-                packageData.uid = UUID(uuidString: packageUid)
+                packageData.uid = self.packageUUID
+                packageData.dataPackageUid = packageConfiguration["uid"] ?? ""
                 packageData.name = packageName
                 packageData.user = self.missionPackage.user
                 packageData.contentsVisible = true
@@ -162,6 +162,23 @@ class TAKDataPackageImporter: COTDataParser {
         }
     }
     
+    func processUnknown(parser: DataPackageParser, packageFile: DataPackageContentsFile) {
+        dataContext.perform {
+            let packageDataFile = DataPackageFile(context: self.dataContext)
+            packageDataFile.dataPackage = self.dataPackageStore
+            packageDataFile.zipEntry = packageFile.fileLocation
+            packageDataFile.ignore = false
+            packageDataFile.isCoT = false
+            packageDataFile.visible = false
+            packageDataFile.name = packageFile.fileName
+            do {
+                try self.dataContext.save()
+            } catch {
+                TAKLogger.error("[TAKDataPackageImporter] Invalid Data Context KML Save \(error)")
+            }
+        }
+    }
+    
     func importFiles() {
         guard let parser = parser else { return }
         let packageFiles = parser.packageFiles
@@ -176,6 +193,8 @@ class TAKDataPackageImporter: COTDataParser {
                     self.processKml(parser: parser, packageFile: $0)
                 } else if $0.fileLocation.hasSuffix(".kmz") {
                     self.processKml(parser: parser, packageFile: $0)
+                } else {
+                    self.processUnknown(parser: parser, packageFile: $0)
                 }
             }
         }

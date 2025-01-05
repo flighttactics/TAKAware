@@ -90,6 +90,27 @@ struct DataPackageFilesList: View {
         dataPackageFile.cotData?.callsign ??
             String(dataPackageFile.zipEntry?.split(separator: "/").last ?? "No Name")
     }
+    
+    @ViewBuilder
+    func actionIconsFor(dataPackageFile: DataPackageFile) -> some View {
+        let zipEntry = dataPackageFile.zipEntry ?? ""
+        if dataPackageFile.isCoT {
+            Image(systemName: "target")
+        } else if zipEntry.hasSuffix(".kml") {
+            Image(systemName: "doc")
+        } else if zipEntry.hasSuffix(".kmz") {
+            Image(systemName: "doc")
+        } else {
+            let fileUrl = DataPackageManager.filePathFor(packageId: dataPackageFile.dataPackage?.uid, filePath: zipEntry)
+            if dataPackageFile.zipEntry != nil && fileUrl != nil {
+                ShareLink(item: fileUrl!) {
+                    Image(systemName: "square.and.arrow.down.on.square")
+                }
+            } else {
+                Image(systemName: "exclamationmark.square")
+            }
+        }
+    }
 
     var body: some View {
         List {
@@ -103,7 +124,7 @@ struct DataPackageFilesList: View {
                                 fileName(dataPackageFile: dataPackageFile)
                             )
                             Spacer()
-                            Image(systemName: (dataPackageFile.isCoT ? "target" : "doc"))
+                            actionIconsFor(dataPackageFile: dataPackageFile)
                         }
                     }
                 }

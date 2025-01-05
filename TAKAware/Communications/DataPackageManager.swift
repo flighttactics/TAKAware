@@ -66,6 +66,22 @@ class DataPackageManager: APIRequestObject, ObservableObject {
     @Published var remotePackageProcessStatus: String = ""
     let ANON_CHANNEL_NAME = "__ANON__"
     
+    static func filePathFor(packageId: UUID?, filePath: String?) -> URL? {
+        TAKLogger.debug("[DataPackageManager] Retrieving filePath for \(packageId?.uuidString ?? "NO ID") and filePath \(filePath ?? "NO PATH")")
+        guard let packageId = packageId, let filePath = filePath else { return nil }
+        let fileManager = FileManager()
+        let baseDirectory = AppConstants.appDirectoryFor(.dataPackages)
+        let packageDirectory = baseDirectory.appending(path: packageId.uuidString)
+        let fileUrl = packageDirectory.appending(component: filePath)
+        if fileManager.isReadableFile(atPath: fileUrl.path(percentEncoded: false)) {
+            TAKLogger.debug("[DataPackageManager] File found at \(fileUrl.path(percentEncoded: false))")
+            return fileUrl
+        } else {
+            TAKLogger.debug("[DataPackageManager] Unable to find file at path \(fileUrl.path(percentEncoded: false))")
+            return nil
+        }
+    }
+    
     func retrieveDataPackages() {
         if !isSendingUpdate {
             isLoading = true
