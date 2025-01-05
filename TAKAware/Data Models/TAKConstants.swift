@@ -8,6 +8,11 @@
 import Foundation
 import UIKit
 
+enum AppDirectories: String {
+    case overlays = "overlays"
+    case dataPackages = "datapackages"
+}
+
 struct AppConstants {
     // App Information
     static let TAK_PLATFORM = "iTAK-Tracker-CIV"    
@@ -29,11 +34,24 @@ struct AppConstants {
     
     static let DATA_SYNC_MISSION_LIST_PATH = "/Marti/api/missions"
     static let DATA_SYNC_MISSION_DETAILS_PATH = "/Marti/api/missions/{name}"
-    
+
     static let MISSION_PACKAGE_LIST_PATH = "/Marti/api/files/metadata?missionPackage=true"
+    //static let MISSION_PACKAGE_LIST_PATH = "/Marti/sync/search?keywords=missionpackage&tool=public"
     static let MISSION_PACKAGE_FILE_PATH = "/Marti/api/files" // Must append the hash to the end
     
     static let UDP_BROADCAST_URL = "239.2.3.1"
+    
+    static let NOTIFY_KML_FILE_ADDED = "KMLFileAdded"
+    static let NOTIFY_KML_FILE_UPDATED = "KMLFileUpdated"
+    static let NOTIFY_KML_FILE_REMOVED = "KMLFileRemoved"
+    
+    static let DIRECTORY_OVERLAYS = "overlays"
+    static let DIRECTORY_DATA_PACKAGES = "datapackages"
+    
+    static func appDirectoryFor(_ directory: AppDirectories) -> URL {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return documentsURL.appendingPathComponent(directory.rawValue)
+    }
     
     // Helper Functions
     static func certificateSigningPath(clientUid: String, appVersion: String) -> String {

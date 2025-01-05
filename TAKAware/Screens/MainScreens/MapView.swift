@@ -165,8 +165,6 @@ class COTMapCircle: MKCircle {
     var labelsOn: Bool = true
 }
 
-// TODO: We'll need a custom renderer for this
-// Rendering as a circle for now
 class COTMapEllipse: MKCircle {
     var major: Double = 0.0
     var minor: Double = 0.0
@@ -205,6 +203,8 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var remarks: String?
     dynamic var videoURL: URL?
     dynamic var shape: MKOverlay?
+    dynamic var isKML: Bool = false
+    dynamic var groupID: UUID?
     
     var annotationIdentifier: String {
         if icon != nil && !icon!.isEmpty {
@@ -234,6 +234,17 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
         }
         self.remarks = mapPoint.remarks
         self.videoURL = mapPoint.videoURL
+    }
+    
+    init(id: String, title: String, icon: String, coordinate: CLLocationCoordinate2D, remarks: String) {
+        self.id = id
+        self.title = title
+        self.icon = icon
+        self.cotType = "a-U-G"
+        // TODO: We need to use the KMLIcon instead of this
+        self.icon = "f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/ylw-pushpin.png"
+        self.coordinate = coordinate
+        self.remarks = remarks
     }
 }
 
@@ -421,6 +432,7 @@ struct MapView: UIViewRepresentable {
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
     @Binding var conflictedItems: [MapPointAnnotation]
     var parentView: AwarenessView
+    var dataContext = DataController.shared.backgroundContext
     
     @State var mapView: CompassMapView = CompassMapView()
     @State var activeBloodhound: COTMapBloodhoundLine?
@@ -429,11 +441,12 @@ struct MapView: UIViewRepresentable {
     @State var bloodhoundStartCoordinate: CLLocationCoordinate2D?
     @State var bloodhoundEndCoordinate: CLLocationCoordinate2D?
     @State var showingAnnotationLabels: Bool = true
+    @State var loadedKmlAnnotations: [String] = []
     
     private static var mapPointsFetchRequest: NSFetchRequest<COTData> {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
         fetchUser.sortDescriptors = []
-        fetchUser.predicate = NSPredicate(format: "visible == YES")
+        fetchUser.predicate = NSPredicate(format: "visible = YES")
         return fetchUser
     }
     
@@ -463,6 +476,13 @@ struct MapView: UIViewRepresentable {
         parentView.annotationSelectedCallback = annotationSelected(_:)
 
         didUpdateRegion()
+        updateKmlOverlays()
+        
+        let nc = NotificationCenter.default
+        
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_ADDED), object: nil, queue: nil, using: kmlChangeNotified)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_UPDATED), object: nil, queue: nil, using: kmlChangeNotified)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_REMOVED), object: nil, queue: nil, using: kmlChangeNotified)
         
 //        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
 //        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
@@ -508,6 +528,96 @@ struct MapView: UIViewRepresentable {
         updateAnnotations(from: view)
     }
     
+    private func kmlChangeNotified(notification: Notification) {
+        TAKLogger.debug("[MapView] Notified of a KML change \(notification.debugDescription)")
+        updateKmlOverlays()
+    }
+    
+    private func updateKmlOverlays() {
+        var processedKmlFiles: [String] = []
+        
+        dataContext.perform {
+            let fetchKml: NSFetchRequest<KMLFile> = KMLFile.fetchRequest()
+            fetchKml.predicate = NSPredicate(format: "visible = YES")
+            let fetchedKml = try? dataContext.fetch(fetchKml)
+            let incomingKml = (fetchedKml == nil) ? [] : fetchedKml!
+
+            incomingKml.forEach { kmlRecord in
+                guard let fileId = kmlRecord.id else {
+                    TAKLogger.debug("[MapView] KMLRecord had no record ID")
+                    return
+                }
+                processedKmlFiles.append(fileId.uuidString)
+                
+                if loadedKmlAnnotations.contains(fileId.uuidString) {
+                    let existingAnnotations: [MapPointAnnotation] = mapView.annotations.filter {
+                        ($0 as? MapPointAnnotation)?.groupID == fileId
+                    } as! [MapPointAnnotation]
+                    TAKLogger.debug("[MapView] Found \(existingAnnotations.count) existing annotations for this KML")
+                    if !kmlRecord.visible {
+                        let overlaysToRemove = existingAnnotations.map { $0.shape }.filter { $0 != nil } as! [MKOverlay]
+                        TAKLogger.debug("[MapView] KML marked as not visible, removing \(existingAnnotations.count) annotations and \(overlaysToRemove.count) overlays")
+                        DispatchQueue.main.async {
+                            mapView.removeOverlays(overlaysToRemove)
+                            mapView.removeAnnotations(existingAnnotations)
+                        }
+                        return
+                    } else {
+                        if !existingAnnotations.isEmpty {
+                            TAKLogger.debug("[MapView] KML marked as visible, but annotations exist, so ignoring")
+                            // We don't need to recreate them
+                            return
+                        }
+                        TAKLogger.debug("[MapView] KML marked as visible, but no annotations exist. Continuing")
+                    }
+                }
+                
+                DispatchQueue.main.async {
+                    loadedKmlAnnotations.append(fileId.uuidString)
+                }
+                
+                if !kmlRecord.visible {
+                    TAKLogger.debug("[MapView] KMLRecord marked as not visible. Skipping.")
+                }
+                
+                let kmlData = KMLData(kmlRecord: kmlRecord)
+                
+                kmlData.placemarks.forEach { placemark in
+                    guard let shape = placemark.mapKitShape else {
+                        return
+                    }
+                    let mpa = MapPointAnnotation(id: UUID().uuidString, title: placemark.name, icon: "", coordinate: shape.coordinate, remarks: placemark.description)
+                    mpa.isKML = true
+                    mpa.groupID = fileId
+                    DispatchQueue.main.async {
+                        mapView.addAnnotation(mpa)
+                        if let overlayShape = shape as? MKOverlay {
+                            mpa.shape = overlayShape
+                            mapView.addOverlay(mpa.shape!)
+                        }
+                        annotationUpdatedCallback(annotation: mpa)
+                    }
+                }
+            }
+            
+            let current = Set(loadedKmlAnnotations)
+            let incoming = Set(processedKmlFiles)
+            let toRemove = current.filter { !incoming.contains($0) }
+            TAKLogger.debug("[MapView] Found \(toRemove.count) KMLs that need cleaned up")
+            toRemove.forEach { fileId in
+                let existingAnnotations: [MapPointAnnotation] = mapView.annotations.filter {
+                    ($0 as? MapPointAnnotation)?.groupID?.uuidString == fileId
+                } as! [MapPointAnnotation]
+                let overlaysToRemove = existingAnnotations.map { $0.shape }.filter { $0 != nil } as! [MKOverlay]
+                TAKLogger.debug("[MapView] Loaded KML file deleted. Removing \(existingAnnotations.count) annotations and \(overlaysToRemove.count) overlays")
+                DispatchQueue.main.async {
+                    mapView.removeOverlays(overlaysToRemove)
+                    mapView.removeAnnotations(existingAnnotations)
+                }
+            }
+        }
+    }
+    
     private func updateAnnotations(from mapView: MKMapView) {
         
         if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
@@ -530,17 +640,20 @@ struct MapView: UIViewRepresentable {
 
         if !toRemove.isEmpty {
             let removableAnnotations = existingAnnotations.filter {
+                !($0 as! MapPointAnnotation).isKML &&
                 toRemove.contains(($0 as! MapPointAnnotation).id)
             }
-
-            if(bloodhoundEndAnnotation != nil && toRemove.contains(bloodhoundEndAnnotation!.id)) {
-                bloodhoundDeselected()
+            
+            if !removableAnnotations.isEmpty {
+                if(bloodhoundEndAnnotation != nil && toRemove.contains(bloodhoundEndAnnotation!.id)) {
+                    bloodhoundDeselected()
+                }
+                
+                let overlaysToRemove = removableAnnotations.map { ($0 as! MapPointAnnotation).shape }.filter { $0 != nil } as! [MKOverlay]
+                mapView.removeOverlays(overlaysToRemove)
+                
+                mapView.removeAnnotations(removableAnnotations)
             }
-            
-            let overlaysToRemove = removableAnnotations.map { ($0 as! MapPointAnnotation).shape }.filter { $0 != nil } as! [MKOverlay]
-            mapView.removeOverlays(overlaysToRemove)
-            
-            mapView.removeAnnotations(removableAnnotations)
         }
         
         for annotation in mapView.annotations.filter({ $0 is MapPointAnnotation }) {
@@ -795,6 +908,10 @@ struct MapView: UIViewRepresentable {
             parent.currentSelectedAnnotation = nil
         }
         
+        func degreesToRadians(_ degrees: Double) -> Double {
+            degrees * .pi / 180
+        }
+        
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             switch overlay {
             case let overlay as MKTileOverlay:
@@ -806,12 +923,30 @@ struct MapView: UIViewRepresentable {
                 circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
                 return circleRenderer
             case let overlay as COTMapEllipse:
-                // TODO: Render as an ellipse, not a circle
-                let circleRenderer = MKCircleRenderer(circle: overlay)
-                circleRenderer.lineWidth = overlay.strokeWeight
-                circleRenderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
-                circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
-                return circleRenderer
+                let ellipseRenderer = MKCircleRenderer(circle: overlay)
+                
+                let mapPointsPerMeter = MKMapPointsPerMeterAtLatitude(overlay.coordinate.latitude)
+                let width = overlay.minor * mapPointsPerMeter
+                let height = overlay.major * mapPointsPerMeter
+                let rect = CGRectMake(0, 0, width, height)
+                
+                let center = ellipseRenderer.path.boundingBox
+                let y = (center.height-height)/2
+                let x = (center.width-width)/2
+
+                var transform: CGAffineTransform = .identity
+                transform = transform.translatedBy(x: x, y: y)
+                transform = transform.translatedBy(x: rect.midX, y: rect.midY)
+                transform = transform.rotated(by: degreesToRadians(overlay.angle))
+                transform = transform.translatedBy(x: -rect.midX, y: -rect.midY)
+
+                let path = CGPath(ellipseIn: rect, transform: &transform)
+                ellipseRenderer.path = path
+
+                ellipseRenderer.lineWidth = overlay.strokeWeight
+                ellipseRenderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
+                ellipseRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
+                return ellipseRenderer
             case let overlay as COTMapPolygon:
                 let renderer = MKPolygonRenderer(overlay: overlay)
                 renderer.lineWidth = overlay.strokeWeight
@@ -834,6 +969,16 @@ struct MapView: UIViewRepresentable {
                 renderer.lineWidth = 3.0
                 renderer.strokeColor = UIColor(red: 0.729, green: 0.969, blue: 0.2, alpha: 1) // #baf733
                 return renderer
+            case let overlay as MKPolyline:
+                let renderer = MKPolylineRenderer(polyline: overlay)
+                renderer.lineWidth = 3.0
+                renderer.strokeColor = UIColor(red: 0.0, green: 0.0, blue: 1.0, alpha: 1)
+                return renderer
+            case let overlay as MKPolygon:
+                let renderer = MKPolygonRenderer(overlay: overlay)
+                renderer.lineWidth = 1.0
+                renderer.strokeColor = UIColor(red: 1.0, green: 1.0, blue: 0.0, alpha: 1)
+                return renderer
             default:
                 return MKOverlayRenderer()
             }
@@ -841,42 +986,6 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             return parent.initializeOrUpdateAnnotationView(mapView: mapView, annotation: annotation)
-//            guard !annotation.isKind(of: MKUserLocation.self) else {
-//                var selfView = mapView.dequeueReusableAnnotationView(withIdentifier: "UserLocation")
-//                if selfView == nil {
-//                    selfView = MKUserLocationView(annotation: annotation, reuseIdentifier: "UserLocation")
-//                }
-//                selfView!.zPriority = .max
-//                return selfView
-//            }
-//            
-//            guard let mpAnnotation = annotation as? MapPointAnnotation else { return nil }
-//            
-//            let identifier = mpAnnotation.annotationIdentifier
-//            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
-//            
-//            if annotationView == nil {
-//                annotationView = SituationalAnnotationView(
-//                    mapView: parent,
-//                    annotation: mpAnnotation,
-//                    reuseIdentifier: identifier
-//                )
-//            }
-//
-//            let icon = IconData.iconFor(type2525: mpAnnotation.cotType ?? "", iconsetPath: mpAnnotation.icon ?? "")
-//            var pointIcon: UIImage = icon.icon
-//            
-//            if let pointColor = mpAnnotation.color {
-//                if pointIcon.isSymbolImage {
-//                    pointIcon = pointIcon.maskSymbol(with: pointColor)
-//                } else {
-//                    pointIcon = pointIcon.maskImage(with: pointColor)
-//                }
-//            }
-//            
-//            annotationView!.image = pointIcon
-//            annotationView!.annotation = mpAnnotation
-//            return annotationView
         }
     }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import WebKit
 
 enum BaseCot2525Mapping: String, CaseIterable, Identifiable, CustomStringConvertible {
     var id: Self { self }
@@ -53,12 +54,79 @@ enum BaseCot2525Mapping: String, CaseIterable, Identifiable, CustomStringConvert
     }
 }
 
+struct HTMLView: UIViewRepresentable {
+    let htmlString: String
+    let webView: WKWebView = WKWebView()
+//    @Binding var height: Double
+//    
+//    func makeCoordinator() -> Coordinator {
+//        Coordinator(self)
+//    }
+
+    func makeUIView(context: Context) -> WKWebView {
+        webView.isOpaque = false
+        return webView
+    }
+
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        webView.loadHTMLString(htmlString, baseURL: nil)
+    }
+    
+//    func webViewConfiguration() -> WKWebViewConfiguration {
+//        let configuration = WKWebViewConfiguration()
+//        configuration.userContentController = userContentController()
+//        return configuration
+//    }
+//    
+//    private func userContentController() -> WKUserContentController {
+//        let controller = WKUserContentController()
+//        controller.addUserScript(viewPortScript())
+//        return controller
+//    }
+//    
+//    private func viewPortScript() -> WKUserScript {
+//        let viewPortScript = """
+//            var meta = document.createElement('meta');
+//            meta.setAttribute('name', 'viewport');
+//            meta.setAttribute('content', 'width=device-width');
+//            meta.setAttribute('initial-scale', '1.0');
+//            meta.setAttribute('maximum-scale', '1.0');
+//            meta.setAttribute('minimum-scale', '1.0');
+//            meta.setAttribute('user-scalable', 'no');
+//            document.getElementsByTagName('head')[0].appendChild(meta);
+//        """
+//        return WKUserScript(source: viewPortScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+//    }
+//    
+//    class Coordinator: NSObject, WKNavigationDelegate {
+//        var parent: HTMLView
+//        init(_ parent: HTMLView) {
+//            self.parent = parent
+//        }
+//        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+//            webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
+//                NSLog("***Height: \(height) Error: \(error)")
+//                guard let height = height as? CGFloat else {
+//                    self.parent.height = 100.0
+//                    return
+//                }
+//                if height < 30.0 {
+//                    self.parent.height = 100.0
+//                } else {
+//                    self.parent.height = height
+//                }
+//            })
+//        }
+//    }
+}
+
 struct AnnotationDetailReadOnly: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var takManager: TAKManager
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
     @Binding var isEditing: Bool
     @State private var showingAlert = false
+    @State private var htmlContentHeight: Double = 100.0
     
     var annotation: MapPointAnnotation? {
         currentSelectedAnnotation
@@ -88,10 +156,19 @@ struct AnnotationDetailReadOnly: View {
                     VStack {
                         Group {
                             Text(annotation!.title ?? "")
-                            Text(annotation!.remarks ?? "")
-                            Text("Type: \(annotation!.cotType ?? "")")
-                            Text("Latitude: \(annotation!.coordinate.latitude.description)")
-                            Text("Longitude: \(annotation!.coordinate.longitude.description)")
+                            // TODO: Be smarter about when to show HTML (check for CDATA)
+                            if annotation!.isKML {
+                                Text("Type: \(annotation!.cotType ?? "")")
+                                Text("Latitude: \(annotation!.coordinate.latitude.description)")
+                                Text("Longitude: \(annotation!.coordinate.longitude.description)")
+                                HTMLView(htmlString: annotation!.remarks!)
+                                    .frame(height: htmlContentHeight)
+                            } else {
+                                Text("Remarks: \(annotation!.remarks!)")
+                                Text("Type: \(annotation!.cotType ?? "")")
+                                Text("Latitude: \(annotation!.coordinate.latitude.description)")
+                                Text("Longitude: \(annotation!.coordinate.longitude.description)")
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }

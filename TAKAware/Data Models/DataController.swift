@@ -24,9 +24,9 @@ class DataController: ObservableObject {
         let container = NSPersistentContainer(name: "COTData")
         
         // Enable memory-only store by enabling these lines
-        //let description = NSPersistentStoreDescription()
-        //description.url = URL(fileURLWithPath: "/dev/null")
-        //container.persistentStoreDescriptions = [description]
+//        let description = NSPersistentStoreDescription()
+//        description.url = URL(fileURLWithPath: "/dev/null")
+//        container.persistentStoreDescriptions = [description]
         
         // Load any persistent stores, which creates a store if none exists.
         container.loadPersistentStores { persistentStore, error in
@@ -161,23 +161,65 @@ class DataController: ObservableObject {
         }
     }
     
-    func deletePackage(dataPackage: DataPackage, deleteAssociatedCoT: Bool = true) {
+    func deletePackage(dataPackage: DataPackage, deleteAssociatedCoT: Bool = true, deleteStoredFile: Bool = true) {
         let dataContext = dataPackage.managedObjectContext ?? backgroundContext
+        let extractLocation = dataPackage.extractLocation
         dataContext.perform {
             let packageFiles = self.dataPackageFilesFromDataPackage(dataPackage)
             packageFiles.forEach { dataPackageFile in
                 if deleteAssociatedCoT && dataPackageFile.cotData != nil {
                     dataContext.delete(dataPackageFile.cotData!)
                 } else {
-                    NSLog("***No associated COTData object to delete! \(dataPackageFile.cotUid?.uuidString ?? "NO UUID")")
+                    TAKLogger.debug("[DataController] ***No associated COTData object to delete! \(dataPackageFile.cotUid?.uuidString ?? "NO UUID")")
                 }
                 dataContext.delete(dataPackageFile)
             }
             dataContext.delete(dataPackage)
             do {
                 try dataContext.save()
+                if deleteStoredFile && extractLocation != nil {
+                    let fileManager = FileManager()
+                    TAKLogger.debug("[DataController] Deleting Data Package directory at \(extractLocation!.path())")
+                    try fileManager.removeItem(at: extractLocation!)
+                }
             } catch {
                 TAKLogger.error("[DataController]: Unable to delete package \(error)")
+            }
+        }
+    }
+    
+    func deleteKMLFile(kmlFile: KMLFile, deleteStoredFile: Bool = true) {
+        let dataContext = kmlFile.managedObjectContext ?? backgroundContext
+        let filePath = kmlFile.filePath!
+        let fileID = kmlFile.id!
+        let isKmz = kmlFile.isCompressed
+        dataContext.perform {
+            dataContext.delete(kmlFile)
+            do {
+                try dataContext.save()
+                if deleteStoredFile {
+                    let fileManager = FileManager()
+                    if isKmz {
+                        let kmzSubdirectory = AppConstants.appDirectoryFor(.overlays).appendingPathComponent(fileID.uuidString)
+                        TAKLogger.debug("[DataController] Deleting KMZ directory at \(kmzSubdirectory.path())")
+                        try fileManager.removeItem(at: kmzSubdirectory)
+                    }
+                    try fileManager.removeItem(at: filePath)
+                }
+            } catch {
+                TAKLogger.error("[DataController]: Unable to delete KML File \(error)")
+            }
+        }
+    }
+    
+    func changeKMLFileVisibility(kmlFile: KMLFile, visible: Bool) {
+        let dataContext = kmlFile.managedObjectContext ?? backgroundContext
+        dataContext.perform {
+            kmlFile.visible = visible
+            do {
+                try dataContext.save()
+            } catch {
+                TAKLogger.error("[DataController]: Unable to change visibility of KML File \(error)")
             }
         }
     }
@@ -185,6 +227,23 @@ class DataController: ObservableObject {
     func deleteCot(cotId: String) {
         let predicate = NSPredicate(format: "id = %@", cotId)
         clearMap(query: predicate)
+    }
+    
+    func clearAll() async {
+        TAKLogger.debug("[DataController] Clearing All Data")
+        
+        let entityList = ["COTData", "DataPackage", "DataPackageFile", "KMLFile"]
+        await backgroundContext.perform {
+            entityList.forEach { entityName in
+                let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: entityName)
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+                do {
+                    try self.backgroundContext.execute(deleteRequest)
+                } catch {
+                    TAKLogger.error("[DataController] Error during clear all of \(entityName): \(error)")
+                }
+            }
+        }
     }
     
     func clearMap(query: NSPredicate) {

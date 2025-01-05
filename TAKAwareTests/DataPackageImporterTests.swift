@@ -12,7 +12,7 @@ import ZIPFoundation
 import CoreData
 @testable import TAKAware
 
-final class DataPackageImporterTests: TAKAwareTestCase {
+final class DataPackageImporterTests: TAKAwareDataTestCase {
     var parser:TAKDataPackageImporter? = nil
     var archiveURL:URL? = nil
 
@@ -35,18 +35,69 @@ final class DataPackageImporterTests: TAKAwareTestCase {
     }
     
     func testCreatesDatabaseEntryForThisPackage() {
-        let uid = "dc772639-f6f2-4bcc-88b5-1d841d91cd14"
+        let uid = UUID(uuidString: "dc772639-f6f2-4bcc-88b5-1d841d91cd14")!
         let context = DataController.shared.backgroundContext
         parser!.parse()
         context.performAndWait {
             let fetchCoT: NSFetchRequest<DataPackage> = DataPackage.fetchRequest()
-            fetchCoT.predicate = NSPredicate(format: "uid = %@", uid)
+            fetchCoT.predicate = NSPredicate(format: "uid = %@", uid as NSUUID)
             let results = try? context.fetch(fetchCoT)
             XCTAssertNotNil(results?.first)
         }
     }
     
-    func testTagsImportedMarkersAsBeingWithThisDataPackage() {
-        
+    func testImportKmlFileStoresAndImports() {
+        let kmlFileName = "blue-course.kml"
+        let context = DataController.shared.backgroundContext
+        parser!.parse()
+        context.performAndWait {
+            let fetchKml: NSFetchRequest<KMLFile> = KMLFile.fetchRequest()
+            fetchKml.predicate = NSPredicate(format: "fileName = %@", kmlFileName)
+            let results = try? context.fetch(fetchKml)
+            XCTAssertNotNil(results?.first)
+        }
+    }
+    
+    func testImportKmlFileStoresADataPackageFile() async {
+        await DataController.shared.clearAll()
+        let kmlFileName = "blue-course.kml"
+        let context = DataController.shared.backgroundContext
+        parser!.parse()
+        context.performAndWait {
+            let fetchDPFile: NSFetchRequest<DataPackageFile> = DataPackageFile.fetchRequest()
+            fetchDPFile.predicate = NSPredicate(format: "name = %@", kmlFileName)
+            let results = try? context.fetch(fetchDPFile)
+            XCTAssertNotNil(results?.first)
+        }
+    }
+    
+    func testImportKmlFileDoesNotStoreAsCoT() async throws {
+        await DataController.shared.clearAll()
+        let kmlFileName = "blue-course.kml"
+        let context = DataController.shared.backgroundContext
+        parser!.parse()
+        context.performAndWait {
+            let fetchDPFile: NSFetchRequest<DataPackageFile> = DataPackageFile.fetchRequest()
+            fetchDPFile.predicate = NSPredicate(format: "name = %@", kmlFileName)
+            let results = try? context.fetch(fetchDPFile)
+            let actual = results?.first
+            if actual != nil {
+                XCTAssertFalse(actual!.isCoT)
+            } else {
+                XCTFail("No Records Found")
+            }
+        }
+    }
+    
+    func testImportKmzFileStoresAndImports() {
+        let kmzFileName = "startmap.kmz"
+        let context = DataController.shared.backgroundContext
+        parser!.parse()
+        context.performAndWait {
+            let fetchKml: NSFetchRequest<KMLFile> = KMLFile.fetchRequest()
+            fetchKml.predicate = NSPredicate(format: "fileName = %@", kmzFileName)
+            let results = try? context.fetch(fetchKml)
+            XCTAssertNotNil(results?.first)
+        }
     }
 }
