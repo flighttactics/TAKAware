@@ -241,6 +241,8 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
         self.title = title
         self.icon = icon
         self.cotType = "a-U-G"
+        // TODO: We need to use the KMLIcon instead of this
+        self.icon = "f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/ylw-pushpin.png"
         self.coordinate = coordinate
         self.remarks = remarks
     }
