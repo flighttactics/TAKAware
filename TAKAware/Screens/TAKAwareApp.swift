@@ -55,12 +55,15 @@ struct TAKTrackerApp: App {
                     .onChange(of: scenePhase) { newPhase in
                         if newPhase == .inactive {
                             TAKLogger.debug("[ScenePhase] Moving to inactive")
+                            NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_APP_INACTIVE), object: nil)
                             settingsStore.shouldTryReconnect = true
                         } else if newPhase == .active {
                             TAKLogger.debug("[ScenePhase] Moving to active")
+                            NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_APP_ACTIVE), object: nil)
                             settingsStore.shouldTryReconnect = true
                         } else if newPhase == .background {
                             TAKLogger.debug("[ScenePhase] Moving to background")
+                            NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_APP_BACKGROUND), object: nil)
                             settingsStore.shouldTryReconnect = true
                         }
                     }

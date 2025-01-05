@@ -44,6 +44,12 @@ struct AppConstants {
     static let NOTIFY_KML_FILE_ADDED = "KMLFileAdded"
     static let NOTIFY_KML_FILE_UPDATED = "KMLFileUpdated"
     static let NOTIFY_KML_FILE_REMOVED = "KMLFileRemoved"
+    static let NOTIFY_COT_ADDED = "COTAdded"
+    static let NOTIFY_COT_UPDATED = "COTUpdated"
+    static let NOTIFY_COT_REMOVED = "COTRemoved"
+    static let NOTIFY_APP_ACTIVE = "AppScenePhaseActive"
+    static let NOTIFY_APP_INACTIVE = "AppScenePhaseInactive"
+    static let NOTIFY_APP_BACKGROUND = "AppScenePhaseBackground"
     
     static let DIRECTORY_OVERLAYS = "overlays"
     static let DIRECTORY_DATA_PACKAGES = "datapackages"

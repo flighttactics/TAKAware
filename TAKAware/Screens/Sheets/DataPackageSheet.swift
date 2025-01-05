@@ -198,7 +198,7 @@ struct DataPackageDetail: View {
             })
             Section(
                 header: Text("Imported Packages"),
-                footer: Text("Swipe a package to manage. Note that KML/KMZ import is not supported at this time")
+                footer: Text("Swipe a package to manage")
             ) {
                 if dataPackages.isEmpty {
                     Text("No Data Packages Imported")
