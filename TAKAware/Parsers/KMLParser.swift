@@ -262,14 +262,24 @@ struct KMLLinearRing: Equatable, XMLObjectDeserialization {
     var altitudeMode: String
     
     var mapCoordinates: [CLLocationCoordinate2D] {
-        let coordTupleArray = coordinates.split(separator: " ")
+        let coordTupleArray = coordinates.split(separator: " ").filter { !$0.isEmpty }
         guard coordTupleArray.count >= 2 else { return [] }
-        return coordTupleArray.map { tuple in
+        let mappedCoordinates: [CLLocationCoordinate2D] = coordTupleArray.map { tuple in
             let coordArray = tuple.split(separator: ",")
+            if coordArray.count < 2 {
+                TAKLogger.debug("[KMLParser] unable to split coordinates \(tuple), returning 0,0")
+                return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+            }
             let lon = Double(coordArray[0]) ?? 0.0
             let lat = Double(coordArray[1]) ?? 0.0
             return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+        } as [CLLocationCoordinate2D]
+        let filteredMappedCoordinates = mappedCoordinates.filter { $0.latitude != 0.0 && $0.longitude != 0.0 }
+        if filteredMappedCoordinates.count < 2 {
+            TAKLogger.debug("[KMLParser] No coordinates found after filtering")
+            return []
         }
+        return filteredMappedCoordinates
     }
 
     public static func ==(lhs: KMLLinearRing, rhs: KMLLinearRing) -> Bool {

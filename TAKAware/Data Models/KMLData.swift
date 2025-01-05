@@ -30,7 +30,7 @@ class KMLData {
                     TAKLogger.error("[KMLData] No KMLs found in the KMZ directory \(kmzDirectory.relativePath)")
                     return
                 }
-                filePath = URL(string: kmlPath!)!
+                filePath = kmzDirectory.appending(path: kmlPath!)
             } catch {
                 TAKLogger.error("[KMLData] Unable to retrieve files from KMZ path \(error)")
                 return
@@ -45,7 +45,7 @@ class KMLData {
         guard let data = try? Data(contentsOf: filePath) else {
             // TODO: Maybe notify the user or update the KML UI?
             // This is a rare case, usually only during development
-            TAKLogger.debug("[MapView] Unable to load KML from \(filePath.path())")
+            TAKLogger.debug("[KMLData] Unable to load KML from \(filePath.path())")
             return
         }
         

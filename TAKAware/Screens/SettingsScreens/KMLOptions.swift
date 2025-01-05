@@ -51,15 +51,17 @@ struct KMLOptionsDetail: View {
                             Task {
                                 let didSucceed = await kmlImporter.process()
                                 if didSucceed {
-                                    alertText = "Data package processed successfully!"
+                                    alertText = "Overlay imported successfully!"
                                 } else {
-                                    alertText = "Data package processing failed"
+                                    alertText = "Overlay import failed"
                                 }
                             }
                             fileurl.stopAccessingSecurityScopedResource()
                             isShowingAlert = true
                         } else {
                             TAKLogger.error("Unable to securely access \(String(describing: fileurl))")
+                            alertText = "Overlay import failed"
+                            isShowingAlert = true
                         }
                     }
                 case .failure(let error):
@@ -68,11 +70,11 @@ struct KMLOptionsDetail: View {
                 
             })
             Section(
-                header: Text("Imported KML Files"),
+                header: Text("Imported Overlay Files"),
                 footer: Text("Swipe a file to manage")
             ) {
                 if kmlFiles.isEmpty {
-                    Text("No KML Files Imported")
+                    Text("No Overlay Files Imported")
                 } else {
                     ForEach(kmlFiles) { kmlFile in
                         HStack {
@@ -107,7 +109,7 @@ struct KMLOptionsDetail: View {
             }
         }
         .alert(isPresented: $isShowingAlert) {
-            Alert(title: Text("KML Import"), message: Text(alertText), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Overlay Import"), message: Text(alertText), dismissButton: .default(Text("OK")))
         }
     }
 }

@@ -165,8 +165,6 @@ class COTMapCircle: MKCircle {
     var labelsOn: Bool = true
 }
 
-// TODO: We'll need a custom renderer for this
-// Rendering as a circle for now
 class COTMapEllipse: MKCircle {
     var major: Double = 0.0
     var minor: Double = 0.0
@@ -175,14 +173,6 @@ class COTMapEllipse: MKCircle {
     var strokeWeight: Double = -1
     var fillColor: Int = -1
     var labelsOn: Bool = true
-    
-    var height: Double {
-        major * 2.0
-    }
-    
-    var width: Double {
-        minor * 2.0
-    }
 }
 
 class COTMapPolygon: MKPolygon {
@@ -551,9 +541,8 @@ struct MapView: UIViewRepresentable {
             let incomingKml = (fetchedKml == nil) ? [] : fetchedKml!
 
             incomingKml.forEach { kmlRecord in
-                guard let filePath = kmlRecord.filePath,
-                        let fileId = kmlRecord.id else {
-                    TAKLogger.debug("[MapView] KMLRecord had no name or file path")
+                guard let fileId = kmlRecord.id else {
+                    TAKLogger.debug("[MapView] KMLRecord had no record ID")
                     return
                 }
                 processedKmlFiles.append(fileId.uuidString)

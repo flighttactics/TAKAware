@@ -72,7 +72,7 @@ class TAKDataPackageImporter: COTDataParser {
     func storeDataPackage() {
         let packageConfiguration = parser!.packageConfiguration
         let packageName = packageConfiguration["name"] ?? missionPackage.name
-        let packageUid = packageConfiguration["uid"] ?? UUID().uuidString
+        let packageUid = UUID(uuidString: packageConfiguration["uid"] ?? "")?.uuidString ?? UUID().uuidString
         let fetchPackage: NSFetchRequest<DataPackage> = DataPackage.fetchRequest()
         fetchPackage.predicate = NSPredicate(format: "uid = %@", packageUid as String)
 
