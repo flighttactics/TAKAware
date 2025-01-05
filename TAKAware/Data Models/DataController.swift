@@ -86,6 +86,7 @@ class DataController: ObservableObject {
                 mapPointData.callsign = title
                 mapPointData.remarks = remarks
                 mapPointData.cotType = cotType
+                mapPointData.archived = true // Always archive edited markers
                 if(mapPointData.hasChanges) {
                     do {
                         try self.backgroundContext.save()
@@ -125,7 +126,7 @@ class DataController: ObservableObject {
             mapPointData.cotType = defaultType
             mapPointData.startDate = Date.now
             mapPointData.updateDate = Date.now
-            mapPointData.archived = true
+            mapPointData.archived = true // Always archive created markers
             mapPointData.rawXml = cotEvent.toXml()
 
             do {
