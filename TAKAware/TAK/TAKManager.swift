@@ -64,6 +64,9 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
         cotDetail.childNodes.append(COTContact(callsign: annotation.title ?? "Unknown"))
         cotDetail.childNodes.append(COTArchive())
         cotDetail.childNodes.append(COTRemarks(message: annotation.remarks ?? ""))
+        if annotation.icon != nil {
+            cotDetail.childNodes.append(COTUserIcon(iconsetPath: annotation.icon!))
+        }
         
         if annotation.isShape && annotation.shape != nil {
             let shape = annotation.shape!
