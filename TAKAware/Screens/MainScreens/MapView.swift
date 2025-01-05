@@ -425,6 +425,7 @@ class CompassMapView: MKMapView {
 }
 
 struct MapView: UIViewRepresentable {
+    @Environment(\.scenePhase) var scenePhase
     @Binding var region: MKCoordinateRegion
     @Binding var mapType: UInt
     @Binding var enableTrafficDisplay: Bool
@@ -442,6 +443,7 @@ struct MapView: UIViewRepresentable {
     @State var bloodhoundEndCoordinate: CLLocationCoordinate2D?
     @State var showingAnnotationLabels: Bool = true
     @State var loadedKmlAnnotations: [String] = []
+    @State var shouldUpdateMap: Bool = true
     
     private static var mapPointsFetchRequest: NSFetchRequest<COTData> {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
@@ -483,6 +485,9 @@ struct MapView: UIViewRepresentable {
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_ADDED), object: nil, queue: nil, using: kmlChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_UPDATED), object: nil, queue: nil, using: kmlChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_REMOVED), object: nil, queue: nil, using: kmlChangeNotified)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_ADDED), object: nil, queue: nil, using: cotChangeNotified)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_UPDATED), object: nil, queue: nil, using: cotChangeNotified)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_REMOVED), object: nil, queue: nil, using: cotChangeNotified)
         
 //        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
 //        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
@@ -525,12 +530,31 @@ struct MapView: UIViewRepresentable {
     func updateUIView(_ view: MKMapView, context: Context) {
         view.mapType = MKMapType(rawValue: UInt(mapType))!
         view.showsTraffic = enableTrafficDisplay
-        updateAnnotations(from: view)
+    }
+    
+    private func appSceneChangeNotified(notification: Notification) {
+        TAKLogger.debug("[MapView] Notified of an App Scene change \(notification.debugDescription)")
+        if notification.name == Notification.Name(AppConstants.NOTIFY_APP_ACTIVE) {
+            shouldUpdateMap = true
+        } else {
+            shouldUpdateMap = false
+        }
     }
     
     private func kmlChangeNotified(notification: Notification) {
         TAKLogger.debug("[MapView] Notified of a KML change \(notification.debugDescription)")
-        updateKmlOverlays()
+        if shouldUpdateMap {
+            updateKmlOverlays()
+        }
+    }
+    
+    private func cotChangeNotified(notification: Notification) {
+        TAKLogger.debug("[MapView] Notified of a COT change \(notification.debugDescription)")
+        if shouldUpdateMap {
+            DispatchQueue.main.async {
+                updateAnnotations()
+            }
+        }
     }
     
     private func updateKmlOverlays() {
@@ -618,8 +642,7 @@ struct MapView: UIViewRepresentable {
         }
     }
     
-    private func updateAnnotations(from mapView: MKMapView) {
-        
+    private func updateAnnotations() {
         if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
             mapView.removeOverlay(activeBloodhound!)
             DispatchQueue.main.async {
