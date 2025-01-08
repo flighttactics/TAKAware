@@ -87,10 +87,12 @@ struct DataPackageEnrollment: View {
 struct ConnectionOptions: View {
     @Binding var isProcessingDataPackage: Bool
     @State var isShowingAlert = false
+    @ObservedObject var settingsStore = SettingsStore.global
     
     var body: some View {
         Group {
-            if(SettingsStore.global.takServerUrl != "") {
+            if(!isProcessingDataPackage && settingsStore.takServerUrl != "") {
+                ServerInformationDisplay()
                 Button(role: .destructive) {
                     SettingsStore.global.clearConnection()
                     isShowingAlert = true
@@ -106,6 +108,9 @@ struct ConnectionOptions: View {
         }
         .alert(isPresented: $isShowingAlert) {
             Alert(title: Text("Server Connection"), message: Text("The TAK Server Connection has been removed"), dismissButton: .default(Text("OK")))
+        }
+        .onAppear {
+            isProcessingDataPackage = false
         }
     }
 }
@@ -342,6 +347,7 @@ struct CertEnrollmentScreen: View {
                 HStack {
                     if(csrRequest.enrollmentStatus == .Succeeded) {
                         Button("Close", role: .none) {
+                            isProcessingDataPackage = false
                             dismiss()
                         }
                     } else {
@@ -386,6 +392,7 @@ struct CertEnrollmentScreen: View {
             }
         }
         .onAppear(perform: {
+            if(!isProcessingDataPackage) { isProcessingDataPackage = true }
             formServerURL = settingsStore.takServerUrl
             formServerPort = settingsStore.takServerPort
             formUsername = settingsStore.takServerUsername

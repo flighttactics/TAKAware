@@ -29,7 +29,6 @@ struct SettingsSheet: View {
                             Text("Server Information")
                     .font(.system(size: 14, weight: .medium))
                 ) {
-                    ServerInformationDisplay()
                     ConnectionOptions(isProcessingDataPackage: $isProcessingDataPackage)
                 }
                 Section {
