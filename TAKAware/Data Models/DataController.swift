@@ -44,7 +44,7 @@ class DataController: ObservableObject {
     var cleanUpTimer: Timer?
     
     private init() {
-        clearTransientItems()
+        clearStaleItems()
     }
     
     func startCleanUpTimer() {
