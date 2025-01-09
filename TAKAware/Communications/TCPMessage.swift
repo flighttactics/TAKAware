@@ -26,6 +26,7 @@ enum ConnectionStatus : String, CustomStringConvertible {
 
 class TCPMessage: NSObject, ObservableObject {
     var connection: NWConnection?
+    let parser = StreamParser()
     
     override init() {
         TAKLogger.debug("[TCPMessage]: Init")
@@ -209,7 +210,6 @@ class TCPMessage: NSObject, ObservableObject {
     func receive(content: Data?, error: NWError?, connection: NWConnection?) {
         guard let data = content else { return }
 
-        let parser = StreamParser()
         parser.parseCoTStream(dataStream: data)
 
         if SettingsStore.global.isConnectedToServer {

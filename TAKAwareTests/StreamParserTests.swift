@@ -45,4 +45,18 @@ final class StreamParserTests: TAKAwareTestCase {
         XCTAssertFalse(parsed["event"]["detail"]["archive"].description.isEmpty)
         XCTAssertTrue(parsed["event"]["detail"]["blahblah"].description.isEmpty)
     }
+    
+    func testParsesByBuildingFromMultipleStrings() throws {
+        let eventPartial1 = Data("<?xml version=\"1.0\"><event uid=\"1\">".utf8)
+        let eventPartial2 =  Data("</event><?xml version=\"1.0\"><event uid=".utf8)
+        let eventPartial3 =  Data("\"2\"></event>".utf8)
+        let initialEventsEmpty = parser.parse(dataStream: eventPartial1)
+        XCTAssertEqual(0, initialEventsEmpty.count, "Parser parsed invalid XML")
+        let firstEventCrossed = parser.parse(dataStream: eventPartial2)
+        XCTAssertEqual(1, firstEventCrossed.count, "Parser missed first event")
+        XCTAssertEqual(event1, String(firstEventCrossed[0]), "Parser split did not match event1")
+        let secondEventCrossed = parser.parse(dataStream: eventPartial3)
+        XCTAssertEqual(1, secondEventCrossed.count, "Parser missed second event")
+        XCTAssertEqual(event2, String(secondEventCrossed[0]), "Parser split did not match event2")
+    }
 }

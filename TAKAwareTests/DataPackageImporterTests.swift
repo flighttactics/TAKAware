@@ -35,12 +35,12 @@ final class DataPackageImporterTests: TAKAwareDataTestCase {
     }
     
     func testCreatesDatabaseEntryForThisPackage() {
-        let uid = UUID(uuidString: "dc772639-f6f2-4bcc-88b5-1d841d91cd14")!
+        let uid = "dc772639-f6f2-4bcc-88b5-1d841d91cd14"
         let context = DataController.shared.backgroundContext
         parser!.parse()
         context.performAndWait {
             let fetchCoT: NSFetchRequest<DataPackage> = DataPackage.fetchRequest()
-            fetchCoT.predicate = NSPredicate(format: "uid = %@", uid as NSUUID)
+            fetchCoT.predicate = NSPredicate(format: "dataPackageUid = %@", uid)
             let results = try? context.fetch(fetchCoT)
             XCTAssertNotNil(results?.first)
         }
