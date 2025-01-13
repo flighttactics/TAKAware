@@ -58,10 +58,14 @@ struct DataPackageDownloader: View {
                             // Then start the data package importer pointed to the file
                             dataPackageManager.importRemotePackage(missionPackage: package)
                         } label: {
-                            if(dataPackages.contains(where: { $0.originalFileHash == package.hash })) {
-                                Image(systemName: "checkmark.circle.fill")
+                            if dataPackageManager.isProcessingRemotePackage {
+                                loader
                             } else {
-                                Image(systemName: "square.and.arrow.down")
+                                if(dataPackages.contains(where: { $0.originalFileHash == package.hash })) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                } else {
+                                    Image(systemName: "square.and.arrow.down")
+                                }
                             }
                         }
                         

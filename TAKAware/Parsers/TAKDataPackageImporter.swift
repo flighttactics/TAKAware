@@ -53,19 +53,8 @@ class TAKDataPackageImporter: COTDataParser {
     func parse() {
         parser = DataPackageParser(fileLocation: archiveLocation, extractLocation: extractLocation)
         parser!.parse()
-        //let packageFiles = parser!.packageFiles
-        
-        // So now we have the package parsed, a list of the files, and the configuration
-        // We need to do a couple of things:
-        // 1) Create some sort of data store for this package we're importing
-        //    so we can manage it from the UI
-        // 2) Go through the files and import them, performing necessary actions
-        // 3) Make sure when we're importing them they're tied to this package
-        //    and marked as archived so they don't get wiped out
-        
         storeDataPackage()
         importFiles()
-        
         TAKLogger.debug("[TAKDataPackageImporter]: Completed Parsing")
     }
     

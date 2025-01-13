@@ -63,6 +63,7 @@ class DataPackageManager: APIRequestObject, ObservableObject {
     @Published var isLoading = false
     @Published var isSendingUpdate = false
     @Published var isFinishedProcessingRemotePackage = false
+    @Published var isProcessingRemotePackage = false
     @Published var remotePackageProcessStatus: String = ""
     let ANON_CHANNEL_NAME = "__ANON__"
     
@@ -158,7 +159,7 @@ class DataPackageManager: APIRequestObject, ObservableObject {
         TAKLogger.debug("[DataPackageManager] storeDataPackageResponse!")
         dataPackages = []
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
 
         do {
             if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
@@ -178,7 +179,20 @@ class DataPackageManager: APIRequestObject, ObservableObject {
                     let user: String = dataPackage["User"] as? String ?? "UNKNOWN USER"
                     
                     let dp = TAKMissionPackage(creator: creator, expiration: expiration, groups: groups, hash: hash, keywords: keywords, mimeType: mimeType, name: name, size: size, time: time, user: user)
-                    dataPackages.append(dp)
+                    
+                    let duplicate = dataPackages.first(where: { $0.name == dp.name })
+                    if duplicate != nil {
+                        let incomingTime = dp.time ?? Date.now
+                        let duplicateTime = duplicate?.time ?? Date.now
+                        if incomingTime > duplicateTime {
+                            dataPackages.removeAll(where: {$0.hash == duplicate?.hash})
+                            dataPackages.append(dp)
+                        } else {
+                            TAKLogger.debug("[DataPackageManager] Duplicate Data Package found but was older than existing (\(incomingTime) vs \(duplicateTime)) so ignoring")
+                        }
+                    } else {
+                        dataPackages.append(dp)
+                    }
                 }
             }
         } catch {
@@ -201,6 +215,7 @@ class DataPackageManager: APIRequestObject, ObservableObject {
     func importRemotePackage(missionPackage: TAKMissionPackage) {
         remotePackageProcessStatus = ""
         isFinishedProcessingRemotePackage = false
+        isProcessingRemotePackage = true
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.MISSION_PACKAGE_FILE_PATH)/\(missionPackage.hash)"
         TAKLogger.debug("[DataPackageManager] Requesting file from \(requestURLString)")
         let requestUrl = URL(string: requestURLString)!
@@ -225,6 +240,7 @@ class DataPackageManager: APIRequestObject, ObservableObject {
                 self.remotePackageProcessStatus = "Data package could not be processed \(error.debugDescription)"
             }
             self.isFinishedProcessingRemotePackage = true
+            self.isProcessingRemotePackage = false
         }
         task.resume()
     }
@@ -233,5 +249,7 @@ class DataPackageManager: APIRequestObject, ObservableObject {
         TAKLogger.error("[DataPackageManager]: Error while trying to retrieve data packages \(err)")
         isLoading = false
         isSendingUpdate = false
+        isFinishedProcessingRemotePackage = true
+        isProcessingRemotePackage = false
     }
 }
