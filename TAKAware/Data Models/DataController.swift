@@ -44,7 +44,7 @@ class DataController: ObservableObject {
     var cleanUpTimer: Timer?
     
     private init() {
-        clearTransientItems()
+        clearStaleItems()
     }
     
     func startCleanUpTimer() {
@@ -76,8 +76,8 @@ class DataController: ObservableObject {
     func updateMarker(id: String, title: String, remarks: String, cotType: String) {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
         fetchUser.predicate = NSPredicate(format: "id = %@", id)
-        backgroundContext.perform {
-            let results = try? self.backgroundContext.fetch(fetchUser)
+        persistentContainer.viewContext.perform {
+            let results = try? self.persistentContainer.viewContext.fetch(fetchUser)
             if results?.count == 0 {
                 TAKLogger.error("[DataController] Unable to locate marker with id \(id) for editing")
                 return
@@ -89,7 +89,7 @@ class DataController: ObservableObject {
                 mapPointData.archived = true // Always archive edited markers
                 if(mapPointData.hasChanges) {
                     do {
-                        try self.backgroundContext.save()
+                        try self.persistentContainer.viewContext.save()
                     } catch {
                         TAKLogger.error("[DataController] Invalid Data Context Save \(error)")
                     }
@@ -114,9 +114,9 @@ class DataController: ObservableObject {
         cotEvent.childNodes.append(cotPoint)
         cotEvent.childNodes.append(cotDetail)
         
-        backgroundContext.perform {
+        persistentContainer.viewContext.perform {
             let mapPointData: COTData!
-            mapPointData = COTData(context: self.backgroundContext)
+            mapPointData = COTData(context: self.persistentContainer.viewContext)
             mapPointData.id = UUID()
             mapPointData.cotUid = UUID().uuidString
             mapPointData.callsign = defaultCallsign
@@ -130,7 +130,7 @@ class DataController: ObservableObject {
             mapPointData.rawXml = cotEvent.toXml()
 
             do {
-                try self.backgroundContext.save()
+                try self.persistentContainer.viewContext.save()
             } catch {
                 TAKLogger.error("[DataController] Invalid Data Context Save \(error)")
             }
@@ -248,7 +248,7 @@ class DataController: ObservableObject {
     }
     
     func clearMap(query: NSPredicate) {
-        backgroundContext.perform {
+        persistentContainer.viewContext.perform {
             let fetch = COTData.fetchRequest()
             fetch.predicate = query
             fetch.includesPropertyValues = false
@@ -256,13 +256,13 @@ class DataController: ObservableObject {
             //request.resultType = .resultTypeObjectIDs
             
             do {
-                let result = try self.backgroundContext.fetch(fetch)
+                let result = try self.persistentContainer.viewContext.fetch(fetch)
                 let count = result.count
                 TAKLogger.debug("[DataController]: This query will impact \(count) records")
                 for row in result {
-                    self.backgroundContext.delete(row)
+                    self.persistentContainer.viewContext.delete(row)
                 }
-                try self.backgroundContext.save()
+                try self.persistentContainer.viewContext.save()
 //                let deleteResult = try dataContext.execute(request) as? NSBatchDeleteResult
 //                if let objectIDs = deleteResult?.result as? [NSManagedObjectID] {
 //                    // Merge the deletions into the app's managed object context.

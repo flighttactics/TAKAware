@@ -24,6 +24,16 @@ struct OnboardingView: View {
     @State var hasAskedPermissions = false
     @State var hasTriedToConnect = false
     @State var isProcessingDataPackage = false
+    @State var buttonNavText = "Next"
+    
+    var permissionsButtonText: String {
+        switch(locationManager.statusString) {
+        case "authorizedAlways":
+            return "Next"
+        default:
+            return "Skip"
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -76,7 +86,7 @@ struct OnboardingView: View {
                         
                         HStack {
                             Spacer()
-                            Button("Skip") {
+                            Button(permissionsButtonText) {
                                 currentStep = OnboardingStep.SetUserInformation
                             }
                             .buttonStyle(.borderedProminent)

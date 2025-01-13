@@ -27,4 +27,12 @@ class TAKAwareDataTestCase : TAKAwareTestCase {
         }
         TAKLogger.debug("***Clearing All Data Complete")
     }
+    
+    override func tearDown() async throws {
+        TAKLogger.debug("***Clearing All Data")
+        Task {
+            await DataController.shared.clearAll()
+        }
+        TAKLogger.debug("***Clearing All Data Complete")
+    }
 }

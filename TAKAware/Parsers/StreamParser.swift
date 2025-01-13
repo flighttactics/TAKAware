@@ -13,13 +13,25 @@ import SWXMLHash
 class StreamParser: COTDataParser {
     
     static let STREAM_DELIMTER = "</event>"
+    var currentDataStream: Data = Data()
     
     func parse(dataStream: Data?) -> Array<String> {
-        guard let data = dataStream else { return [] }
-        let str = String(decoding: data, as: UTF8.self)
-        return str.components(separatedBy: StreamParser.STREAM_DELIMTER)
-            .filter { !$0.isEmpty }
-            .map { "\($0)\(StreamParser.STREAM_DELIMTER)" }
+        var events: [String] = []
+        guard let data = dataStream else { return events }
+        currentDataStream.append(data)
+        var str = String(decoding: currentDataStream, as: UTF8.self)
+        while str.contains(StreamParser.STREAM_DELIMTER) {
+            let splitEvent = str.split(separator: StreamParser.STREAM_DELIMTER, maxSplits: 1)
+            let cotEvent = splitEvent.first!
+            var restOfString = ""
+            if splitEvent.count > 1 {
+                restOfString = String(splitEvent.last!)
+            }
+            events.append("\(cotEvent)\(StreamParser.STREAM_DELIMTER)")
+            str = restOfString
+        }
+        currentDataStream = Data(str.utf8)
+        return events
     }
     
     func parseCoTStream(dataStream: Data?) {

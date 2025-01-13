@@ -643,6 +643,8 @@ struct MapView: UIViewRepresentable {
     }
     
     private func updateAnnotations() {
+        let origUpdateVal = shouldUpdateMap
+        shouldUpdateMap = false
         if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
             mapView.removeOverlay(activeBloodhound!)
             DispatchQueue.main.async {
@@ -724,6 +726,7 @@ struct MapView: UIViewRepresentable {
             let newOverlays = newAnnotations.map { $0.shape }.filter { $0 != nil } as! [MKOverlay]
             mapView.addOverlays(newOverlays)
         }
+        shouldUpdateMap = origUpdateVal
     }
     
     func addMarker(at: CLLocationCoordinate2D) {
