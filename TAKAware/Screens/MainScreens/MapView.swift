@@ -189,6 +189,33 @@ class COTMapPolyline: MKPolyline {
     var labelsOn: Bool = true
 }
 
+class COTImageOverlay: NSObject, MKOverlay {
+    var coordinate: CLLocationCoordinate2D
+    var boundingMapRect: MKMapRect
+    var overlayImage: UIImage
+    var alpha: Double = 1.0
+    
+    init(image: UIImage, center: CLLocationCoordinate2D, boundingRect: MKMapRect) {
+        coordinate = center
+        boundingMapRect = boundingRect
+        overlayImage = image
+    }
+    
+}
+
+class COTImageOverlayRenderer: MKOverlayRenderer {
+    override func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
+        guard let overlay = self.overlay as? COTImageOverlay else {
+            return
+        }
+
+        let rect = self.rect(for: overlay.boundingMapRect)
+        UIGraphicsPushContext(context)
+        overlay.overlayImage.draw(in: rect, blendMode: .normal, alpha: overlay.alpha)
+        UIGraphicsPopContext()
+    }
+}
+
 class COTMapBloodhoundLine: MKGeodesicPolyline {}
 
 final class MapPointAnnotation: NSObject, MKAnnotation {
@@ -622,6 +649,48 @@ struct MapView: UIViewRepresentable {
                         annotationUpdatedCallback(annotation: mpa)
                     }
                 }
+                
+                kmlData.groundOverlays.forEach { groundOverlay in
+                    guard let icon = groundOverlay.icon,
+                          let latLongBox = groundOverlay.latLonBox,
+                          let iconBasePath = kmlData.iconBasePath
+                    else {
+                        return
+                    }
+                    if icon.href.hasPrefix("http") {
+                        TAKLogger.debug("[MapView] KML GroundOverlay image is using http - skipping")
+                        return
+                    }
+                    
+                    let imgUrl = iconBasePath.appendingPathComponent(icon.href)
+                    let fileManager = FileManager()
+                    if fileManager.fileExists(atPath: imgUrl.path()) {
+                        do {
+                            let imgData = try Data(contentsOf: imgUrl)
+                            let img = UIImage(data: imgData)!
+                            let coordinate1 = CLLocationCoordinate2DMake(latLongBox.north,latLongBox.east);
+                            let coordinate2 = CLLocationCoordinate2DMake(latLongBox.south,latLongBox.west);
+                            let p1 = MKMapPoint(coordinate1)
+                            let p2 = MKMapPoint(coordinate2)
+                            let mapRect = MKMapRect(x: fmin(p1.x,p2.x), y: fmin(p1.y,p2.y), width: fabs(p1.x-p2.x), height: fabs(p1.y-p2.y));
+                            let imgOverlay = COTImageOverlay(image: img, center: mapRect.origin.coordinate, boundingRect: mapRect)
+                            let mpa = MapPointAnnotation(id: UUID().uuidString, title: kmlData.docTitle, icon: "", coordinate: mapRect.origin.coordinate, remarks: kmlData.docDescription)
+                            mpa.isKML = true
+                            mpa.groupID = fileId
+                            DispatchQueue.main.async {
+                                mapView.addAnnotation(mpa)
+                                mpa.shape = imgOverlay
+                                mapView.addOverlay(imgOverlay)
+                                annotationUpdatedCallback(annotation: mpa)
+                            }
+                            
+                        } catch {
+                            TAKLogger.error("[MapView] Error loading KML GroundOverlay icon \(error)")
+                        }
+                    } else {
+                        TAKLogger.debug("[MapView] KML GroundOverlay icon was not located at \(imgUrl.path())")
+                    }
+                }
             }
             
             let current = Set(loadedKmlAnnotations)
@@ -990,6 +1059,8 @@ struct MapView: UIViewRepresentable {
                 renderer.lineWidth = 3.0
                 renderer.strokeColor = UIColor(red: 0.729, green: 0.969, blue: 0.2, alpha: 1) // #baf733
                 return renderer
+            case let overlay as COTImageOverlay:
+                return COTImageOverlayRenderer(overlay: overlay)
             case let overlay as MKGeodesicPolyline:
                 let renderer = MKPolylineRenderer(polyline: overlay)
                 renderer.lineWidth = 3.0

@@ -11,6 +11,10 @@ class KMLData {
     let kmlRecord: KMLFile
     let overlayDirectory = AppConstants.appDirectoryFor(.overlays)
     var placemarks: [KMLPlacemark] = []
+    var groundOverlays: [KMLGroundOverlay] = []
+    var iconBasePath: URL?
+    var docTitle: String = ""
+    var docDescription: String = ""
     
     init(kmlRecord: KMLFile) {
         self.kmlRecord = kmlRecord
@@ -30,6 +34,7 @@ class KMLData {
                     TAKLogger.error("[KMLData] No KMLs found in the KMZ directory \(kmzDirectory.relativePath)")
                     return
                 }
+                iconBasePath = kmzDirectory
                 filePath = kmzDirectory.appending(path: kmlPath!)
             } catch {
                 TAKLogger.error("[KMLData] Unable to retrieve files from KMZ path \(error)")
@@ -37,6 +42,7 @@ class KMLData {
             }
         } else if kmlRecord.filePath != nil {
             filePath = kmlRecord.filePath!
+            iconBasePath = filePath // This is a weird case because a KML typically wouldn't have an icon with it
         } else {
             TAKLogger.debug("[KMLData] KMLRecord had no file path")
             return
@@ -53,6 +59,9 @@ class KMLData {
             let parser = KMLParser()
             parser.parse(kmlString: string)
             self.placemarks = parser.placemarks
+            self.groundOverlays = parser.groundOverlays
+            self.docTitle = parser.document?.name ?? ""
+            self.docDescription = parser.document?.description ?? ""
         } else {
             TAKLogger.error("[MapView] Unable to decode KML from file")
         }
