@@ -68,8 +68,13 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
             cotDetail.childNodes.append(COTUserIcon(iconsetPath: annotation.icon!))
         }
         
-        if annotation.isShape && annotation.shape != nil {
-            let shape = annotation.shape!
+        // TODO: Modify this to send KMLs appropriately
+        // Right now a KML gets represented as a shape, so we'd send it
+        // as a shape rather than a KML. This is problematic for MultiGeometry
+        // and GroundOverlays since they require more than a single node
+        // or additional files (like images)
+        if annotation.shapes.count == 1 {
+            let shape = annotation.shapes.first!
             switch shape {
             case let shape as COTMapCircle:
                 let cotEllipse = COTEllipse(major: shape.major, minor: shape.minor, angle: shape.angle)

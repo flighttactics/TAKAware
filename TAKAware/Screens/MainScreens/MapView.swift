@@ -229,7 +229,7 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var color: UIColor?
     dynamic var remarks: String?
     dynamic var videoURL: URL?
-    dynamic var shape: MKOverlay?
+    dynamic var shapes: [MKOverlay] = []
     dynamic var isKML: Bool = false
     dynamic var groupID: UUID?
     
@@ -244,11 +244,19 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
     }
     
     var isShape: Bool {
-        shape != nil
+        !shapes.isEmpty
     }
     
-    init(mapPoint: COTData, shape: MKOverlay? = nil) {
-        self.shape = shape
+    convenience init(mapPoint: COTData, shape: MKOverlay? = nil) {
+        var shapes: [MKOverlay] = []
+        if shape != nil {
+            shapes.append(shape!)
+        }
+        self.init(mapPoint: mapPoint, shapes: shapes)
+    }
+    
+    init(mapPoint: COTData, shapes: [MKOverlay]) {
+        self.shapes = shapes
         self.id = mapPoint.id?.uuidString ?? UUID().uuidString
         self.title = mapPoint.callsign ?? "NO CALLSIGN"
         self.icon = mapPoint.icon ?? ""
@@ -285,7 +293,7 @@ class SituationalAnnotationView: MKAnnotationView {
         self.mapPointAnnotation = annotation
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         self.canShowCallout = true
-        if annotation.shape == nil {
+        if !annotation.isShape {
             setUpLabel()
         }
         setUpMenu()
@@ -293,7 +301,7 @@ class SituationalAnnotationView: MKAnnotationView {
     
     func updateForAnnotation(annotation: MapPointAnnotation) {
         self.mapPointAnnotation = annotation
-        if annotation.shape == nil {
+        if !annotation.isShape {
             setUpLabel()
         }
         setUpMenu()
@@ -379,8 +387,9 @@ class SituationalAnnotationView: MKAnnotationView {
         if(mapView.parentView.conflictedItems.isEmpty) {
             mapView.parentView.closeDeconflictionView()
         }
-        if mapView.parentView.currentSelectedAnnotation?.shape != nil {
-            mapView.mapView.removeOverlay(mapView.parentView.currentSelectedAnnotation!.shape!)
+        let removeShapes = mapView.parentView.currentSelectedAnnotation?.isShape ?? false
+        if removeShapes {
+            mapView.mapView.removeOverlays(mapView.parentView.currentSelectedAnnotation!.shapes)
         }
         mapView.parentView.currentSelectedAnnotation = nil
         DispatchQueue.main.async {
@@ -531,7 +540,7 @@ struct MapView: UIViewRepresentable {
     }
     
     func prepareAnnotationView(annotation: MapPointAnnotation, annotationView: MKAnnotationView) {
-        if annotation.shape == nil {
+        if !annotation.isShape {
             let iconSetPath = annotation.icon ?? ""
             let icon = IconData.iconFor(type2525: annotation.cotType ?? "", iconsetPath: iconSetPath)
             var pointIcon: UIImage = icon.icon
@@ -606,7 +615,7 @@ struct MapView: UIViewRepresentable {
                     } as! [MapPointAnnotation]
                     TAKLogger.debug("[MapView] Found \(existingAnnotations.count) existing annotations for this KML")
                     if !kmlRecord.visible {
-                        let overlaysToRemove = existingAnnotations.map { $0.shape }.filter { $0 != nil } as! [MKOverlay]
+                        let overlaysToRemove = Array(existingAnnotations.map { $0.shapes }.joined()) as! [MKOverlay]
                         TAKLogger.debug("[MapView] KML marked as not visible, removing \(existingAnnotations.count) annotations and \(overlaysToRemove.count) overlays")
                         DispatchQueue.main.async {
                             mapView.removeOverlays(overlaysToRemove)
@@ -643,8 +652,8 @@ struct MapView: UIViewRepresentable {
                     DispatchQueue.main.async {
                         mapView.addAnnotation(mpa)
                         if let overlayShape = shape as? MKOverlay {
-                            mpa.shape = overlayShape
-                            mapView.addOverlay(mpa.shape!)
+                            mpa.shapes = [overlayShape]
+                            mapView.addOverlays(mpa.shapes)
                         }
                         annotationUpdatedCallback(annotation: mpa)
                     }
@@ -679,7 +688,7 @@ struct MapView: UIViewRepresentable {
                             mpa.groupID = fileId
                             DispatchQueue.main.async {
                                 mapView.addAnnotation(mpa)
-                                mpa.shape = imgOverlay
+                                mpa.shapes = [imgOverlay]
                                 mapView.addOverlay(imgOverlay)
                                 annotationUpdatedCallback(annotation: mpa)
                             }
@@ -701,7 +710,7 @@ struct MapView: UIViewRepresentable {
                 let existingAnnotations: [MapPointAnnotation] = mapView.annotations.filter {
                     ($0 as? MapPointAnnotation)?.groupID?.uuidString == fileId
                 } as! [MapPointAnnotation]
-                let overlaysToRemove = existingAnnotations.map { $0.shape }.filter { $0 != nil } as! [MKOverlay]
+                let overlaysToRemove = Array(existingAnnotations.map { $0.shapes }.joined()) as! [MKOverlay]
                 TAKLogger.debug("[MapView] Loaded KML file deleted. Removing \(existingAnnotations.count) annotations and \(overlaysToRemove.count) overlays")
                 DispatchQueue.main.async {
                     mapView.removeOverlays(overlaysToRemove)
@@ -743,7 +752,7 @@ struct MapView: UIViewRepresentable {
                     bloodhoundDeselected()
                 }
                 
-                let overlaysToRemove = removableAnnotations.map { ($0 as! MapPointAnnotation).shape }.filter { $0 != nil } as! [MKOverlay]
+                let overlaysToRemove = Array(removableAnnotations.map { ($0 as! MapPointAnnotation).shapes }.joined()) as! [MKOverlay]
                 mapView.removeOverlays(overlaysToRemove)
                 
                 mapView.removeAnnotations(removableAnnotations)
@@ -792,7 +801,7 @@ struct MapView: UIViewRepresentable {
             let newAnnotations = newMapPoints.map { $0.annotation }
             mapView.addAnnotations(newAnnotations)
             
-            let newOverlays = newAnnotations.map { $0.shape }.filter { $0 != nil } as! [MKOverlay]
+            let newOverlays = Array(newAnnotations.map { $0.shapes }.joined()) as! [MKOverlay]
             mapView.addOverlays(newOverlays)
         }
         shouldUpdateMap = origUpdateVal
