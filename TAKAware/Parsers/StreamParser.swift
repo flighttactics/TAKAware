@@ -13,6 +13,7 @@ import SWXMLHash
 class StreamParser: COTDataParser {
     
     static let STREAM_DELIMTER = "</event>"
+    static let PB_MAGIC_BYTE: UInt8 = 0xbf
     var currentDataStream: Data = Data()
     
     func parse(dataStream: Data?) -> Array<String> {

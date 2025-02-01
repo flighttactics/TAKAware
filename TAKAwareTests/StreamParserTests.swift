@@ -8,6 +8,7 @@
 import Foundation
 import XCTest
 import SWXMLHash
+import SwiftProtobuf
 @testable import TAKAware
 
 final class StreamParserTests: TAKAwareTestCase {
@@ -59,4 +60,17 @@ final class StreamParserTests: TAKAwareTestCase {
         XCTAssertEqual(1, secondEventCrossed.count, "Parser missed second event")
         XCTAssertEqual(event2, String(secondEventCrossed[0]), "Parser split did not match event2")
     }
+    
+//    func testParsesProtobufIntoEvents() throws {
+//        var pbTAKMessage = Atakmap_Commoncommo_Protobuf_V1_TakMessage()
+//        var pbTAKEvent = Atakmap_Commoncommo_Protobuf_V1_CotEvent()
+//        var dataMessage = Data()
+//        dataMessage.append(contentsOf: [StreamParser.PB_MAGIC_BYTE])
+//        pbTAKEvent.uid = UUID().uuidString
+//        pbTAKMessage.cotEvent = pbTAKEvent
+//        let pbMessageData = try pbTAKMessage.serializedData()
+//        dataMessage.append(pbMessageData)
+//        let events = parser.parse(dataStream: dataMessage)
+//        XCTAssertEqual(1, events.count, "Parser did not handle protobuf properly")
+//    }
 }

@@ -46,6 +46,18 @@
 		A53F59EC2D0FD58900DFD794 /* SettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59E12D0FD58900DFD794 /* SettingsSheet.swift */; };
 		A53F59ED2D0FD58900DFD794 /* Sheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59E22D0FD58900DFD794 /* Sheet.swift */; };
 		A53F59EE2D0FD58900DFD794 /* VideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59E32D0FD58900DFD794 /* VideoPlayerView.swift */; };
+		A54312DD2D4E720000033230 /* group.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54312D52D4E720000033230 /* group.pb.swift */; };
+		A54312DE2D4E720000033230 /* contact.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54312D22D4E720000033230 /* contact.pb.swift */; };
+		A54312DF2D4E720000033230 /* takmessage.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54312D92D4E720000033230 /* takmessage.pb.swift */; };
+		A54312E02D4E720000033230 /* takcontrol.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54312D82D4E720000033230 /* takcontrol.pb.swift */; };
+		A54312E12D4E720000033230 /* cotevent.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54312D32D4E720000033230 /* cotevent.pb.swift */; };
+		A54312E22D4E720000033230 /* status.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54312D72D4E720000033230 /* status.pb.swift */; };
+		A54312E32D4E720000033230 /* takv.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54312DA2D4E720000033230 /* takv.pb.swift */; };
+		A54312E42D4E720000033230 /* track.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54312DB2D4E720000033230 /* track.pb.swift */; };
+		A54312E52D4E720000033230 /* detail.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54312D42D4E720000033230 /* detail.pb.swift */; };
+		A54312E62D4E720000033230 /* precisionlocation.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54312D62D4E720000033230 /* precisionlocation.pb.swift */; };
+		A54312E82D4E75F700033230 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = A54312E72D4E75F700033230 /* SwiftProtobuf */; };
+		A54312EA2D4E75F700033230 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = A54312E92D4E75F700033230 /* SwiftProtobufPluginLibrary */; };
 		A54F70872AB0AEA400D8C541 /* DataPackageParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F70862AB0AEA400D8C541 /* DataPackageParserTests.swift */; };
 		A54F70892AB0C40B00D8C541 /* TCPMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A54F70882AB0C40B00D8C541 /* TCPMessageTests.swift */; };
 		A5582CC32AD5CB4600DE0D5C /* TAKAwareTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5582CC22AD5CB4600DE0D5C /* TAKAwareTestCase.swift */; };
@@ -3466,7 +3478,7 @@
 		A52BE8F82D15F6F400E82414 /* KMLOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLOptions.swift; sourceTree = "<group>"; };
 		A52BE8FA2D15FAA600E82414 /* KMLImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLImporter.swift; sourceTree = "<group>"; };
 		A52BE8FC2D16075C00E82414 /* KMLImporterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLImporterTests.swift; sourceTree = "<group>"; };
-		A52BE8FE2D160C8900E82414 /* KMLLinearRing.kml */ = {isa = PBXFileReference; lastKnownFileType = text; path = KMLLinearRing.kml; sourceTree = "<group>"; };
+		A52BE8FE2D160C8900E82414 /* KMLLinearRing.kml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KMLLinearRing.kml; sourceTree = "<group>"; };
 		A52BE9002D160D3A00E82414 /* KMLLineString.kml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KMLLineString.kml; sourceTree = "<group>"; };
 		A52BE9012D160D3A00E82414 /* KMLPoint.kml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KMLPoint.kml; sourceTree = "<group>"; };
 		A52BE9022D160D3A00E82414 /* KMLPolygon.kml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KMLPolygon.kml; sourceTree = "<group>"; };
@@ -3481,6 +3493,16 @@
 		A53F59E12D0FD58900DFD794 /* SettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheet.swift; sourceTree = "<group>"; };
 		A53F59E22D0FD58900DFD794 /* Sheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheet.swift; sourceTree = "<group>"; };
 		A53F59E32D0FD58900DFD794 /* VideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerView.swift; sourceTree = "<group>"; };
+		A54312D22D4E720000033230 /* contact.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = contact.pb.swift; sourceTree = "<group>"; };
+		A54312D32D4E720000033230 /* cotevent.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cotevent.pb.swift; sourceTree = "<group>"; };
+		A54312D42D4E720000033230 /* detail.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = detail.pb.swift; sourceTree = "<group>"; };
+		A54312D52D4E720000033230 /* group.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = group.pb.swift; sourceTree = "<group>"; };
+		A54312D62D4E720000033230 /* precisionlocation.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = precisionlocation.pb.swift; sourceTree = "<group>"; };
+		A54312D72D4E720000033230 /* status.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = status.pb.swift; sourceTree = "<group>"; };
+		A54312D82D4E720000033230 /* takcontrol.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = takcontrol.pb.swift; sourceTree = "<group>"; };
+		A54312D92D4E720000033230 /* takmessage.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = takmessage.pb.swift; sourceTree = "<group>"; };
+		A54312DA2D4E720000033230 /* takv.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = takv.pb.swift; sourceTree = "<group>"; };
+		A54312DB2D4E720000033230 /* track.pb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = track.pb.swift; sourceTree = "<group>"; };
 		A54F70862AB0AEA400D8C541 /* DataPackageParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackageParserTests.swift; sourceTree = "<group>"; };
 		A54F70882AB0C40B00D8C541 /* TCPMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPMessageTests.swift; sourceTree = "<group>"; };
 		A5582CC22AD5CB4600DE0D5C /* TAKAwareTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKAwareTestCase.swift; sourceTree = "<group>"; };
@@ -6857,7 +6879,9 @@
 				A5FB4E622A8FDF430034966D /* X509 in Frameworks */,
 				A507C0742C1BECE80022BB0F /* SwiftTAK in Frameworks */,
 				A56679832C04DACD00C453DC /* NIOSSL in Frameworks */,
+				A54312EA2D4E75F700033230 /* SwiftProtobufPluginLibrary in Frameworks */,
 				B6C8997D4C1B298C733111DC /* Pods_TAKAware.framework in Frameworks */,
+				A54312E82D4E75F700033230 /* SwiftProtobuf in Frameworks */,
 				A5702A432C205772008E1763 /* CodeScanner in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6941,6 +6965,23 @@
 				A53F59E32D0FD58900DFD794 /* VideoPlayerView.swift */,
 			);
 			path = Sheets;
+			sourceTree = "<group>";
+		};
+		A54312DC2D4E720000033230 /* takproto-swift */ = {
+			isa = PBXGroup;
+			children = (
+				A54312D22D4E720000033230 /* contact.pb.swift */,
+				A54312D32D4E720000033230 /* cotevent.pb.swift */,
+				A54312D42D4E720000033230 /* detail.pb.swift */,
+				A54312D52D4E720000033230 /* group.pb.swift */,
+				A54312D62D4E720000033230 /* precisionlocation.pb.swift */,
+				A54312D72D4E720000033230 /* status.pb.swift */,
+				A54312D82D4E720000033230 /* takcontrol.pb.swift */,
+				A54312D92D4E720000033230 /* takmessage.pb.swift */,
+				A54312DA2D4E720000033230 /* takv.pb.swift */,
+				A54312DB2D4E720000033230 /* track.pb.swift */,
+			);
+			path = "takproto-swift";
 			sourceTree = "<group>";
 		};
 		A55ABF432ABDBF7600195AB7 /* SettingsScreens */ = {
@@ -10337,11 +10378,11 @@
 		A5D8D38D2A53B0FB002F0E3E /* TAKAwareTests */ = {
 			isa = PBXGroup;
 			children = (
+				A5FB4E6C2AAA483B0034966D /* Test Files */,
 				A5A1F9E32D3164A8009AA951 /* DataPackageManagerTests.swift */,
 				A52BE8FC2D16075C00E82414 /* KMLImporterTests.swift */,
 				A52BE8F62D15AAC500E82414 /* KMLParserTests.swift */,
 				A5CF821E2CE67CC800CBE744 /* DataPackageImporterTests.swift */,
-				A5FB4E6C2AAA483B0034966D /* Test Files */,
 				A5FB4E6A2AA751890034966D /* CertificateSigningRequestTests.swift */,
 				A5FB4E772AAA49D30034966D /* TestConstants.swift */,
 				A54F70862AB0AEA400D8C541 /* DataPackageParserTests.swift */,
@@ -10426,6 +10467,7 @@
 				A5B312B92C38C5A6007B3914 /* COTData.xcdatamodeld */,
 				A5B312C02C397AC5007B3914 /* DataController.swift */,
 				A5B312C62C39CAAF007B3914 /* IconData.swift */,
+				A54312DC2D4E720000033230 /* takproto-swift */,
 			);
 			path = "Data Models";
 			sourceTree = "<group>";
@@ -10502,6 +10544,8 @@
 				A507C0732C1BECE80022BB0F /* SwiftTAK */,
 				A5702A422C205772008E1763 /* CodeScanner */,
 				A5B312C42C39CA91007B3914 /* SQLite */,
+				A54312E72D4E75F700033230 /* SwiftProtobuf */,
+				A54312E92D4E75F700033230 /* SwiftProtobufPluginLibrary */,
 			);
 			productName = "TAK Spike";
 			productReference = A5D8D37A2A53B0F9002F0E3E /* TAKAware.app */;
@@ -10588,6 +10632,7 @@
 				A507C0722C1BECE80022BB0F /* XCRemoteSwiftPackageReference "SwiftTAK" */,
 				A5702A412C205772008E1763 /* XCRemoteSwiftPackageReference "CodeScanner" */,
 				A5B312C32C39CA91007B3914 /* XCRemoteSwiftPackageReference "SQLite" */,
+				A51C92B92D4DCD0A007338F7 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 			);
 			productRefGroup = A5D8D37B2A53B0F9002F0E3E /* Products */;
 			projectDirPath = "";
@@ -14018,6 +14063,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A54312DD2D4E720000033230 /* group.pb.swift in Sources */,
+				A54312DE2D4E720000033230 /* contact.pb.swift in Sources */,
+				A54312DF2D4E720000033230 /* takmessage.pb.swift in Sources */,
+				A54312E02D4E720000033230 /* takcontrol.pb.swift in Sources */,
+				A54312E12D4E720000033230 /* cotevent.pb.swift in Sources */,
+				A54312E22D4E720000033230 /* status.pb.swift in Sources */,
+				A54312E32D4E720000033230 /* takv.pb.swift in Sources */,
+				A54312E42D4E720000033230 /* track.pb.swift in Sources */,
+				A54312E52D4E720000033230 /* detail.pb.swift in Sources */,
+				A54312E62D4E720000033230 /* precisionlocation.pb.swift in Sources */,
 				A5D8D3802A53B0F9002F0E3E /* MainScreen.swift in Sources */,
 				A55ABF4F2ABDC0A800195AB7 /* TAKOptions.swift in Sources */,
 				A52BE9092D17E01500E82414 /* KMLFile+Extension.swift in Sources */,
@@ -14467,6 +14522,14 @@
 				kind = branch;
 			};
 		};
+		A51C92B92D4DCD0A007338F7 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-protobuf.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.28.2;
+			};
+		};
 		A5702A412C205772008E1763 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twostraws/CodeScanner";
@@ -14522,6 +14585,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A507C0722C1BECE80022BB0F /* XCRemoteSwiftPackageReference "SwiftTAK" */;
 			productName = SwiftTAK;
+		};
+		A54312E72D4E75F700033230 /* SwiftProtobuf */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A51C92B92D4DCD0A007338F7 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			productName = SwiftProtobuf;
+		};
+		A54312E92D4E75F700033230 /* SwiftProtobufPluginLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A51C92B92D4DCD0A007338F7 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			productName = SwiftProtobufPluginLibrary;
 		};
 		A56679822C04DACD00C453DC /* NIOSSL */ = {
 			isa = XCSwiftPackageProductDependency;
