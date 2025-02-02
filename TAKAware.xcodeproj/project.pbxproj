@@ -3401,7 +3401,6 @@
 		A5D8D3992A53B0FB002F0E3E /* TAKAwareUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D3982A53B0FB002F0E3E /* TAKAwareUITests.swift */; };
 		A5D8D39B2A53B0FB002F0E3E /* TAKAwareUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D39A2A53B0FB002F0E3E /* TAKAwareUITestsLaunchTests.swift */; };
 		A5D8D3A82A53B465002F0E3E /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D8D3A72A53B465002F0E3E /* LocationManager.swift */; };
-		A5E2D0BB2C3F1E47009FCD51 /* ChannelOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2D0BA2C3F1E47009FCD51 /* ChannelOptions.swift */; };
 		A5E2D0BD2C3F218B009FCD51 /* ChannelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2D0BC2C3F218B009FCD51 /* ChannelManager.swift */; };
 		A5E2D0C02C3F8D84009FCD51 /* ChannelManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E2D0BF2C3F8D84009FCD51 /* ChannelManagerTests.swift */; };
 		A5E7B00B2A70B5FA00D9203F /* TAKDataPackageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E7B00A2A70B5F900D9203F /* TAKDataPackageParser.swift */; };
@@ -6850,7 +6849,6 @@
 		A5D8D3982A53B0FB002F0E3E /* TAKAwareUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKAwareUITests.swift; sourceTree = "<group>"; };
 		A5D8D39A2A53B0FB002F0E3E /* TAKAwareUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKAwareUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A5D8D3A72A53B465002F0E3E /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		A5E2D0BA2C3F1E47009FCD51 /* ChannelOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelOptions.swift; sourceTree = "<group>"; };
 		A5E2D0BC2C3F218B009FCD51 /* ChannelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelManager.swift; sourceTree = "<group>"; };
 		A5E2D0BF2C3F8D84009FCD51 /* ChannelManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelManagerTests.swift; sourceTree = "<group>"; };
 		A5E7B00A2A70B5F900D9203F /* TAKDataPackageParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKDataPackageParser.swift; sourceTree = "<group>"; };
@@ -6997,7 +6995,6 @@
 				A55ABF522ABDC11900195AB7 /* AboutInformation.swift */,
 				A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */,
 				A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */,
-				A5E2D0BA2C3F1E47009FCD51 /* ChannelOptions.swift */,
 				A578E42B2C548CFC001978D4 /* DataSyncMissions.swift */,
 			);
 			path = SettingsScreens;
@@ -14133,7 +14130,6 @@
 				A50C5F5B2A5F92FF001E52E6 /* SettingsStore.swift in Sources */,
 				4630FD192B5071BD00988ED4 /* String+Extension.swift in Sources */,
 				4630FD1A2B5071BD00988ED4 /* ChatViewModel.swift in Sources */,
-				A5E2D0BB2C3F1E47009FCD51 /* ChannelOptions.swift in Sources */,
 				A578E4382C55B3E1001978D4 /* DataSyncManager.swift in Sources */,
 				A52BE8F92D15F6F900E82414 /* KMLOptions.swift in Sources */,
 				A5B312CE2C39DD38007B3914 /* StreamParser.swift in Sources */,
@@ -14318,7 +14314,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 81;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14362,7 +14358,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 81;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14402,7 +14398,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 81;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14423,7 +14419,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 81;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14442,7 +14438,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 81;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
@@ -14459,7 +14455,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 81;
+				CURRENT_PROJECT_VERSION = 83;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;

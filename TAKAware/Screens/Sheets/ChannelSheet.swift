@@ -9,23 +9,75 @@ import Foundation
 import SwiftTAK
 import SwiftUI
 
+struct ChannelOptions: View {
+    var body: some View {
+        NavigationLink(destination: ChannelOptionsDetail()) {
+            Text("Channel Options")
+        }
+    }
+}
+
+struct ChannelOptionsDetail: View {
+    @Environment(\.dismiss) var dismiss
+    @StateObject var settingsStore: SettingsStore = SettingsStore.global
+    @StateObject var channelManager: ChannelManager = ChannelManager()
+    @State var channelState = true
+    
+    var body: some View {
+        List {
+            if(settingsStore.takServerUrl.isEmpty) {
+                Text("Not connected to a server")
+            } else if(channelManager.isLoading) {
+                HStack {
+                    Text("Retrieving Channels")
+                    ProgressView()
+                }
+            } else if(channelManager.activeChannels.isEmpty) {
+                Text("No Channels Available for \(settingsStore.takServerUrl)")
+            } else {
+                ForEach(channelManager.activeChannels, id:\.name) { channel in
+                    VStack {
+                        HStack {
+                            Button {
+                                channelManager.toggleChannel(channel: channel)
+                            } label: {
+                                if(channelManager.isSendingUpdate) {
+                                    ProgressView()
+                                        .padding(.trailing, 5)
+                                } else if(channel.active) {
+                                    Image(systemName: "eye.fill")
+                                } else {
+                                    Image(systemName: "eye.slash")
+                                }
+                                
+                            }
+                            Text(channel.name)
+                        }
+                    }
+                    .padding(.top, 20)
+                }
+            }
+        }
+        .onAppear {
+            channelManager.retrieveChannels()
+        }
+        .navigationTitle("Channel Options")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Dismiss") {
+                    dismiss()
+                }
+            }
+        }
+    }
+}
+
 struct ChannelSheet: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
     @StateObject var channelManager: ChannelManager = ChannelManager()
-    @State private var isRotating = 0.0
     @State var channelState = true
-    
-    var loader: some View {
-        return Image(systemName: "arrowshape.turn.up.right.circle")
-            .rotationEffect(.degrees(isRotating))
-            .onAppear {
-                withAnimation(.linear(duration: 1)
-                        .speed(0.1).repeatForever(autoreverses: false)) {
-                    isRotating = 360.0
-                }
-            }
-    }
 
     var body: some View {
         NavigationView {
@@ -35,7 +87,7 @@ struct ChannelSheet: View {
                 } else if(channelManager.isLoading) {
                     HStack {
                         Text("Retrieving Channels")
-                        loader
+                        ProgressView()
                     }
                 } else if(channelManager.activeChannels.isEmpty) {
                     Text("No Channels Available for \(settingsStore.takServerUrl)")
@@ -47,7 +99,8 @@ struct ChannelSheet: View {
                                     channelManager.toggleChannel(channel: channel)
                                 } label: {
                                     if(channelManager.isSendingUpdate) {
-                                        loader
+                                        ProgressView()
+                                            .padding(.trailing, 5)
                                     } else if(channel.active) {
                                         Image(systemName: "eye.fill")
                                     } else {
