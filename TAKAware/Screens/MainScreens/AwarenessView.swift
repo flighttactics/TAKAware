@@ -139,8 +139,8 @@ struct AwarenessView: View {
 
             Group {
                 Button(action: { bloodhoundDeselectedCallback() }) {
-                    navBarImage(imageName: "bloodhoundsvg")
-                        .colorMultiply((isAcquiringBloodhoundTarget ? .red : .yellow))
+                    navBarImage(imageName: "bloodhound")
+                        .colorMultiply((isAcquiringBloodhoundTarget ? .red : .clear))
                         .padding(5)
                 }
                 
@@ -179,7 +179,7 @@ struct AwarenessView: View {
                 }
                 
                 Button(action: { selectedSheet = .emergencySettings }) {
-                    navBarImage(systemName: "exclamationmark.triangle")
+                    navBarImage(imageName: "nav_alert")
                         .foregroundColor(settingsStore.isAlertActivated ? .red : .yellow)
                         .padding(5)
                 }
