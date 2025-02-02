@@ -348,6 +348,7 @@ class SituationalAnnotationView: MKAnnotationView {
         let infoImage = UIImage(named: "details")!
         let trashImage = UIImage(named: "ic_menu_delete")!
         let videoImage = UIImage(named: "video")!
+        let phoneImage = UIImage(systemName: "phone.fill")!
                 
         let infoButton = UIButton.systemButton(with: infoImage, target: nil, action: nil)
         infoButton.addTarget(self, action: #selector(self.detailsPressed), for: .touchUpInside)
@@ -364,8 +365,14 @@ class SituationalAnnotationView: MKAnnotationView {
         deleteButton.contentMode = .scaleAspectFit
         actionView.addArrangedSubview(deleteButton)
         
+        if(mapPointAnnotation.phone != nil && !mapPointAnnotation.phone!.isEmpty) {
+            let phoneButton = UIButton.systemButton(with: phoneImage, target: nil, action: nil)
+            phoneButton.addTarget(self, action: #selector(self.makeCall), for: .touchUpInside)
+            phoneButton.contentMode = .scaleAspectFit
+            actionView.addArrangedSubview(phoneButton)
+        }
+        
         if(mapPointAnnotation.videoURL != nil) {
-            //let videoButton = UIButton.systemButton(with: UIImage(systemName: "video.circle")!, target: nil, action: nil)
             let videoButton = UIButton.systemButton(with: videoImage, target: nil, action: nil)
             videoButton.addTarget(self, action: #selector(self.videoPressed), for: .touchUpInside)
             videoButton.contentMode = .scaleAspectFit
@@ -380,6 +387,18 @@ class SituationalAnnotationView: MKAnnotationView {
         
         self.canShowCallout = true
         self.detailCalloutAccessoryView = actionView
+    }
+    
+    // TODO: Do something meaningful on devices that can't make calls (like iPads)
+    // TODO: Enable the menu to copy the number or send a text
+    @objc func makeCall(sender: UIButton) {
+        guard let phone = mapPointAnnotation.phone else {
+            TAKLogger.error("[MapView] Attempted to make a phone call with no annotation / phone")
+            return
+        }
+        if let telUrl = URL(string: "tel://\(phone)") {
+            UIApplication.shared.open(telUrl, options: [:])
+        }
     }
     
     @objc func videoPressed(sender: UIButton) {
@@ -594,7 +613,6 @@ struct MapView: UIViewRepresentable {
     }
     
     private func cotChangeNotified(notification: Notification) {
-        TAKLogger.debug("[MapView] Notified of a COT change \(notification.debugDescription)")
         if shouldUpdateMap {
             DispatchQueue.main.async {
                 updateAnnotations()

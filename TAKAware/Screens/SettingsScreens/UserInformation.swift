@@ -36,6 +36,13 @@ struct UserInformation: View {
                             }
                             .pickerStyle(.menu)
                             .foregroundColor(.secondary)
+                HStack {
+                    Text("Phone Number")
+                        .foregroundColor(.secondary)
+                    TextField("Phone Number", text: $settingsStore.phoneNumber)
+                        .keyboardType(.phonePad)
+                        .multilineTextAlignment(.trailing)
+                }
                 
             }
         }

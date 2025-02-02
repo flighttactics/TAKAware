@@ -97,6 +97,12 @@ class SettingsStore: ObservableObject {
         }
     }
     
+    @Published var phoneNumber: String {
+        didSet {
+            UserDefaults.standard.set(phoneNumber, forKey: "phoneNumber")
+        }
+    }
+    
     @Published var cotType: String {
         didSet {
             UserDefaults.standard.set(cotType, forKey: "cotType")
@@ -298,6 +304,8 @@ class SettingsStore: ObservableObject {
         self.team = (UserDefaults.standard.object(forKey: "team") == nil ? TeamColor.Cyan.rawValue : UserDefaults.standard.object(forKey: "team") as! String)
         
         self.role = (UserDefaults.standard.object(forKey: "role") == nil ? TeamRole.TeamMember.rawValue : UserDefaults.standard.object(forKey: "role") as! String)
+        
+        self.phoneNumber = (UserDefaults.standard.object(forKey: "phoneNumber") == nil ? "" : UserDefaults.standard.object(forKey: "phoneNumber") as! String)
         
         self.cotType = (UserDefaults.standard.object(forKey: "cotType") == nil ? "a-f-G-U-C" : UserDefaults.standard.object(forKey: "cotType") as! String)
         
