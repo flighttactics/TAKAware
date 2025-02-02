@@ -13,12 +13,15 @@
         <attribute name="labels_on" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="phone" optional="YES" attributeType="String"/>
         <attribute name="rawXml" optional="YES" attributeType="String"/>
         <attribute name="remarks" optional="YES" attributeType="String"/>
+        <attribute name="role" optional="YES" attributeType="String"/>
         <attribute name="staleDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="strokeColor" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="strokeWeight" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="team" optional="YES" attributeType="String"/>
         <attribute name="updateDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="videoURL" optional="YES" attributeType="URI"/>
         <attribute name="visible" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>

@@ -80,6 +80,12 @@ struct MapOptions: View {
                     }
                 }
                 
+                Section(header: Text("Contact Icons"), footer: Text("Will cause a map refresh when toggled")) {
+                    List {
+                        Toggle("Show Contacts as 2525 Icons", isOn: $settingsStore.enable2525ForRoles)
+                    }
+                }
+                
 //                Section(header:
 //                    HStack {
 //                        Text("Custom Map Overlays")

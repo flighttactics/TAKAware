@@ -232,6 +232,9 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var shapes: [MKOverlay] = []
     dynamic var isKML: Bool = false
     dynamic var groupID: UUID?
+    dynamic var kmlIcon: String?
+    dynamic var role: String?
+    dynamic var phone: String?
     
     var annotationIdentifier: String {
         if icon != nil && !icon!.isEmpty {
@@ -267,19 +270,24 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
             && mapPoint.iconColor! != "-1" {
             self.color = IconData.colorFromArgb(argbVal: Int(mapPoint.iconColor!)!)
         }
+        if mapPoint.team != nil && !SettingsStore.global.enable2525ForRoles {
+            self.color = IconData.colorForTeam(mapPoint.team!)
+        }
         self.remarks = mapPoint.remarks
         self.videoURL = mapPoint.videoURL
+        self.role = mapPoint.role
+        self.phone = mapPoint.phone
     }
     
     init(id: String, title: String, icon: String, coordinate: CLLocationCoordinate2D, remarks: String) {
         self.id = id
         self.title = title
-        self.icon = icon
         self.cotType = "a-U-G"
         // TODO: We need to use the KMLIcon instead of this
-        self.icon = "f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/ylw-pushpin.png"
+        self.icon = IconData.DEFAULT_KML_ICON
         self.coordinate = coordinate
         self.remarks = remarks
+        self.kmlIcon = icon
     }
 }
 
@@ -541,12 +549,13 @@ struct MapView: UIViewRepresentable {
     
     func prepareAnnotationView(annotation: MapPointAnnotation, annotationView: MKAnnotationView) {
         if !annotation.isShape {
-            let iconSetPath = annotation.icon ?? ""
-            let icon = IconData.iconFor(type2525: annotation.cotType ?? "", iconsetPath: iconSetPath)
+            let icon = IconData.iconFor(annotation: annotation)
             var pointIcon: UIImage = icon.icon
             
             if let pointColor = annotation.color {
-                if pointIcon.isSymbolImage {
+                if icon.isCircularImage {
+                    pointIcon = pointIcon.maskCircularImage(with: pointColor)
+                } else if pointIcon.isSymbolImage {
                     pointIcon = pointIcon.maskSymbol(with: pointColor)
                 } else {
                     pointIcon = pointIcon.maskImage(with: pointColor)

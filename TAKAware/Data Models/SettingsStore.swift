@@ -275,10 +275,19 @@ class SettingsStore: ObservableObject {
             UserDefaults.standard.set(enableTrafficDisplay, forKey: "enableTrafficDisplay")
         }
     }
+    
+    @Published var enable2525ForRoles: Bool {
+        didSet {
+            UserDefaults.standard.set(enable2525ForRoles, forKey: "enable2525ForRoles")
+            DataController.shared.clearTransientItems()
+        }
+    }
 
     private init() {
         let defaultSign = SettingsStore.generateDefaultCallSign()
         self.lastAppVersionRun = (UserDefaults.standard.object(forKey: "lastAppVersionRun") == nil ? "" : UserDefaults.standard.object(forKey: "lastAppVersionRun") as! String)
+        
+        self.enable2525ForRoles = (UserDefaults.standard.object(forKey: "enable2525ForRoles") == nil ? false : UserDefaults.standard.object(forKey: "enable2525ForRoles") as! Bool)
         
         self.enableTrafficDisplay = (UserDefaults.standard.object(forKey: "enableTrafficDisplay") == nil ? true : UserDefaults.standard.object(forKey: "enableTrafficDisplay") as! Bool)
         

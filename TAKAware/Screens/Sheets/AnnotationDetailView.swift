@@ -136,7 +136,7 @@ struct AnnotationDetailReadOnly: View {
         if annotation != nil && annotation!.isShape {
             return UIImage(named: "nav_draw")!
         } else {
-            let icon = IconData.iconFor(type2525: annotation?.cotType ?? "", iconsetPath: annotation?.icon ?? "")
+            let icon = IconData.iconFor(annotation: annotation)
             return icon.icon
         }
     }
@@ -212,7 +212,7 @@ struct AnnotationDetailView: View {
     }
     
     var iconImage: UIImage {
-        let icon = IconData.iconFor(type2525: annotation?.cotType ?? "", iconsetPath: annotation?.icon ?? "")
+        let icon = IconData.iconFor(annotation: annotation)
         return icon.icon
     }
 

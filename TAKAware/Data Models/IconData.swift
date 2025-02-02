@@ -8,6 +8,7 @@
 import CoreGraphics
 import Foundation
 import SQLite
+import SwiftTAK
 import UIKit
 
 struct IconSet {
@@ -29,12 +30,15 @@ struct Icon {
     var groupName: String
     var type2525b: String?
     var icon: UIImage
+    var isCircularImage: Bool = false
 }
 
 class IconData {
     var connection: Connection?
     let iconSetTable = Table("iconsets")
     let iconTable = Table("icons")
+    
+    static let DEFAULT_KML_ICON: String = "f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/ylw-pushpin.png"
     
     static let shared = IconData()
     
@@ -44,6 +48,43 @@ class IconData {
         let red = CGFloat(argbVal >> 16 & 0xff)
         let alpha = CGFloat(argbVal >> 24 & 0xff)
         return UIColor(red: red/255, green: green/255.0, blue: blue/255.0, alpha: alpha/255.0)
+    }
+    
+    static func colorForTeam(_ team: String) -> UIColor {
+        /*
+         From https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV/blob/889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc/atak/ATAK/app/src/main/assets/filters/team_filters.xml#L9
+         <filter team='White'>white</filter>
+         <filter team='Yellow'>yellow</filter>
+         <filter team='Orange'>#FFFF7700</filter>
+         <filter team='Magenta'>magenta</filter>
+         <filter team='Red'>red</filter>
+         <filter team='Maroon'>#FF7F0000</filter>
+         <filter team='Purple'>#FF7F007F</filter>
+         <filter team='Dark Blue'>#FF00007F</filter>
+         <filter team='Blue'>blue</filter>
+         <filter team='Cyan'>cyan</filter>
+         <filter team='Teal'>#FF007F7F</filter>
+         <filter team='Green'>green</filter>
+         <filter team='Dark Green'>#FF007F00</filter>
+         <filter team='Brown'>#FFA0714F</filter>
+         */
+        switch(team) {
+        case "White": return UIColor.white
+        case "Yellow": return UIColor.yellow
+        case "Magenta": return UIColor.magenta
+        case "Red": return UIColor.red
+        case "Blue": return UIColor.blue
+        case "Cyan": return UIColor.cyan
+        case "Green": return UIColor.green
+        case "Orange": return UIColor(red: 1, green: 0.467, blue: 0, alpha: 1.0)
+        case "Maroon": return UIColor(red: 0.498, green: 0, blue: 0, alpha: 1.0)
+        case "Purple": return UIColor(red: 0.498, green: 0, blue: 0.498, alpha: 1.0)
+        case "Dark Blue": return UIColor(red: 0, green: 0, blue: 0.498, alpha: 1.0)
+        case "Teal": return UIColor(red: 0, green: 0.498, blue: 0.498, alpha: 1.0)
+        case "Dark Green": return UIColor(red: 0, green: 0.498, blue: 0, alpha: 1.0)
+        case "Brown": return UIColor(red: 0.627, green: 0.443, blue: 0.31, alpha: 1.0)
+        default: return UIColor.white
+        }
     }
     
     static func availableIconSets() -> [IconSet] {
@@ -64,6 +105,29 @@ class IconData {
             }
         } catch {}
         return []
+    }
+    
+    static func iconFor(annotation: MapPointAnnotation?) -> Icon {
+        if annotation?.role != nil && !annotation!.role!.isEmpty && !SettingsStore.global.enable2525ForRoles {
+            return IconData.iconFor(role: annotation!.role!)
+        }
+        let iconSetPath = annotation?.icon ?? ""
+        return IconData.iconFor(type2525: annotation?.cotType ?? "", iconsetPath: iconSetPath)
+    }
+    
+    static func iconFor(role: String) -> Icon {
+        let uiImg = switch(role) {
+        case TeamRole.ForwardObserver.rawValue: UIImage(named: "forwardobserver")
+        case TeamRole.HQ.rawValue: UIImage(named: "hq")
+        case TeamRole.K9.rawValue: UIImage(named: "k9")
+        case TeamRole.Medic.rawValue: UIImage(named: "medic")
+        case TeamRole.RTO.rawValue: UIImage(named: "rto")
+        case TeamRole.Sniper.rawValue: UIImage(named: "sniper")
+        case TeamRole.TeamMember.rawValue: UIImage(named: "team")
+        case TeamRole.TeamLead.rawValue: UIImage(named: "teamlead")
+        default: UIImage(named: "team")
+        }
+        return Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: uiImg!, isCircularImage: true)
     }
     
     static func iconFor(type2525: String, iconsetPath: String) -> Icon {

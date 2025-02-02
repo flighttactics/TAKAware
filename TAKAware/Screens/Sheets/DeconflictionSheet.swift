@@ -19,7 +19,7 @@ struct DeconflictionSheet: View {
         if annotation.isShape {
             return UIImage(named: "nav_draw")!
         } else {
-            let icon = IconData.iconFor(type2525: annotation.cotType ?? "", iconsetPath: annotation.icon ?? "")
+            let icon = IconData.iconFor(annotation: annotation)
             return icon.icon
         }
     }
