@@ -355,15 +355,117 @@ struct KMLPolygon: Equatable, XMLObjectDeserialization {
     }
 }
 
+struct KMLMultiGeometry: Equatable, XMLObjectDeserialization {
+    var node: XMLIndexer? = nil
+
+    public static func ==(lhs: KMLMultiGeometry, rhs: KMLMultiGeometry) -> Bool {
+        return lhs.node?.all.count == rhs.node?.all.count
+    }
+    
+    static func deserialize(_ node: XMLIndexer) throws -> KMLMultiGeometry {
+        return KMLMultiGeometry(
+            node: node
+        )
+    }
+    
+    var mapKitShapes: [MKShape] {
+        var shapes: [MKShape] = []
+        shapes.append(contentsOf: points.compactMap { point in
+            guard let coordinate = point.mapCoordinate else { return nil }
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            return annotation
+        })
+        
+        shapes.append(contentsOf: lineStrings.compactMap { lineString in
+            let coordinates = lineString.mapCoordinates
+            guard !coordinates.isEmpty else { return nil }
+            return MKPolyline(coordinates: coordinates, count: coordinates.count)
+        })
+        
+        shapes.append(contentsOf: linearRings.compactMap { linearRing in
+            let coordinates = linearRing.mapCoordinates
+            guard !coordinates.isEmpty else { return nil }
+            return MKPolygon(coordinates: coordinates, count: coordinates.count)
+        })
+        
+        shapes.append(contentsOf: polygons.compactMap { polygon in
+            guard let outerCoordinates = polygon.outerLinearRing?.mapCoordinates else { return nil }
+            
+            let innerShapes: [MKPolygon] = polygon.innerLinearRings.map { linearRing in
+                let coords = linearRing.mapCoordinates
+                return MKPolygon(coordinates: coords, count: coords.count)
+            }
+            
+            return MKPolygon(coordinates: outerCoordinates, count: outerCoordinates.count, interiorPolygons: innerShapes)
+        })
+        return shapes
+    }
+    
+    var points: [KMLPoint] {
+        guard let node = node else { return [] }
+        do {
+            let pointNodes = try node.byKey("Point")
+            let kmlPoints = try pointNodes.all.map { try $0.value() as KMLPoint }
+            return kmlPoints
+        } catch {}
+        return []
+    }
+    
+    var lineStrings: [KMLLineString] {
+        guard let node = node else { return [] }
+        do {
+            let lineStringNodes = try node.byKey("LineString")
+            let kmlLineStrings = try lineStringNodes.all.map { try $0.value() as KMLLineString }
+            return kmlLineStrings
+        } catch {}
+        return []
+    }
+    
+    var linearRings: [KMLLinearRing] {
+        guard let node = node else { return [] }
+        do {
+            let linearRingNodes = try node.byKey("LinearRing")
+            let kmlLinearRings = try linearRingNodes.all.map { try $0.value() as KMLLinearRing }
+            return kmlLinearRings
+        } catch {}
+        return []
+    }
+    
+    var polygons: [KMLPolygon] {
+        guard let node = node else { return [] }
+        do {
+            let polygons = try node.byKey("Polygon")
+            let kmlPolygons = try polygons.all.map { try $0.value() as KMLPolygon }
+            return kmlPolygons
+        } catch {}
+        return []
+    }
+}
+
 struct KMLPlacemark: Equatable, XMLObjectDeserialization {
     var node: XMLIndexer? = nil
     var name: String = ""
     var description: String = ""
     var visibility: Bool = true
-    //Future StyleSelector Support: StyleMap
-    //Future Geometry Support: MultiGeometry, GeometryCollection, Model, gx:Track, gx:MultiTrack
+    // TODO: Future StyleSelector Support: StyleMap
+    // TODO: Future Geometry Support: GeometryCollection, Model, gx:Track, gx:MultiTrack
     
-    var mapKitShape: MKShape? {
+    var coordinate: CLLocationCoordinate2D {
+        mapKitShapes.first?.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+    }
+    
+    var mapKitShapes: [MKShape] {
+        if let multiGeometry = multiGeometry {
+            return multiGeometry.mapKitShapes
+        } else if let mapKitShape = mapKitShape {
+            return [mapKitShape]
+        } else {
+            return []
+        }
+    }
+    
+    private var mapKitShape: MKShape? {
         if let point = point {
             guard let coordinate = point.mapCoordinate else { return nil }
             let annotation = MKPointAnnotation()
@@ -387,6 +489,14 @@ struct KMLPlacemark: Equatable, XMLObjectDeserialization {
             guard !coordinates.isEmpty else { return nil }
             return MKPolygon(coordinates: coordinates, count: coordinates.count)
         }
+        return nil
+    }
+    
+    var multiGeometry: KMLMultiGeometry? {
+        guard let node = node else { return nil }
+        do {
+            return try node["MultiGeometry"].value()
+        } catch {}
         return nil
     }
     

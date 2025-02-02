@@ -643,18 +643,16 @@ struct MapView: UIViewRepresentable {
                 let kmlData = KMLData(kmlRecord: kmlRecord)
                 
                 kmlData.placemarks.forEach { placemark in
-                    guard let shape = placemark.mapKitShape else {
+                    guard !placemark.mapKitShapes.isEmpty else {
                         return
                     }
-                    let mpa = MapPointAnnotation(id: UUID().uuidString, title: placemark.name, icon: "", coordinate: shape.coordinate, remarks: placemark.description)
+                    let mpa = MapPointAnnotation(id: UUID().uuidString, title: placemark.name, icon: "", coordinate: placemark.coordinate, remarks: placemark.description)
                     mpa.isKML = true
                     mpa.groupID = fileId
                     DispatchQueue.main.async {
                         mapView.addAnnotation(mpa)
-                        if let overlayShape = shape as? MKOverlay {
-                            mpa.shapes = [overlayShape]
-                            mapView.addOverlays(mpa.shapes)
-                        }
+                        mpa.shapes = placemark.mapKitShapes.compactMap { $0 as? MKOverlay }
+                        mapView.addOverlays(mpa.shapes)
                         annotationUpdatedCallback(annotation: mpa)
                     }
                 }
