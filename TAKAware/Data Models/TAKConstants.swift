@@ -50,6 +50,7 @@ struct AppConstants {
     static let NOTIFY_APP_ACTIVE = "AppScenePhaseActive"
     static let NOTIFY_APP_INACTIVE = "AppScenePhaseInactive"
     static let NOTIFY_APP_BACKGROUND = "AppScenePhaseBackground"
+    static let NOTIFY_SCROLL_TO_KML = "ScrollToKML"
     
     static let DIRECTORY_OVERLAYS = "overlays"
     static let DIRECTORY_DATA_PACKAGES = "datapackages"

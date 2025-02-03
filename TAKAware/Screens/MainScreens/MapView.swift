@@ -551,6 +551,7 @@ struct MapView: UIViewRepresentable {
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_ADDED), object: nil, queue: nil, using: cotChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_UPDATED), object: nil, queue: nil, using: cotChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_REMOVED), object: nil, queue: nil, using: cotChangeNotified)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_KML), object: nil, queue: nil, using: scrollToKml)
         
 //        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
 //        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
@@ -617,6 +618,21 @@ struct MapView: UIViewRepresentable {
             DispatchQueue.main.async {
                 updateAnnotations()
             }
+        }
+    }
+    
+    private func scrollToKml(notification: Notification) {
+        guard let kmlId: UUID = notification.object as? UUID else {
+            TAKLogger.debug("[MapView] Scroll to KML requested but no UUID provided")
+            return
+        }
+        let kmlAnnotations: [MapPointAnnotation] = mapView.annotations.filter {
+            ($0 as? MapPointAnnotation)?.groupID == kmlId
+        } as! [MapPointAnnotation]
+        if kmlAnnotations.isEmpty {
+            TAKLogger.debug("[MapView] Scroll to KML requested but no annotations found to scroll to")
+        } else {
+            mapView.setCenter(kmlAnnotations.first!.coordinate, animated: true)
         }
     }
     
