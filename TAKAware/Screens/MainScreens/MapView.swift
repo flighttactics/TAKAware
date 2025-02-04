@@ -504,7 +504,7 @@ struct MapView: UIViewRepresentable {
     @State var bloodhoundEndAnnotation: MapPointAnnotation?
     @State var bloodhoundStartCoordinate: CLLocationCoordinate2D?
     @State var bloodhoundEndCoordinate: CLLocationCoordinate2D?
-    @State var showingAnnotationLabels: Bool = true
+    @State var showingAnnotationLabels: Bool = false
     @State var loadedKmlAnnotations: [String] = []
     @State var shouldUpdateMap: Bool = true
     
@@ -702,13 +702,51 @@ struct MapView: UIViewRepresentable {
                 
                 kmlData.groundOverlays.forEach { groundOverlay in
                     guard let icon = groundOverlay.icon,
-                          let latLongBox = groundOverlay.latLonBox,
                           let iconBasePath = kmlData.iconBasePath
                     else {
+                        TAKLogger.debug("[MapView] KML GroundOverlay has no icon. Skipping.")
                         return
                     }
+                    
+                    let latLongBox = groundOverlay.latLonBox
+                    let latLongQuad = groundOverlay.latLonQuad
+                    
                     if icon.href.hasPrefix("http") {
                         TAKLogger.debug("[MapView] KML GroundOverlay image is using http - skipping")
+                        return
+                    }
+                    
+                    var mapRect: MKMapRect? = nil
+                    
+                    if latLongBox != nil {
+                        let coordinate1 = CLLocationCoordinate2DMake(latLongBox!.north,latLongBox!.east);
+                        let coordinate2 = CLLocationCoordinate2DMake(latLongBox!.south,latLongBox!.west);
+                        let p1 = MKMapPoint(coordinate1)
+                        let p2 = MKMapPoint(coordinate2)
+                        mapRect = MKMapRect(x: fmin(p1.x,p2.x), y: fmin(p1.y,p2.y), width: fabs(p1.x-p2.x), height: fabs(p1.y-p2.y));
+                    } else if latLongQuad != nil {
+                        let coordinateQuad = latLongQuad!.coordinates.split(separator: " ")
+                        if coordinateQuad.count < 4 {
+                            TAKLogger.debug("[MapView] KML GroundOverlay has invalid LatLonQuad. Skipping.")
+                            return
+                        }
+                        // Counter-clockwise order with the first coordinate corresponding to the lower-left corner
+                        // LowerLeft, LowerRight, UpperRight, UpperLeft
+                        let lowerLeftLonLatCoords: [String] = coordinateQuad[0].split(separator: ",").prefix(2).map { String($0) }
+                        let lowerRightLonLatCoords: [String] = coordinateQuad[1].split(separator: ",").prefix(2).map { String($0) }
+                        let upperRightLonLatCoords: [String] = coordinateQuad[2].split(separator: ",").prefix(2).map { String($0) }
+                        let upperLeftLonLatCoords: [String] = coordinateQuad[3].split(separator: ",").prefix(2).map { String($0) }
+                        let lowerLeftLonLat = CLLocationCoordinate2DMake(Double(lowerLeftLonLatCoords.last!)!,Double(lowerLeftLonLatCoords.first!)!);
+                        let lowerRightLonLat = CLLocationCoordinate2DMake(Double(lowerRightLonLatCoords.last!)!,Double(lowerRightLonLatCoords.first!)!);
+                        let upperRightLonLat = CLLocationCoordinate2DMake(Double(upperRightLonLatCoords.last!)!,Double(upperRightLonLatCoords.first!)!);
+                        let upperLeftLonLat = CLLocationCoordinate2DMake(Double(upperLeftLonLatCoords.last!)!,Double(upperLeftLonLatCoords.first!)!);
+                        let p1 = MKMapPoint(lowerLeftLonLat)
+                        let p2 = MKMapPoint(lowerRightLonLat)
+                        let p3 = MKMapPoint(upperRightLonLat)
+                        let p4 = MKMapPoint(upperLeftLonLat)
+                        mapRect = MKMapRect(x: fmin(p1.x,p3.x), y: fmin(p1.y,p3.y), width: fabs(p1.x-p3.x), height: fabs(p1.y-p3.y));
+                    } else {
+                        TAKLogger.debug("[MapView] KML GroundOverlay has no LatLonBox or LatLonQuad. Skipping.")
                         return
                     }
                     
@@ -718,13 +756,9 @@ struct MapView: UIViewRepresentable {
                         do {
                             let imgData = try Data(contentsOf: imgUrl)
                             let img = UIImage(data: imgData)!
-                            let coordinate1 = CLLocationCoordinate2DMake(latLongBox.north,latLongBox.east);
-                            let coordinate2 = CLLocationCoordinate2DMake(latLongBox.south,latLongBox.west);
-                            let p1 = MKMapPoint(coordinate1)
-                            let p2 = MKMapPoint(coordinate2)
-                            let mapRect = MKMapRect(x: fmin(p1.x,p2.x), y: fmin(p1.y,p2.y), width: fabs(p1.x-p2.x), height: fabs(p1.y-p2.y));
-                            let imgOverlay = COTImageOverlay(image: img, center: mapRect.origin.coordinate, boundingRect: mapRect)
-                            let mpa = MapPointAnnotation(id: UUID().uuidString, title: kmlData.docTitle, icon: "", coordinate: mapRect.origin.coordinate, remarks: kmlData.docDescription)
+                            
+                            let imgOverlay = COTImageOverlay(image: img, center: mapRect!.origin.coordinate, boundingRect: mapRect!)
+                            let mpa = MapPointAnnotation(id: UUID().uuidString, title: kmlData.docTitle, icon: "", coordinate: mapRect!.origin.coordinate, remarks: kmlData.docDescription)
                             mpa.isKML = true
                             mpa.groupID = fileId
                             DispatchQueue.main.async {

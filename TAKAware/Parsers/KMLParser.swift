@@ -740,6 +740,7 @@ struct KMLGroundOverlay: Equatable, XMLObjectDeserialization {
         return nil
     }
     
+    // Specifies where the top, bottom, right, and left sides of a bounding box for the ground overlay are aligned. 
     var latLonBox: KMLLatLonBox? {
         guard let node = node else { return nil }
         do {
@@ -748,6 +749,7 @@ struct KMLGroundOverlay: Equatable, XMLObjectDeserialization {
         return nil
     }
     
+    // Specifies the coordinates of the four corner points of a quadrilateral defining the overlay area
     var latLonQuad: KMLGoogleLatLonQuad? {
         guard let node = node else { return nil }
         do {
