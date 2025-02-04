@@ -1071,6 +1071,10 @@ struct MapView: UIViewRepresentable {
             }
         }
         
+        func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+            parent.updateAnnotations()
+        }
+        
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
             parent.didUpdateRegion()
         }
