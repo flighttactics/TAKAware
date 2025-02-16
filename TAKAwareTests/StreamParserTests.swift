@@ -9,6 +9,7 @@ import Foundation
 import XCTest
 import SWXMLHash
 import SwiftProtobuf
+import SwiftTAK
 @testable import TAKAware
 
 final class StreamParserTests: TAKAwareTestCase {
@@ -60,6 +61,22 @@ final class StreamParserTests: TAKAwareTestCase {
         XCTAssertEqual(1, secondEventCrossed.count, "Parser missed second event")
         XCTAssertEqual(event2, String(secondEventCrossed[0]), "Parser split did not match event2")
     }
+    
+//    func testUnknownBug() throws {
+//        let cot = """
+//<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+//<event version='2.0' uid='MXY292' type='a-f-A-C-F' how='m-g' time='2025-02-13T20:59:01Z' start='2025-02-13T20:59:01Z' stale='2025-02-13T21:09:01Z'><contact callsign='MXY292'/><point lat='33.3405647277832' lon='-79.75859832763672' hae='10972.933430870518' ce='9999999.0' le='9999999.0'/></event>
+//"""
+//        let cotData = Data(cot.utf8)
+//        let unknownEvent = parser.parse(dataStream: cotData)
+//        let cotParser = COTXMLParser()
+//        print("    ")
+//        print("************")
+//        debugPrint(cotParser.parse(unknownEvent.first!))
+//        print("************")
+//        print("    ")
+//        //parser.parseAtom(cotEvent: unknownEvent.first!, rawXml: cot)
+//    }
     
 //    func testParsesProtobufIntoEvents() throws {
 //        var pbTAKMessage = Atakmap_Commoncommo_Protobuf_V1_TakMessage()
