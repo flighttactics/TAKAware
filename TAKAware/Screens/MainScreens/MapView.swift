@@ -6,6 +6,8 @@
 //
 
 import CoreData
+import CoreImage
+import CoreImage.CIFilterBuiltins
 import Foundation
 import MapKit
 import SwiftTAK
@@ -194,11 +196,13 @@ class COTImageOverlay: NSObject, MKOverlay {
     var boundingMapRect: MKMapRect
     var overlayImage: UIImage
     var alpha: Double = 1.0
+    var actualCoords: [MKMapPoint] = []
     
     init(image: UIImage, center: CLLocationCoordinate2D, boundingRect: MKMapRect) {
         coordinate = center
         boundingMapRect = boundingRect
         overlayImage = image
+        
     }
     
 }
@@ -209,10 +213,41 @@ class COTImageOverlayRenderer: MKOverlayRenderer {
             return
         }
 
-        let rect = self.rect(for: overlay.boundingMapRect)
+        var rect = self.rect(for: overlay.boundingMapRect)
         UIGraphicsPushContext(context)
-        overlay.overlayImage.draw(in: rect, blendMode: .normal, alpha: overlay.alpha)
+        var img = overlay.overlayImage
+        if !overlay.actualCoords.isEmpty {
+            var ll = self.point(for: overlay.actualCoords[0])
+            var lr = self.point(for: overlay.actualCoords[1])
+            var ur = self.point(for: overlay.actualCoords[2])
+            var ul = self.point(for: overlay.actualCoords[3])
+            
+            let minAdj = min(ul.x, ll.x, ur.x, lr.x)
+            let xAdj = minAdj * -1 // At least one of the Xs needs to be at origin
+            ll.x = ll.x-xAdj
+            lr.x = lr.x-xAdj
+            ur.x = ur.x-xAdj
+            ul.x = ul.x-xAdj
+
+            let ciImg = CIImage(image: img)
+
+            let perspectiveTransformFilter = CIFilter.perspectiveTransform()
+            perspectiveTransformFilter.inputImage = ciImg
+            perspectiveTransformFilter.topRight = cartesianForPoint(point: ur, extent: rect)
+            perspectiveTransformFilter.topLeft = cartesianForPoint(point: ul, extent: rect)
+            perspectiveTransformFilter.bottomRight = cartesianForPoint(point: lr, extent: rect)
+            perspectiveTransformFilter.bottomLeft = cartesianForPoint(point: ll, extent: rect)
+            let txImg = perspectiveTransformFilter.outputImage!
+            img = UIImage(ciImage: txImg)
+            rect.origin = ul
+        }
+        let alpha = overlay.alpha
+        img.draw(in: rect, blendMode: .normal, alpha: alpha)
         UIGraphicsPopContext()
+    }
+    
+    func cartesianForPoint(point:CGPoint, extent:CGRect) -> CGPoint {
+        return CGPoint(x: point.x,y: extent.height - point.y)
     }
 }
 
@@ -717,34 +752,29 @@ struct MapView: UIViewRepresentable {
                     }
                     
                     var mapRect: MKMapRect? = nil
+                    var actualCoords: [MKMapPoint] = []
                     
                     if latLongBox != nil {
-                        let coordinate1 = CLLocationCoordinate2DMake(latLongBox!.north,latLongBox!.east);
-                        let coordinate2 = CLLocationCoordinate2DMake(latLongBox!.south,latLongBox!.west);
-                        let p1 = MKMapPoint(coordinate1)
-                        let p2 = MKMapPoint(coordinate2)
-                        mapRect = MKMapRect(x: fmin(p1.x,p2.x), y: fmin(p1.y,p2.y), width: fabs(p1.x-p2.x), height: fabs(p1.y-p2.y));
+                        let coordinates = groundOverlay.latLonBoxCoordinates
+                        let northEast = MKMapPoint(coordinates.first!)
+                        let southWest = MKMapPoint(coordinates.last!)
+                        mapRect = MKMapRect(x: fmin(northEast.x,southWest.x), y: fmin(northEast.y,southWest.y), width: fabs(northEast.x-southWest.x), height: fabs(northEast.y-southWest.y));
                     } else if latLongQuad != nil {
-                        let coordinateQuad = latLongQuad!.coordinates.split(separator: " ")
+                        let coordinateQuad = groundOverlay.latLonQuadCoordinates
                         if coordinateQuad.count < 4 {
                             TAKLogger.debug("[MapView] KML GroundOverlay has invalid LatLonQuad. Skipping.")
                             return
                         }
-                        // Counter-clockwise order with the first coordinate corresponding to the lower-left corner
-                        // LowerLeft, LowerRight, UpperRight, UpperLeft
-                        let lowerLeftLonLatCoords: [String] = coordinateQuad[0].split(separator: ",").prefix(2).map { String($0) }
-                        let lowerRightLonLatCoords: [String] = coordinateQuad[1].split(separator: ",").prefix(2).map { String($0) }
-                        let upperRightLonLatCoords: [String] = coordinateQuad[2].split(separator: ",").prefix(2).map { String($0) }
-                        let upperLeftLonLatCoords: [String] = coordinateQuad[3].split(separator: ",").prefix(2).map { String($0) }
-                        let lowerLeftLonLat = CLLocationCoordinate2DMake(Double(lowerLeftLonLatCoords.last!)!,Double(lowerLeftLonLatCoords.first!)!);
-                        let lowerRightLonLat = CLLocationCoordinate2DMake(Double(lowerRightLonLatCoords.last!)!,Double(lowerRightLonLatCoords.first!)!);
-                        let upperRightLonLat = CLLocationCoordinate2DMake(Double(upperRightLonLatCoords.last!)!,Double(upperRightLonLatCoords.first!)!);
-                        let upperLeftLonLat = CLLocationCoordinate2DMake(Double(upperLeftLonLatCoords.last!)!,Double(upperLeftLonLatCoords.first!)!);
-                        let p1 = MKMapPoint(lowerLeftLonLat)
-                        let p2 = MKMapPoint(lowerRightLonLat)
-                        let p3 = MKMapPoint(upperRightLonLat)
-                        let p4 = MKMapPoint(upperLeftLonLat)
-                        mapRect = MKMapRect(x: fmin(p1.x,p3.x), y: fmin(p1.y,p3.y), width: fabs(p1.x-p3.x), height: fabs(p1.y-p3.y));
+
+                        let ll = MKMapPoint(coordinateQuad[0])
+                        let lr = MKMapPoint(coordinateQuad[1])
+                        let ur = MKMapPoint(coordinateQuad[2])
+                        let ul = MKMapPoint(coordinateQuad[3])
+                        actualCoords = [ll, lr, ur, ul]
+
+                        let maxWidth = max(ll.x, lr.x, ur.x, ul.x) - min(ll.x, lr.x, ur.x, ul.x)
+                        let maxHeight = max(ll.y, lr.y, ur.y, ul.y) - min(ll.y, lr.y, ur.y, ul.y)
+                        mapRect = MKMapRect(x: ul.x, y: ul.y, width: maxWidth, height: maxHeight);
                     } else {
                         TAKLogger.debug("[MapView] KML GroundOverlay has no LatLonBox or LatLonQuad. Skipping.")
                         return
@@ -758,6 +788,7 @@ struct MapView: UIViewRepresentable {
                             let img = UIImage(data: imgData)!
                             
                             let imgOverlay = COTImageOverlay(image: img, center: mapRect!.origin.coordinate, boundingRect: mapRect!)
+                            imgOverlay.actualCoords = actualCoords
                             let mpa = MapPointAnnotation(id: UUID().uuidString, title: kmlData.docTitle, icon: "", coordinate: mapRect!.origin.coordinate, remarks: kmlData.docDescription)
                             mpa.isKML = true
                             mpa.groupID = fileId
