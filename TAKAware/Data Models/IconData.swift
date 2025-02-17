@@ -15,6 +15,7 @@ struct IconSet {
     var id: Int
     var name: String
     var uid: String
+    var iconsetUUID: UUID
     var selectedGroup: String
     var version: String?
     var skipResize: Bool = false
@@ -124,6 +125,7 @@ class IconData {
                     id: iconSet[Expression<Int>("id")],
                     name: iconSet[Expression<String>("name")],
                     uid: iconSet[Expression<String>("uid")],
+                    iconsetUUID: iconSet[Expression<UUID>("iconsetUUID")],
                     selectedGroup: iconSet[Expression<String>("selectedGroup")],
                     version: iconSet[Expression<String?>("version")],
                     defaultFriendly: iconSet[Expression<String?>("defaultFriendly")],
@@ -226,7 +228,6 @@ class IconData {
                 } else {
                     TAKLogger.error("[IconData] mil2525icon with name \(mil2525iconName) for \(type2525) could not be converted into an image!")
                     let defaultImg = milStdIconWithName(name: "sugp")
-                    print("Trying instead to load \(defaultImg)")
                     uiImg = UIImage(named: defaultImg)!
                 }
                 

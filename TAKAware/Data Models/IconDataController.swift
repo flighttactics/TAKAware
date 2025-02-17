@@ -80,8 +80,6 @@ class IconDataController: ObservableObject {
         }
     }
     
-    // TODO: Set selectedGroup name if empty
-    // TODO: Fail insert if UUID already exists
     func createIconSet(iconSet: IconSet, icons: [Icon]) async throws {
         TAKLogger.debug("[IconDataController] Inserting iconset named \(iconSet.name)")
         var didCreateIconset = true
@@ -92,7 +90,7 @@ class IconDataController: ObservableObject {
             let results = (try? self.backgroundContext.fetch(fetchIconset)) ?? []
             if results.isEmpty {
                 let iconSetData: LocalIconSet = LocalIconSet(context: self.backgroundContext)
-                iconSetData.iconsetUUID = UUID()
+                iconSetData.iconsetUUID = iconSet.iconsetUUID
                 iconSetData.id = Int32(iconSet.id)
                 iconSetData.uid = iconSet.uid
                 iconSetData.name = iconSet.name
@@ -126,6 +124,33 @@ class IconDataController: ObservableObject {
         
         if !didCreateIconset {
             throw IconDataControllerError.runtimeError("IconSet \(iconSet.name) already exists with uid \(iconSet.uid)")
+        }
+    }
+
+    func deleteIconset(iconSet: LocalIconSet, deleteStoredFile: Bool = true) {
+        let dataContext = iconSet.managedObjectContext ?? backgroundContext
+        let iconsetUUID = iconSet.iconsetUUID ?? UUID()
+        let iconsetUid = iconSet.uid ?? "NOUID"
+        let fetchIcons: NSFetchRequest<LocalIcon> = LocalIcon.fetchRequest()
+        fetchIcons.predicate = NSPredicate(format: "iconset_uid = %@", iconsetUid)
+        fetchIcons.includesPropertyValues = false
+        dataContext.perform {
+            do {
+                dataContext.delete(iconSet)
+                let icons = try dataContext.fetch(fetchIcons)
+                for icon in icons {
+                    dataContext.delete(icon)
+                }
+                try dataContext.save()
+                if deleteStoredFile {
+                    let fileManager = FileManager()
+                    let iconsetSubdirectory = AppConstants.appDirectoryFor(.iconsets).appendingPathComponent(iconsetUUID.uuidString)
+                    TAKLogger.debug("[DataController] Deleting Iconset directory at \(iconsetSubdirectory.path())")
+                    try fileManager.removeItem(at: iconsetSubdirectory)
+                }
+            } catch {
+                TAKLogger.error("[DataController]: Unable to delete Iconset File \(error)")
+            }
         }
     }
 }

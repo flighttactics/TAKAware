@@ -54,6 +54,7 @@ class IconsetImporter {
                     id: iconSet[Expression<Int>("id")],
                     name: iconSet[Expression<String>("name")],
                     uid: iconSet[Expression<String>("uid")],
+                    iconsetUUID: iconSet[Expression<UUID>("iconsetUUID")],
                     selectedGroup: iconSet[Expression<String>("selectedGroup")],
                     version: iconSet[Expression<String?>("version")],
                     defaultFriendly: iconSet[Expression<String?>("defaultFriendly")],
@@ -127,7 +128,8 @@ class IconsetImporter {
             id: 0,
             name: iconSetName,
             uid: iconSetUID,
-            selectedGroup: selectedGroup ?? "",
+            iconsetUUID: iconsetUUID,
+            selectedGroup: selectedGroup ?? "Default",
             version: version,
             skipResize: skipResize,
             defaultFriendly: defaultFriendly,
@@ -166,21 +168,11 @@ class IconsetImporter {
                         let iconImg = UIImage(data: imgData!)
                         if iconImg != nil {
                             img = iconImg!
-                        } else {
-                            print("***iconImg was nil for \(imgPath)")
                         }
-                    } else {
-                        print("***imgData was nil for \(imgPath)")
                     }
-                    
-                    print("\(iconName) has path \(iconPath) with group \(iconPathParts.first!) and name \(iconPathParts.last!)")
+
                     let icon = Icon(id: 0, iconset_uid: parsedIconset!.uid, filename: iconName, groupName: group, type2525b: iconType2525b, icon: img)
                     parsedIcons.append(icon)
-                    //debugPrint(iconNode)
-                    // extract information
-                    // set group
-                    // load image data
-                    // Resize to 32x32 if needed
                 }
             }
         } catch {

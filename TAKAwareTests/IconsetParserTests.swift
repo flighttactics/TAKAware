@@ -38,7 +38,6 @@ final class IconsetParserTests: TAKAwareTestCase {
         TAKLogger.debug("***Clearing All Data Complete")
     }
     
-    // TODO: Check against LocalIconSet
     // TODO: Copy SQLIte into LocalIconSet on startup
     func testParsingIconsetStoresIconset() async throws {
         let context = IconDataController.shared.backgroundContext
