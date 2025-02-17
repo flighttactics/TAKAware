@@ -758,6 +758,34 @@ struct KMLGroundOverlay: Equatable, XMLObjectDeserialization {
         return nil
     }
     
+    var latLonBoxCoordinates: [CLLocationCoordinate2D] {
+        guard let latLongBox = latLonBox else {
+            return []
+        }
+        let northEast = CLLocationCoordinate2DMake(latLongBox.north,latLongBox.east)
+        let southWest = CLLocationCoordinate2DMake(latLongBox.south,latLongBox.west)
+        return [northEast, southWest]
+    }
+    
+    var latLonQuadCoordinates: [CLLocationCoordinate2D] {
+        let coordinateQuad = latLonQuad!.coordinates.split(separator: " ")
+        if coordinateQuad.count < 4 {
+            TAKLogger.debug("[MapView] KML GroundOverlay has invalid LatLonQuad. Skipping.")
+            return []
+        }
+        // Counter-clockwise order with the first coordinate corresponding to the lower-left corner
+        // LowerLeft, LowerRight, UpperRight, UpperLeft
+        let lowerLeftLonLatCoords: [String] = coordinateQuad[0].split(separator: ",").prefix(2).map { String($0) }
+        let lowerRightLonLatCoords: [String] = coordinateQuad[1].split(separator: ",").prefix(2).map { String($0) }
+        let upperRightLonLatCoords: [String] = coordinateQuad[2].split(separator: ",").prefix(2).map { String($0) }
+        let upperLeftLonLatCoords: [String] = coordinateQuad[3].split(separator: ",").prefix(2).map { String($0) }
+        let lowerLeftLonLat = CLLocationCoordinate2DMake(Double(lowerLeftLonLatCoords.last!)!,Double(lowerLeftLonLatCoords.first!)!);
+        let lowerRightLonLat = CLLocationCoordinate2DMake(Double(lowerRightLonLatCoords.last!)!,Double(lowerRightLonLatCoords.first!)!);
+        let upperRightLonLat = CLLocationCoordinate2DMake(Double(upperRightLonLatCoords.last!)!,Double(upperRightLonLatCoords.first!)!);
+        let upperLeftLonLat = CLLocationCoordinate2DMake(Double(upperLeftLonLatCoords.last!)!,Double(upperLeftLonLatCoords.first!)!);
+        return [lowerLeftLonLat, lowerRightLonLat, upperRightLonLat, upperLeftLonLat]
+    }
+    
     public static func ==(lhs: KMLGroundOverlay, rhs: KMLGroundOverlay) -> Bool {
         return lhs.name == rhs.name
     }
