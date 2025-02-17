@@ -7,7 +7,11 @@
 
 import Foundation
 
-class TAKChannel: Equatable {
+class TAKChannel: Equatable, Comparable {
+    static func < (lhs: TAKChannel, rhs: TAKChannel) -> Bool {
+        lhs.name.lowercased() < rhs.name.lowercased()
+    }
+    
     var name: String
     var active: Bool
     var direction: String?
@@ -91,9 +95,9 @@ class ChannelManager: APIRequestObject, ObservableObject {
             if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 guard let channelList = json["data"] as? [[String: Any]] else { return }
                 for channelData in channelList {
-                    let name = channelData["name"] as! String
+                    var name = channelData["name"] as! String
                     if(name == ANON_CHANNEL_NAME) {
-                        continue
+                        name = "Public"
                     }
                     
                     let active = channelData["active"] as! Int == 1
@@ -111,6 +115,7 @@ class ChannelManager: APIRequestObject, ObservableObject {
                     let channel = TAKChannel(name: name, active: active, direction: direction, created: created, type: type, bitpos: bitpos)
                     activeChannels.append(channel)
                 }
+                activeChannels = activeChannels.sorted()
             }
         } catch {
             TAKLogger.error("[ChannelManager]: Error processing channel list response \(error)")
