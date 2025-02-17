@@ -11,6 +11,7 @@ import UIKit
 enum AppDirectories: String {
     case overlays = "overlays"
     case dataPackages = "datapackages"
+    case iconsets = "iconsets"
 }
 
 struct AppConstants {
@@ -51,9 +52,6 @@ struct AppConstants {
     static let NOTIFY_APP_INACTIVE = "AppScenePhaseInactive"
     static let NOTIFY_APP_BACKGROUND = "AppScenePhaseBackground"
     static let NOTIFY_SCROLL_TO_KML = "ScrollToKML"
-    
-    static let DIRECTORY_OVERLAYS = "overlays"
-    static let DIRECTORY_DATA_PACKAGES = "datapackages"
     
     static func appDirectoryFor(_ directory: AppDirectories) -> URL {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!

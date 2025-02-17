@@ -132,15 +132,6 @@ struct AnnotationDetailReadOnly: View {
         currentSelectedAnnotation
     }
     
-    var iconImage: UIImage {
-        if annotation != nil && annotation!.isShape {
-            return UIImage(named: "nav_draw")!
-        } else {
-            let icon = IconData.iconFor(annotation: annotation)
-            return icon.icon
-        }
-    }
-    
     func broadcastPoint() {
         guard currentSelectedAnnotation != nil else { return }
         takManager.broadcastPoint(annotation: currentSelectedAnnotation!)
@@ -172,9 +163,7 @@ struct AnnotationDetailReadOnly: View {
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    Image(uiImage: iconImage)
-                        .resizable()
-                        .frame(width: 40, height: 40)
+                    IconImage(annotation: annotation, frameSize: 40.0)
                 }
                 HStack {
                     Spacer()
@@ -209,11 +198,6 @@ struct AnnotationDetailView: View {
     
     var annotation: MapPointAnnotation? {
         currentSelectedAnnotation
-    }
-    
-    var iconImage: UIImage {
-        let icon = IconData.iconFor(annotation: annotation)
-        return icon.icon
     }
 
     var body: some View {

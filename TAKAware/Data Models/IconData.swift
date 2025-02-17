@@ -17,6 +17,7 @@ struct IconSet {
     var uid: String
     var selectedGroup: String
     var version: String?
+    var skipResize: Bool = false
     var defaultFriendly: String?
     var defaultHostile: String?
     var defaultNeutral: String?
@@ -38,9 +39,37 @@ class IconData {
     let iconSetTable = Table("iconsets")
     let iconTable = Table("icons")
     
+    let iconSetId = Expression<Int>(value: "id")
+    let iconSetName = Expression<String>(value: "name")
+    let iconSetUid = Expression<String>(value: "uid")
+    let selectedGroup = Expression<String>(value: "selectedGroup")
+    let version = Expression<String?>(value: "version")
+    let defaultFriendly = Expression<String?>(value: "defaultFriendly")
+    let defaultHostile = Expression<String?>(value: "defaultHostile")
+    let defaultNeutral = Expression<String?>(value: "defaultNeutral")
+    let defaultUnknown = Expression<String?>(value: "defaultUnknown")
+    
     static let DEFAULT_KML_ICON: String = "f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/ylw-pushpin.png"
     
     static let shared = IconData()
+    
+    func insertIconset(iconSet: IconSet) throws {
+        guard let connection = connection else { return }
+        var iconsetGroup = iconSet.selectedGroup
+        if iconsetGroup.isEmpty { iconsetGroup = iconSet.name }
+        try connection.run(
+            iconSetTable.insert(
+                iconSetName <- iconSet.name,
+                iconSetUid <- iconSet.uid,
+                selectedGroup <- iconsetGroup,
+                version <- iconSet.version ?? "",
+                defaultFriendly <- iconSet.defaultFriendly ?? "",
+                defaultHostile <- iconSet.defaultHostile ?? "",
+                defaultNeutral <- iconSet.defaultNeutral ?? "",
+                defaultUnknown <- iconSet.defaultUnknown ?? ""
+            )
+        )
+    }
     
     static func colorFromArgb(argbVal: Int) -> UIColor {
         let blue = CGFloat(argbVal & 0xff)
@@ -107,12 +136,12 @@ class IconData {
         return []
     }
     
-    static func iconFor(annotation: MapPointAnnotation?) -> Icon {
+    static func iconFor(annotation: MapPointAnnotation?) async -> Icon {
         if annotation?.role != nil && !annotation!.role!.isEmpty && !SettingsStore.global.enable2525ForRoles {
             return IconData.iconFor(role: annotation!.role!)
         }
         let iconSetPath = annotation?.icon ?? ""
-        return IconData.iconFor(type2525: annotation?.cotType ?? "", iconsetPath: iconSetPath)
+        return await IconData.iconFor(type2525: annotation?.cotType ?? "", iconsetPath: iconSetPath)
     }
     
     static func iconFor(role: String) -> Icon {
@@ -130,7 +159,7 @@ class IconData {
         return Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: uiImg!, isCircularImage: true)
     }
     
-    static func iconFor(type2525: String, iconsetPath: String) -> Icon {
+    static func iconFor(type2525: String, iconsetPath: String) async -> Icon {
         var dataBytes = Data()
         
         TAKLogger.debug("[IconData] Loading icon for \(type2525) and path \(iconsetPath)")
@@ -165,6 +194,12 @@ class IconData {
                         }
                     } catch {
                         TAKLogger.error("[IconData] Error retrieving iconsetpath \(error)")
+                    }
+                    
+                    if dataBytes.isEmpty {
+                        TAKLogger.debug("[IconData] Default SQL did not contain icon. Need to check custom loads")
+                        dataBytes = await IconDataController.shared.retrieveIconFor(iconSetUid: iconSetUid, filename: imageName)
+                        TAKLogger.debug("[IconData] dataBytes empty? \(dataBytes.isEmpty)")
                     }
                 }
             } else {

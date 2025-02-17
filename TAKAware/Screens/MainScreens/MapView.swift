@@ -599,12 +599,15 @@ struct MapView: UIViewRepresentable {
     
     func annotationUpdatedCallback(annotation: MapPointAnnotation) {
         guard let annotationView = mapView.view(for: annotation) else { return }
-        prepareAnnotationView(annotation: annotation, annotationView: annotationView)
+        Task {
+            await prepareAnnotationView(annotation: annotation, annotationView: annotationView)
+        }
     }
     
-    func prepareAnnotationView(annotation: MapPointAnnotation, annotationView: MKAnnotationView) {
+    // Note: This code is somewhat duplicated in IconImage
+    func prepareAnnotationView(annotation: MapPointAnnotation, annotationView: MKAnnotationView) async {
         if !annotation.isShape {
-            let icon = IconData.iconFor(annotation: annotation)
+            let icon = await IconData.iconFor(annotation: annotation)
             var pointIcon: UIImage = icon.icon
             
             if let pointColor = annotation.color {
@@ -1006,7 +1009,9 @@ struct MapView: UIViewRepresentable {
             )
         }
         
-        prepareAnnotationView(annotation: mpAnnotation, annotationView: annotationView!)
+        Task {
+            await prepareAnnotationView(annotation: mpAnnotation, annotationView: annotationView!)
+        }
         return annotationView
     }
     

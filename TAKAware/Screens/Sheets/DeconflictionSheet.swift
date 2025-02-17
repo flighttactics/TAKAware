@@ -14,15 +14,6 @@ struct DeconflictionSheet: View {
     @Binding var conflictedItems: [MapPointAnnotation]
     let parentView: AwarenessView
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
-    
-    func iconImage(_ annotation: MapPointAnnotation) -> UIImage {
-        if annotation.isShape {
-            return UIImage(named: "nav_draw")!
-        } else {
-            let icon = IconData.iconFor(annotation: annotation)
-            return icon.icon
-        }
-    }
 
     var body: some View {
         NavigationView {
@@ -33,9 +24,7 @@ struct DeconflictionSheet: View {
                     ForEach(conflictedItems, id:\.title) { item in
                         VStack {
                             HStack {
-                                Image(uiImage: iconImage(item))
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
+                                IconImage(annotation: item)
                                 Button {
                                     parentView.didSelectAnnotation(item)
                                 } label: {
