@@ -82,17 +82,17 @@ class QRCodeParser {
     // ATAK QR Codes are json with complete cert enrollment information
     func parseAsATAKRegistrationQRCode() -> CertificateEnrollmentParameters {
         guard let json = try? JSONSerialization.jsonObject(with: Data(originalString.utf8), options: []) as? [String: Any] else {
-            print("***Unable to parse JSON")
+            TAKLogger.debug("[QRCodeParser] Unable to parse JSON")
             return CertificateEnrollmentParameters(wasInvalidString: true)
         }
         
         guard let serverCreds = json["serverCredentials"] as? [String: String] else {
-            print("***Unable to parse serverCredentials")
+            TAKLogger.debug("[QRCodeParser] Unable to parse serverCredentials")
             return CertificateEnrollmentParameters(wasInvalidString: true)
         }
         
         guard let connectionString = serverCreds["connectionString"] else {
-            print("***Unable to parse connectionString")
+            TAKLogger.debug("[QRCodeParser] Unable to parse connectionString")
             return CertificateEnrollmentParameters(wasInvalidString: true)
         }
         
@@ -107,7 +107,7 @@ class QRCodeParser {
         var response = CertificateEnrollmentParameters(serverURL: serverURL, serverPort: serverPort)
         
         guard let userCreds = json["userCredentials"] as? [String: String] else {
-            print("***Unable to parse userCredentials")
+            TAKLogger.debug("[QRCodeParser] Unable to parse userCredentials")
             return response
         }
         
