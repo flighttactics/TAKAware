@@ -16,7 +16,7 @@ enum AppDirectories: String {
 
 struct AppConstants {
     // App Information
-    static let TAK_PLATFORM = "iTAK-Tracker-CIV"    
+    static let TAK_PLATFORM = "TAKAware-CIV"    
     
     // Ports
     static let DEFAULT_CSR_PORT = "8446"
