@@ -202,9 +202,7 @@ class COTImageOverlay: NSObject, MKOverlay {
         coordinate = center
         boundingMapRect = boundingRect
         overlayImage = image
-        
     }
-    
 }
 
 class COTImageOverlayRenderer: MKOverlayRenderer {
@@ -542,6 +540,7 @@ struct MapView: UIViewRepresentable {
     @State var showingAnnotationLabels: Bool = false
     @State var loadedKmlAnnotations: [String] = []
     @State var shouldUpdateMap: Bool = true
+    @State var activeCustomMapOverlay: MKTileOverlay?
     
     private static var mapPointsFetchRequest: NSFetchRequest<COTData> {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
@@ -552,6 +551,16 @@ struct MapView: UIViewRepresentable {
     
     @FetchRequest(fetchRequest: mapPointsFetchRequest)
     private var mapPointsData: FetchedResults<COTData>
+    
+    private static var mapSourceFetchRequest: NSFetchRequest<MapSource> {
+        let fetchSource: NSFetchRequest<MapSource> = MapSource.fetchRequest()
+        fetchSource.sortDescriptors = []
+        fetchSource.predicate = NSPredicate(format: "visible = YES")
+        return fetchSource
+    }
+    
+    @FetchRequest(fetchRequest: mapSourceFetchRequest)
+    private var visibleMapSources: FetchedResults<MapSource>
     
     var shouldForceInitialTracking: Bool {
         return region.center.latitude == 0.0 || region.center.longitude == 0.0
@@ -587,14 +596,56 @@ struct MapView: UIViewRepresentable {
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_UPDATED), object: nil, queue: nil, using: cotChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_REMOVED), object: nil, queue: nil, using: cotChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_KML), object: nil, queue: nil, using: scrollToKml)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_MAP_SOURCE_UPDATED), object: nil, queue: nil, using: mapSourceUpdatedCallback)
         
-//        let templateUrl = "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}&s=Gal&apistyle=s.t:2|s.e:l|p.v:off"
-//        //let templateUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png?scale={scale}"
-//        let googleHybridOverlay = MKTileOverlay(urlTemplate:templateUrl)
-//        googleHybridOverlay.canReplaceMapContent = true
-//        mapView.addOverlay(googleHybridOverlay, level: .aboveLabels)
+        overlayActiveMapSources()
 
         return mapView
+    }
+    
+    private func overlayActiveMapSources() {
+        TAKLogger.debug("[MapView] Updating active map sources overlays")
+        if !visibleMapSources.isEmpty {
+            let mapSource = visibleMapSources.first!
+            if let sourceUrl = URLComponents(string: mapSource.url!)?.string?.removingPercentEncoding {
+                TAKLogger.debug("[MapView] Active Custom Map Source located, activating")
+                if activeCustomMapOverlay != nil {
+                    TAKLogger.debug("[MapView] Clearing the existing custom map source")
+                    mapView.removeOverlay(activeCustomMapOverlay!)
+                }
+                let cleanedFromGoogleUrl = sourceUrl.replacingOccurrences(of: "{$", with: "{")
+                let mapSourceOverlay = MKTileOverlay(urlTemplate: cleanedFromGoogleUrl)
+                mapSourceOverlay.canReplaceMapContent = true
+                
+                DispatchQueue.main.async {
+                    // We need to force the background map to satellite (so no Apple Maps labels show)
+                    // but we don't want to trigger the standard callback if we use SettingsStore
+                    UserDefaults.standard.set(MKMapType.satellite.rawValue, forKey: "mapTypeDisplay")
+                    
+                    TAKLogger.debug("[MapView] Adding the map source overlay")
+                    // Place Tile Overlays at the bottom
+                    mapView.removeOverlays(mapView.overlays.filter({$0 is MKTileOverlay}))
+                    mapView.insertOverlay(mapSourceOverlay, at: 0, level: .aboveRoads)
+                    activeCustomMapOverlay = mapSourceOverlay
+                }
+                
+            }
+        } else {
+            if activeCustomMapOverlay != nil {
+                DispatchQueue.main.async {
+                    TAKLogger.debug("[MapView] No custom map sources visible, clearing existing ones")
+                    mapView.removeOverlays(mapView.overlays.filter({$0 is MKTileOverlay}))
+                    activeCustomMapOverlay = nil
+                }
+            }
+        }
+    }
+    
+    private func mapSourceUpdatedCallback(notification: Notification) {
+        TAKLogger.debug("[MapView] mapSourceUpdatedCallback received!")
+        DispatchQueue.main.async {
+            overlayActiveMapSources()
+        }
     }
     
     func annotationUpdatedCallback(annotation: MapPointAnnotation) {
@@ -992,7 +1043,6 @@ struct MapView: UIViewRepresentable {
             selfView!.zPriority = .max
             return selfView
         }
-        
         guard let mpAnnotation = annotation as? MapPointAnnotation else {
             TAKLogger.error("[MapView] Unknown Annotation present on map \(annotation.debugDescription ?? "")")
             return nil

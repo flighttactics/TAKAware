@@ -240,9 +240,11 @@ class SettingsStore: ObservableObject {
         }
     }
     
+    // Note: overlayActiveMapSources in MapView also updates this value directly without going through here
     @Published var mapTypeDisplay: UInt {
         didSet {
             UserDefaults.standard.set(mapTypeDisplay, forKey: "mapTypeDisplay")
+            NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_MAP_SOURCE_UPDATED), object: nil)
         }
     }
     

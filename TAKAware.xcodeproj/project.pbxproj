@@ -3412,6 +3412,8 @@
 		A5F30A712CE9678700FEA8DA /* QRCodeParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F30A702CE9678300FEA8DA /* QRCodeParser.swift */; };
 		A5F8AA432D5D7879009901A7 /* iconset-import-test.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5F8AA422D5D7879009901A7 /* iconset-import-test.zip */; };
 		A5F8AA452D6374FC009901A7 /* IconImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F8AA442D6374EE009901A7 /* IconImage.swift */; };
+		A5F8AA472D63C149009901A7 /* MapSourceParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F8AA462D63C144009901A7 /* MapSourceParser.swift */; };
+		A5F8AA492D63C163009901A7 /* MapSourceImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F8AA482D63C15F009901A7 /* MapSourceImporter.swift */; };
 		A5FB4E622A8FDF430034966D /* X509 in Frameworks */ = {isa = PBXBuildFile; productRef = A5FB4E612A8FDF430034966D /* X509 */; };
 		A5FB4E642A8FE0020034966D /* CSRRequestor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FB4E632A8FE0020034966D /* CSRRequestor.swift */; };
 		A5FB4E662A98D0FF0034966D /* TAKConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FB4E652A98D0FF0034966D /* TAKConstants.swift */; };
@@ -6866,6 +6868,8 @@
 		A5F30A702CE9678300FEA8DA /* QRCodeParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeParser.swift; sourceTree = "<group>"; };
 		A5F8AA422D5D7879009901A7 /* iconset-import-test.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = "iconset-import-test.zip"; sourceTree = "<group>"; };
 		A5F8AA442D6374EE009901A7 /* IconImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconImage.swift; sourceTree = "<group>"; };
+		A5F8AA462D63C144009901A7 /* MapSourceParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSourceParser.swift; sourceTree = "<group>"; };
+		A5F8AA482D63C15F009901A7 /* MapSourceImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSourceImporter.swift; sourceTree = "<group>"; };
 		A5FB4E632A8FE0020034966D /* CSRRequestor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRRequestor.swift; sourceTree = "<group>"; };
 		A5FB4E652A98D0FF0034966D /* TAKConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKConstants.swift; sourceTree = "<group>"; };
 		A5FB4E6A2AA751890034966D /* CertificateSigningRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSigningRequestTests.swift; sourceTree = "<group>"; };
@@ -10421,6 +10425,8 @@
 		A5E2F8FA2A791EC100EDD0B4 /* Parsers */ = {
 			isa = PBXGroup;
 			children = (
+				A5F8AA482D63C15F009901A7 /* MapSourceImporter.swift */,
+				A5F8AA462D63C144009901A7 /* MapSourceParser.swift */,
 				A54312EE2D52D6BD00033230 /* IconsetImporter.swift */,
 				A52BE8FA2D15FAA600E82414 /* KMLImporter.swift */,
 				A52BE8F42D15AAB600E82414 /* KMLParser.swift */,
@@ -14098,6 +14104,7 @@
 				4630FD132B5071A100988ED4 /* ChatView.swift in Sources */,
 				4630FD0E2B506EC000988ED4 /* Palette+Color.swift in Sources */,
 				A5B312C12C397AC5007B3914 /* DataController.swift in Sources */,
+				A5F8AA492D63C163009901A7 /* MapSourceImporter.swift in Sources */,
 				A5FB4E642A8FE0020034966D /* CSRRequestor.swift in Sources */,
 				A5B1FF642C3B86D600C7F546 /* UIImage+Extension.swift in Sources */,
 				A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */,
@@ -14130,6 +14137,7 @@
 				A5B312C72C39CAAF007B3914 /* IconData.swift in Sources */,
 				4630FD142B5071A100988ED4 /* MessageView.swift in Sources */,
 				A5AA510A2AC33488006696B2 /* OnboardingView.swift in Sources */,
+				A5F8AA472D63C149009901A7 /* MapSourceParser.swift in Sources */,
 				A5E7B0182A76AA8B00D9203F /* TAKLogger.swift in Sources */,
 				A508213F2AB3D19B00E0CBD8 /* TAKCAConfigResponseParser.swift in Sources */,
 				A55ABF492ABDC02200195AB7 /* ConnectionOptions.swift in Sources */,
@@ -14338,7 +14346,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 85;
+				CURRENT_PROJECT_VERSION = 88;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14362,7 +14370,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = I;
 				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -14382,7 +14390,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 85;
+				CURRENT_PROJECT_VERSION = 88;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14406,7 +14414,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = I;
 				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

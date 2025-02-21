@@ -8,6 +8,7 @@
 import CoreData
 import Foundation
 import SwiftTAK
+import MapKit
 
 class DataController: ObservableObject {
     
@@ -52,25 +53,6 @@ class DataController: ObservableObject {
         cleanUpTimer = Timer.scheduledTimer(withTimeInterval: 15.0, repeats: true) { _ in
             self.clearStaleItems()
         }
-    }
-    
-    func clearAllMarkers() {
-        let predicate = NSPredicate(format: "1=1", Date() as CVarArg)
-        clearMap(query: predicate)
-    }
-    
-    // Clears everything not archived, regardless of stale
-    func clearTransientItems() {
-        let archiveFalseFlagPredicate = NSPredicate(format: "archived == NO")
-        clearMap(query: archiveFalseFlagPredicate)
-    }
-    
-    // Clears all non-archive stale items
-    func clearStaleItems() {
-        let staleDatePredictate = NSPredicate(format: "staleDate < %@", Date() as NSDate)
-        let archiveFalseFlagPredicate = NSPredicate(format: "archived == NO")
-        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [staleDatePredictate, archiveFalseFlagPredicate])
-        clearMap(query: predicate)
     }
 
     func updateMarker(id: String, title: String, remarks: String, cotType: String) {
@@ -225,6 +207,64 @@ class DataController: ObservableObject {
         }
     }
     
+    func activateMapSource(name: String) {
+        switch name {
+        case "Standard":
+            SettingsStore.global.mapTypeDisplay = MKMapType.standard.rawValue
+            changeCustomMapSourceVisibility(visible: false)
+        case "Hybrid":
+            SettingsStore.global.mapTypeDisplay = MKMapType.hybrid.rawValue
+            changeCustomMapSourceVisibility(visible: false)
+        case "Satellite":
+            SettingsStore.global.mapTypeDisplay = MKMapType.satellite.rawValue
+            changeCustomMapSourceVisibility(visible: false)
+        case "Flyover":
+            SettingsStore.global.mapTypeDisplay = MKMapType.hybridFlyover.rawValue
+            changeCustomMapSourceVisibility(visible: false)
+        default:
+            changeCustomMapSourceVisibility(mapName: name, visible: true)
+            SettingsStore.global.mapTypeDisplay = MKMapType.satellite.rawValue
+        }
+    }
+    
+    func changeCustomMapSourceVisibility(mapSource: MapSource? = nil, mapName: String? = nil, visible: Bool) {
+        TAKLogger.debug("[DataController] Requested to change custom map source visibility to \(visible)")
+        let fetch = MapSource.fetchRequest()
+        let dataContext = mapSource?.managedObjectContext ?? backgroundContext
+        dataContext.perform {
+            do {
+                let customMapSources = try dataContext.fetch(fetch)
+                // Only one custom map source can be visible at a time
+                customMapSources.forEach { customMapSource in
+                    if customMapSource.name == mapName {
+                        customMapSource.visible = visible
+                    } else {
+                        customMapSource.visible = false
+                    }
+                }
+                mapSource?.visible = visible
+                try dataContext.save()
+                NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_MAP_SOURCE_UPDATED), object: nil)
+            } catch {
+                TAKLogger.error("[DataController]: Unable to change Map Source visibility \(error)")
+            }
+        }
+        
+    }
+    
+    func deleteMapSource(mapSource: MapSource) {
+        let dataContext = mapSource.managedObjectContext ?? backgroundContext
+        dataContext.perform {
+            dataContext.delete(mapSource)
+            do {
+                try dataContext.save()
+                NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_MAP_SOURCE_UPDATED), object: nil)
+            } catch {
+                TAKLogger.error("[DataController]: Unable to change visibility of Map Source \(error)")
+            }
+        }
+    }
+    
     func deleteCot(cotId: String) {
         let predicate = NSPredicate(format: "id = %@", cotId)
         clearMap(query: predicate)
@@ -233,7 +273,7 @@ class DataController: ObservableObject {
     func clearAll() async {
         TAKLogger.debug("[DataController] Clearing All Data")
         
-        let entityList = ["COTData", "DataPackage", "DataPackageFile", "KMLFile"]
+        let entityList = ["COTData", "DataPackage", "DataPackageFile", "KMLFile", "MapSource"]
         await backgroundContext.perform {
             entityList.forEach { entityName in
                 let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: entityName)
@@ -247,30 +287,39 @@ class DataController: ObservableObject {
         }
     }
     
+    func clearAllMarkers() {
+        let predicate = NSPredicate(format: "1=1", Date() as CVarArg)
+        clearMap(query: predicate)
+    }
+    
+    // Clears everything not archived, regardless of stale
+    func clearTransientItems() {
+        let archiveFalseFlagPredicate = NSPredicate(format: "archived == NO")
+        clearMap(query: archiveFalseFlagPredicate)
+    }
+    
+    // Clears all non-archive stale items
+    func clearStaleItems() {
+        let staleDatePredictate = NSPredicate(format: "staleDate < %@", Date() as NSDate)
+        let archiveFalseFlagPredicate = NSPredicate(format: "archived == NO")
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [staleDatePredictate, archiveFalseFlagPredicate])
+        clearMap(query: predicate)
+    }
+    
     func clearMap(query: NSPredicate) {
-        persistentContainer.viewContext.perform {
+        backgroundContext.perform {
             let fetch = COTData.fetchRequest()
             fetch.predicate = query
             fetch.includesPropertyValues = false
-            //let request = NSBatchDeleteRequest(fetchRequest: fetch)
-            //request.resultType = .resultTypeObjectIDs
             
             do {
-                let result = try self.persistentContainer.viewContext.fetch(fetch)
+                let result = try self.backgroundContext.fetch(fetch)
                 let count = result.count
                 TAKLogger.debug("[DataController]: This query will impact \(count) records")
                 for row in result {
-                    self.persistentContainer.viewContext.delete(row)
+                    self.backgroundContext.delete(row)
                 }
-                try self.persistentContainer.viewContext.save()
-//                let deleteResult = try dataContext.execute(request) as? NSBatchDeleteResult
-//                if let objectIDs = deleteResult?.result as? [NSManagedObjectID] {
-//                    // Merge the deletions into the app's managed object context.
-//                    NSManagedObjectContext.mergeChanges(
-//                        fromRemoteContextSave: [NSDeletedObjectsKey: objectIDs],
-//                        into: [dataContext]
-//                    )
-//                }
+                try self.backgroundContext.save()
             } catch {
                 TAKLogger.error("[DataController]: Unable to clear map \(error)")
             }

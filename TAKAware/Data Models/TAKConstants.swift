@@ -52,6 +52,7 @@ struct AppConstants {
     static let NOTIFY_APP_INACTIVE = "AppScenePhaseInactive"
     static let NOTIFY_APP_BACKGROUND = "AppScenePhaseBackground"
     static let NOTIFY_SCROLL_TO_KML = "ScrollToKML"
+    static let NOTIFY_MAP_SOURCE_UPDATED = "MapSourceUpdated"
     
     static func appDirectoryFor(_ directory: AppDirectories) -> URL {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
