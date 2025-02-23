@@ -1183,6 +1183,8 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
             switch overlay {
+            case let overlay as OfflineTileOverlay:
+                return TileOverlayRenderer(overlay: overlay)
             case let overlay as MKTileOverlay:
                 return MKTileOverlayRenderer(tileOverlay: overlay)
             case let overlay as COTMapCircle:

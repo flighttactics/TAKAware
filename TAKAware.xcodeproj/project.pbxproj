@@ -3414,6 +3414,7 @@
 		A5F8AA452D6374FC009901A7 /* IconImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F8AA442D6374EE009901A7 /* IconImage.swift */; };
 		A5F8AA472D63C149009901A7 /* MapSourceParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F8AA462D63C144009901A7 /* MapSourceParser.swift */; };
 		A5F8AA492D63C163009901A7 /* MapSourceImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F8AA482D63C15F009901A7 /* MapSourceImporter.swift */; };
+		A5F8AA602D68BA1C009901A7 /* MapOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F8AA5F2D68BA17009901A7 /* MapOverlays.swift */; };
 		A5FB4E622A8FDF430034966D /* X509 in Frameworks */ = {isa = PBXBuildFile; productRef = A5FB4E612A8FDF430034966D /* X509 */; };
 		A5FB4E642A8FE0020034966D /* CSRRequestor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FB4E632A8FE0020034966D /* CSRRequestor.swift */; };
 		A5FB4E662A98D0FF0034966D /* TAKConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5FB4E652A98D0FF0034966D /* TAKConstants.swift */; };
@@ -6870,6 +6871,7 @@
 		A5F8AA442D6374EE009901A7 /* IconImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconImage.swift; sourceTree = "<group>"; };
 		A5F8AA462D63C144009901A7 /* MapSourceParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSourceParser.swift; sourceTree = "<group>"; };
 		A5F8AA482D63C15F009901A7 /* MapSourceImporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSourceImporter.swift; sourceTree = "<group>"; };
+		A5F8AA5F2D68BA17009901A7 /* MapOverlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapOverlays.swift; sourceTree = "<group>"; };
 		A5FB4E632A8FE0020034966D /* CSRRequestor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRRequestor.swift; sourceTree = "<group>"; };
 		A5FB4E652A98D0FF0034966D /* TAKConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKConstants.swift; sourceTree = "<group>"; };
 		A5FB4E6A2AA751890034966D /* CertificateSigningRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSigningRequestTests.swift; sourceTree = "<group>"; };
@@ -7020,6 +7022,7 @@
 		A595F6642C278C9A00E81976 /* MainScreens */ = {
 			isa = PBXGroup;
 			children = (
+				A5F8AA5F2D68BA17009901A7 /* MapOverlays.swift */,
 				A595F6672C278CCD00E81976 /* AwarenessView.swift */,
 				A595F6692C278CFE00E81976 /* Components.swift */,
 				A578E42D2C550FD8001978D4 /* MapView.swift */,
@@ -14135,6 +14138,7 @@
 				A53F59EE2D0FD58900DFD794 /* VideoPlayerView.swift in Sources */,
 				A5A30D572D280F88009399F3 /* KMLData.swift in Sources */,
 				A5B312C72C39CAAF007B3914 /* IconData.swift in Sources */,
+				A5F8AA602D68BA1C009901A7 /* MapOverlays.swift in Sources */,
 				4630FD142B5071A100988ED4 /* MessageView.swift in Sources */,
 				A5AA510A2AC33488006696B2 /* OnboardingView.swift in Sources */,
 				A5F8AA472D63C149009901A7 /* MapSourceParser.swift in Sources */,
