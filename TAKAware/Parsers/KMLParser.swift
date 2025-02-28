@@ -210,12 +210,12 @@ struct KMLLineString: Equatable, XMLObjectDeserialization {
     var altitudeMode: String
     
     var mapCoordinates: [CLLocationCoordinate2D] {
-        let coordTupleArray = coordinates.split(separator: " ").filter { !$0.isEmpty }
+        let coordTupleArray = coordinates.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ").filter { !$0.isEmpty }
         guard coordTupleArray.count >= 2 else { return [] }
         let mappedCoordinates: [CLLocationCoordinate2D] = coordTupleArray.map { tuple in
             let coordArray = tuple.split(separator: ",")
             if coordArray.count < 2 {
-                TAKLogger.debug("[KMLParser] unable to split coordinates \(tuple), returning 0,0")
+                TAKLogger.debug("[KMLParser] unable to split coordinates \(tuple) (\(coordinates)), returning 0,0")
                 return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
             }
             let lon = Double(coordArray[0]) ?? 0.0
@@ -262,12 +262,13 @@ struct KMLLinearRing: Equatable, XMLObjectDeserialization {
     var altitudeMode: String
     
     var mapCoordinates: [CLLocationCoordinate2D] {
-        let coordTupleArray = coordinates.split(separator: " ").filter { !$0.isEmpty }
+        let coordTupleArray = coordinates.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ").filter { !$0.isEmpty }
         guard coordTupleArray.count >= 2 else { return [] }
         let mappedCoordinates: [CLLocationCoordinate2D] = coordTupleArray.map { tuple in
             let coordArray = tuple.split(separator: ",")
             if coordArray.count < 2 {
-                TAKLogger.debug("[KMLParser] unable to split coordinates \(tuple), returning 0,0")
+                debugPrint(coordinates)
+                TAKLogger.debug("[KMLParser] unable to split coordinates \(tuple) (\(coordinates)), returning 0,0")
                 return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
             }
             let lon = Double(coordArray[0]) ?? 0.0

@@ -155,7 +155,7 @@ struct AnnotationDetailReadOnly: View {
                                 HTMLView(htmlString: annotation!.remarks!)
                                     .frame(height: htmlContentHeight)
                             } else {
-                                Text("Remarks: \(annotation!.remarks!)")
+                                Text("Remarks: \(annotation!.remarks ?? "")")
                                 Text("Type: \(annotation!.cotType ?? "")")
                                 Text("Latitude: \(annotation!.coordinate.latitude.description)")
                                 Text("Longitude: \(annotation!.coordinate.longitude.description)")

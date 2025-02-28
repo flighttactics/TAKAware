@@ -21,7 +21,6 @@
 		A507C0742C1BECE80022BB0F /* SwiftTAK in Frameworks */ = {isa = PBXBuildFile; productRef = A507C0732C1BECE80022BB0F /* SwiftTAK */; };
 		A508213F2AB3D19B00E0CBD8 /* TAKCAConfigResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A508213E2AB3D19B00E0CBD8 /* TAKCAConfigResponseParser.swift */; };
 		A50C5F5B2A5F92FF001E52E6 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50C5F5A2A5F92FF001E52E6 /* SettingsStore.swift */; };
-		A50C5F5D2A601CF0001E52E6 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50C5F5C2A601CF0001E52E6 /* SettingsView.swift */; };
 		A50C5F5F2A6032D2001E52E6 /* EmergencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50C5F5E2A6032D2001E52E6 /* EmergencyView.swift */; };
 		A51B12EA2BB1E28800C25239 /* AdvancedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */; };
 		A51B12EC2BB1E29800C25239 /* SituationalAwarenessOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */; };
@@ -3476,7 +3475,6 @@
 		A507C0702C1BE5CE0022BB0F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		A508213E2AB3D19B00E0CBD8 /* TAKCAConfigResponseParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKCAConfigResponseParser.swift; sourceTree = "<group>"; };
 		A50C5F5A2A5F92FF001E52E6 /* SettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStore.swift; sourceTree = "<group>"; };
-		A50C5F5C2A601CF0001E52E6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A50C5F5E2A6032D2001E52E6 /* EmergencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyView.swift; sourceTree = "<group>"; };
 		A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedOptions.swift; sourceTree = "<group>"; };
 		A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SituationalAwarenessOptions.swift; sourceTree = "<group>"; };
@@ -10467,7 +10465,6 @@
 				4630FD112B5071A100988ED4 /* Message */,
 				A55ABF432ABDBF7600195AB7 /* SettingsScreens */,
 				A5D8D37F2A53B0F9002F0E3E /* MainScreen.swift */,
-				A50C5F5C2A601CF0001E52E6 /* SettingsView.swift */,
 				A5D8D37D2A53B0F9002F0E3E /* TAKAwareApp.swift */,
 				A50C5F5E2A6032D2001E52E6 /* EmergencyView.swift */,
 				A5AA51092AC33488006696B2 /* OnboardingView.swift */,
@@ -14161,7 +14158,6 @@
 				A5A30D592D2A431E009399F3 /* COTData+Extension.swift in Sources */,
 				A50C5F5F2A6032D2001E52E6 /* EmergencyView.swift in Sources */,
 				A59C08472AACF95100C33B44 /* CertificateManager.swift in Sources */,
-				A50C5F5D2A601CF0001E52E6 /* SettingsView.swift in Sources */,
 				A50C5F5B2A5F92FF001E52E6 /* SettingsStore.swift in Sources */,
 				4630FD192B5071BD00988ED4 /* String+Extension.swift in Sources */,
 				4630FD1A2B5071BD00988ED4 /* ChatViewModel.swift in Sources */,
