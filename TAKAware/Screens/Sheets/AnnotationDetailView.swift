@@ -126,7 +126,7 @@ struct AnnotationDetailReadOnly: View {
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
     @Binding var isEditing: Bool
     @State private var showingAlert = false
-    @State private var htmlContentHeight: Double = 100.0
+    @State private var htmlContentHeight: Double = 200.0
     
     var annotation: MapPointAnnotation? {
         currentSelectedAnnotation
@@ -143,27 +143,38 @@ struct AnnotationDetailReadOnly: View {
             if annotation == nil {
                 Text("No Map Item Selected")
             } else {
-                HStack(alignment: .top) {
+                if annotation!.isKML {
                     VStack {
-                        Group {
-                            Text(annotation!.title ?? "")
-                            // TODO: Be smarter about when to show HTML (check for CDATA)
-                            if annotation!.isKML {
-                                Text("Type: \(annotation!.cotType ?? "")")
-                                Text("Latitude: \(annotation!.coordinate.latitude.description)")
-                                Text("Longitude: \(annotation!.coordinate.longitude.description)")
-                                HTMLView(htmlString: annotation!.remarks!)
-                                    .frame(height: htmlContentHeight)
-                            } else {
+                        HStack(alignment: .top) {
+                            VStack {
+                                Group {
+                                    Text(annotation!.title ?? "")
+                                    Text("Type: \(annotation!.cotType ?? "")")
+                                    Text("Latitude: \(annotation!.coordinate.latitude.description)")
+                                    Text("Longitude: \(annotation!.coordinate.longitude.description)")
+                                }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                            IconImage(annotation: annotation, frameSize: 40.0)
+                        }
+                        // TODO: Be smarter about when to show HTML (check for CDATA)
+                        HTMLView(htmlString: annotation!.remarks!)
+                            .frame(height: htmlContentHeight)
+                    }
+                } else {
+                    HStack(alignment: .top) {
+                        VStack {
+                            Group {
+                                Text(annotation!.title ?? "")
                                 Text("Remarks: \(annotation!.remarks ?? "")")
                                 Text("Type: \(annotation!.cotType ?? "")")
                                 Text("Latitude: \(annotation!.coordinate.latitude.description)")
                                 Text("Longitude: \(annotation!.coordinate.longitude.description)")
                             }
+                            .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        IconImage(annotation: annotation, frameSize: 40.0)
                     }
-                    IconImage(annotation: annotation, frameSize: 40.0)
                 }
                 HStack {
                     Spacer()
