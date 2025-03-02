@@ -368,21 +368,30 @@ struct CertEnrollmentScreen: View {
                 processQRCode(qrCodeResult)
             }) {
                 NavigationView {
-                    CodeScannerView(
-                        codeTypes: [.qr],
-                        showViewfinder: true,
-                        simulatedData: "MyTAK,tak.example.com,8089,SSL",
-                        shouldVibrateOnSuccess: true,
-                        videoCaptureDevice: AVCaptureDevice.zoomedCameraForQRCode()
-                    ) { response in
-                        if case let .success(result) = response {
-                            qrCodeResult = result.string
-                            isPresentingQRScanner = false
+                    Group {
+                        if isAuthorized {
+                            CodeScannerView(
+                                codeTypes: [.qr],
+                                showViewfinder: true,
+                                simulatedData: "MyTAK,tak.example.com,8089,SSL",
+                                shouldVibrateOnSuccess: true,
+                                videoCaptureDevice: AVCaptureDevice.zoomedCameraForQRCode()
+                            ) { response in
+                                if case let .success(result) = response {
+                                    qrCodeResult = result.string
+                                    isPresentingQRScanner = false
+                                }
+                            }
+                        } else {
+                            VStack(alignment: .center) {
+                                Text("Camera access has been disabled. Please enable in settings.")
+                            }
+                                
                         }
                     }
                     .toolbar {
                         ToolbarItem {
-                            Button("Cancel", action: { isPresentingQRScanner = false })
+                            Button("Cancel", action: { dismiss() })
                         }
                     }
                 }
