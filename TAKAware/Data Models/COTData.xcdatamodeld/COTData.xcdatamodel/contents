@@ -56,6 +56,42 @@
         <relationship name="cotData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="COTData"/>
         <relationship name="dataPackage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="DataPackage" inverseName="dataPackageFiles" inverseEntity="DataPackage"/>
     </entity>
+    <entity name="DataSyncMission" representedClassName="DataSyncMission" syncable="YES" codeGenerationType="class">
+        <attribute name="createTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="creatorUID" optional="YES" attributeType="String"/>
+        <attribute name="enabled" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="expiration" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="groups" optional="YES" attributeType="String"/>
+        <attribute name="guid" optional="YES" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="inviteOnly" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="keywords" optional="YES" attributeType="String"/>
+        <attribute name="missionDescription" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="password" optional="YES" attributeType="String"/>
+        <attribute name="passwordProtected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="serverHost" optional="YES" attributeType="String"/>
+        <attribute name="serverID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="DataSyncMissionItem" representedClassName="DataSyncMissionItem" syncable="YES" codeGenerationType="class">
+        <attribute name="cotUid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="creatorUid" optional="YES" attributeType="String"/>
+        <attribute name="expiration" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="fileHash" optional="YES" attributeType="String"/>
+        <attribute name="filename" optional="YES" attributeType="String"/>
+        <attribute name="fileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isCOT" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="keywords" optional="YES" attributeType="String"/>
+        <attribute name="localpath" optional="YES" attributeType="String"/>
+        <attribute name="mimeType" optional="YES" attributeType="String"/>
+        <attribute name="missionUUID" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="submissionTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="submitter" optional="YES" attributeType="String"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="uid" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="KMLFile" representedClassName="KMLFile" syncable="YES" codeGenerationType="class">
         <attribute name="fileName" attributeType="String"/>
         <attribute name="filePath" attributeType="URI"/>
@@ -75,5 +111,18 @@
         <attribute name="tileUpdate" optional="YES" attributeType="String"/>
         <attribute name="url" attributeType="String"/>
         <attribute name="visible" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="TAKServer" representedClassName="TAKServer" syncable="YES" codeGenerationType="class">
+        <attribute name="apiPort" attributeType="Integer 16" defaultValueString="8446" usesScalarValueType="YES"/>
+        <attribute name="clientCert" optional="YES" attributeType="String"/>
+        <attribute name="clientCertPW" optional="YES" attributeType="String"/>
+        <attribute name="enabled" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="hostUrl" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="serverCert" optional="YES" attributeType="String"/>
+        <attribute name="serverCertPort" attributeType="Integer 16" defaultValueString="8443" usesScalarValueType="YES"/>
+        <attribute name="serverCertPW" optional="YES" attributeType="String"/>
+        <attribute name="streamingPort" attributeType="Integer 16" defaultValueString="8089" usesScalarValueType="YES"/>
     </entity>
 </model>

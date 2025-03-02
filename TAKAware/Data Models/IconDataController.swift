@@ -42,7 +42,7 @@ class IconDataController: ObservableObject {
         return container
     }()
     
-    private init() {}
+    init() {}
     
     func clearAll() {
         backgroundContext.perform {

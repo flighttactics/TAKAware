@@ -62,6 +62,17 @@ final class StreamParserTests: TAKAwareTestCase {
         XCTAssertEqual(event2, String(secondEventCrossed[0]), "Parser split did not match event2")
     }
     
+    func testParsesTaskMissionChangeEvent() throws {
+        let xml = """
+<event version="2.0" uid="62d88822-1426-40c6-b30d-e440f2c56daa" type="t-x-m-c" how="h-g-i-g-o" time="2024-07-28T17:48:03Z" start="2024-07-28T17:48:03Z" stale="2024-07-28T17:53:03Z"><point lat="0" lon="0" hae="0" ce="9999999" le="9999999"/><detail></detail></event>
+"""
+        let cotParser: COTXMLParser = COTXMLParser()
+        let taskedEventXml = parser.parse(dataStream: Data(xml.utf8)).first
+        XCTAssertNotNil(taskedEventXml)
+        let taskedEvent = cotParser.parse(taskedEventXml!)
+        XCTAssertEqual(taskedEvent?.eventType, .TASKING)
+    }
+    
 //    func testUnknownBug() throws {
 //        let cot = """
 //<?xml version='1.0' encoding='UTF-8' standalone='yes'?>

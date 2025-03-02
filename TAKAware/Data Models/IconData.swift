@@ -200,7 +200,7 @@ class IconData {
                     
                     if dataBytes.isEmpty {
                         TAKLogger.debug("[IconData] Default SQL did not contain icon. Need to check custom loads")
-                        dataBytes = await IconDataController.shared.retrieveIconFor(iconSetUid: iconSetUid, filename: imageName)
+                        dataBytes = await IconDataController().retrieveIconFor(iconSetUid: iconSetUid, filename: imageName)
                         TAKLogger.debug("[IconData] dataBytes empty? \(dataBytes.isEmpty)")
                     }
                 }

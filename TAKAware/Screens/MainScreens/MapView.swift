@@ -956,7 +956,7 @@ struct MapView: UIViewRepresentable {
         }
 
         if !toAdd.isEmpty {
-            let insertingAnnotations = incomingData.filter { toAdd.contains($0.id!.uuidString)}
+            let insertingAnnotations = incomingData.filter { toAdd.contains($0.id?.uuidString ?? "")}
             let newMapPoints = insertingAnnotations.map { COTMapObject(mapPoint: $0) }
             let newAnnotations = newMapPoints.map { $0.annotation }
             mapView.addAnnotations(newAnnotations)

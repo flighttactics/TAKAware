@@ -40,7 +40,6 @@
 		A53F59E72D0FD58900DFD794 /* ChannelSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DC2D0FD58900DFD794 /* ChannelSheet.swift */; };
 		A53F59E82D0FD58900DFD794 /* ChatSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DD2D0FD58900DFD794 /* ChatSheet.swift */; };
 		A53F59E92D0FD58900DFD794 /* DataPackageSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DE2D0FD58900DFD794 /* DataPackageSheet.swift */; };
-		A53F59EA2D0FD58900DFD794 /* DataSyncSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59DF2D0FD58900DFD794 /* DataSyncSheet.swift */; };
 		A53F59EB2D0FD58900DFD794 /* DeconflictionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59E02D0FD58900DFD794 /* DeconflictionSheet.swift */; };
 		A53F59EC2D0FD58900DFD794 /* SettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59E12D0FD58900DFD794 /* SettingsSheet.swift */; };
 		A53F59ED2D0FD58900DFD794 /* Sheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53F59E22D0FD58900DFD794 /* Sheet.swift */; };
@@ -3494,7 +3493,6 @@
 		A53F59DC2D0FD58900DFD794 /* ChannelSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSheet.swift; sourceTree = "<group>"; };
 		A53F59DD2D0FD58900DFD794 /* ChatSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSheet.swift; sourceTree = "<group>"; };
 		A53F59DE2D0FD58900DFD794 /* DataPackageSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackageSheet.swift; sourceTree = "<group>"; };
-		A53F59DF2D0FD58900DFD794 /* DataSyncSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSyncSheet.swift; sourceTree = "<group>"; };
 		A53F59E02D0FD58900DFD794 /* DeconflictionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeconflictionSheet.swift; sourceTree = "<group>"; };
 		A53F59E12D0FD58900DFD794 /* SettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheet.swift; sourceTree = "<group>"; };
 		A53F59E22D0FD58900DFD794 /* Sheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheet.swift; sourceTree = "<group>"; };
@@ -6973,7 +6971,6 @@
 				A53F59DC2D0FD58900DFD794 /* ChannelSheet.swift */,
 				A53F59DD2D0FD58900DFD794 /* ChatSheet.swift */,
 				A53F59DE2D0FD58900DFD794 /* DataPackageSheet.swift */,
-				A53F59DF2D0FD58900DFD794 /* DataSyncSheet.swift */,
 				A53F59E02D0FD58900DFD794 /* DeconflictionSheet.swift */,
 				A53F59E12D0FD58900DFD794 /* SettingsSheet.swift */,
 				A53F59E22D0FD58900DFD794 /* Sheet.swift */,
@@ -14126,7 +14123,6 @@
 				A52BE8F52D15AAB900E82414 /* KMLParser.swift in Sources */,
 				A53F59E82D0FD58900DFD794 /* ChatSheet.swift in Sources */,
 				A53F59E92D0FD58900DFD794 /* DataPackageSheet.swift in Sources */,
-				A53F59EA2D0FD58900DFD794 /* DataSyncSheet.swift in Sources */,
 				A52BE8ED2D132C3E00E82414 /* APIRequestObject.swift in Sources */,
 				A53F59EB2D0FD58900DFD794 /* DeconflictionSheet.swift in Sources */,
 				A54312EF2D52D6C100033230 /* IconsetImporter.swift in Sources */,
@@ -14346,7 +14342,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
+				CURRENT_PROJECT_VERSION = 90;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14370,7 +14366,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = I;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -14390,7 +14386,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 88;
+				CURRENT_PROJECT_VERSION = 90;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14414,7 +14410,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = I;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

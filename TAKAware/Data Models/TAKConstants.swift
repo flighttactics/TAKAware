@@ -33,8 +33,10 @@ struct AppConstants {
     static let CHANNELS_LIST_PATH = "/Marti/api/groups/all"
     static let CHANNELS_BIT_UPDATE_PATH = "/Marti/api/groups/activebits"
     
-    static let DATA_SYNC_MISSION_LIST_PATH = "/Marti/api/missions"
-    static let DATA_SYNC_MISSION_DETAILS_PATH = "/Marti/api/missions/{name}"
+    static let DATA_SYNC_MISSION_LIST_PATH = "/Marti/api/missions?passwordProtected=true" // GET
+    static let DATA_SYNC_MISSION_DETAILS_PATH = "/Marti/api/missions/{name}" // GET
+    static let DATA_SYNC_MISSION_SUBSCRIBE_PATH = "/Marti/api/missions/{name}/subscription" // PUT
+    static let DATA_SYNC_MISSION_UNSUBSCRIBE_PATH = "/Marti/api/missions/{name}/subscription?disconnectOnly=true" // DELETE
 
     static let MISSION_PACKAGE_LIST_PATH = "/Marti/api/files/metadata?missionPackage=true"
     //static let MISSION_PACKAGE_LIST_PATH = "/Marti/sync/search?keywords=missionpackage&tool=public"
@@ -53,6 +55,7 @@ struct AppConstants {
     static let NOTIFY_APP_BACKGROUND = "AppScenePhaseBackground"
     static let NOTIFY_SCROLL_TO_KML = "ScrollToKML"
     static let NOTIFY_MAP_SOURCE_UPDATED = "MapSourceUpdated"
+    static let NOTIFY_SERVER_CONNECTED = "TAKServerConnected"
     
     static func appDirectoryFor(_ directory: AppDirectories) -> URL {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!

@@ -22,6 +22,7 @@ struct MainScreen: View {
     @EnvironmentObject var locationManager: LocationManager
     @EnvironmentObject var settingsStore: SettingsStore
     
+    @StateObject var dataSyncManager: DataSyncManager = DataSyncManager(shouldListenForUpdates: true)
     @State private var displayUIState = DisplayUIState()
     @State private var migrator = Migrator()
     @State var isShowingAlert = false

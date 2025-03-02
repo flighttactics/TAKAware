@@ -37,6 +37,7 @@ struct SettingsSheet: View {
                     ChannelOptions()
                     DataPackageOptions()
                     KMLOptions()
+                    DataSyncMissionOptions()
                     AboutInformation()
                 }
             }

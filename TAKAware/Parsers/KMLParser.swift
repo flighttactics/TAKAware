@@ -267,7 +267,6 @@ struct KMLLinearRing: Equatable, XMLObjectDeserialization {
         let mappedCoordinates: [CLLocationCoordinate2D] = coordTupleArray.map { tuple in
             let coordArray = tuple.split(separator: ",")
             if coordArray.count < 2 {
-                debugPrint(coordinates)
                 TAKLogger.debug("[KMLParser] unable to split coordinates \(tuple) (\(coordinates)), returning 0,0")
                 return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
             }
