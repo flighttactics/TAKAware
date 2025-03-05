@@ -75,6 +75,9 @@ class SettingsStore: ObservableObject {
         takServerUrl = ""
         takServerUsername = ""
         takServerPassword = ""
+        takServerPort = TAKConstants.DEFAULT_STREAMING_PORT
+        takServerCSRPort = TAKConstants.DEFAULT_CSR_PORT
+        takServerSecureAPIPort = TAKConstants.DEFAULT_SECURE_API_PORT
         serverCertificateTruststore = []
         clearAllIdentities()
     }
