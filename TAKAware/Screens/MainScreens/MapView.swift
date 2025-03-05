@@ -205,6 +205,40 @@ class COTImageOverlay: NSObject, MKOverlay {
     }
 }
 
+class COTEllipseRenderer: MKOverlayRenderer {
+    
+    func degreesToRadians(_ degrees: Double) -> Double {
+        degrees * .pi / 180
+    }
+    
+    override func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
+        guard let overlay = self.overlay as? COTMapEllipse else {
+            return
+        }
+
+        let rect = self.rect(for: overlay.boundingMapRect)
+        UIGraphicsPushContext(context)
+        context.setLineWidth((overlay.strokeWeight/10) * MKRoadWidthAtZoomScale(zoomScale)) //
+        
+        context.setStrokeColor(IconData.colorFromArgb(argbVal: Int(overlay.strokeColor)).cgColor)
+        
+        let mapPointsPerMeter = MKMapPointsPerMeterAtLatitude(overlay.coordinate.latitude)
+        let width = overlay.minor * mapPointsPerMeter
+        let height = overlay.major * mapPointsPerMeter
+
+        let y = (rect.height-height)/2
+        let x = (rect.width-width)/2
+        let finalRect = CGRectMake(x, y, width, height)
+
+        context.translateBy(x: finalRect.midX, y: finalRect.midY)
+        context.rotate(by: degreesToRadians(overlay.angle))
+        context.translateBy(x: -finalRect.midX, y: -finalRect.midY)
+        
+        context.strokeEllipse(in: finalRect)
+        UIGraphicsPopContext()
+    }
+}
+
 class COTImageOverlayRenderer: MKOverlayRenderer {
     override func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
         guard let overlay = self.overlay as? COTImageOverlay else {
@@ -1194,30 +1228,7 @@ struct MapView: UIViewRepresentable {
                 circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
                 return circleRenderer
             case let overlay as COTMapEllipse:
-                let ellipseRenderer = MKCircleRenderer(circle: overlay)
-                
-                let mapPointsPerMeter = MKMapPointsPerMeterAtLatitude(overlay.coordinate.latitude)
-                let width = overlay.minor * mapPointsPerMeter
-                let height = overlay.major * mapPointsPerMeter
-                let rect = CGRectMake(0, 0, width, height)
-                
-                let center = ellipseRenderer.path.boundingBox
-                let y = (center.height-height)/2
-                let x = (center.width-width)/2
-
-                var transform: CGAffineTransform = .identity
-                transform = transform.translatedBy(x: x, y: y)
-                transform = transform.translatedBy(x: rect.midX, y: rect.midY)
-                transform = transform.rotated(by: degreesToRadians(overlay.angle))
-                transform = transform.translatedBy(x: -rect.midX, y: -rect.midY)
-
-                let path = CGPath(ellipseIn: rect, transform: &transform)
-                ellipseRenderer.path = path
-
-                ellipseRenderer.lineWidth = overlay.strokeWeight
-                ellipseRenderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
-                ellipseRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
-                return ellipseRenderer
+                return COTEllipseRenderer(overlay: overlay)
             case let overlay as COTMapPolygon:
                 let renderer = MKPolygonRenderer(overlay: overlay)
                 renderer.lineWidth = overlay.strokeWeight
