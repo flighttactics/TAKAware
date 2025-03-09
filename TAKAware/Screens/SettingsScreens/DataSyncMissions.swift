@@ -133,7 +133,12 @@ struct DataSyncSubscribedMissionDetail: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             if mission.passwordProtected {
-                presentAlert = true
+                if mission.password == nil {
+                    presentAlert = true
+                } else {
+                    password = mission.password!
+                    loadMission()
+                }
             } else {
                 loadMission()
             }

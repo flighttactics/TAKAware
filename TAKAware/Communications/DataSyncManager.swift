@@ -408,7 +408,7 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                 (mimeType == "application/json" || mimeType == "text/plain"),
                 let data = data {
                 Task {
-                    await self.storeDataMissionDetailResponse(data, shouldSyncContents: shouldSyncContents)
+                    await self.storeDataMissionDetailResponse(data, password: password, shouldSyncContents: shouldSyncContents)
                 }
             } else {
                 self.logDataPackagesError("Unknown response from server when attempting data mission detail retrieval")
@@ -565,7 +565,7 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
         task.resume()
     }
     
-    func storeDataPackagesResponse(_ data: Data, password: String? = nil) async {
+    func storeDataPackagesResponse(_ data: Data) async {
         TAKLogger.debug("[DataSyncManager] storingDataSyncResponse!")
         DispatchQueue.main.async {
             self.dataPackages = []
@@ -583,8 +583,10 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                         let name = dataPackageData["name"] as! String
                         let storedMission = results?.first(where: {$0.name == name})
                         var dbUid: UUID? = nil
+                        var password: String? = nil
                         if storedMission != nil {
                             dbUid = storedMission?.id
+                            password = storedMission?.password
                         }
                         let description = dataPackageData["description"] as! String
                         let creatorUid = dataPackageData["creatorUid"] as! String

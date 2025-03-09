@@ -35,6 +35,8 @@ struct AppConstants {
     
     static let DATA_SYNC_MISSION_LIST_PATH = "/Marti/api/missions?passwordProtected=true" // GET
     static let DATA_SYNC_MISSION_DETAILS_PATH = "/Marti/api/missions/{name}" // GET
+    static let DATA_SYNC_MISSION_TOKEN_PATH = "/Marti/api/missions/{name}/token" // GET
+    static let DATA_SYNC_MISSION_COT_DETAILS_PATH = "/Marti/api/missions/{name}/cot" // GET
     static let DATA_SYNC_MISSION_SUBSCRIBE_PATH = "/Marti/api/missions/{name}/subscription" // PUT
     static let DATA_SYNC_MISSION_UNSUBSCRIBE_PATH = "/Marti/api/missions/{name}/subscription?disconnectOnly=true" // DELETE
 
