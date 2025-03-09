@@ -86,28 +86,17 @@ struct DataPackageEnrollment: View {
 
 struct ConnectionOptions: View {
     @Binding var isProcessingDataPackage: Bool
-    @State var isShowingAlert = false
     @ObservedObject var settingsStore = SettingsStore.global
     
     var body: some View {
         Group {
             if(!isProcessingDataPackage && settingsStore.takServerUrl != "") {
                 ServerInformationDisplay()
-                Button(role: .destructive) {
-                    SettingsStore.global.clearConnection()
-                    isShowingAlert = true
-                } label: {
-                    Text("Delete Current TAK Server Connection")
-                }
-                .contentShape(Rectangle())
             } else {
                 NavigationLink(destination: ConnectionOptionsScreen(isProcessingDataPackage: $isProcessingDataPackage)) {
                     Text("Connect to a TAK Server")
                 }
             }
-        }
-        .alert(isPresented: $isShowingAlert) {
-            Alert(title: Text("Server Connection"), message: Text("The TAK Server Connection has been removed"), dismissButton: .default(Text("OK")))
         }
         .onAppear {
             isProcessingDataPackage = false
