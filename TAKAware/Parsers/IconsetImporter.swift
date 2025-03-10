@@ -46,27 +46,6 @@ class IconsetImporter {
         }
     }
     
-    func availableIconSets() -> [IconSet] {
-        guard let conn = connection else { return [] }
-        do {
-            return try conn.prepare(iconSetTable).map { iconSet in
-                IconSet(
-                    id: iconSet[Expression<Int>("id")],
-                    name: iconSet[Expression<String>("name")],
-                    uid: iconSet[Expression<String>("uid")],
-                    iconsetUUID: iconSet[Expression<UUID>("iconsetUUID")],
-                    selectedGroup: iconSet[Expression<String>("selectedGroup")],
-                    version: iconSet[Expression<String?>("version")],
-                    defaultFriendly: iconSet[Expression<String?>("defaultFriendly")],
-                    defaultHostile: iconSet[Expression<String?>("defaultHostile")],
-                    defaultNeutral: iconSet[Expression<String?>("defaultNeutral")],
-                    defaultUnknown: iconSet[Expression<String?>("defaultUnknown")]
-                )
-            }
-        } catch {}
-        return []
-    }
-    
     func process() async -> Bool {
         TAKLogger.debug("[IconsetImporter] Starting Iconset processing")
         createExtractionDirectory()

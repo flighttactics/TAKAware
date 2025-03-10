@@ -13,11 +13,6 @@ final class IconDataTests: TAKAwareTestCase {
     
     var someVar: String?
     
-    func testRetrieveIconSets() {
-        let iconSets = IconData.availableIconSets()
-        XCTAssertEqual(10, iconSets.count, "No Iconsets may have been found")
-    }
-    
     func buildTestIconFromBase64String(_ iconData: String) -> Icon {
         let imgData = Data(base64Encoded: iconData)!
         let cgDp = CGDataProvider(data: imgData as CFData)!
@@ -84,5 +79,45 @@ final class IconDataTests: TAKAwareTestCase {
         let iconString = "83198b4872a8c34eb9c549da8a4de5a28f07821185b39a2277948f66c24ac17a/GeoOps/Fire Location.png"
         let actualIcon = await IconData.iconFor(type2525: "a-H-G", iconsetPath: iconString)
         XCTAssertNotEqual(actualIcon.icon.pngData(), expectedIcon.icon.pngData())
+    }
+    
+    func testConvertHtmlToUIColor() throws {
+        let htmlColor = "ff0000ff"
+        let expectedFinalArgbInt = -16776961
+        let color = IconData.colorFromKMLColor(kmlColor: htmlColor)
+        XCTAssertEqual(expectedFinalArgbInt, Int(color))
+    }
+    
+    func testConvertHtmlToUIColorWithEmptyString() throws {
+        let htmlColor = ""
+        let expectedFinalArgbInt = 0
+        let color = IconData.colorFromKMLColor(kmlColor: htmlColor)
+        XCTAssertEqual(expectedFinalArgbInt, Int(color))
+    }
+    
+    func testConvertHtmlToUIColorWithInvalidString() throws {
+        let htmlColor = "asdasdasdasads"
+        let expectedFinalArgbInt = 0
+        let color = IconData.colorFromKMLColor(kmlColor: htmlColor)
+        XCTAssertEqual(expectedFinalArgbInt, Int(color))
+    }
+    
+    // The order of expression is aabbggrr
+    func testConvertCommonHtmlColors() throws {
+        let htmlBlack = "FF000000" //-16777216
+        let htmlBlackClear = "00000000" //0
+        let htmlRed = "FF0000FF" //-65536
+        let htmlBlue = "FFFF0000" //-16776961
+        let htmlGreen = "FF00FF00" //-16711936
+        let htmlWhite = "ffffffff" //-1
+        let htmlWhiteClear = "00ffffff" //16777215
+        
+        XCTAssertEqual(IconData.colorFromKMLColor(kmlColor: htmlBlack), -16777216)
+        XCTAssertEqual(IconData.colorFromKMLColor(kmlColor: htmlBlackClear), 0)
+        XCTAssertEqual(IconData.colorFromKMLColor(kmlColor: htmlRed), -65536)
+        XCTAssertEqual(IconData.colorFromKMLColor(kmlColor: htmlBlue), -16776961)
+        XCTAssertEqual(IconData.colorFromKMLColor(kmlColor: htmlGreen), -16711936)
+        XCTAssertEqual(IconData.colorFromKMLColor(kmlColor: htmlWhite), -1)
+        XCTAssertEqual(IconData.colorFromKMLColor(kmlColor: htmlWhiteClear), 16777215)
     }
 }

@@ -517,8 +517,7 @@ final class KMLParserTests: TAKAwareTestCase {
 </kml>
 """
         parser.parse(kmlString: testKML)
-        XCTAssertEqual(parser.placemarks.first?.styles.count, 1)
-        let style = parser.placemarks.first?.styles.first
+        let style = parser.placemarks.first?.style
         XCTAssertEqual("1234S", style?.id)
         let iconStyle = style?.iconStyle
         let labelStyle = style?.labelStyle
@@ -537,5 +536,172 @@ final class KMLParserTests: TAKAwareTestCase {
         
         XCTAssertEqual("7f7faaaa", polyStyle?.color)
         XCTAssertEqual("random", polyStyle?.colorMode)
+    }
+    
+    func testStylesInPlacemarkRoots() throws {
+        let testKML = """
+<?xml version="1.0"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+<Folder>
+    <Placemark>
+        <name>Placemark Root1</name>
+        <description>Hello, Placemark Root1</description>
+        <Style id="1234S1">
+            <IconStyle>
+              <color>a1ff00ff</color>
+              <scale>1.1</scale>
+              <Icon>
+                <href>http://myserver.com/icon1.jpg</href>
+              </Icon>
+            </IconStyle>
+            <LabelStyle>
+              <color>7fffaaff</color>
+              <scale>1.1</scale>
+            </LabelStyle>
+            <LineStyle>
+              <color>ff0000ff</color>
+              <width>1</width>
+            </LineStyle>
+            <PolyStyle>
+              <color>7f7faaaa</color>
+              <colorMode>random</colorMode>
+            </PolyStyle>
+        </Style>
+    </Placemark>
+    <Placemark>
+        <name>Placemark Root2</name>
+        <description>Hello, Placemark Root2</description>
+        <Style id="1234S2">
+            <IconStyle>
+              <color>a2ff00ff</color>
+              <scale>1.2</scale>
+              <Icon>
+                <href>http://myserver.com/icon2.jpg</href>
+              </Icon>
+            </IconStyle>
+            <LabelStyle>
+              <color>7fffaaff</color>
+              <scale>1.2</scale>
+            </LabelStyle>
+            <LineStyle>
+              <color>ff0000ff</color>
+              <width>2</width>
+            </LineStyle>
+            <PolyStyle>
+              <color>7f7faaaa</color>
+              <colorMode>random</colorMode>
+            </PolyStyle>
+        </Style>
+    </Placemark>
+</Folder
+</kml>
+"""
+        parser.parse(kmlString: testKML)
+
+        let style1 = parser.placemarks.first?.style
+        XCTAssertEqual("1234S1", style1?.id)
+        let iconStyle1 = style1?.iconStyle
+        let labelStyle1 = style1?.labelStyle
+        let lineStyle1 = style1?.lineStyle
+        let polyStyle1 = style1?.polygonStyle
+        
+        XCTAssertEqual("a1ff00ff", iconStyle1?.color)
+        XCTAssertEqual(1.1, iconStyle1?.scale)
+        XCTAssertEqual("http://myserver.com/icon1.jpg", iconStyle1?.icon?.href)
+        
+        XCTAssertEqual("7fffaaff", labelStyle1?.color)
+        XCTAssertEqual(1.1, labelStyle1?.scale)
+        
+        XCTAssertEqual("ff0000ff", lineStyle1?.color)
+        XCTAssertEqual(1.0, lineStyle1?.width)
+        
+        XCTAssertEqual("7f7faaaa", polyStyle1?.color)
+        XCTAssertEqual("random", polyStyle1?.colorMode)
+        
+        let style2 = parser.placemarks.last?.style
+        XCTAssertEqual("1234S2", style2?.id)
+        let iconStyle2 = style2?.iconStyle
+        let labelStyle2 = style2?.labelStyle
+        let lineStyle2 = style2?.lineStyle
+        let polyStyle2 = style2?.polygonStyle
+        
+        XCTAssertEqual("a2ff00ff", iconStyle2?.color)
+        XCTAssertEqual(1.2, iconStyle2?.scale)
+        XCTAssertEqual("http://myserver.com/icon2.jpg", iconStyle2?.icon?.href)
+        
+        XCTAssertEqual("7fffaaff", labelStyle2?.color)
+        XCTAssertEqual(1.2, labelStyle2?.scale)
+        
+        XCTAssertEqual("ff0000ff", lineStyle2?.color)
+        XCTAssertEqual(2.0, lineStyle2?.width)
+        
+        XCTAssertEqual("7f7faaaa", polyStyle2?.color)
+        XCTAssertEqual("random", polyStyle2?.colorMode)
+    }
+    
+    func testDocumentWithDocumentAndFolder() throws {
+        let testKML = """
+<?xml version="1.0"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+<Document>
+    <Folder>
+        <Placemark id="folder-placemark">
+            <name>Root Placemark</name>
+            <description>Hello, Document Root</description>
+            <Style id="1234SR">
+                <IconStyle>
+                  <color>FFFFFFFF</color>
+                  <scale>1.1</scale>
+                  <Icon>
+                    <href>http://myserver.com/icon1.jpg</href>
+                  </Icon>
+                </IconStyle>
+                <LabelStyle>
+                  <color>7fffaaff</color>
+                  <scale>1.5</scale>
+                </LabelStyle>
+                <LineStyle>
+                  <color>ff0000ff</color>
+                  <width>15</width>
+                </LineStyle>
+                <PolyStyle>
+                  <color>7f7faaaa</color>
+                  <colorMode>random</colorMode>
+                </PolyStyle>
+            </Style>
+        </Placemark>
+    </Folder>
+    <Document>
+        <Placemark id="document-placemark">
+            <name>Document Placemark</name>
+            <description>Hello, Document Root</description>
+            <Style id="1234SD">
+                <IconStyle>
+                  <color>00000000</color>
+                  <scale>1.2</scale>
+                  <Icon>
+                    <href>http://myserver.com/icon2.jpg</href>
+                  </Icon>
+                </IconStyle>
+                <LabelStyle>
+                  <color>7fffaaff</color>
+                  <scale>1.5</scale>
+                </LabelStyle>
+                <LineStyle>
+                  <color>ff0000ff</color>
+                  <width>15</width>
+                </LineStyle>
+                <PolyStyle>
+                  <color>7f7faaaa</color>
+                  <colorMode>random</colorMode>
+                </PolyStyle>
+            </Style>
+        </Placemark>
+    </Document>
+</Document>
+</kml>
+"""
+        parser.parse(kmlString: testKML)
+        XCTAssertEqual(parser.placemarks.count, 2)
     }
 }

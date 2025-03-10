@@ -80,6 +80,22 @@ class IconData {
         return UIColor(red: red/255, green: green/255.0, blue: blue/255.0, alpha: alpha/255.0)
     }
     
+    // The order of expression is aabbggrr, where aa=alpha (00 to ff);
+    // bb=blue (00 to ff); gg=green (00 to ff); rr=red (00 to ff)
+    static func colorFromKMLColor(kmlColor: String) -> Int {
+        let colorArray = kmlColor.hexaToBytes
+        guard colorArray.count == 4 else {
+            TAKLogger.debug("[IconData] Unable to parse KML Color from \(kmlColor)")
+            return 0
+        }
+        let a1: Int32 = Int32(colorArray[0])
+        let b1: Int32 = Int32(colorArray[1])
+        let g1: Int32 = Int32(colorArray[2])
+        let r1: Int32 = Int32(colorArray[3])
+        let finalInt = (a1 << 24) + (r1 << 16) + (g1 << 8) + (b1 << 0)
+        return Int(finalInt)
+    }
+    
     static func colorForTeam(_ team: String) -> UIColor {
         /*
          From https://github.com/deptofdefense/AndroidTacticalAssaultKit-CIV/blob/889eee292c43d3d2eafdd1f2fbf378ad5cd89ecc/atak/ATAK/app/src/main/assets/filters/team_filters.xml#L9
@@ -115,27 +131,6 @@ class IconData {
         case "Brown": return UIColor(red: 0.627, green: 0.443, blue: 0.31, alpha: 1.0)
         default: return UIColor.white
         }
-    }
-    
-    static func availableIconSets() -> [IconSet] {
-        guard let conn = shared.connection else { return [] }
-        do {
-            return try conn.prepare(shared.iconSetTable).map { iconSet in
-                IconSet(
-                    id: iconSet[Expression<Int>("id")],
-                    name: iconSet[Expression<String>("name")],
-                    uid: iconSet[Expression<String>("uid")],
-                    iconsetUUID: iconSet[Expression<UUID>("iconsetUUID")],
-                    selectedGroup: iconSet[Expression<String>("selectedGroup")],
-                    version: iconSet[Expression<String?>("version")],
-                    defaultFriendly: iconSet[Expression<String?>("defaultFriendly")],
-                    defaultHostile: iconSet[Expression<String?>("defaultHostile")],
-                    defaultNeutral: iconSet[Expression<String?>("defaultNeutral")],
-                    defaultUnknown: iconSet[Expression<String?>("defaultUnknown")]
-                )
-            }
-        } catch {}
-        return []
     }
     
     static func iconFor(annotation: MapPointAnnotation?) async -> Icon {

@@ -72,6 +72,8 @@
 		A55CE96D2AB1D8A20081AF86 /* ConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55CE96C2AB1D8A20081AF86 /* ConverterTests.swift */; };
 		A56679832C04DACD00C453DC /* NIOSSL in Frameworks */ = {isa = PBXBuildFile; productRef = A56679822C04DACD00C453DC /* NIOSSL */; };
 		A567329B2D77D95F00BCC83F /* COTMapObjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A567329A2D77D95B00BCC83F /* COTMapObjectTests.swift */; };
+		A567329D2D7E4B4E00BCC83F /* Collection+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A567329C2D7E4B4500BCC83F /* Collection+Extension.swift */; };
+		A567329F2D7E4B5700BCC83F /* StringProtocol+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A567329E2D7E4B5200BCC83F /* StringProtocol+Extension.swift */; };
 		A5702A432C205772008E1763 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = A5702A422C205772008E1763 /* CodeScanner */; };
 		A578E42C2C548CFC001978D4 /* DataSyncMissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E42B2C548CFC001978D4 /* DataSyncMissions.swift */; };
 		A578E42E2C550FD8001978D4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E42D2C550FD8001978D4 /* MapView.swift */; };
@@ -3524,6 +3526,8 @@
 		A55CE96A2AB1D8860081AF86 /* Converter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Converter.swift; sourceTree = "<group>"; };
 		A55CE96C2AB1D8A20081AF86 /* ConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterTests.swift; sourceTree = "<group>"; };
 		A567329A2D77D95B00BCC83F /* COTMapObjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COTMapObjectTests.swift; sourceTree = "<group>"; };
+		A567329C2D7E4B4500BCC83F /* Collection+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extension.swift"; sourceTree = "<group>"; };
+		A567329E2D7E4B5200BCC83F /* StringProtocol+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringProtocol+Extension.swift"; sourceTree = "<group>"; };
 		A578E42B2C548CFC001978D4 /* DataSyncMissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSyncMissions.swift; sourceTree = "<group>"; };
 		A578E42D2C550FD8001978D4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		A578E4372C55B3E1001978D4 /* DataSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSyncManager.swift; sourceTree = "<group>"; };
@@ -6948,6 +6952,8 @@
 		4630FD152B5071BD00988ED4 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				A567329E2D7E4B5200BCC83F /* StringProtocol+Extension.swift */,
+				A567329C2D7E4B4500BCC83F /* Collection+Extension.swift */,
 				A5A30D582D2A4318009399F3 /* COTData+Extension.swift */,
 				A52BE9082D17E01000E82414 /* KMLFile+Extension.swift */,
 				4630FD162B5071BD00988ED4 /* String+Extension.swift */,
@@ -14089,6 +14095,7 @@
 				A54312DE2D4E720000033230 /* contact.pb.swift in Sources */,
 				A54312DF2D4E720000033230 /* takmessage.pb.swift in Sources */,
 				A54312E02D4E720000033230 /* takcontrol.pb.swift in Sources */,
+				A567329F2D7E4B5700BCC83F /* StringProtocol+Extension.swift in Sources */,
 				A54312E12D4E720000033230 /* cotevent.pb.swift in Sources */,
 				A54312E22D4E720000033230 /* status.pb.swift in Sources */,
 				A54312E32D4E720000033230 /* takv.pb.swift in Sources */,
@@ -14126,6 +14133,7 @@
 				A52BE8F52D15AAB900E82414 /* KMLParser.swift in Sources */,
 				A53F59E82D0FD58900DFD794 /* ChatSheet.swift in Sources */,
 				A53F59E92D0FD58900DFD794 /* DataPackageSheet.swift in Sources */,
+				A567329D2D7E4B4E00BCC83F /* Collection+Extension.swift in Sources */,
 				A52BE8ED2D132C3E00E82414 /* APIRequestObject.swift in Sources */,
 				A53F59EB2D0FD58900DFD794 /* DeconflictionSheet.swift in Sources */,
 				A54312EF2D52D6C100033230 /* IconsetImporter.swift in Sources */,
