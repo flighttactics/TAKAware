@@ -755,6 +755,30 @@ struct KMLFolder: XMLObjectDeserialization {
         return []
     }
     
+    var documents: [KMLDocument] {
+        guard let node = node else { return [] }
+        let documentNodes = node["Document"].all
+        do {
+            return try documentNodes.map { node in
+                try node.value() as KMLDocument
+            }
+        }
+        catch {}
+        return []
+    }
+    
+    var folders: [KMLFolder] {
+        guard let node = node else { return [] }
+        let folderNodes = node["Folder"].all
+        do {
+            return try folderNodes.map { node in
+                try node.value() as KMLFolder
+            }
+        }
+        catch {}
+        return []
+    }
+    
     static func deserialize(_ node: XMLIndexer) throws -> KMLFolder {
         let name = try? node["name"].value() as String
         return KMLFolder(
@@ -910,11 +934,25 @@ struct KMLGroundOverlay: Equatable, XMLObjectDeserialization {
 }
 
 class KMLParser {
+    // KMLs can recursively define folders and documents. This can
+    // cause significant performance problems if users try to import
+    // deep, nested KMLs. So for now, limit the depth it will search
+    // documents and folders
+    let MAX_DEPTH = 2
+    private var currentFolderDepth = 0
+    private var currentDocumentDepth = 0
+    
     var placemarks: [KMLPlacemark] = []
     var groundOverlays: [KMLGroundOverlay] = []
     var document: KMLDocument? = nil
     
+    private func resetDepthCalculations() {
+        currentFolderDepth = 0
+        currentDocumentDepth = 0
+    }
+    
     func parse(kmlString: String) {
+        resetDepthCalculations()
         let kml = XMLHash.parse(kmlString)
         let kmlRoot = kml["kml"]
         
@@ -947,18 +985,40 @@ class KMLParser {
                 let documentKml: KMLDocument = try documentXml.value()
                 if self.document == nil {
                     self.document = documentKml // Only take the first document in the case of multiples
-                }
-                placemarks.append(contentsOf: documentKml.placemarks)
-                groundOverlays.append(contentsOf: documentKml.groundOverlays)
-                documentKml.folders.forEach { folder in
-                    placemarks.append(contentsOf: folder.placemarks)
-                    groundOverlays.append(contentsOf: folder.groundOverlays)
-                }
-                documentKml.documents.forEach { subDoc in
-                    placemarks.append(contentsOf: subDoc.placemarks)
-                    groundOverlays.append(contentsOf: subDoc.groundOverlays)
+                    parseDocument(document: documentKml)
                 }
             } catch {}
+        }
+    }
+    
+    // TODO: Remove recursive depth restrictions
+    private func parseFolder(folder: KMLFolder) {
+        currentFolderDepth += 1
+        
+        placemarks.append(contentsOf: folder.placemarks)
+        groundOverlays.append(contentsOf: folder.groundOverlays)
+        if currentFolderDepth < MAX_DEPTH {
+            folder.folders.forEach { folder in
+                parseFolder(folder: folder)
+            }
+            folder.documents.forEach { subDoc in
+                parseDocument(document: subDoc)
+            }
+        }
+    }
+    
+    // TODO: Remove recursive depth restrictions
+    private func parseDocument(document: KMLDocument) {
+        currentDocumentDepth += 1
+        placemarks.append(contentsOf: document.placemarks)
+        groundOverlays.append(contentsOf: document.groundOverlays)
+        if currentDocumentDepth < MAX_DEPTH {
+            document.folders.forEach { folder in
+                parseFolder(folder: folder)
+            }
+            document.documents.forEach { subDoc in
+                parseDocument(document: subDoc)
+            }
         }
     }
 }
