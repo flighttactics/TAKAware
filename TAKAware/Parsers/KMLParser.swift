@@ -403,7 +403,7 @@ struct KMLMultiGeometry: Equatable, XMLObjectDeserialization {
             guard !coordinates.isEmpty else { return nil }
             let polygon = COTMapPolygon(coordinates: coordinates, count: coordinates.count)
             if let polygonStyle = style?.polygonStyle {
-                if !polygonStyle.color.isEmpty && polygonStyle.fill {
+                if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
                     polygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
                 }
             }
@@ -423,7 +423,7 @@ struct KMLMultiGeometry: Equatable, XMLObjectDeserialization {
                 let coords = linearRing.mapCoordinates
                 let polygon = COTMapPolygon(coordinates: coords, count: coords.count)
                 if let polygonStyle = style?.polygonStyle {
-                    if !polygonStyle.color.isEmpty && polygonStyle.fill {
+                    if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
                         polygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
                     }
                 }
@@ -438,7 +438,7 @@ struct KMLMultiGeometry: Equatable, XMLObjectDeserialization {
             
             let finalPolygon = COTMapPolygon(coordinates: outerCoordinates, count: outerCoordinates.count, interiorPolygons: innerShapes)
             if let polygonStyle = style?.polygonStyle {
-                if !polygonStyle.color.isEmpty && polygonStyle.fill {
+                if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
                     finalPolygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
                 }
             }
@@ -540,7 +540,7 @@ struct KMLPlacemark: Equatable, XMLObjectDeserialization {
                 let coords = linearRing.mapCoordinates
                 let polygon = COTMapPolygon(coordinates: coords, count: coords.count)
                 if let polygonStyle = style?.polygonStyle {
-                    if !polygonStyle.color.isEmpty && polygonStyle.fill {
+                    if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
                         polygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
                     }
                 }
@@ -555,7 +555,7 @@ struct KMLPlacemark: Equatable, XMLObjectDeserialization {
             
             let finalPolygon = COTMapPolygon(coordinates: outerCoordinates, count: outerCoordinates.count, interiorPolygons: innerShapes)
             if let polygonStyle = style?.polygonStyle {
-                if !polygonStyle.color.isEmpty && polygonStyle.fill {
+                if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
                     finalPolygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
                 }
             }
@@ -571,7 +571,7 @@ struct KMLPlacemark: Equatable, XMLObjectDeserialization {
             guard !coordinates.isEmpty else { return nil }
             let polygon = COTMapPolygon(coordinates: coordinates, count: coordinates.count)
             if let polygonStyle = style?.polygonStyle {
-                if !polygonStyle.color.isEmpty && polygonStyle.fill {
+                if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
                     polygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
                 }
             }

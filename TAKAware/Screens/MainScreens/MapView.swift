@@ -139,7 +139,12 @@ class COTMapObject: NSObject {
     
     var shape: MKOverlay? {
         // Shapes: Circle, Polygon, Polyline
-        self.cotEvent = COTXMLParser().parse(cotData.rawXml ?? "")
+        guard let rawXml = cotData.rawXml else {
+            return nil
+        }
+        guard !rawXml.isEmpty else { return nil }
+
+        self.cotEvent = COTXMLParser().parse(rawXml)
         if COTMapObject.RECTANGLE_TYPES.contains(cotType) {
             return buildRectangle()
         } else if COTMapObject.CIRCLE_TYPES.contains(cotType) {
@@ -197,6 +202,7 @@ class COTImageOverlay: NSObject, MKOverlay {
     var overlayImage: UIImage
     var alpha: Double = 1.0
     var actualCoords: [MKMapPoint] = []
+    var rotation: Double = 0.0
     
     init(image: UIImage, center: CLLocationCoordinate2D, boundingRect: MKMapRect) {
         coordinate = center
@@ -240,6 +246,10 @@ class COTEllipseRenderer: MKOverlayRenderer {
 }
 
 class COTImageOverlayRenderer: MKOverlayRenderer {
+    func degreesToRadians(_ degrees: Double) -> Double {
+        degrees * .pi / 180
+    }
+
     override func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in context: CGContext) {
         guard let overlay = self.overlay as? COTImageOverlay else {
             return
@@ -262,7 +272,6 @@ class COTImageOverlayRenderer: MKOverlayRenderer {
             ul.x = ul.x-xAdj
 
             let ciImg = CIImage(image: img)
-
             let perspectiveTransformFilter = CIFilter.perspectiveTransform()
             perspectiveTransformFilter.inputImage = ciImg
             perspectiveTransformFilter.topRight = cartesianForPoint(point: ur, extent: rect)
@@ -273,6 +282,17 @@ class COTImageOverlayRenderer: MKOverlayRenderer {
             img = UIImage(ciImage: txImg)
             rect.origin = ul
         }
+
+        if overlay.rotation != 0.0 {
+            context.scaleBy(x: 1.0, y: -1.0)
+            context.translateBy(x: 0.0, y: -rect.size.height)
+            context.translateBy(x: rect.size.width / 2, y: rect.size.height / 2)
+            context.rotate(by: degreesToRadians(overlay.rotation))
+            context.translateBy(x: -rect.size.width / 2, y: -rect.size.height / 2)
+            context.translateBy(x: 0.0, y: rect.size.height)
+            context.scaleBy(x: 1.0, y: -1.0)
+        }
+        
         let alpha = overlay.alpha
         img.draw(in: rect, blendMode: .normal, alpha: alpha)
         UIGraphicsPopContext()
@@ -290,6 +310,7 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var title: String?
     dynamic var subtitle: String?
     dynamic var coordinate: CLLocationCoordinate2D
+    dynamic var altitude: Double? // In meters
     dynamic var icon: String?
     dynamic var cotType: String?
     dynamic var image: UIImage? = UIImage.init(systemName: "circle.fill")
@@ -332,6 +353,7 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
         self.icon = mapPoint.icon ?? ""
         self.cotType = mapPoint.cotType ?? "a-U-G"
         self.coordinate = CLLocationCoordinate2D(latitude: mapPoint.latitude, longitude: mapPoint.longitude)
+        self.altitude = mapPoint.altitude
         if mapPoint.iconColor != nil
             && mapPoint.iconColor!.isNotEmpty
             && mapPoint.iconColor! != "-1" {
@@ -378,6 +400,8 @@ class SituationalAnnotationView: MKAnnotationView {
         self.mapPointAnnotation = annotation
         if !annotation.isShape {
             setUpLabel()
+        } else {
+            annotationLabel.removeFromSuperview()
         }
         setUpMenu()
     }
@@ -846,7 +870,7 @@ struct MapView: UIViewRepresentable {
                         let coordinates = groundOverlay.latLonBoxCoordinates
                         let northEast = MKMapPoint(coordinates.first!)
                         let southWest = MKMapPoint(coordinates.last!)
-                        mapRect = MKMapRect(x: fmin(northEast.x,southWest.x), y: fmin(northEast.y,southWest.y), width: fabs(northEast.x-southWest.x), height: fabs(northEast.y-southWest.y));
+                        mapRect = MKMapRect(x: fmin(northEast.x,southWest.x), y: fmin(northEast.y,southWest.y), width: fabs(northEast.x-southWest.x), height: fabs(northEast.y-southWest.y))
                     } else if latLongQuad != nil {
                         let coordinateQuad = groundOverlay.latLonQuadCoordinates
                         if coordinateQuad.count < 4 {
@@ -877,6 +901,7 @@ struct MapView: UIViewRepresentable {
                             
                             let imgOverlay = COTImageOverlay(image: img, center: mapRect!.origin.coordinate, boundingRect: mapRect!)
                             imgOverlay.actualCoords = actualCoords
+                            imgOverlay.rotation = groundOverlay.latLonBox?.rotation ?? 0.0
                             let mpa = MapPointAnnotation(id: UUID().uuidString, title: kmlData.docTitle, icon: "", coordinate: mapRect!.origin.coordinate, remarks: kmlData.docDescription)
                             mpa.isKML = true
                             mpa.groupID = fileId
@@ -1225,7 +1250,9 @@ struct MapView: UIViewRepresentable {
                 let circleRenderer = MKCircleRenderer(circle: overlay)
                 circleRenderer.lineWidth = overlay.strokeWeight
                 circleRenderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
-                circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
+                if overlay.fillColor != -1 {
+                    circleRenderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
+                }
                 return circleRenderer
             case let overlay as COTMapEllipse:
                 return COTEllipseRenderer(overlay: overlay)
@@ -1233,13 +1260,17 @@ struct MapView: UIViewRepresentable {
                 let renderer = MKPolygonRenderer(overlay: overlay)
                 renderer.lineWidth = overlay.strokeWeight
                 renderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
-                renderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
+                if overlay.fillColor != -1 {
+                    renderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
+                }
                 return renderer
             case let overlay as COTMapPolyline:
                 let renderer = MKPolylineRenderer(polyline: overlay)
                 renderer.lineWidth = overlay.strokeWeight
                 renderer.strokeColor = IconData.colorFromArgb(argbVal: Int(overlay.strokeColor))
-                renderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
+                if overlay.fillColor != -1 {
+                    renderer.fillColor = IconData.colorFromArgb(argbVal: Int(overlay.fillColor))
+                }
                 return renderer
             case let overlay as COTMapBloodhoundLine:
                 let renderer = MKPolylineRenderer(polyline: overlay)
