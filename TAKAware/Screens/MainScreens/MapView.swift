@@ -894,7 +894,7 @@ struct MapView: UIViewRepresentable {
                     
                     let imgUrl = iconBasePath.appendingPathComponent(icon.href)
                     let fileManager = FileManager()
-                    if fileManager.fileExists(atPath: imgUrl.path()) {
+                    if fileManager.fileExists(atPath: imgUrl.path(percentEncoded: false)) {
                         do {
                             let imgData = try Data(contentsOf: imgUrl)
                             let img = UIImage(data: imgData)!
