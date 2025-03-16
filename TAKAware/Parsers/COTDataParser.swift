@@ -22,6 +22,7 @@ class COTDataParser: NSObject {
         TAKLogger.debug("[COTDataParser] removeMissionContent not yet implemented")
     }
     
+    // Is this already in the CoT Database? Be sure to associate if so
     func parseMissionXml(rawXml: String) {
         let cot = XMLHash.parse(rawXml)
         let missionNode = cot["event"]["detail"]["mission"]
@@ -43,17 +44,6 @@ class COTDataParser: NSObject {
                         if contentUidNode.element != nil {
                             let cotDetailsNode = missionChange["details"]
                             if let cotDetailsElement = cotDetailsNode.element {
-                                let cotType = cotDetailsElement.value(ofAttribute: "type") ?? "a-u-G"
-                                let cotCallsign = cotDetailsElement.value(ofAttribute: "callsign") ?? "UNKNOWN"
-                                let cotIconsetPath = cotDetailsElement.value(ofAttribute: "iconsetPath") ?? ""
-                                let cotColor = cotDetailsElement.value(ofAttribute: "color") ?? "-1"
-                                var lat = "0.0"
-                                var lon = "0.0"
-                                if let locationNode = cotDetailsNode["location"].element {
-                                    lat = locationNode.value(ofAttribute: "lat") ?? "0.0"
-                                    lon = locationNode.value(ofAttribute: "lon") ?? "0.0"
-                                }
-                                // TODO: Link to the Data Sync mission, fool!
                                 dataContext.perform {
                                     
                                     let fetchMission: NSFetchRequest<DataSyncMission> = DataSyncMission.fetchRequest()
@@ -61,20 +51,33 @@ class COTDataParser: NSObject {
                                     let missionResults = try? self.dataContext.fetch(fetchMission)
                                     
                                     if let storedMission = missionResults?.first {
-                                        let cotData = COTData(context: self.dataContext)
-                                        cotData.id = UUID()
-                                        cotData.cotType = cotType
-                                        cotData.callsign = cotCallsign
-                                        cotData.icon = cotIconsetPath
-                                        cotData.iconColor = cotColor
-                                        cotData.cotUid = contentUidNode.element?.text ?? UUID().uuidString
-                                        cotData.latitude = Double(lat) ?? 0.0
-                                        cotData.longitude = Double(lon) ?? 0.0
+                                        let cotUid = contentUidNode.element?.text ?? UUID().uuidString
                                         
-                                        let dsMissionItem = DataSyncMissionItem(context: self.dataContext)
-                                        dsMissionItem.id = UUID()
-                                        dsMissionItem.cotUid = cotData.id
-                                        dsMissionItem.uid = contentUidNode.element!.text
+                                        let fetchCot: NSFetchRequest<COTData> = COTData.fetchRequest()
+                                        fetchCot.predicate = NSPredicate(format: "cotUid = %@", cotUid as String)
+                                        let cotResults = try? self.dataContext.fetch(fetchCot)
+                                        
+                                        var cotDataId: UUID? = nil
+                                        
+                                        if cotResults != nil && cotResults!.count > 0 {
+                                            cotDataId = cotResults!.first?.id
+                                        }
+                                        
+                                        let fetchDsCot: NSFetchRequest<DataSyncMissionItem> = DataSyncMissionItem.fetchRequest()
+                                        fetchDsCot.predicate = NSPredicate(format: "uid = %@", cotUid as String)
+                                        let cotDsResults = try? self.dataContext.fetch(fetchDsCot)
+                                        
+                                        let dsMissionItem: DataSyncMissionItem!
+                                        
+                                        if cotDsResults != nil && cotDsResults!.count > 0 {
+                                            dsMissionItem = cotDsResults!.first
+                                        } else {
+                                            dsMissionItem = DataSyncMissionItem(context: self.dataContext)
+                                            dsMissionItem.id = UUID()
+                                        }
+                                        
+                                        dsMissionItem.cotUid = cotDataId
+                                        dsMissionItem.uid = cotUid
                                         dsMissionItem.missionUUID = storedMission.id
                                         dsMissionItem.isCOT = true
                                         
@@ -191,6 +194,7 @@ class COTDataParser: NSObject {
         TAKLogger.debug("[COTDataParser] Parsing task \(cotEvent.type)")
     }
     
+    // Is this already in a DataSync mission? Be sure to associate if so
     func parseCustom(cotEvent: COTEvent, rawXml: String, forceArchive: Bool = false, dataPackageFile: DataPackageFile? = nil) {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
         fetchUser.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
@@ -211,6 +215,10 @@ class COTDataParser: NSObject {
             let cotVideoURL: URL? = URL(string: cotEvent.cotDetail?.cotVideo?.url ?? "")
             
             let cotShouldArchive = cotEvent.cotDetail?.childNodes.contains(where: { $0 is COTArchive }) ?? false
+            
+            if let altitude = Double(cotEvent.cotPoint?.hae ?? "0.0") {
+                mapPointData.altitude = altitude
+            }
 
             mapPointData.callsign = cotEvent.cotDetail?.cotContact?.callsign ?? "UNKNOWN"
             mapPointData.latitude = Double(cotEvent.cotPoint?.lat ?? "0.0") ?? 0.0
@@ -238,6 +246,7 @@ class COTDataParser: NSObject {
         }
     }
     
+    // Is this already in a DataSync mission? Be sure to associate if so
     func parseAtom(cotEvent: COTEvent, rawXml: String, forceArchive: Bool = false, dataPackageFile: DataPackageFile? = nil) {
         let fetchUser: NSFetchRequest<COTData> = COTData.fetchRequest()
         fetchUser.predicate = NSPredicate(format: "cotUid = %@", cotEvent.uid as String)
@@ -262,6 +271,10 @@ class COTDataParser: NSObject {
             let phone = cotEvent.cotDetail?.cotContact?.phone
             let role = cotEvent.cotDetail?.cotGroup?.role
             let team = cotEvent.cotDetail?.cotGroup?.name
+            
+            if let altitude = Double(cotEvent.cotPoint?.hae ?? "0.0") {
+                mapPointData.altitude = altitude
+            }
 
             mapPointData.callsign = callsign
             mapPointData.latitude = Double(cotEvent.cotPoint?.lat ?? "0.0") ?? 0.0

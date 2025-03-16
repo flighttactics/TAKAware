@@ -35,7 +35,7 @@ class StreamParser: COTDataParser {
         return events
     }
     
-    func parseCoTStream(dataStream: Data?) {
+    func parseCoTStream(dataStream: Data?, forceArchive: Bool = false) {
         guard let dataStream = dataStream else { return }
 
         let events = parse(dataStream: dataStream)
@@ -45,7 +45,7 @@ class StreamParser: COTDataParser {
             }
             switch(cotEvent.eventType) {
             case .ATOM, .BIT:
-                parseAtom(cotEvent: cotEvent, rawXml: xmlEvent)
+                parseAtom(cotEvent: cotEvent, rawXml: xmlEvent, forceArchive: forceArchive)
             case .CUSTOM:
                 parseCustom(cotEvent: cotEvent, rawXml: xmlEvent)
             case .TASKING:

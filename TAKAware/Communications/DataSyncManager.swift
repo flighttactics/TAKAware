@@ -34,6 +34,7 @@ struct DataSyncDataPackageUidDetail {
 }
 
 struct DataSyncDataPackageContent {
+    var uid: String // Should match data.uid
     var data: DataSyncDataPackageContentData
     var timestamp: String = ""
     var creatorUid: String = ""
@@ -78,6 +79,7 @@ struct DataSyncDataPackage {
     var passwordProtected: Bool = false
     var password: String? = nil
     var dbUid: UUID? = nil
+    var token: String? = nil
 }
 
 class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
@@ -119,6 +121,49 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
         }
     }
     
+    func retrieveLatestMissionCoT(mission: DataSyncDataPackage) {
+        let missionPath = AppConstants.DATA_SYNC_MISSION_COT_DETAILS_PATH.replacingOccurrences(of: "{name}", with: mission.name)
+        let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(missionPath)"
+        TAKLogger.debug("[DataSyncManager] Retriving mission CoT from \(requestURLString)")
+        let requestUrl = URL(string: requestURLString)!
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 5
+        var request = URLRequest(url: requestUrl)
+        request.httpMethod = "get"
+        if mission.passwordProtected && mission.token != nil {
+            TAKLogger.debug("[DataSyncManager] Adding bearer token for mission CoT retrieval at \(requestURLString)")
+            request.setValue("Bearer \(mission.token!)", forHTTPHeaderField: "Authorization")
+        }
+
+        let session = URLSession(configuration: configuration,
+                                 delegate: self,
+                                 delegateQueue: OperationQueue.main)
+
+        let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
+            TAKLogger.debug("[DataSyncManager] Session Data Task Returned...")
+            if error != nil {
+                self.logDataPackagesError(error!.localizedDescription)
+                return
+            }
+            guard let response = response as? HTTPURLResponse,
+                (200...299).contains(response.statusCode) else {
+                self.logDataPackagesError("Non success response code \((response as? HTTPURLResponse)?.statusCode.description ?? "UNKNOWN")")
+                return
+            }
+            if let mimeType = response.mimeType,
+                (mimeType == "application/xml" || mimeType == "text/plain"),
+            let _ = data {
+                TAKLogger.debug("[DataSyncManager] Parsing latest mission CoT")
+                let streamParser = StreamParser()
+                streamParser.parseCoTStream(dataStream: data, forceArchive: true)
+            } else {
+                self.logDataPackagesError("Unknown response from server when attempting data mission CoT retrieval")
+            }
+        })
+
+        task.resume()
+    }
+    
     func downloadMission(missionName: String, password: String?) {
         retrieveMission(missionName: missionName, password: password, shouldSyncContents: true)
     }
@@ -158,6 +203,8 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
             missingMissionItems?.forEach { self.dataContext.delete($0) }
             
             // Add new items
+            // TODO: Once we've added them, we need to pull in the CoT from /missions/name/cot
+            // TODO: When pulling in CoT, make sure it gets associated to these records
             mission.uids.forEach { uid in
                 TAKLogger.debug("[DataSyncManager] Storing point for \(uid.data). DB Backed? \(shouldDbBack)")
                 let fetchCot: NSFetchRequest<COTData> = COTData.fetchRequest()
@@ -165,36 +212,20 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                 let results = try? self.dataContext.fetch(fetchCot)
                 
                 let mapPointData: COTData!
+                var mapPointUUID: UUID? = nil
 
                 if results?.count == 0 {
-                    mapPointData = COTData(context: self.dataContext)
-                    mapPointData.id = UUID()
-                    mapPointData.cotUid = uid.data
                  } else {
                      mapPointData = results?.first
+                     mapPointUUID = mapPointData?.id
                  }
-
-                let callsign = uid.detail?.callsign ?? "UNKNOWN"
-
-                mapPointData.callsign = callsign
-                mapPointData.latitude = uid.detail?.location.lat ?? 0.0
-                mapPointData.longitude = uid.detail?.location.lon ?? 0.0
-                mapPointData.cotType = uid.detail?.type ?? "a-U-G"
-                mapPointData.icon = uid.detail?.iconsetPath ?? ""
-                mapPointData.iconColor = uid.detail?.color ?? "-1"
-                mapPointData.startDate = Date()
-                mapPointData.startDate = Date()
-                mapPointData.startDate = Date().addingTimeInterval(15.0)
-                mapPointData.archived = true
-                mapPointData.visible = true
-                mapPointData.rawXml = ""
                 
                 if shouldDbBack {
                     let fetchDSMission: NSFetchRequest<DataSyncMission> = DataSyncMission.fetchRequest()
                     fetchDSMission.predicate = NSPredicate(format: "name = %@", mission.name)
                     if let mission = try? self.dataContext.fetch(fetchDSMission).first {
                         let fetchDSMissionItem: NSFetchRequest<DataSyncMissionItem> = DataSyncMissionItem.fetchRequest()
-                        fetchDSMissionItem.predicate = NSPredicate(format: "cotUid = %@", mapPointData.id! as CVarArg)
+                        fetchDSMissionItem.predicate = NSPredicate(format: "uid = %@", uid.data)
                         let results = try? self.dataContext.fetch(fetchDSMissionItem)
                         
                         let dsMissionItem: DataSyncMissionItem!
@@ -202,12 +233,13 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                         if results?.count == 0 {
                             dsMissionItem = DataSyncMissionItem(context: self.dataContext)
                             dsMissionItem.id = UUID()
-                            dsMissionItem.cotUid = mapPointData.id
+                            dsMissionItem.cotUid = mapPointUUID
                             dsMissionItem.uid = uid.data
                             dsMissionItem.missionUUID = mission.id
                             dsMissionItem.isCOT = true
                          } else {
                              dsMissionItem = results?.first
+                             dsMissionItem.cotUid = mapPointUUID
                          }
                     }
                 }
@@ -215,6 +247,7 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
 
             do {
                 try self.dataContext.save()
+                self.retrieveLatestMissionCoT(mission: mission)
                 DispatchQueue.main.async {
                     self.missionDownloadCompleted = true
                     self.isDownloadingMission = false
@@ -255,6 +288,7 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                 mission.inviteOnly = (missionPackage.inviteOnly == "true")
                 mission.keywords = missionPackage.keywords.joined(separator: ",")
                 mission.missionDescription = missionPackage.description
+                mission.token = missionPackage.token
             }
             
             do {
@@ -276,7 +310,6 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                 let fetchMissionItems: NSFetchRequest<DataSyncMissionItem> = DataSyncMissionItem.fetchRequest()
                 fetchMissionItems.predicate = NSPredicate(format: "missionUUID = %@", storedMission.id! as CVarArg)
                 let results = try? self.dataContext.fetch(fetchMissionItems)
-                
                 results?.forEach { self.dataContext.delete($0) }
                 
                 self.dataContext.delete(storedMission)
@@ -447,6 +480,7 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                         let passwordProtected = dataPackageData["passwordProtected"] as! Bool
                         let uids = dataPackageData["uids"] as! [[String: Any]]
                         let contents = dataPackageData["contents"] as! [[String: Any]]
+                        let token = dataPackageData["token"] as? String
                         
                         /*
                          {
@@ -494,8 +528,16 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                         }
                         
                         let mappedContents: [DataSyncDataPackageContent] = contents.map { content in
+                            let detail: [String: Any]? = content["data"] as? [String: Any]
+                            let uid = detail?["uid"] as? String ?? UUID().uuidString
                             return DataSyncDataPackageContent(
-                                data: DataSyncDataPackageContentData(),
+                                uid: uid,
+                                data: DataSyncDataPackageContentData(
+                                    mimeType: detail?["mimeType"] as? String ?? "",
+                                    name: detail?["name"] as? String ?? "UNKNOWN",
+                                    uid: uid,
+                                    size: detail?["size"] as? Int ?? 0
+                                ),
                                 timestamp: content["timestamp"] as? String ?? "",
                                 creatorUid: content["creatorUid"] as? String ?? ""
                             )
@@ -509,7 +551,8 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                             contents: mappedContents,
                             passwordProtected: passwordProtected,
                             password: password,
-                            dbUid: dbUid
+                            dbUid: dbUid,
+                            token: token
                         )
                         DispatchQueue.main.async {
                             self.dataPackages.append(dataPackage)
@@ -592,6 +635,7 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                         let creatorUid = dataPackageData["creatorUid"] as! String
                         let createTime = dataPackageData["createTime"] as! String
                         let passwordProtected = dataPackageData["passwordProtected"] as! Bool
+                        let token = dataPackageData["token"] as? String
                         let dataPackage = DataSyncDataPackage(
                             name: name,
                             description: description,
@@ -599,7 +643,8 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                             createTime: createTime,
                             passwordProtected: passwordProtected,
                             password: password,
-                            dbUid: dbUid
+                            dbUid: dbUid,
+                            token: token
                         )
                         DispatchQueue.main.async {
                             self.dataPackages.append(dataPackage)

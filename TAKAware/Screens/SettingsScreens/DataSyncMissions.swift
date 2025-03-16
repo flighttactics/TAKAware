@@ -78,8 +78,16 @@ struct DataSyncSubscribedMissionDetail: View {
                 } else {
                     Text("Name: \(retrievedMission!.name)")
                     Text("Creator: \(retrievedMission!.creatorUid)")
-                    Text("Number UIDs: \(missionCotCount)")
-                    Text("Number Attachments: \(missionAttachmentCount)")
+                    NavigationLink {
+                        DataSyncMissionCoTDetail(mission: retrievedMission)
+                    } label: {
+                        Text("Number Map Items: \(missionCotCount)")
+                    }
+                    NavigationLink {
+                        DataSyncMissionAttachmentDetail(mission: retrievedMission)
+                    } label: {
+                        Text("Number Attachments: \(missionAttachmentCount)")
+                    }
                     HStack {
                         Spacer()
                         Group {
@@ -134,7 +142,11 @@ struct DataSyncSubscribedMissionDetail: View {
         .onAppear {
             if mission.passwordProtected {
                 if mission.password == nil {
-                    presentAlert = true
+                    if password.isEmpty {
+                        presentAlert = true
+                    } else {
+                        loadMission()
+                    }
                 } else {
                     password = mission.password!
                     loadMission()
@@ -153,6 +165,62 @@ struct DataSyncSubscribedMissionDetail: View {
         })
         .alert("Mission Sync Completed", isPresented: $dataSyncManager.missionDownloadCompleted) {
             Button("OK", role: .cancel) { }
+        }
+    }
+}
+
+struct DataSyncMissionCoTDetail: View {
+    var mission: DataSyncDataPackage?
+    
+    var body: some View {
+        Group {
+            if mission != nil && !mission!.uids.isEmpty {
+                Text("Note: Mission map marker interaction is not yet supported")
+                    .font(.body)
+                    .padding(.top, 20)
+            }
+            List {
+                if mission == nil {
+                    Text("No DataSync mission selected")
+                } else if mission!.uids.isEmpty {
+                    Text("No map items in selected DataSync mission")
+                } else {
+                    ForEach(mission!.uids, id:\.data) { cotMarker in
+                        HStack {
+                            if let detail = cotMarker.detail {
+                                Text("\(detail.callsign) (\(detail.type))")
+                            } else {
+                                Text("ID: \(cotMarker.data)")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct DataSyncMissionAttachmentDetail: View {
+    var mission: DataSyncDataPackage?
+
+    var body: some View {
+        Group {
+            if mission != nil && !mission!.contents.isEmpty {
+                Text("Note: Mission Attachment downloads are not yet supported")
+                    .font(.body)
+                    .padding(.top, 20)
+            }
+            List {
+                if mission == nil {
+                    Text("No DataSync mission selected")
+                } else if mission!.contents.isEmpty {
+                    Text("No attachments in selected DataSync mission")
+                } else {
+                    ForEach(mission!.contents, id:\.timestamp) { packageContent in
+                        Text(packageContent.data.name)
+                    }
+                }
+            }
         }
     }
 }
