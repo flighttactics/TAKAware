@@ -320,6 +320,7 @@ class DataController: ObservableObject {
                     self.backgroundContext.delete(row)
                 }
                 try self.backgroundContext.save()
+                NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_COT_REMOVED), object: nil)
             } catch {
                 TAKLogger.error("[DataController]: Unable to clear map \(error)")
             }

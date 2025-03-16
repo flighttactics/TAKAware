@@ -761,7 +761,7 @@ struct MapView: UIViewRepresentable {
     }
     
     private func cotChangeNotified(notification: Notification) {
-        if shouldUpdateMap {
+        if shouldUpdateMap || notification.name == Notification.Name(AppConstants.NOTIFY_COT_REMOVED) {
             DispatchQueue.main.async {
                 updateAnnotations()
             }
