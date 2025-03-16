@@ -49,20 +49,22 @@ struct DataSyncSubscribedMissionDetail: View {
         dataSyncManager.retrieveMission(missionName: mission.name)
     }
     
+    // TODO: Reimplement database query
     var missionCotCount: Int {
-        if retrievedMission?.dbUid == nil {
+        //if retrievedMission?.dbUid == nil {
             retrievedMission!.uids.count
-        } else {
-            storedMissionItems.count(where: { $0.isCOT })
-        }
+        //} else {
+        //    storedMissionItems.count(where: { $0.isCOT })
+        //}
     }
     
+    // TODO: Reimplement database query
     var missionAttachmentCount: Int {
-        if retrievedMission?.dbUid == nil {
+        //if retrievedMission?.dbUid == nil {
             retrievedMission!.contents.count
-        } else {
-            storedMissionItems.count(where: { !$0.isCOT })
-        }
+        //} else {
+        //    storedMissionItems.count(where: { !$0.isCOT })
+        //}
     }
 
     var body: some View {

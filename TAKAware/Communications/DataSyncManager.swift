@@ -306,13 +306,19 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
             let results = try? self.dataContext.fetch(fetchDsm)
 
             if let storedMission = results?.first {
-                
                 let fetchMissionItems: NSFetchRequest<DataSyncMissionItem> = DataSyncMissionItem.fetchRequest()
                 fetchMissionItems.predicate = NSPredicate(format: "missionUUID = %@", storedMission.id! as CVarArg)
                 let results = try? self.dataContext.fetch(fetchMissionItems)
                 results?.forEach { self.dataContext.delete($0) }
                 
                 self.dataContext.delete(storedMission)
+                if var dp = self.dataPackages.first {
+                    DispatchQueue.main.async {
+                        dp.dbUid = nil
+                        self.dataPackages.removeAll()
+                        self.dataPackages.append(dp)
+                    }
+                }
                 TAKLogger.debug("[DataSyncManager] Mission \(missionName) deleted from DB")
             } else {
                 TAKLogger.debug("[DataSyncManager] Mission \(missionName) not found when trying to delete from DB")
