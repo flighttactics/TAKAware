@@ -501,18 +501,7 @@ class SituationalAnnotationView: MKAnnotationView {
     }
     
     @objc func deletePressed(sender: UIButton) {
-        mapView.parentView.conflictedItems.removeAll(where: {$0.id == mapPointAnnotation.id})
-        if(mapView.parentView.conflictedItems.isEmpty) {
-            mapView.parentView.closeDeconflictionView()
-        }
-        let removeShapes = mapView.parentView.currentSelectedAnnotation?.isShape ?? false
-        if removeShapes {
-            mapView.mapView.removeOverlays(mapView.parentView.currentSelectedAnnotation!.shapes)
-        }
-        mapView.parentView.currentSelectedAnnotation = nil
-        DispatchQueue.main.async {
-            DataController.shared.deleteCot(cotId: self.mapPointAnnotation.id)
-        }
+        mapView.deleteAnnotations([mapPointAnnotation])
     }
     
     @objc func detailsPressed(sender: UIButton) {
@@ -641,6 +630,7 @@ struct MapView: UIViewRepresentable {
         parentView.bloodhoundDeselectedCallback = bloodhoundDeselected
         parentView.annotationUpdatedCallback = annotationUpdatedCallback
         parentView.annotationSelectedCallback = annotationSelected(_:)
+        parentView.annotationsDeletedCallback = deleteAnnotations(_:)
 
         didUpdateRegion()
         updateKmlOverlays()
@@ -710,6 +700,24 @@ struct MapView: UIViewRepresentable {
         guard let annotationView = mapView.view(for: annotation) else { return }
         Task {
             await prepareAnnotationView(annotation: annotation, annotationView: annotationView)
+        }
+    }
+    
+    func deleteAnnotations(_ annotations: [MapPointAnnotation]) {
+        annotations.forEach { annotation in
+            parentView.conflictedItems.removeAll(where: {$0.id == annotation.id})
+            if(parentView.conflictedItems.isEmpty) {
+                parentView.closeDeconflictionView()
+            }
+            if annotation.isShape {
+                mapView.removeOverlays(annotation.shapes)
+            }
+            if annotation == parentView.currentSelectedAnnotation {
+                parentView.currentSelectedAnnotation = nil
+            }
+            DispatchQueue.main.async {
+                DataController.shared.deleteCot(cotId: annotation.id)
+            }
         }
     }
     
