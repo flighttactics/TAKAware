@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FE905252D82F815006AD554 /* COTData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0FE905232D82F815006AD554 /* COTData.xcdatamodeld */; };
 		4630FD0E2B506EC000988ED4 /* Palette+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD0D2B506EC000988ED4 /* Palette+Color.swift */; };
 		4630FD132B5071A100988ED4 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD102B5071A100988ED4 /* ChatView.swift */; };
 		4630FD142B5071A100988ED4 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD122B5071A100988ED4 /* MessageView.swift */; };
@@ -77,7 +78,6 @@
 		A5AA510F2AC35B75006696B2 /* SettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AA510E2AC35B75006696B2 /* SettingsStoreTests.swift */; };
 		A5B1FF642C3B86D600C7F546 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B1FF632C3B86D600C7F546 /* UIImage+Extension.swift */; };
 		A5B312B72C38C57D007B3914 /* iconsets.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = A5B312B62C38C57D007B3914 /* iconsets.sqlite */; };
-		A5B312BB2C38C5A6007B3914 /* COTData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A5B312B92C38C5A6007B3914 /* COTData.xcdatamodeld */; };
 		A5B312C12C397AC5007B3914 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B312C02C397AC5007B3914 /* DataController.swift */; };
 		A5B312C52C39CA91007B3914 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = A5B312C42C39CA91007B3914 /* SQLite */; };
 		A5B312C72C39CAAF007B3914 /* IconData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B312C62C39CAAF007B3914 /* IconData.swift */; };
@@ -3442,6 +3442,7 @@
 /* Begin PBXFileReference section */
 		0840B3A75D0239E21ADEA2E7 /* Pods_TAKAware.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TAKAware.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CD85BD73504580BC32FA239 /* Pods-TAKAware-TAKAwareTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKAware-TAKAwareTests.debug.xcconfig"; path = "Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests.debug.xcconfig"; sourceTree = "<group>"; };
+		0FE905242D82F815006AD554 /* COTData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = COTData.xcdatamodel; sourceTree = "<group>"; };
 		4630FD0D2B506EC000988ED4 /* Palette+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Palette+Color.swift"; sourceTree = "<group>"; };
 		4630FD102B5071A100988ED4 /* ChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		4630FD122B5071A100988ED4 /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
@@ -3515,7 +3516,6 @@
 		A5AA510E2AC35B75006696B2 /* SettingsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStoreTests.swift; sourceTree = "<group>"; };
 		A5B1FF632C3B86D600C7F546 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		A5B312B62C38C57D007B3914 /* iconsets.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconsets.sqlite; sourceTree = "<group>"; };
-		A5B312BA2C38C5A6007B3914 /* COTData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = COTData.xcdatamodel; sourceTree = "<group>"; };
 		A5B312C02C397AC5007B3914 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		A5B312C62C39CAAF007B3914 /* IconData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconData.swift; sourceTree = "<group>"; };
 		A5B312C92C39D1F0007B3914 /* IconDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconDataTests.swift; sourceTree = "<group>"; };
@@ -10416,6 +10416,7 @@
 		A5E2F8FE2A791F5600EDD0B4 /* Data Models */ = {
 			isa = PBXGroup;
 			children = (
+				0FE905232D82F815006AD554 /* COTData.xcdatamodeld */,
 				A5A30D562D280F84009399F3 /* KMLData.swift */,
 				A5B312B62C38C57D007B3914 /* iconsets.sqlite */,
 				4630FD1B2B5071D200988ED4 /* MessageData.swift */,
@@ -10423,7 +10424,6 @@
 				A5FB4E652A98D0FF0034966D /* TAKConstants.swift */,
 				4630FD4A2B51A34500988ED4 /* MessageModel.xcdatamodeld */,
 				A5014F9A2C178C5300BE40C1 /* Migrator.swift */,
-				A5B312B92C38C5A6007B3914 /* COTData.xcdatamodeld */,
 				A5B312C02C397AC5007B3914 /* DataController.swift */,
 				A5B312C62C39CAAF007B3914 /* IconData.swift */,
 			);
@@ -14035,12 +14035,12 @@
 				A55ABF512ABDC0E900195AB7 /* MapOptions.swift in Sources */,
 				A59530FC2CF7EFB00078C1E8 /* DataPackageManager.swift in Sources */,
 				A5D8D37E2A53B0F9002F0E3E /* TAKAwareApp.swift in Sources */,
-				A5B312BB2C38C5A6007B3914 /* COTData.xcdatamodeld in Sources */,
 				A5E7B00B2A70B5FA00D9203F /* TAKDataPackageParser.swift in Sources */,
 				A595F66A2C278CFE00E81976 /* Components.swift in Sources */,
 				A5A49D902A5459B5009764C1 /* TAKManager.swift in Sources */,
 				4630FD4C2B51A34500988ED4 /* MessageModel.xcdatamodeld in Sources */,
 				A53F59E52D0FD58900DFD794 /* AlertSheet.swift in Sources */,
+				0FE905252D82F815006AD554 /* COTData.xcdatamodeld in Sources */,
 				A53F59E62D0FD58900DFD794 /* AnnotationDetailView.swift in Sources */,
 				A53F59E72D0FD58900DFD794 /* ChannelSheet.swift in Sources */,
 				A52BE8F52D15AAB900E82414 /* KMLParser.swift in Sources */,
@@ -14265,7 +14265,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 79;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
-				DEVELOPMENT_TEAM = 28788VBS76;
+				DEVELOPMENT_TEAM = C3ZV5V8KUJ;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14288,7 +14288,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.bah.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -14309,7 +14309,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 79;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
-				DEVELOPMENT_TEAM = 28788VBS76;
+				DEVELOPMENT_TEAM = C3ZV5V8KUJ;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14332,7 +14332,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
+				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.bah.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -14347,7 +14347,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 77;
+				CURRENT_PROJECT_VERSION = 79;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14368,7 +14368,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 77;
+				CURRENT_PROJECT_VERSION = 79;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14387,7 +14387,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 77;
+				CURRENT_PROJECT_VERSION = 79;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
@@ -14404,7 +14404,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 77;
+				CURRENT_PROJECT_VERSION = 79;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
@@ -14550,6 +14550,16 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
+		0FE905232D82F815006AD554 /* COTData.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				0FE905242D82F815006AD554 /* COTData.xcdatamodel */,
+			);
+			currentVersion = 0FE905242D82F815006AD554 /* COTData.xcdatamodel */;
+			path = COTData.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		4630FD4A2B51A34500988ED4 /* MessageModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
@@ -14557,17 +14567,6 @@
 			);
 			currentVersion = 4630FD4B2B51A34500988ED4 /* Message.xcdatamodel */;
 			path = MessageModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		A5B312B92C38C5A6007B3914 /* COTData.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				A5B312BA2C38C5A6007B3914 /* COTData.xcdatamodel */,
-			);
-			currentVersion = A5B312BA2C38C5A6007B3914 /* COTData.xcdatamodel */;
-			name = COTData.xcdatamodeld;
-			path = "/Users/foyc/Workspace/flighttactics/TAKAware/TAKAware/Data Models/COTData.xcdatamodeld";
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

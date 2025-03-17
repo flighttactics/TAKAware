@@ -51,15 +51,15 @@ class TAKDataPackageImporter: COTDataParser {
     }
     
     func parse() {
-        parser = DataPackageParser(fileLocation: archiveLocation, extractLocation: extractLocation)
+        parser = DataPackageParser(fileLocation: archiveLocation)//, extractLocation: extractLocation)
         parser!.parse()
         storeDataPackage()
-        importFiles()
+        //importFiles()
         TAKLogger.debug("[TAKDataPackageImporter]: Completed Parsing")
     }
     
     func storeDataPackage() {
-        let packageConfiguration = parser!.packageConfiguration
+        /*let packageConfiguration = parser!.packageConfiguration
         let packageName = packageConfiguration["name"] ?? missionPackage.name
         let fetchPackage: NSFetchRequest<DataPackage> = DataPackage.fetchRequest()
         fetchPackage.predicate = NSPredicate(format: "uid = %@", packageUUID.uuidString as String)
@@ -88,9 +88,10 @@ class TAKDataPackageImporter: COTDataParser {
             } catch {
                 TAKLogger.error("[TAKDataPackageImporter] Invalid Data Context Save \(error)")
             }
-        }
+        }*/
     }
     
+    /*
     func processKml(parser: DataPackageParser, packageFile: DataPackageContentsFile) {
         dataContext.perform {
             let packageDataFile = DataPackageFile(context: self.dataContext)
@@ -121,7 +122,8 @@ class TAKDataPackageImporter: COTDataParser {
             }
         }
     }
-    
+    */
+    /*
     func processCoT(parser: DataPackageParser, packageFile: DataPackageContentsFile) {
         dataContext.perform {
             let packageDataFile = DataPackageFile(context: self.dataContext)
@@ -149,8 +151,8 @@ class TAKDataPackageImporter: COTDataParser {
                 TAKLogger.debug("[TAKDataPackageImporter] Non-Atom CoT Event received \(cotEvent.type)")
             }
         }
-    }
-    
+    }*/
+    /*
     func processUnknown(parser: DataPackageParser, packageFile: DataPackageContentsFile) {
         dataContext.perform {
             let packageDataFile = DataPackageFile(context: self.dataContext)
@@ -166,8 +168,8 @@ class TAKDataPackageImporter: COTDataParser {
                 TAKLogger.error("[TAKDataPackageImporter] Invalid Data Context KML Save \(error)")
             }
         }
-    }
-    
+    }*/
+    /*
     func importFiles() {
         guard let parser = parser else { return }
         let packageFiles = parser.packageFiles
@@ -187,5 +189,5 @@ class TAKDataPackageImporter: COTDataParser {
                 }
             }
         }
-    }
+    }*/
 }

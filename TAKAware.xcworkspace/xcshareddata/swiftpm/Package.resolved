@@ -73,30 +73,21 @@
       }
     },
     {
-      "identity" : "swift-docc-plugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-docc-plugin",
-      "state" : {
-        "revision" : "85e4bb4e1cd62cec64a4b8e769dcefdf0c5b9d64",
-        "version" : "1.4.3"
-      }
-    },
-    {
-      "identity" : "swift-docc-symbolkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-docc-symbolkit",
-      "state" : {
-        "revision" : "b45d1f2ed151d057b54504d653e0da5552844e34",
-        "version" : "1.0.0"
-      }
-    },
-    {
       "identity" : "swift-nio",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
         "revision" : "f7dc3f527576c398709b017584392fb58592e7f5",
         "version" : "2.75.0"
+      }
+    },
+    {
+      "identity" : "swift-nio-ssl",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-nio-ssl",
+      "state" : {
+        "revision" : "0cc3528ff48129d64ab9cab0b1cd621634edfc6b",
+        "version" : "2.29.3"
       }
     },
     {

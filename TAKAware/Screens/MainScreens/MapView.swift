@@ -34,7 +34,7 @@ class COTMapObject: NSObject {
     }
     
     var annotation: MapPointAnnotation {
-        if isLine {
+        /*if isLine {
             let line = self.shape as! COTMapPolyline
             let centerPoint = line.coordinate
             cotData.latitude = centerPoint.latitude
@@ -44,15 +44,16 @@ class COTMapObject: NSObject {
             return MapPointAnnotation(mapPoint: cotData, shape: self.shape)
         } else {
             return MapPointAnnotation(mapPoint: cotData)
-        }
+        }*/
+        return MapPointAnnotation(mapPoint: cotData)
     }
-    
+    /*
     func buildRectangle() -> COTMapPolygon {
-        let pointLinks = cotEvent?.cotDetail?.cotLinks ?? []
-        let strokeColor = cotEvent?.cotDetail?.cotStrokeColor?.value ?? -1
-        let strokeWeight = cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
-        let fillColor = cotEvent?.cotDetail?.cotFillColor?.value ?? -1
-        let labelsOn = cotEvent?.cotDetail?.cotLabelsOn?.value ?? true
+        let pointLinks = []//cotEvent?.cotDetail?.cotLinks ?? []
+        let strokeColor = -1//cotEvent?.cotDetail?.cotStrokeColor?.value ?? -1
+        let strokeWeight = -1.0//cotEvent?.cotDetail?.cotStrokeWeight?.value ?? -1
+        let fillColor = -1//cotEvent?.cotDetail?.cotFillColor?.value ?? -1
+        let labelsOn = true//cotEvent?.cotDetail?.cotLabelsOn?.value ?? true
         let coordinates: [CLLocationCoordinate2D] = pointLinks.map { pointLink in
             let points = pointLink.point.split(separator: ",")
             guard points.count >= 2 else {
@@ -149,7 +150,7 @@ class COTMapObject: NSObject {
         }
         return nil
     }
-    
+    */
     init(mapPoint: COTData) {
         self.cotData = mapPoint
     }

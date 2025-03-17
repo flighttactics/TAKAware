@@ -54,6 +54,7 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
     }
     
     func broadcastPoint(annotation: MapPointAnnotation) {
+        /*
         var cotEvent = COTEvent(version: COTMessage.COT_EVENT_VERSION, uid: annotation.id, type: annotation.cotType!, how: HowType.HumanGIGO.rawValue, time: Date(), start: Date(), stale: Date().addingTimeInterval(10.0))
         
         let cotPoint = COTPoint(lat: annotation.coordinate.latitude.description, lon: annotation.coordinate.longitude.description, hae: COTPoint.DEFAULT_ERROR_VALUE.description, ce: COTPoint.DEFAULT_ERROR_VALUE.description, le: COTPoint.DEFAULT_ERROR_VALUE.description)
@@ -116,6 +117,7 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
         self.sendToUDP(message: message)
         self.sendToTCP(message: message)
         TAKLogger.debug("[TAKManager]: Done broadcasting marker CoT")
+         */
     }
     
     func broadcastLocation(locationManager: LocationManager) {
