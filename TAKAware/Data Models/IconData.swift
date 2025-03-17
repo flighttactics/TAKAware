@@ -225,11 +225,38 @@ class IconData {
                     let defaultImg = milStdIconWithName(name: "sugp")
                     uiImg = UIImage(named: defaultImg)!
                 }
-                
+            } else {
+                TAKLogger.debug("[IconData] No 2525 icon found, checking static icons")
+                let staticIconName = IconData.staticIconNameFromCotType(cotType: type2525)
+                let staticIcon = UIImage(named: staticIconName)
+                if staticIcon != nil {
+                    uiImg = staticIcon!
+                }
             }
         }
 
         return Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: uiImg)
+    }
+    
+    static func staticIconNameFromCotType(cotType: String) -> String {
+        guard cotType.count > 2 && ["b","u"].contains(cotType.first) else {
+            return ""
+        }
+        
+        switch(cotType) {
+        case "b-m-p-i": return "piicon"
+        case "b-m-p-c-cp": return "piicon_contact"
+        case "b-m-p-c-ip": return "piicon_initial"
+        case "b-m-p-c": return "piicon"
+        case "b-m-p-w-GOTO": return "pointtype_waypoint_default"
+        case "b-m-p-w": return "generic"
+        case "b-i-x-i": return "camera"
+        case "b-d": return "nav_alert"
+        case "u-r-b-bullseye": return "bullseye"
+        case "b-m-p-s-p-loc": return "sensor_location"
+        case "b-m-p-s-p-op": return "binos"
+        default: return ""
+        }
     }
     
     static func milStdIconWithName(name: String) -> String {
