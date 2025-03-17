@@ -12,7 +12,7 @@ DEPENDENCIES:
   - color-ios (~> 1.0.1)
   - grid-ios (~> 1.0.5)
   - mgrs-ios (~> 1.1.4)
-  - MobileVLCKit (~> 3.3.0)
+  - MobileVLCKit
   - sf-ios (~> 4.1.2)
 
 SPEC REPOS:
@@ -30,6 +30,6 @@ SPEC CHECKSUMS:
   MobileVLCKit: c5dd1b0ae933dc9c2348099840e753496dcdd908
   sf-ios: 03cc989b70b11d80ab80afc9db2086a621fa4703
 
-PODFILE CHECKSUM: 46eed3330cc9452e1837db02cec5fa0f2393267a
+PODFILE CHECKSUM: cf2d6c77836a37e14b83d9d535e85715e8007ec0
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

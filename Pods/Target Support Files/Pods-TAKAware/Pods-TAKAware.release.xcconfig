@@ -6,6 +6,7 @@ HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/color-ios/co
 LD_RUNPATH_SEARCH_PATHS = $(inherited) /usr/lib/swift '@executable_path/Frameworks' '@loader_path/Frameworks'
 LIBRARY_SEARCH_PATHS = $(inherited) "${TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}" /usr/lib/swift
 OTHER_LDFLAGS = $(inherited) -l"bz2" -l"c++" -l"iconv" -l"xml2" -l"z" -framework "AVFoundation" -framework "AudioToolbox" -framework "CFNetwork" -framework "CoreGraphics" -framework "CoreMedia" -framework "CoreText" -framework "Foundation" -framework "MobileVLCKit" -framework "OpenGLES" -framework "QuartzCore" -framework "Security" -framework "VideoToolbox" -framework "color_ios" -framework "grid_ios" -framework "mgrs_ios" -framework "sf_ios"
+OTHER_MODULE_VERIFIER_FLAGS = $(inherited) "-F${PODS_CONFIGURATION_BUILD_DIR}/MobileVLCKit" "-F${PODS_CONFIGURATION_BUILD_DIR}/color-ios" "-F${PODS_CONFIGURATION_BUILD_DIR}/grid-ios" "-F${PODS_CONFIGURATION_BUILD_DIR}/mgrs-ios" "-F${PODS_CONFIGURATION_BUILD_DIR}/sf-ios"
 OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)

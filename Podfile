@@ -10,7 +10,7 @@ target 'TAKAware' do
   pod 'color-ios', '~> 1.0.1'
   pod 'grid-ios', '~> 1.0.5'
   pod 'mgrs-ios', '~> 1.1.4'
-  pod 'MobileVLCKit', '~>3.3.0'
+  pod 'MobileVLCKit'#, '~>3.3.0'
 
   target 'TAKAwareTests' do
     pod 'mgrs-ios', '~> 1.1.4'

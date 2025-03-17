@@ -21,14 +21,14 @@
     },
     {
       "target" : {
-        "containerPath" : "container:..\/TAKAware\/TAKAware.xcodeproj",
+        "containerPath" : "container:TAKAware.xcodeproj",
         "identifier" : "A5D8D3892A53B0FA002F0E3E",
         "name" : "TAKAwareTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:..\/TAKAware\/TAKAware.xcodeproj",
+        "containerPath" : "container:TAKAware.xcodeproj",
         "identifier" : "A5D8D3932A53B0FB002F0E3E",
         "name" : "TAKAwareUITests"
       }

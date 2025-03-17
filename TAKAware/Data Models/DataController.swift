@@ -103,7 +103,7 @@ class DataController: ObservableObject {
         let defaultType = "a-U-G"
         
         // First create a COTEvent
-        var cotEvent = COTEvent(version: COTMessage.COT_EVENT_VERSION, uid: UUID().uuidString, type: defaultType, how: HowType.MachineGPSDerived.rawValue, time: Date.now, start: Date.now, stale: Date.distantFuture)
+        var cotEvent = COTEvent(version: "2.0"/*COTMessage.COT_EVENT_VERSION*/, uid: UUID().uuidString, type: defaultType, how: HowType.MachineGPSDerived.rawValue, time: Date.now, start: Date.now, stale: Date.distantFuture)
         let cotPoint = COTPoint(lat: latitude.description, lon: longitude.description, hae: COTPoint.DEFAULT_ERROR_VALUE.description, ce: COTPoint.DEFAULT_ERROR_VALUE.description, le: COTPoint.DEFAULT_ERROR_VALUE.description)
         
         var cotDetail = COTDetail()
