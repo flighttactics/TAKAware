@@ -10,6 +10,9 @@ import NIOSSL
 import SwiftTAK
 import CoreData
 
+// TODO: Import Custom Iconsets
+// TODO: Import multiple connections
+// TODO: Handle preference files 
 class TAKDataPackageImporter: COTDataParser {
     var archiveLocation: URL
     var fileHash: String = ""
@@ -151,6 +154,18 @@ class TAKDataPackageImporter: COTDataParser {
         }
     }
     
+    func processMapSource(parser: DataPackageParser, packageFile: DataPackageContentsFile) {
+        TAKLogger.debug("[TAKDataPackageImporter] Attempting to process XML as a map source")
+        let mapFile = parser.retrieveFileFromArchive(packageFile)
+        guard !mapFile.isEmpty else {
+            return
+        }
+        let importer = MapSourceImporter(mapName: packageFile.fileName, fileData: mapFile)
+        Task {
+           await importer.process()
+        }
+    }
+    
     func processUnknown(parser: DataPackageParser, packageFile: DataPackageContentsFile) {
         dataContext.perform {
             let packageDataFile = DataPackageFile(context: self.dataContext)
@@ -182,6 +197,8 @@ class TAKDataPackageImporter: COTDataParser {
                     self.processKml(parser: parser, packageFile: $0)
                 } else if $0.fileLocation.hasSuffix(".kmz") {
                     self.processKml(parser: parser, packageFile: $0)
+                } else if $0.fileLocation.hasSuffix(".xml") {
+                    self.processMapSource(parser: parser, packageFile: $0)
                 } else {
                     self.processUnknown(parser: parser, packageFile: $0)
                 }

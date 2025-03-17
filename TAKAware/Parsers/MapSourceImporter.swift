@@ -9,14 +9,22 @@ import Foundation
 import CoreData
 
 class MapSourceImporter: COTDataParser {
-    var mapSourceLocation: URL
+    var mapSourceLocation: URL?
+    var mapSourceFileData: Data?
     var fileName: String
     var mapSourceParser: MapSourceParser
     var hasFailure = false
     
     init(fileLocation: URL) {
         self.mapSourceLocation = fileLocation
+        self.mapSourceFileData = try? Data(contentsOf: fileLocation)
         fileName = fileLocation.lastPathComponent
+        mapSourceParser = MapSourceParser()
+    }
+    
+    init(mapName: String, fileData: Data) {
+        self.mapSourceFileData = fileData
+        fileName = mapName
         mapSourceParser = MapSourceParser()
     }
     
@@ -32,26 +40,24 @@ class MapSourceImporter: COTDataParser {
     
     private func parseFile() {
         guard !hasFailure else { return }
-        do {
-            let data = try Data(contentsOf: mapSourceLocation)
-            if let mapString = String(data: data, encoding: .utf8) {
-                TAKLogger.debug("[MapSourceImporter] Starting parse of Map Source")
-                mapSourceParser.parse(mapSourceString: mapString)
-                if mapSourceParser.parsedMapSource == nil {
-                    hasFailure = true
-                }
-            } else {
+        guard mapSourceFileData != nil else {
+            TAKLogger.error("[MapSourceImporter] Attempted to parse a map source without data")
+            return
+        }
+        if let mapString = String(data: mapSourceFileData!, encoding: .utf8) {
+            TAKLogger.debug("[MapSourceImporter] Starting parse of Map Source")
+            mapSourceParser.parse(mapSourceString: mapString)
+            if mapSourceParser.parsedMapSource == nil {
                 hasFailure = true
             }
-        } catch {
+        } else {
             hasFailure = true
-            TAKLogger.error("[MapSourceImporter] Error parsing file: \(error)")
         }
     }
     
     private func storeFile() {
         guard !hasFailure, let parsedMapSource = mapSourceParser.parsedMapSource else { return }
-        var mapSource: MapSource = MapSource(context: self.dataContext)
+        let mapSource: MapSource = MapSource(context: self.dataContext)
         mapSource.id = parsedMapSource.id
         mapSource.name = parsedMapSource.name
         mapSource.url = parsedMapSource.url
