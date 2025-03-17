@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import QuickLook
 import SwiftTAK
 import SwiftUI
 
@@ -75,6 +76,7 @@ struct DataPackageDownloader: View {
 
 struct DataPackageFilesList: View {
     @StateObject var dataPackageManager: DataPackageManager = DataPackageManager()
+    @State var previewUrl: URL?
     var dataPackage: DataPackage
     var dataPackageFiles: [DataPackageFile] {
         dataPackage.dataPackageFiles?.allObjects as! [DataPackageFile]
@@ -97,8 +99,13 @@ struct DataPackageFilesList: View {
         } else {
             let fileUrl = DataPackageManager.filePathFor(packageId: dataPackageFile.dataPackage?.uid, filePath: zipEntry)
             if dataPackageFile.zipEntry != nil && fileUrl != nil {
-                ShareLink(item: fileUrl!) {
-                    Image(systemName: "square.and.arrow.down.on.square")
+                HStack {
+                    ShareLink(item: fileUrl!) {
+                        Image(systemName: "square.and.arrow.down.on.square")
+                    }
+                    Button { previewUrl = fileUrl } label: {
+                        Image(systemName: "binoculars")
+                    }
                 }
             } else {
                 Image(systemName: "exclamationmark.square")
@@ -124,6 +131,7 @@ struct DataPackageFilesList: View {
                 }
             }
         }
+        .quickLookPreview($previewUrl)
     }
 }
 
