@@ -323,6 +323,7 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var kmlIcon: String?
     dynamic var role: String?
     dynamic var phone: String?
+    dynamic var updateDate: Date?
     
     var annotationIdentifier: String {
         if icon != nil && !icon!.isEmpty {
@@ -366,6 +367,7 @@ final class MapPointAnnotation: NSObject, MKAnnotation {
         self.videoURL = mapPoint.videoURL
         self.role = mapPoint.role
         self.phone = mapPoint.phone
+        self.updateDate = mapPoint.updateDate
     }
     
     init(id: String, title: String, icon: String, coordinate: CLLocationCoordinate2D, remarks: String) {
@@ -946,7 +948,7 @@ struct MapView: UIViewRepresentable {
             }
         }
     }
-    
+
     private func updateAnnotations() {
         let origUpdateVal = shouldUpdateMap
         shouldUpdateMap = false
@@ -986,9 +988,10 @@ struct MapView: UIViewRepresentable {
             }
         }
         
-        for annotation in mapView.annotations.filter({ $0 is MapPointAnnotation }) {
+        for annotation in existingAnnotations {
             guard let mpAnnotation = annotation as? MapPointAnnotation else { continue }
             guard let node = incomingData.first(where: {$0.id?.uuidString == mpAnnotation.id}) else { continue }
+            guard mpAnnotation.updateDate != node.updateDate else { continue }
             let updatedMp = COTMapObject(mapPoint: node).annotation
             let willNeedIconUpdate = (mpAnnotation.cotType != updatedMp.cotType || mpAnnotation.icon != updatedMp.icon)
             mpAnnotation.title = updatedMp.title
@@ -997,6 +1000,7 @@ struct MapView: UIViewRepresentable {
             mpAnnotation.cotType = updatedMp.cotType
             mpAnnotation.coordinate = updatedMp.coordinate
             mpAnnotation.remarks = updatedMp.remarks
+            mpAnnotation.updateDate = updatedMp.updateDate
             if mpAnnotation.id == bloodhoundEndAnnotation?.id {
                 let userLocation = mapView.userLocation.coordinate
                 let endPointLocation = mpAnnotation.coordinate

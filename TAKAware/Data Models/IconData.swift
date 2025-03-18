@@ -35,6 +35,64 @@ struct Icon {
     var isCircularImage: Bool = false
 }
 
+final class IconCache<Key: Hashable, Value> {
+    private let wrapped = NSCache<WrappedKey, Entry>()
+    
+    func insert(_ value: Value, forKey key: Key) {
+        let entry = Entry(value: value)
+        wrapped.setObject(entry, forKey: WrappedKey(key))
+    }
+
+    func value(forKey key: Key) -> Value? {
+        let entry = wrapped.object(forKey: WrappedKey(key))
+        return entry?.value
+    }
+
+    func removeValue(forKey key: Key) {
+        wrapped.removeObject(forKey: WrappedKey(key))
+    }
+    
+    subscript(key: Key) -> Value? {
+        get { return value(forKey: key) }
+        set {
+            guard let value = newValue else {
+                // If nil was assigned using our subscript,
+                // then we remove any value for that key:
+                removeValue(forKey: key)
+                return
+            }
+
+            insert(value, forKey: key)
+        }
+    }
+}
+
+private extension IconCache {
+    final class Entry {
+        let value: Value
+
+        init(value: Value) {
+            self.value = value
+        }
+    }
+
+    final class WrappedKey: NSObject {
+        let key: Key
+
+        init(_ key: Key) { self.key = key }
+
+        override var hash: Int { return key.hashValue }
+
+        override func isEqual(_ object: Any?) -> Bool {
+            guard let value = object as? WrappedKey else {
+                return false
+            }
+
+            return value.key == key
+        }
+    }
+}
+
 class IconData {
     var connection: Connection?
     let iconSetTable = Table("iconsets")
@@ -53,6 +111,7 @@ class IconData {
     static let DEFAULT_KML_ICON: String = "f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/ylw-pushpin.png"
     
     static let shared = IconData()
+    static let cache = IconCache<String, Icon>()
     
     func insertIconset(iconSet: IconSet) throws {
         guard let connection = connection else { return }
@@ -142,6 +201,13 @@ class IconData {
     }
     
     static func iconFor(role: String) -> Icon {
+        
+        if let cached = cache[role] {
+            return cached
+        }
+        
+        TAKLogger.debug("[IconData] Cache Miss: Loading icon for role \(role)")
+        
         let uiImg = switch(role) {
         case TeamRole.ForwardObserver.rawValue: UIImage(named: "forwardobserver")
         case TeamRole.HQ.rawValue: UIImage(named: "hq")
@@ -153,13 +219,21 @@ class IconData {
         case TeamRole.TeamLead.rawValue: UIImage(named: "teamlead")
         default: UIImage(named: "team")
         }
-        return Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: uiImg!, isCircularImage: true)
+        let icon = Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: uiImg!, isCircularImage: true)
+        cache[role] = icon
+        return icon
     }
     
     static func iconFor(type2525: String, iconsetPath: String) async -> Icon {
+        let cacheKey = "\(type2525):\(iconsetPath)"
+        
+        if let cached = cache[cacheKey] {
+            return cached
+        }
+        
         var dataBytes = Data()
         
-        TAKLogger.debug("[IconData] Loading icon for \(type2525) and path \(iconsetPath)")
+        TAKLogger.debug("[IconData] Cache Miss: Loading icon for \(type2525) and path \(iconsetPath)")
         
         if iconsetPath.count > 0 {
             //de450cbf-2ffc-47fb-bd2b-ba2db89b035e/Resources/ESF4-FIRE-HAZMAT_Aerial-Apparatus-Ladder.png
@@ -175,7 +249,9 @@ class IconData {
                     // So we'll return a circle
                     // where the imageName is the argb colors
                     let spotMapImg = UIImage(systemName: "circle.inset.filled")!
-                    return Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: spotMapImg)
+                    let result = Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: spotMapImg)
+                    cache[cacheKey] = result
+                    return result
                 } else {
                     let bitMapCol = SQLite.Expression<Blob>("bitmap")
                     let iconSetCol = SQLite.Expression<String>("iconset_uid")
@@ -235,7 +311,9 @@ class IconData {
             }
         }
 
-        return Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: uiImg)
+        let result = Icon(id: 0, iconset_uid: UUID().uuidString, filename: "none", groupName: "none", icon: uiImg)
+        cache[cacheKey] = result
+        return result
     }
     
     static func staticIconNameFromCotType(cotType: String) -> String {
