@@ -49,7 +49,7 @@ struct Sheet: View {
             case .dataPackage: DataPackageSheet()
             case .channels: ChannelSheet()
             case .detail: AnnotationDetailView(currentSelectedAnnotation: $currentSelectedAnnotation, parentView: parentView)
-            case .videoPlayer: VideoPlayerView(currentSelectedAnnotation: $currentSelectedAnnotation)
+            case .videoPlayer: VideoPlayerView(currentSelectedAnnotation: currentSelectedAnnotation)
             case .deconflictionView: DeconflictionSheet(conflictedItems: $conflictedItems, parentView: parentView)
         }
     }

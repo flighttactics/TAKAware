@@ -55,7 +55,7 @@ struct PlayerView: UIViewRepresentable {
 struct VideoPlayerView: View {
     @Environment(\.dismiss) var dismiss
     @State var currentPlayer: VLCMediaPlayer = VLCMediaPlayer()
-    @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    var currentSelectedAnnotation: MapPointAnnotation?
     @State var viewPresent: Bool = true
     @State var cachedAnnotation: MapPointAnnotation?
     
@@ -76,7 +76,7 @@ struct VideoPlayerView: View {
                 if currentSelectedAnnotation == nil || currentSelectedAnnotation!.videoURL == nil {
                     Text("No Video Source Selected")
                 } else {
-                    VLCKitPlayer(currentSelectedAnnotation: $currentSelectedAnnotation, present: $viewPresent)
+                    VLCKitPlayer(currentSelectedAnnotation: currentSelectedAnnotation, present: $viewPresent)
                 }
             }
             .navigationBarItems(trailing: Button("Close", action: {
@@ -209,7 +209,7 @@ struct VLCKitPlayer: View {
     @StateObject private var playerWrapper: VLCPlayerWrapper = VLCPlayerWrapper()
     @State private var viewModel = ViewModel()
     @State var selectedUrl: String?
-    @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    var currentSelectedAnnotation: MapPointAnnotation?
     @Binding var present: Bool
     
     func fixedUpUrl(_ sourceUrl: String?) -> String? {
@@ -218,11 +218,11 @@ struct VLCKitPlayer: View {
             // Example: raw://https//strmr5.sha.maryland.gov/rtplive/5e0089a0025c0075004d823633235daa/playlist.m3u8:80
             var fixedUrl = urlToCheck.replacingOccurrences(of: "raw://", with: "")
             fixedUrl = fixedUrl.replacingOccurrences(of: "http//", with: "http://")
-            if fixedUrl.contains("https//") {
+            if fixedUrl.contains("https") {
                 fixedUrl = fixedUrl.replacingOccurrences(of: "https//", with: "https://")
                 // Some cameras include a port 80 prefix for https, which won't work
                 // But if it's any other port, it's likely intentional
-                fixedUrl = fixedUrl.replacingOccurrences(of: ":80", with: "")
+                fixedUrl = fixedUrl.replacingOccurrences(of: ":80$", with: "", options: .regularExpression)
             }
             TAKLogger.debug("[VideoPlayer] Fixing up URL from \(urlToCheck) to \(fixedUrl)")
             return fixedUrl
@@ -232,10 +232,10 @@ struct VLCKitPlayer: View {
         }
     }
     
-    init(currentSelectedAnnotation: Binding<MapPointAnnotation?>, present: Binding<Bool>) {
-        _currentSelectedAnnotation = currentSelectedAnnotation
+    init(currentSelectedAnnotation: MapPointAnnotation?, present: Binding<Bool>) {
+        self.currentSelectedAnnotation = currentSelectedAnnotation
         _present = present
-        let fixedUrl = fixedUpUrl(currentSelectedAnnotation.wrappedValue?.videoURL?.absoluteString)
+        let fixedUrl = fixedUpUrl(currentSelectedAnnotation?.videoURL?.absoluteString)
         _selectedUrl = State(wrappedValue: fixedUrl)
     }
     
