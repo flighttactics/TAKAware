@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="23F79" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="LocalIcon" representedClassName="LocalIcon" syncable="YES" codeGenerationType="class">
+        <attribute name="bitmap" attributeType="Binary"/>
+        <attribute name="filename" attributeType="String"/>
+        <attribute name="groupName" optional="YES" attributeType="String"/>
+        <attribute name="iconset_uid" attributeType="String"/>
+        <attribute name="iconUUID" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="type2525b" optional="YES" attributeType="String"/>
+        <attribute name="useCnt" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="iconSet" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalIconSet" inverseName="icons" inverseEntity="LocalIconSet"/>
+    </entity>
+    <entity name="LocalIconSet" representedClassName="LocalIconSet" syncable="YES" codeGenerationType="class">
+        <attribute name="defaultFriendly" optional="YES" attributeType="String"/>
+        <attribute name="defaultHostile" optional="YES" attributeType="String"/>
+        <attribute name="defaultNeutral" optional="YES" attributeType="String"/>
+        <attribute name="defaultUnknown" optional="YES" attributeType="String"/>
+        <attribute name="iconsetUUID" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="selectedGroup" attributeType="String"/>
+        <attribute name="skipResize" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="uid" attributeType="String"/>
+        <attribute name="version" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="icons" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LocalIcon" inverseName="iconSet" inverseEntity="LocalIcon"/>
+    </entity>
+</model>

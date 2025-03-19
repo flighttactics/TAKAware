@@ -13,6 +13,7 @@ import SWXMLHash
 class StreamParser: COTDataParser {
     
     static let STREAM_DELIMTER = "</event>"
+    static let PB_MAGIC_BYTE: UInt8 = 0xbf
     var currentDataStream: Data = Data()
     
     func parse(dataStream: Data?) -> Array<String> {
@@ -34,7 +35,7 @@ class StreamParser: COTDataParser {
         return events
     }
     
-    func parseCoTStream(dataStream: Data?) {
+    func parseCoTStream(dataStream: Data?, forceArchive: Bool = false) {
         guard let dataStream = dataStream else { return }
 
         let events = parse(dataStream: dataStream)
@@ -44,13 +45,14 @@ class StreamParser: COTDataParser {
             }
             switch(cotEvent.eventType) {
             case .ATOM, .BIT:
-                parseAtom(cotEvent: cotEvent, rawXml: xmlEvent)
+                parseAtom(cotEvent: cotEvent, rawXml: xmlEvent, forceArchive: forceArchive)
             case .CUSTOM:
                 parseCustom(cotEvent: cotEvent, rawXml: xmlEvent)
+            case .TASKING:
+                parseTask(cotEvent: cotEvent, rawXml: xmlEvent)
             default:
-                TAKLogger.debug("[StreamParser] Non-Atom CoT Event received \(cotEvent.type)")
+                TAKLogger.debug("[StreamParser] Unknown CoT Event received \(cotEvent.type)")
             }
-            
         }
     }
 }

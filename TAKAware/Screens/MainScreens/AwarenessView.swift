@@ -50,6 +50,7 @@ struct AwarenessView: View {
     @State var bloodhoundDeselectedCallback: () -> Void = { () in }
     @State var annotationUpdatedCallback: (MapPointAnnotation) -> Void = { (_) in }
     @State var annotationSelectedCallback: (MapPointAnnotation) -> Void = { (_) in }
+    @State var annotationsDeletedCallback: ([MapPointAnnotation]) -> Void = { (_) in }
     
     func formatOrZero(item: Double?, formatter: String = "%.0f") -> String {
         guard let item = item else {
@@ -106,7 +107,7 @@ struct AwarenessView: View {
         .sheet(item: $selectedSheet, content: {
             Sheet(parentView: self, type: $0, conflictedItems: $conflictedItems, currentSelectedAnnotation: $currentSelectedAnnotation)
                 .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
-                .presentationBackgroundInteraction(.enabled(upThrough: .height(200)))
+                .presentationBackgroundInteraction(.enabled)
                 .presentationContentInteraction(.scrolls)
         })
         .background(Color.baseMediumGray)
@@ -139,8 +140,8 @@ struct AwarenessView: View {
 
             Group {
                 Button(action: { bloodhoundDeselectedCallback() }) {
-                    navBarImage(imageName: "bloodhoundsvg")
-                        .colorMultiply((isAcquiringBloodhoundTarget ? .red : .yellow))
+                    navBarImage(imageName: "bloodhound")
+                        .colorMultiply((isAcquiringBloodhoundTarget ? .red : .clear))
                         .padding(5)
                 }
                 
@@ -179,7 +180,7 @@ struct AwarenessView: View {
                 }
                 
                 Button(action: { selectedSheet = .emergencySettings }) {
-                    navBarImage(systemName: "exclamationmark.triangle")
+                    navBarImage(imageName: "nav_alert")
                         .foregroundColor(settingsStore.isAlertActivated ? .red : .yellow)
                         .padding(5)
                 }

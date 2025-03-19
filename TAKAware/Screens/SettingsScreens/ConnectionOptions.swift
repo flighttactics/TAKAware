@@ -86,28 +86,17 @@ struct DataPackageEnrollment: View {
 
 struct ConnectionOptions: View {
     @Binding var isProcessingDataPackage: Bool
-    @State var isShowingAlert = false
     @ObservedObject var settingsStore = SettingsStore.global
     
     var body: some View {
         Group {
             if(!isProcessingDataPackage && settingsStore.takServerUrl != "") {
                 ServerInformationDisplay()
-                Button(role: .destructive) {
-                    SettingsStore.global.clearConnection()
-                    isShowingAlert = true
-                } label: {
-                    Text("Delete Current TAK Server Connection")
-                }
-                .contentShape(Rectangle())
             } else {
                 NavigationLink(destination: ConnectionOptionsScreen(isProcessingDataPackage: $isProcessingDataPackage)) {
                     Text("Connect to a TAK Server")
                 }
             }
-        }
-        .alert(isPresented: $isShowingAlert) {
-            Alert(title: Text("Server Connection"), message: Text("The TAK Server Connection has been removed"), dismissButton: .default(Text("OK")))
         }
         .onAppear {
             isProcessingDataPackage = false
@@ -368,21 +357,30 @@ struct CertEnrollmentScreen: View {
                 processQRCode(qrCodeResult)
             }) {
                 NavigationView {
-                    CodeScannerView(
-                        codeTypes: [.qr],
-                        showViewfinder: true,
-                        simulatedData: "MyTAK,tak.example.com,8089,SSL",
-                        shouldVibrateOnSuccess: true,
-                        videoCaptureDevice: AVCaptureDevice.zoomedCameraForQRCode()
-                    ) { response in
-                        if case let .success(result) = response {
-                            qrCodeResult = result.string
-                            isPresentingQRScanner = false
+                    Group {
+                        if isAuthorized {
+                            CodeScannerView(
+                                codeTypes: [.qr],
+                                showViewfinder: true,
+                                simulatedData: "MyTAK,tak.example.com,8089,SSL",
+                                shouldVibrateOnSuccess: true,
+                                videoCaptureDevice: AVCaptureDevice.zoomedCameraForQRCode()
+                            ) { response in
+                                if case let .success(result) = response {
+                                    qrCodeResult = result.string
+                                    isPresentingQRScanner = false
+                                }
+                            }
+                        } else {
+                            VStack(alignment: .center) {
+                                Text("Camera access has been disabled. Please enable in settings.")
+                            }
+                                
                         }
                     }
                     .toolbar {
                         ToolbarItem {
-                            Button("Cancel", action: { isPresentingQRScanner = false })
+                            Button("Cancel", action: { dismiss() })
                         }
                     }
                 }

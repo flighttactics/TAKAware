@@ -27,7 +27,7 @@ struct SettingsSheet: View {
                 }
                 Section(header:
                             Text("Server Information")
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.system(size: 14, weight: .medium)), footer: Text("Swipe server to manage")
                 ) {
                     ConnectionOptions(isProcessingDataPackage: $isProcessingDataPackage)
                 }
@@ -37,6 +37,7 @@ struct SettingsSheet: View {
                     ChannelOptions()
                     DataPackageOptions()
                     KMLOptions()
+                    DataSyncMissionOptions()
                     AboutInformation()
                 }
             }

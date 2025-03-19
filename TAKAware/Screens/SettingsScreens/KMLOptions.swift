@@ -103,13 +103,21 @@ struct KMLOptionsDetail: View {
                                     Label("Hidden", systemImage: "eye.slash.fill")
                                 }
                             }
+                            Button {
+                                NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_KML), object: kmlFile.id)
+                            } label: {
+                                Image(systemName: "arrow.up.left.and.down.right.and.arrow.up.right.and.down.left")
+                            }
                         }
                     }
                 }
             }
         }
         .alert(isPresented: $isShowingAlert) {
-            Alert(title: Text("Overlay Import"), message: Text(alertText), dismissButton: .default(Text("OK")))
+            Alert(
+                title: Text("Overlay Import"),
+                message: Text(alertText),
+                dismissButton: .default(Text("OK")))
         }
     }
 }

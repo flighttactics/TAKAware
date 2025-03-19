@@ -174,7 +174,7 @@ struct KMLPoint: Equatable, XMLObjectDeserialization {
     var altitudeMode: String
     
     var mapCoordinate: CLLocationCoordinate2D? {
-        let coordArray = coordinates.split(separator: ",")
+        let coordArray = coordinates.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: ",")
         guard coordArray.count >= 2 else { return nil }
         let lon = Double(coordArray[0]) ?? 0.0
         let lat = Double(coordArray[1]) ?? 0.0
@@ -210,12 +210,12 @@ struct KMLLineString: Equatable, XMLObjectDeserialization {
     var altitudeMode: String
     
     var mapCoordinates: [CLLocationCoordinate2D] {
-        let coordTupleArray = coordinates.split(separator: " ").filter { !$0.isEmpty }
+        let coordTupleArray = coordinates.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ").filter { !$0.isEmpty }
         guard coordTupleArray.count >= 2 else { return [] }
         let mappedCoordinates: [CLLocationCoordinate2D] = coordTupleArray.map { tuple in
             let coordArray = tuple.split(separator: ",")
             if coordArray.count < 2 {
-                TAKLogger.debug("[KMLParser] unable to split coordinates \(tuple), returning 0,0")
+                TAKLogger.debug("[KMLParser] unable to split coordinates \(tuple) (\(coordinates)), returning 0,0")
                 return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
             }
             let lon = Double(coordArray[0]) ?? 0.0
@@ -262,12 +262,12 @@ struct KMLLinearRing: Equatable, XMLObjectDeserialization {
     var altitudeMode: String
     
     var mapCoordinates: [CLLocationCoordinate2D] {
-        let coordTupleArray = coordinates.split(separator: " ").filter { !$0.isEmpty }
+        let coordTupleArray = coordinates.trimmingCharacters(in: .whitespacesAndNewlines).split(separator: " ").filter { !$0.isEmpty }
         guard coordTupleArray.count >= 2 else { return [] }
         let mappedCoordinates: [CLLocationCoordinate2D] = coordTupleArray.map { tuple in
             let coordArray = tuple.split(separator: ",")
             if coordArray.count < 2 {
-                TAKLogger.debug("[KMLParser] unable to split coordinates \(tuple), returning 0,0")
+                TAKLogger.debug("[KMLParser] unable to split coordinates \(tuple) (\(coordinates)), returning 0,0")
                 return CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
             }
             let lon = Double(coordArray[0]) ?? 0.0
@@ -355,15 +355,168 @@ struct KMLPolygon: Equatable, XMLObjectDeserialization {
     }
 }
 
+struct KMLMultiGeometry: Equatable, XMLObjectDeserialization {
+    var node: XMLIndexer? = nil
+
+    public static func ==(lhs: KMLMultiGeometry, rhs: KMLMultiGeometry) -> Bool {
+        return lhs.node?.all.count == rhs.node?.all.count
+    }
+    
+    static func deserialize(_ node: XMLIndexer) throws -> KMLMultiGeometry {
+        return KMLMultiGeometry(
+            node: node
+        )
+    }
+    
+    var style: KMLStyle? {
+        guard let node = node else { return nil }
+        do {
+            return try node["Style"].value()
+        } catch {}
+        return nil
+    }
+    
+    var mapKitShapes: [MKShape] {
+        var shapes: [MKShape] = []
+        shapes.append(contentsOf: points.compactMap { point in
+            guard let coordinate = point.mapCoordinate else { return nil }
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            return annotation
+        })
+        
+        shapes.append(contentsOf: lineStrings.compactMap { lineString in
+            let coordinates = lineString.mapCoordinates
+            guard !coordinates.isEmpty else { return nil }
+            let polyline = COTMapPolyline(coordinates: coordinates, count: coordinates.count)
+            if let lineStyle = style?.lineStyle {
+                if lineStyle.width > 0.0 { polyline.strokeWeight = lineStyle.width }
+                if !lineStyle.color.isEmpty {
+                    polyline.strokeColor = IconData.colorFromKMLColor(kmlColor: lineStyle.color)
+                }
+            }
+            return polyline
+        })
+        
+        shapes.append(contentsOf: linearRings.compactMap { linearRing in
+            let coordinates = linearRing.mapCoordinates
+            guard !coordinates.isEmpty else { return nil }
+            let polygon = COTMapPolygon(coordinates: coordinates, count: coordinates.count)
+            if let polygonStyle = style?.polygonStyle {
+                if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
+                    polygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
+                }
+            }
+            if let lineStyle = style?.lineStyle {
+                if lineStyle.width > 0.0 { polygon.strokeWeight = lineStyle.width }
+                if !lineStyle.color.isEmpty {
+                    polygon.strokeColor = IconData.colorFromKMLColor(kmlColor: lineStyle.color)
+                }
+            }
+            return polygon
+        })
+        
+        shapes.append(contentsOf: polygons.compactMap { polygon in
+            guard let outerCoordinates = polygon.outerLinearRing?.mapCoordinates else { return nil }
+            
+            let innerShapes: [MKPolygon] = polygon.innerLinearRings.map { linearRing in
+                let coords = linearRing.mapCoordinates
+                let polygon = COTMapPolygon(coordinates: coords, count: coords.count)
+                if let polygonStyle = style?.polygonStyle {
+                    if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
+                        polygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
+                    }
+                }
+                if let lineStyle = style?.lineStyle {
+                    if lineStyle.width > 0.0 { polygon.strokeWeight = lineStyle.width }
+                    if !lineStyle.color.isEmpty {
+                        polygon.strokeColor = IconData.colorFromKMLColor(kmlColor: lineStyle.color)
+                    }
+                }
+                return polygon
+            }
+            
+            let finalPolygon = COTMapPolygon(coordinates: outerCoordinates, count: outerCoordinates.count, interiorPolygons: innerShapes)
+            if let polygonStyle = style?.polygonStyle {
+                if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
+                    finalPolygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
+                }
+            }
+            if let lineStyle = style?.lineStyle {
+                if lineStyle.width > 0.0 { finalPolygon.strokeWeight = lineStyle.width }
+                if !lineStyle.color.isEmpty {
+                    finalPolygon.strokeColor = IconData.colorFromKMLColor(kmlColor: lineStyle.color)
+                }
+            }
+            return finalPolygon
+        })
+        return shapes
+    }
+    
+    var points: [KMLPoint] {
+        guard let node = node else { return [] }
+        do {
+            let pointNodes = try node.byKey("Point")
+            let kmlPoints = try pointNodes.all.map { try $0.value() as KMLPoint }
+            return kmlPoints
+        } catch {}
+        return []
+    }
+    
+    var lineStrings: [KMLLineString] {
+        guard let node = node else { return [] }
+        do {
+            let lineStringNodes = try node.byKey("LineString")
+            let kmlLineStrings = try lineStringNodes.all.map { try $0.value() as KMLLineString }
+            return kmlLineStrings
+        } catch {}
+        return []
+    }
+    
+    var linearRings: [KMLLinearRing] {
+        guard let node = node else { return [] }
+        do {
+            let linearRingNodes = try node.byKey("LinearRing")
+            let kmlLinearRings = try linearRingNodes.all.map { try $0.value() as KMLLinearRing }
+            return kmlLinearRings
+        } catch {}
+        return []
+    }
+    
+    var polygons: [KMLPolygon] {
+        guard let node = node else { return [] }
+        do {
+            let polygons = try node.byKey("Polygon")
+            let kmlPolygons = try polygons.all.map { try $0.value() as KMLPolygon }
+            return kmlPolygons
+        } catch {}
+        return []
+    }
+}
+
 struct KMLPlacemark: Equatable, XMLObjectDeserialization {
     var node: XMLIndexer? = nil
     var name: String = ""
     var description: String = ""
     var visibility: Bool = true
-    //Future StyleSelector Support: StyleMap
-    //Future Geometry Support: MultiGeometry, GeometryCollection, Model, gx:Track, gx:MultiTrack
+    // TODO: Future StyleSelector Support: StyleMap
+    // TODO: Future Geometry Support: GeometryCollection, Model, gx:Track, gx:MultiTrack
     
-    var mapKitShape: MKShape? {
+    var coordinate: CLLocationCoordinate2D {
+        mapKitShapes.first?.coordinate ?? CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+    }
+    
+    var mapKitShapes: [MKShape] {
+        if let multiGeometry = multiGeometry {
+            return multiGeometry.mapKitShapes
+        } else if let mapKitShape = mapKitShape {
+            return [mapKitShape]
+        } else {
+            return []
+        }
+    }
+    
+    private var mapKitShape: MKShape? {
         if let point = point {
             guard let coordinate = point.mapCoordinate else { return nil }
             let annotation = MKPointAnnotation()
@@ -372,21 +525,72 @@ struct KMLPlacemark: Equatable, XMLObjectDeserialization {
         } else if let lineString = lineString {
             let coordinates = lineString.mapCoordinates
             guard !coordinates.isEmpty else { return nil }
-            return MKPolyline(coordinates: coordinates, count: coordinates.count)
+            let polyline = COTMapPolyline(coordinates: coordinates, count: coordinates.count)
+            if let lineStyle = style?.lineStyle {
+                if lineStyle.width > 0.0 { polyline.strokeWeight = lineStyle.width }
+                if !lineStyle.color.isEmpty {
+                    polyline.strokeColor = IconData.colorFromKMLColor(kmlColor: lineStyle.color)
+                }
+            }
+            return polyline
         } else if let polygon = polygon {
             guard let outerCoordinates = polygon.outerLinearRing?.mapCoordinates else { return nil }
             
             let innerShapes: [MKPolygon] = polygon.innerLinearRings.map { linearRing in
                 let coords = linearRing.mapCoordinates
-                return MKPolygon(coordinates: coords, count: coords.count)
+                let polygon = COTMapPolygon(coordinates: coords, count: coords.count)
+                if let polygonStyle = style?.polygonStyle {
+                    if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
+                        polygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
+                    }
+                }
+                if let lineStyle = style?.lineStyle {
+                    if lineStyle.width > 0.0 { polygon.strokeWeight = lineStyle.width }
+                    if !lineStyle.color.isEmpty {
+                        polygon.strokeColor = IconData.colorFromKMLColor(kmlColor: lineStyle.color)
+                    }
+                }
+                return polygon
             }
             
-            return MKPolygon(coordinates: outerCoordinates, count: outerCoordinates.count, interiorPolygons: innerShapes)
+            let finalPolygon = COTMapPolygon(coordinates: outerCoordinates, count: outerCoordinates.count, interiorPolygons: innerShapes)
+            if let polygonStyle = style?.polygonStyle {
+                if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
+                    finalPolygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
+                }
+            }
+            if let lineStyle = style?.lineStyle {
+                if lineStyle.width > 0.0 { finalPolygon.strokeWeight = lineStyle.width }
+                if !lineStyle.color.isEmpty {
+                    finalPolygon.strokeColor = IconData.colorFromKMLColor(kmlColor: lineStyle.color)
+                }
+            }
+            return finalPolygon
         } else if let linearRing = linearRing {
             let coordinates = linearRing.mapCoordinates
             guard !coordinates.isEmpty else { return nil }
-            return MKPolygon(coordinates: coordinates, count: coordinates.count)
+            let polygon = COTMapPolygon(coordinates: coordinates, count: coordinates.count)
+            if let polygonStyle = style?.polygonStyle {
+                if !polygonStyle.color.isEmpty && polygonStyle.fill && polygonStyle.color != "0" {
+                    polygon.fillColor = IconData.colorFromKMLColor(kmlColor: polygonStyle.color)
+                }
+            }
+            if let lineStyle = style?.lineStyle {
+                if lineStyle.width > 0.0 { polygon.strokeWeight = lineStyle.width }
+                if !lineStyle.color.isEmpty {
+                    polygon.strokeColor = IconData.colorFromKMLColor(kmlColor: lineStyle.color)
+                }
+            }
+            return polygon
         }
+        return nil
+    }
+    
+    var multiGeometry: KMLMultiGeometry? {
+        guard let node = node else { return nil }
+        do {
+            return try node["MultiGeometry"].value()
+        } catch {}
         return nil
     }
     
@@ -422,16 +626,13 @@ struct KMLPlacemark: Equatable, XMLObjectDeserialization {
         return nil
     }
     
-    var styles: [KMLStyle] {
-        guard let node = node else { return [] }
-        let styleNodes = node["Style"].all
+    // Lower Hall's Alley, Skywalker, Little Mo, Upper Hall's Alley, Doc's Run, Little Jo, Tele Alley
+    var style: KMLStyle? {
+        guard let node = node else { return nil }
         do {
-            return try styleNodes.map { node in
-                try node.value() as KMLStyle
-            }
-        }
-        catch {}
-        return []
+            return try node["Style"].value()
+        } catch {}
+        return nil
     }
     
     public static func ==(lhs: KMLPlacemark, rhs: KMLPlacemark) -> Bool {
@@ -440,7 +641,7 @@ struct KMLPlacemark: Equatable, XMLObjectDeserialization {
     }
     
     static func deserialize(_ node: XMLIndexer) throws -> KMLPlacemark {
-        let name = try? node["name"].value() as String
+        let name = node["name"].element?.text
         let description = try? node["description"].value() as String
         return KMLPlacemark(
             node: node,
@@ -503,6 +704,18 @@ struct KMLDocument: XMLObjectDeserialization {
         return []
     }
     
+    var documents: [KMLDocument] {
+        guard let node = node else { return [] }
+        let documentNodes = node["Document"].all
+        do {
+            return try documentNodes.map { node in
+                try node.value() as KMLDocument
+            }
+        }
+        catch {}
+        return []
+    }
+    
     static func deserialize(_ node: XMLIndexer) throws -> KMLDocument {
         let name = try? node["name"].value() as String
         let description = try? node["description"].value() as String
@@ -536,6 +749,30 @@ struct KMLFolder: XMLObjectDeserialization {
         do {
             return try groundOverlayNodes.map { node in
                 try node.value() as KMLGroundOverlay
+            }
+        }
+        catch {}
+        return []
+    }
+    
+    var documents: [KMLDocument] {
+        guard let node = node else { return [] }
+        let documentNodes = node["Document"].all
+        do {
+            return try documentNodes.map { node in
+                try node.value() as KMLDocument
+            }
+        }
+        catch {}
+        return []
+    }
+    
+    var folders: [KMLFolder] {
+        guard let node = node else { return [] }
+        let folderNodes = node["Folder"].all
+        do {
+            return try folderNodes.map { node in
+                try node.value() as KMLFolder
             }
         }
         catch {}
@@ -630,6 +867,7 @@ struct KMLGroundOverlay: Equatable, XMLObjectDeserialization {
         return nil
     }
     
+    // Specifies where the top, bottom, right, and left sides of a bounding box for the ground overlay are aligned. 
     var latLonBox: KMLLatLonBox? {
         guard let node = node else { return nil }
         do {
@@ -638,12 +876,41 @@ struct KMLGroundOverlay: Equatable, XMLObjectDeserialization {
         return nil
     }
     
+    // Specifies the coordinates of the four corner points of a quadrilateral defining the overlay area
     var latLonQuad: KMLGoogleLatLonQuad? {
         guard let node = node else { return nil }
         do {
             return try node["gx:LatLonQuad"].value()
         } catch {}
         return nil
+    }
+    
+    var latLonBoxCoordinates: [CLLocationCoordinate2D] {
+        guard let latLongBox = latLonBox else {
+            return []
+        }
+        let northEast = CLLocationCoordinate2DMake(latLongBox.north,latLongBox.east)
+        let southWest = CLLocationCoordinate2DMake(latLongBox.south,latLongBox.west)
+        return [northEast, southWest]
+    }
+    
+    var latLonQuadCoordinates: [CLLocationCoordinate2D] {
+        let coordinateQuad = latLonQuad!.coordinates.split(separator: " ")
+        if coordinateQuad.count < 4 {
+            TAKLogger.debug("[MapView] KML GroundOverlay has invalid LatLonQuad. Skipping.")
+            return []
+        }
+        // Counter-clockwise order with the first coordinate corresponding to the lower-left corner
+        // LowerLeft, LowerRight, UpperRight, UpperLeft
+        let lowerLeftLonLatCoords: [String] = coordinateQuad[0].split(separator: ",").prefix(2).map { String($0) }
+        let lowerRightLonLatCoords: [String] = coordinateQuad[1].split(separator: ",").prefix(2).map { String($0) }
+        let upperRightLonLatCoords: [String] = coordinateQuad[2].split(separator: ",").prefix(2).map { String($0) }
+        let upperLeftLonLatCoords: [String] = coordinateQuad[3].split(separator: ",").prefix(2).map { String($0) }
+        let lowerLeftLonLat = CLLocationCoordinate2DMake(Double(lowerLeftLonLatCoords.last!)!,Double(lowerLeftLonLatCoords.first!)!);
+        let lowerRightLonLat = CLLocationCoordinate2DMake(Double(lowerRightLonLatCoords.last!)!,Double(lowerRightLonLatCoords.first!)!);
+        let upperRightLonLat = CLLocationCoordinate2DMake(Double(upperRightLonLatCoords.last!)!,Double(upperRightLonLatCoords.first!)!);
+        let upperLeftLonLat = CLLocationCoordinate2DMake(Double(upperLeftLonLatCoords.last!)!,Double(upperLeftLonLatCoords.first!)!);
+        return [lowerLeftLonLat, lowerRightLonLat, upperRightLonLat, upperLeftLonLat]
     }
     
     public static func ==(lhs: KMLGroundOverlay, rhs: KMLGroundOverlay) -> Bool {
@@ -667,11 +934,25 @@ struct KMLGroundOverlay: Equatable, XMLObjectDeserialization {
 }
 
 class KMLParser {
+    // KMLs can recursively define folders and documents. This can
+    // cause significant performance problems if users try to import
+    // deep, nested KMLs. So for now, limit the depth it will search
+    // documents and folders
+    let MAX_DEPTH = 2
+    private var currentFolderDepth = 0
+    private var currentDocumentDepth = 0
+    
     var placemarks: [KMLPlacemark] = []
     var groundOverlays: [KMLGroundOverlay] = []
     var document: KMLDocument? = nil
     
+    private func resetDepthCalculations() {
+        currentFolderDepth = 0
+        currentDocumentDepth = 0
+    }
+    
     func parse(kmlString: String) {
+        resetDepthCalculations()
         let kml = XMLHash.parse(kmlString)
         let kmlRoot = kml["kml"]
         
@@ -704,14 +985,40 @@ class KMLParser {
                 let documentKml: KMLDocument = try documentXml.value()
                 if self.document == nil {
                     self.document = documentKml // Only take the first document in the case of multiples
-                }
-                placemarks.append(contentsOf: documentKml.placemarks)
-                groundOverlays.append(contentsOf: documentKml.groundOverlays)
-                documentKml.folders.forEach { folder in
-                    placemarks.append(contentsOf: folder.placemarks)
-                    groundOverlays.append(contentsOf: folder.groundOverlays)
+                    parseDocument(document: documentKml)
                 }
             } catch {}
+        }
+    }
+    
+    // TODO: Remove recursive depth restrictions
+    private func parseFolder(folder: KMLFolder) {
+        currentFolderDepth += 1
+        
+        placemarks.append(contentsOf: folder.placemarks)
+        groundOverlays.append(contentsOf: folder.groundOverlays)
+        if currentFolderDepth < MAX_DEPTH {
+            folder.folders.forEach { folder in
+                parseFolder(folder: folder)
+            }
+            folder.documents.forEach { subDoc in
+                parseDocument(document: subDoc)
+            }
+        }
+    }
+    
+    // TODO: Remove recursive depth restrictions
+    private func parseDocument(document: KMLDocument) {
+        currentDocumentDepth += 1
+        placemarks.append(contentsOf: document.placemarks)
+        groundOverlays.append(contentsOf: document.groundOverlays)
+        if currentDocumentDepth < MAX_DEPTH {
+            document.folders.forEach { folder in
+                parseFolder(folder: folder)
+            }
+            document.documents.forEach { subDoc in
+                parseDocument(document: subDoc)
+            }
         }
     }
 }

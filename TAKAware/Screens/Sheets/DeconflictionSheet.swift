@@ -12,46 +12,55 @@ import SwiftUI
 struct DeconflictionSheet: View {
     @Environment(\.dismiss) var dismiss
     @Binding var conflictedItems: [MapPointAnnotation]
-    let parentView: AwarenessView
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
+    @State private var selection = Set<MapPointAnnotation>()
+    @State private var editMode = EditMode.inactive
+    let parentView: AwarenessView
     
-    func iconImage(_ annotation: MapPointAnnotation) -> UIImage {
-        if annotation.isShape {
-            return UIImage(named: "nav_draw")!
-        } else {
-            let icon = IconData.iconFor(type2525: annotation.cotType ?? "", iconsetPath: annotation.icon ?? "")
-            return icon.icon
-        }
+    private func deleteSelectedCots() {
+        parentView.annotationsDeletedCallback(Array(selection))
+        selection.removeAll()
+        editMode = EditMode.inactive
     }
 
     var body: some View {
         NavigationView {
-            List {
-                if(conflictedItems.isEmpty) {
-                    Text("No Markers Selected")
+            Group {
+                if conflictedItems.isEmpty {
+                    Text("No items selected")
                 } else {
-                    ForEach(conflictedItems, id:\.title) { item in
-                        VStack {
-                            HStack {
-                                Image(uiImage: iconImage(item))
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
-                                Button {
-                                    parentView.didSelectAnnotation(item)
-                                } label: {
-                                    Text(item.title!)
-                                }
+                    List(conflictedItems, id:\.self, selection: $selection) { item in
+                        HStack {
+                            IconImage(annotation: item)
+                            Button {
+                                parentView.didSelectAnnotation(item)
+                            } label: {
+                                Text(item.title!)
                             }
                         }
                         .padding(.top, 20)
                     }
                 }
+                if !selection.isEmpty {
+                    HStack {
+                        Button { editMode = EditMode.inactive } label: {
+                            Text("Cancel")
+                        }
+                        Spacer()
+                        Button(role: .destructive) { deleteSelectedCots() } label: {
+                            Text("Delete ^[\(selection.count) items](inflect: true)")
+                        }
+                        .buttonStyle(BorderedProminentButtonStyle())
+                    }
+                    .padding()
+                }
             }
-            .navigationBarItems(trailing: Button("Close", action: {
+            .navigationBarItems(leading: EditButton(), trailing: Button("Close", action: {
                 dismiss()
             }))
             .navigationTitle("Select Item")
             .navigationBarTitleDisplayMode(.inline)
+            .environment(\.editMode, $editMode)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

@@ -8,6 +8,8 @@
 import Foundation
 import XCTest
 import SWXMLHash
+import SwiftProtobuf
+import SwiftTAK
 @testable import TAKAware
 
 final class StreamParserTests: TAKAwareTestCase {
@@ -59,4 +61,44 @@ final class StreamParserTests: TAKAwareTestCase {
         XCTAssertEqual(1, secondEventCrossed.count, "Parser missed second event")
         XCTAssertEqual(event2, String(secondEventCrossed[0]), "Parser split did not match event2")
     }
+    
+    func testParsesTaskMissionChangeEvent() throws {
+        let xml = """
+<event version="2.0" uid="62d88822-1426-40c6-b30d-e440f2c56daa" type="t-x-m-c" how="h-g-i-g-o" time="2024-07-28T17:48:03Z" start="2024-07-28T17:48:03Z" stale="2024-07-28T17:53:03Z"><point lat="0" lon="0" hae="0" ce="9999999" le="9999999"/><detail></detail></event>
+"""
+        let cotParser: COTXMLParser = COTXMLParser()
+        let taskedEventXml = parser.parse(dataStream: Data(xml.utf8)).first
+        XCTAssertNotNil(taskedEventXml)
+        let taskedEvent = cotParser.parse(taskedEventXml!)
+        XCTAssertEqual(taskedEvent?.eventType, .TASKING)
+    }
+    
+//    func testUnknownBug() throws {
+//        let cot = """
+//<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+//<event version='2.0' uid='MXY292' type='a-f-A-C-F' how='m-g' time='2025-02-13T20:59:01Z' start='2025-02-13T20:59:01Z' stale='2025-02-13T21:09:01Z'><contact callsign='MXY292'/><point lat='33.3405647277832' lon='-79.75859832763672' hae='10972.933430870518' ce='9999999.0' le='9999999.0'/></event>
+//"""
+//        let cotData = Data(cot.utf8)
+//        let unknownEvent = parser.parse(dataStream: cotData)
+//        let cotParser = COTXMLParser()
+//        print("    ")
+//        print("************")
+//        debugPrint(cotParser.parse(unknownEvent.first!))
+//        print("************")
+//        print("    ")
+//        //parser.parseAtom(cotEvent: unknownEvent.first!, rawXml: cot)
+//    }
+    
+//    func testParsesProtobufIntoEvents() throws {
+//        var pbTAKMessage = Atakmap_Commoncommo_Protobuf_V1_TakMessage()
+//        var pbTAKEvent = Atakmap_Commoncommo_Protobuf_V1_CotEvent()
+//        var dataMessage = Data()
+//        dataMessage.append(contentsOf: [StreamParser.PB_MAGIC_BYTE])
+//        pbTAKEvent.uid = UUID().uuidString
+//        pbTAKMessage.cotEvent = pbTAKEvent
+//        let pbMessageData = try pbTAKMessage.serializedData()
+//        dataMessage.append(pbMessageData)
+//        let events = parser.parse(dataStream: dataMessage)
+//        XCTAssertEqual(1, events.count, "Parser did not handle protobuf properly")
+//    }
 }

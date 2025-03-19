@@ -19,7 +19,6 @@ struct Sheet: View {
         case emergencySettings
         case settings
         case chat
-        case dataSync
         case dataPackage
         case channels
         case detail
@@ -32,7 +31,6 @@ struct Sheet: View {
                 case .emergencySettings: return "emergencysettings"
                 case .settings: return "settings"
                 case .chat: return "chat"
-                case .dataSync: return "datasync"
                 case .dataPackage: return "datapackage"
                 case .channels: return "channels"
                 case .detail: return "detail"
@@ -48,11 +46,10 @@ struct Sheet: View {
             case .emergencySettings: AlertSheet()
             case .settings: SettingsSheet()
             case .chat: ChatView() //ChatSheet()
-            case .dataSync: DataSyncSheet()
             case .dataPackage: DataPackageSheet()
             case .channels: ChannelSheet()
             case .detail: AnnotationDetailView(currentSelectedAnnotation: $currentSelectedAnnotation, parentView: parentView)
-            case .videoPlayer: VideoPlayerView(currentSelectedAnnotation: $currentSelectedAnnotation)
+            case .videoPlayer: VideoPlayerView(currentSelectedAnnotation: currentSelectedAnnotation)
             case .deconflictionView: DeconflictionSheet(conflictedItems: $conflictedItems, parentView: parentView)
         }
     }

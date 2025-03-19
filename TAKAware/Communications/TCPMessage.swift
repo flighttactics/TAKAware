@@ -263,7 +263,9 @@ class TCPMessage: NSObject, ObservableObject {
                 SettingsStore.global.connectionStatus = ConnectionStatus.AttemptingToConnect.description
             }
         case .ready:
+            // TODO: Send a notification we connected so we can reestablish DataSync
             TAKLogger.debug("[TCPMessage]: Entered state: ready")
+            NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_SERVER_CONNECTED), object: SettingsStore.global.takServerUrl)
             DispatchQueue.main.async {
                 SettingsStore.global.isConnectedToServer = true
                 SettingsStore.global.isConnectingToServer = false

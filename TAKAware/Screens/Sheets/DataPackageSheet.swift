@@ -6,29 +6,19 @@
 //
 
 import Foundation
+import QuickLook
 import SwiftTAK
 import SwiftUI
 
 struct DataPackageDownloader: View {
     @StateObject var settingsStore: SettingsStore = SettingsStore.global
     @StateObject var dataPackageManager: DataPackageManager = DataPackageManager()
-    @State private var isRotating = 0.0
     @State var isShowingAlert = false
     @State var alertText: String = ""
     @State private var searchText = ""
+    @State private var activePackage = ""
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt, order: .reverse)])
     var dataPackages: FetchedResults<DataPackage>
-    
-    var loader: some View {
-        return Image(systemName: "arrowshape.turn.up.right.circle")
-            .rotationEffect(.degrees(isRotating))
-            .onAppear {
-                withAnimation(.linear(duration: 1)
-                        .speed(0.4).repeatForever(autoreverses: false)) {
-                    isRotating = 360.0
-                }
-            }
-    }
     
     var searchResults: [TAKMissionPackage] {
         if searchText.isEmpty {
@@ -41,7 +31,7 @@ struct DataPackageDownloader: View {
     var body: some View {
         List {
             if dataPackageManager.isLoading {
-                loader
+                ProgressView()
             } else if searchResults.isEmpty {
                 Text("No Data Packages available to download")
             } else {
@@ -56,10 +46,11 @@ struct DataPackageDownloader: View {
                         Button {
                             // On press, download the archive to the file system
                             // Then start the data package importer pointed to the file
+                            activePackage = package.name
                             dataPackageManager.importRemotePackage(missionPackage: package)
                         } label: {
-                            if dataPackageManager.isProcessingRemotePackage {
-                                loader
+                            if dataPackageManager.isProcessingRemotePackage && activePackage == package.name {
+                                ProgressView()
                             } else {
                                 if(dataPackages.contains(where: { $0.originalFileHash == package.hash })) {
                                     Image(systemName: "checkmark.circle.fill")
@@ -85,6 +76,7 @@ struct DataPackageDownloader: View {
 
 struct DataPackageFilesList: View {
     @StateObject var dataPackageManager: DataPackageManager = DataPackageManager()
+    @State var previewUrl: URL?
     var dataPackage: DataPackage
     var dataPackageFiles: [DataPackageFile] {
         dataPackage.dataPackageFiles?.allObjects as! [DataPackageFile]
@@ -107,8 +99,13 @@ struct DataPackageFilesList: View {
         } else {
             let fileUrl = DataPackageManager.filePathFor(packageId: dataPackageFile.dataPackage?.uid, filePath: zipEntry)
             if dataPackageFile.zipEntry != nil && fileUrl != nil {
-                ShareLink(item: fileUrl!) {
-                    Image(systemName: "square.and.arrow.down.on.square")
+                HStack {
+                    ShareLink(item: fileUrl!) {
+                        Image(systemName: "square.and.arrow.down.on.square")
+                    }
+                    Button { previewUrl = fileUrl } label: {
+                        Image(systemName: "binoculars")
+                    }
                 }
             } else {
                 Image(systemName: "exclamationmark.square")
@@ -134,6 +131,7 @@ struct DataPackageFilesList: View {
                 }
             }
         }
+        .quickLookPreview($previewUrl)
     }
 }
 
@@ -174,7 +172,6 @@ struct DataPackageDetail: View {
             .buttonStyle(.plain)
             .contentShape(Rectangle())
             .fileImporter(isPresented: $isShowingFilePicker, allowedContentTypes: [.zip], allowsMultipleSelection: false, onCompletion: { results in
-                
                 switch results {
                 case .success(let fileurls):
                     for fileurl in fileurls {
@@ -198,7 +195,6 @@ struct DataPackageDetail: View {
                 case .failure(let error):
                     TAKLogger.debug(String(describing: error))
                 }
-                
             })
             Section(
                 header: Text("Imported Packages"),

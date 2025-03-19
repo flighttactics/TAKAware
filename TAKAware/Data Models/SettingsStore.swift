@@ -75,6 +75,9 @@ class SettingsStore: ObservableObject {
         takServerUrl = ""
         takServerUsername = ""
         takServerPassword = ""
+        takServerPort = TAKConstants.DEFAULT_STREAMING_PORT
+        takServerCSRPort = TAKConstants.DEFAULT_CSR_PORT
+        takServerSecureAPIPort = TAKConstants.DEFAULT_SECURE_API_PORT
         serverCertificateTruststore = []
         clearAllIdentities()
     }
@@ -94,6 +97,12 @@ class SettingsStore: ObservableObject {
     @Published var role: String {
         didSet {
             UserDefaults.standard.set(role, forKey: "role")
+        }
+    }
+    
+    @Published var phoneNumber: String {
+        didSet {
+            UserDefaults.standard.set(phoneNumber, forKey: "phoneNumber")
         }
     }
     
@@ -234,9 +243,11 @@ class SettingsStore: ObservableObject {
         }
     }
     
+    // Note: overlayActiveMapSources in MapView also updates this value directly without going through here
     @Published var mapTypeDisplay: UInt {
         didSet {
             UserDefaults.standard.set(mapTypeDisplay, forKey: "mapTypeDisplay")
+            NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_MAP_SOURCE_UPDATED), object: nil)
         }
     }
     
@@ -275,10 +286,19 @@ class SettingsStore: ObservableObject {
             UserDefaults.standard.set(enableTrafficDisplay, forKey: "enableTrafficDisplay")
         }
     }
+    
+    @Published var enable2525ForRoles: Bool {
+        didSet {
+            UserDefaults.standard.set(enable2525ForRoles, forKey: "enable2525ForRoles")
+            DataController.shared.clearTransientItems()
+        }
+    }
 
     private init() {
         let defaultSign = SettingsStore.generateDefaultCallSign()
         self.lastAppVersionRun = (UserDefaults.standard.object(forKey: "lastAppVersionRun") == nil ? "" : UserDefaults.standard.object(forKey: "lastAppVersionRun") as! String)
+        
+        self.enable2525ForRoles = (UserDefaults.standard.object(forKey: "enable2525ForRoles") == nil ? false : UserDefaults.standard.object(forKey: "enable2525ForRoles") as! Bool)
         
         self.enableTrafficDisplay = (UserDefaults.standard.object(forKey: "enableTrafficDisplay") == nil ? true : UserDefaults.standard.object(forKey: "enableTrafficDisplay") as! Bool)
         
@@ -289,6 +309,8 @@ class SettingsStore: ObservableObject {
         self.team = (UserDefaults.standard.object(forKey: "team") == nil ? TeamColor.Cyan.rawValue : UserDefaults.standard.object(forKey: "team") as! String)
         
         self.role = (UserDefaults.standard.object(forKey: "role") == nil ? TeamRole.TeamMember.rawValue : UserDefaults.standard.object(forKey: "role") as! String)
+        
+        self.phoneNumber = (UserDefaults.standard.object(forKey: "phoneNumber") == nil ? "" : UserDefaults.standard.object(forKey: "phoneNumber") as! String)
         
         self.cotType = (UserDefaults.standard.object(forKey: "cotType") == nil ? "a-f-G-U-C" : UserDefaults.standard.object(forKey: "cotType") as! String)
         

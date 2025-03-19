@@ -19,7 +19,7 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
     @Published var isConnectedToServer = false
     
     override init() {
-        cotMessage = COTMessage(staleTimeMinutes: SettingsStore.global.staleTimeMinutes, deviceID: UIDevice.current.identifierForVendor!.uuidString, phoneModel: AppConstants.getPhoneModel(), phoneOS: AppConstants.getPhoneOS(), appPlatform: AppConstants.TAK_PLATFORM, appVersion: AppConstants.getAppReleaseAndBuildVersion())
+        cotMessage = COTMessage(staleTimeMinutes: SettingsStore.global.staleTimeMinutes, deviceID: AppConstants.getClientID(), phoneModel: AppConstants.getPhoneModel(), phoneOS: AppConstants.getPhoneOS(), appPlatform: AppConstants.TAK_PLATFORM, appVersion: AppConstants.getAppReleaseAndBuildVersion())
         super.init()
         udpMessage.connect()
         TAKLogger.debug("[TAKManager]: establishing TCP Message Connect")
@@ -68,8 +68,13 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
             cotDetail.childNodes.append(COTUserIcon(iconsetPath: annotation.icon!))
         }
         
-        if annotation.isShape && annotation.shape != nil {
-            let shape = annotation.shape!
+        // TODO: Modify this to send KMLs appropriately
+        // Right now a KML gets represented as a shape, so we'd send it
+        // as a shape rather than a KML. This is problematic for MultiGeometry
+        // and GroundOverlays since they require more than a single node
+        // or additional files (like images)
+        if annotation.shapes.count == 1 {
+            let shape = annotation.shapes.first!
             switch shape {
             case let shape as COTMapCircle:
                 let cotEllipse = COTEllipse(major: shape.major, minor: shape.minor, angle: shape.angle)
@@ -133,7 +138,7 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
             
             let positionInfo = self.generatePositionInfo(location: location, heading: heading)
             
-            let message = self.cotMessage.generateCOTXml(positionInfo: positionInfo, callSign: SettingsStore.global.callSign, group: SettingsStore.global.team, role: SettingsStore.global.role, phoneBatteryStatus: AppConstants.getPhoneBatteryStatus().description)
+            let message = self.cotMessage.generateCOTXml(positionInfo: positionInfo, callSign: SettingsStore.global.callSign, group: SettingsStore.global.team, role: SettingsStore.global.role, phone: SettingsStore.global.phoneNumber, phoneBatteryStatus: AppConstants.getPhoneBatteryStatus().description)
 
             TAKLogger.debug("[TAKManager]: Getting ready to broadcast location CoT")
             TAKLogger.debug(message)
