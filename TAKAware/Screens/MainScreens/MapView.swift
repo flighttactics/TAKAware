@@ -36,8 +36,7 @@ class COTMapObject: NSObject {
     }
     
     var annotation: MapPointAnnotation {
-        if isLine {
-            let line = self.shape as! COTMapPolyline
+        if isLine, let line = self.shape as? COTMapPolyline {
             let centerPoint = line.coordinate
             cotData.latitude = centerPoint.latitude
             cotData.longitude = centerPoint.longitude
@@ -634,6 +633,7 @@ struct MapView: UIViewRepresentable {
         parentView.annotationSelectedCallback = annotationSelected(_:)
         parentView.annotationsDeletedCallback = deleteAnnotations(_:)
 
+        updateAnnotations()
         didUpdateRegion()
         updateKmlOverlays()
         
@@ -951,7 +951,9 @@ struct MapView: UIViewRepresentable {
 
     private func updateAnnotations() {
         let origUpdateVal = shouldUpdateMap
-        shouldUpdateMap = false
+        DispatchQueue.main.async {
+            shouldUpdateMap = false
+        }
         if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
             mapView.removeOverlay(activeBloodhound!)
             DispatchQueue.main.async {
@@ -1035,7 +1037,9 @@ struct MapView: UIViewRepresentable {
             let newOverlays = Array(newAnnotations.map { $0.shapes }.joined()) as! [MKOverlay]
             mapView.addOverlays(newOverlays)
         }
-        shouldUpdateMap = origUpdateVal
+        DispatchQueue.main.async {
+            shouldUpdateMap = origUpdateVal
+        }
     }
     
     func addMarker(at: CLLocationCoordinate2D) {
@@ -1148,6 +1152,27 @@ struct MapView: UIViewRepresentable {
         }
     }
     
+    func didUpdateUserLocation() {
+        let userLocation = mapView.userLocation.coordinate
+        if(
+            activeBloodhound != nil &&
+            bloodhoundEndAnnotation != nil &&
+            (userLocation.latitude != bloodhoundStartCoordinate?.latitude ||
+           userLocation.longitude != bloodhoundStartCoordinate?.longitude)
+        ){
+            TAKLogger.debug("Bloodhound endpoint being updated due to user move")
+            DispatchQueue.main.async {
+                if(activeBloodhound != nil) {
+                    TAKLogger.debug("[MapView] Removing old bloodhound line")
+                    mapView.removeOverlay(activeBloodhound!)
+                } else {
+                    TAKLogger.debug("[MapView] Updated Bloodhound line but no activeBloodhound")
+                }
+                createBloodhound(annotation: bloodhoundEndAnnotation!)
+            }
+        }
+    }
+    
     func didUpdateRegion() {
         let BORDER_POINT = 0.60
         let latDelta = mapView.region.span.latitudeDelta
@@ -1229,7 +1254,7 @@ struct MapView: UIViewRepresentable {
         }
         
         func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-            parent.updateAnnotations()
+            parent.didUpdateUserLocation()
         }
         
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
