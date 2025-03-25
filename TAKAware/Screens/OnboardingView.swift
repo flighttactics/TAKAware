@@ -28,10 +28,10 @@ struct OnboardingView: View {
     
     var permissionsButtonText: String {
         switch(locationManager.statusString) {
-        case "authorizedAlways":
-            return "Next"
-        default:
+        case "notDetermined":
             return "Skip"
+        default:
+            return "Next"
         }
     }
     
