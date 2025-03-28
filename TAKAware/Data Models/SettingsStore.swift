@@ -10,6 +10,12 @@ import MapKit
 import SwiftTAK
 import UIKit
 
+enum MapLabelDisplayOption: Int {
+    case Truncate
+    case ShowFullLabel
+    case Scroll
+}
+
 class SettingsStore: ObservableObject {
     static let global = SettingsStore()
     
@@ -293,12 +299,27 @@ class SettingsStore: ObservableObject {
             DataController.shared.clearTransientItems()
         }
     }
+    
+    @Published var mapLabelDisplayOption: MapLabelDisplayOption {
+        didSet {
+            UserDefaults.standard.set(mapLabelDisplayOption.rawValue, forKey: "mapLabelDisplayOption")
+        }
+    }
+    
+    var mapLabelShouldTruncate: Bool {
+        get { mapLabelDisplayOption == .Truncate }
+        set {
+            mapLabelDisplayOption = newValue ? MapLabelDisplayOption.Truncate : MapLabelDisplayOption.ShowFullLabel
+        }
+    }
 
     private init() {
         let defaultSign = SettingsStore.generateDefaultCallSign()
         self.lastAppVersionRun = (UserDefaults.standard.object(forKey: "lastAppVersionRun") == nil ? "" : UserDefaults.standard.object(forKey: "lastAppVersionRun") as! String)
         
         self.enable2525ForRoles = (UserDefaults.standard.object(forKey: "enable2525ForRoles") == nil ? false : UserDefaults.standard.object(forKey: "enable2525ForRoles") as! Bool)
+        
+        self.mapLabelDisplayOption = (UserDefaults.standard.object(forKey: "mapLabelDisplayOption") == nil ? .Truncate : MapLabelDisplayOption(rawValue: UserDefaults.standard.object(forKey: "mapLabelDisplayOption") as! Int) ?? .Truncate)
         
         self.enableTrafficDisplay = (UserDefaults.standard.object(forKey: "enableTrafficDisplay") == nil ? true : UserDefaults.standard.object(forKey: "enableTrafficDisplay") as! Bool)
         
