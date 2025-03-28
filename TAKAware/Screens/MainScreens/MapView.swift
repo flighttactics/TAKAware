@@ -484,16 +484,12 @@ class SituationalAnnotationView: MKAnnotationView {
         self.detailCalloutAccessoryView = actionView
     }
     
-    // TODO: Do something meaningful on devices that can't make calls (like iPads)
-    // TODO: Enable the menu to copy the number or send a text
     @objc func makeCall(sender: UIButton) {
         guard let phone = mapPointAnnotation.phone else {
             TAKLogger.error("[MapView] Attempted to make a phone call with no annotation / phone")
             return
         }
-        if let telUrl = URL(string: "tel://\(phone)") {
-            UIApplication.shared.open(telUrl, options: [:])
-        }
+        NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_PHONE_ACTION_REQUESTED), object: phone)
     }
     
     @objc func videoPressed(sender: UIButton) {

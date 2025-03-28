@@ -58,6 +58,7 @@ struct AppConstants {
     static let NOTIFY_SCROLL_TO_KML = "ScrollToKML"
     static let NOTIFY_MAP_SOURCE_UPDATED = "MapSourceUpdated"
     static let NOTIFY_SERVER_CONNECTED = "TAKServerConnected"
+    static let NOTIFY_PHONE_ACTION_REQUESTED = "PhoneActionRequested"
     
     static func appDirectoryFor(_ directory: AppDirectories) -> URL {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
