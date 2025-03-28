@@ -8,6 +8,39 @@
 import CoreData
 import SwiftUI
 import MapKit
+import MessageUI
+
+struct TextMessageComposer: UIViewControllerRepresentable {
+    
+    class Coordinator: NSObject, MFMessageComposeViewControllerDelegate {
+        func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+            controller.dismiss(animated: true)
+        }
+        
+        var parent: TextMessageComposer
+
+        init(_ parent: TextMessageComposer) {
+            self.parent = parent
+        }
+    }
+    
+    let phoneNumber: String
+
+    func makeUIViewController(context: Context) -> MFMessageComposeViewController {
+        let controller = MFMessageComposeViewController()
+        controller.recipients = [phoneNumber]
+        controller.messageComposeDelegate = context.coordinator
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: MFMessageComposeViewController, context: Context) {}
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    typealias UIViewControllerType = MFMessageComposeViewController
+}
 
 private extension AwarenessView {
     func navBarImage(imageName: String) -> some View {
@@ -43,6 +76,9 @@ struct AwarenessView: View {
     @State private var tracking:MapUserTrackingMode = .none
     @State var selectedSheet: Sheet.SheetType? = nil
     @State var isAcquiringBloodhoundTarget: Bool = false
+    @State var presentPhoneOptions: Bool = false
+    @State var presentTextMessageComposer: Bool = false
+    @State var phoneOptionsPhoneNumber: String? = nil
     @State var currentSelectedAnnotation: MapPointAnnotation? = nil
     @State var bloodhoundEndPoint: MapPointAnnotation? = nil
     @State var conflictedItems: [MapPointAnnotation] = []
@@ -119,6 +155,49 @@ struct AwarenessView: View {
         .overlay(alignment: .bottomLeading, content: {
             bloodhoundInfo
                 .padding(.horizontal)
+        })
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name(AppConstants.NOTIFY_PHONE_ACTION_REQUESTED))) { info in
+            guard let phone = info.object as? String else {
+                TAKLogger.error("[AwarenessView] Phone Action request notification received with no phone")
+                return
+            }
+            phoneOptionsPhoneNumber = phone
+            presentPhoneOptions = true
+        }
+        .sheet(isPresented: $presentTextMessageComposer, content: {
+            let phoneNumber = phoneOptionsPhoneNumber ?? "UNKNOWN NUMBER"
+            TextMessageComposer(phoneNumber: phoneNumber)
+        })
+        .actionSheet(isPresented: $presentPhoneOptions, content: {
+            let phoneNumber = phoneOptionsPhoneNumber ?? "UNKNOWN NUMBER"
+            var actionButtons: [ActionSheet.Button] = [
+                .cancel(),
+                .default(
+                    Text("Copy"),
+                    action: {
+                        UIPasteboard.general.setValue(phoneNumber, forPasteboardType: "public.plain-text")
+                    }
+                )
+            ]
+            if let telUrl = URL(string: "tel://\(phoneNumber)") {
+                if UIApplication.shared.canOpenURL(telUrl) {
+                    actionButtons.append(.default(
+                        Text("Call"),
+                        action: { UIApplication.shared.open(telUrl) }
+                    ))
+                }
+            } else { TAKLogger.debug("[AwarenessView] Call supported not enabled for this device") }
+            if (MFMessageComposeViewController.canSendText()) {
+                actionButtons.append(.default(
+                    Text("Text"),
+                    action: {
+                        presentTextMessageComposer = true
+                    }
+                ))
+            } else { TAKLogger.debug("[AwarenessView] Text supported not enabled for this device") }
+            return ActionSheet(title: Text("\(phoneNumber)"),
+                               buttons: actionButtons
+            )
         })
     }
     
