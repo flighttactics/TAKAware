@@ -20,6 +20,8 @@ enum ReleasedAppVersions : String, CustomStringConvertible, CaseIterable {
     case v11 = "1.1"
     case v12 = "1.2"
     case v13 = "1.3"
+    case v131 = "1.3.1"
+    case v14 = "1.4"
     
     public var description: String {
         return self.rawValue
@@ -59,7 +61,7 @@ class Migrator: ObservableObject {
         switch version! {
         case ReleasedAppVersions.v10, ReleasedAppVersions.v11, ReleasedAppVersions.v12:
             migrateServerCertificateToTrust()
-        case ReleasedAppVersions.v13:
+        case ReleasedAppVersions.v13, ReleasedAppVersions.v131, ReleasedAppVersions.v14:
             TAKLogger.debug("[Migrator]: No migrations needed")
             return
         }
