@@ -420,7 +420,10 @@ class SituationalAnnotationView: MKAnnotationView {
         annotationLabel.sizeToFit()
         annotationLabel.preferredMaxLayoutWidth = 70
         let afterReframe = annotationLabel.frame
-        let newWidth = (afterReframe.width > 70) ? 70 : afterReframe.width
+        var newWidth = afterReframe.width
+        if SettingsStore.global.mapLabelDisplayOption == .Truncate {
+            newWidth = (afterReframe.width > 70) ? 70 : afterReframe.width
+        }
         let xPos = -(newWidth/2) + 15
         annotationLabel.frame = CGRect(x: xPos, y: -10, width: newWidth, height: afterReframe.height)
         self.addSubview(annotationLabel)

@@ -88,10 +88,11 @@ struct MapOptions: View {
                     }
                 }
                 
-                Section(header: Text("Map Options"), footer: Text("Will cause a map refresh when toggled")) {
+                Section(header: Text("Map Options"), footer: Text("May cause a map refresh when toggled")) {
                     List {
                         Toggle("Show traffic when available", isOn: $settingsStore.enableTrafficDisplay)
                         Toggle("Show Contacts as 2525 Icons", isOn: $settingsStore.enable2525ForRoles)
+                        Toggle("Truncate Map Labels", isOn: $settingsStore.mapLabelShouldTruncate)
                     }
                 }
                 
