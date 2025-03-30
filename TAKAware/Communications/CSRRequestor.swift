@@ -302,7 +302,7 @@ class CSRRequestor: NSObject, ObservableObject, URLSessionDelegate {
                 return
             }
             if let mimeType = response.mimeType,
-                mimeType == "text/plain",
+                (mimeType == "text/plain" || mimeType == "application/xml"),
                 let data = data,
                 let dataString = String(data: data, encoding: .utf8) {
                 self.processConfigResponse(data: data, dataString: dataString)
