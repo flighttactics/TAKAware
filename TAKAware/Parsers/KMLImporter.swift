@@ -74,18 +74,18 @@ class KMLImporter: COTDataParser {
             TAKLogger.debug("[KMLImporter] We have data of \(fileData!.debugDescription) - writing directly")
             data = fileData
         } else if archiveLocation != nil {
-            TAKLogger.debug("[KMLImporter] We have an archiveLocation of \(archiveLocation!.path()) - copying")
+            TAKLogger.debug("[KMLImporter] We have an archiveLocation of \(archiveLocation!.path(percentEncoded: false)) - copying")
             do {
                 if archiveLocation!.startAccessingSecurityScopedResource() {
                     fileName = archiveLocation!.lastPathComponent
                     data = try Data(contentsOf: archiveLocation!)
                 } else {
                     hasFailure = true
-                    TAKLogger.error("[KMLImporter] Error copying file from \(archiveLocation!.path()): Unable to access")
+                    TAKLogger.error("[KMLImporter] Error copying file from \(archiveLocation!.path(percentEncoded: false)): Unable to access")
                 }
             } catch {
                 hasFailure = true
-                TAKLogger.error("[KMLImporter] Error copying file from \(archiveLocation!.path()): \(error)")
+                TAKLogger.error("[KMLImporter] Error copying file from \(archiveLocation!.path(percentEncoded: false)): \(error)")
             }
             archiveLocation!.stopAccessingSecurityScopedResource()
         }
@@ -97,7 +97,7 @@ class KMLImporter: COTDataParser {
             savedLocation = overlayFileURL
         } catch {
             hasFailure = true
-            TAKLogger.error("[KMLImporter] Error writing file to \(overlayFileURL.path()): \(error)")
+            TAKLogger.error("[KMLImporter] Error writing file to \(overlayFileURL.path(percentEncoded: false)): \(error)")
         }
 
         TAKLogger.debug("[KMLImporter] File copy complete")
@@ -113,10 +113,10 @@ class KMLImporter: COTDataParser {
         let fileManager = FileManager()
         let extractLocation = overlaysURL.appendingPathComponent(fileUUID.uuidString)
         do {
-            TAKLogger.debug("[KMLImporter] Extracting KMZ to \(extractLocation.path())")
+            TAKLogger.debug("[KMLImporter] Extracting KMZ to \(extractLocation.path(percentEncoded: false))")
             try fileManager.createDirectory(at: extractLocation, withIntermediateDirectories: true, attributes: nil)
             try fileManager.unzipItem(at: savedLocation, to: extractLocation)
-            let extractedFiles: [String] = try fileManager.contentsOfDirectory(atPath: extractLocation.path())
+            let extractedFiles: [String] = try fileManager.contentsOfDirectory(atPath: extractLocation.path(percentEncoded: false))
             guard let rootKml = extractedFiles.first(where: { $0.hasSuffix("kml") }) else {
                 hasFailure = true
                 TAKLogger.error("[KMLImporter] Extraction of ZIP archive failed due to no root KML file")

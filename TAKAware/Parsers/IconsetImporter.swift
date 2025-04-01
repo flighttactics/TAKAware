@@ -71,10 +71,10 @@ class IconsetImporter {
         extractLocation = iconsetsURL.appending(path: extractionDirectory)
         let fileManager = FileManager()
         do {
-            TAKLogger.debug("[IconsetImporter] Extracting iconset to \(extractLocation!.path())")
+            TAKLogger.debug("[IconsetImporter] Extracting iconset to \(extractLocation!.path(percentEncoded: false))")
             try fileManager.createDirectory(at: extractLocation!, withIntermediateDirectories: true, attributes: nil)
             try fileManager.unzipItem(at: iconsetPackageToImport, to: extractLocation!)
-            let extractedFiles: [String] = try fileManager.contentsOfDirectory(atPath: extractLocation!.path())
+            let extractedFiles: [String] = try fileManager.contentsOfDirectory(atPath: extractLocation!.path(percentEncoded: false))
             guard let rootXml = extractedFiles.first(where: { $0.hasSuffix("xml") }) else {
                 hasFailure = true
                 TAKLogger.error("[IconsetImporter] Extraction of iconset archive failed due to no root XML file")
@@ -129,7 +129,7 @@ class IconsetImporter {
                 let iconsetRoot = rootXml["iconset"]
                 try buildIconset(iconsetRoot)
                 let iconNodes = iconsetRoot.children
-                let subpaths: [String] = try fileManager.subpathsOfDirectory(atPath: extractLocation!.path())
+                let subpaths: [String] = try fileManager.subpathsOfDirectory(atPath: extractLocation!.path(percentEncoded: false))
                 try iconNodes.forEach { iconNode in
                     let iconName: String = try iconNode.value(ofAttribute: "name")
                     let iconType2525b: String? = iconNode.value(ofAttribute: "type2525b")
@@ -142,7 +142,7 @@ class IconsetImporter {
                     var img = UIImage(named: "sugp-----------")!
                     
                     let imgPath = extractLocation!.appending(path: iconPath)
-                    let imgData = fileManager.contents(atPath: imgPath.path())
+                    let imgData = fileManager.contents(atPath: imgPath.path(percentEncoded: false))
                     if imgData != nil {
                         let iconImg = UIImage(data: imgData!)
                         if iconImg != nil {

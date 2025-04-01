@@ -162,7 +162,7 @@ class DataController: ObservableObject {
                 try dataContext.save()
                 if deleteStoredFile && extractLocation != nil {
                     let fileManager = FileManager()
-                    TAKLogger.debug("[DataController] Deleting Data Package directory at \(extractLocation!.path())")
+                    TAKLogger.debug("[DataController] Deleting Data Package directory at \(extractLocation!.path(percentEncoded: false))")
                     try fileManager.removeItem(at: extractLocation!)
                 }
             } catch {
@@ -184,7 +184,7 @@ class DataController: ObservableObject {
                     let fileManager = FileManager()
                     if isKmz {
                         let kmzSubdirectory = AppConstants.appDirectoryFor(.overlays).appendingPathComponent(fileID.uuidString)
-                        TAKLogger.debug("[DataController] Deleting KMZ directory at \(kmzSubdirectory.path())")
+                        TAKLogger.debug("[DataController] Deleting KMZ directory at \(kmzSubdirectory.path(percentEncoded: false))")
                         try fileManager.removeItem(at: kmzSubdirectory)
                     }
                     try fileManager.removeItem(at: filePath)

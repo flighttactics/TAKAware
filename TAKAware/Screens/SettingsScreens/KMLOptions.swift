@@ -46,7 +46,7 @@ struct KMLOptionsDetail: View {
                 case .success(let fileurls):
                     for fileurl in fileurls {
                         if(fileurl.startAccessingSecurityScopedResource()) {
-                            TAKLogger.debug("Processing KML at \(String(describing: fileurl))")
+                            TAKLogger.debug("[KMLOptions] Processing KML at \(String(describing: fileurl))")
                             let kmlImporter = KMLImporter(archiveLocation: fileurl)
                             Task {
                                 let didSucceed = await kmlImporter.process()
@@ -59,7 +59,7 @@ struct KMLOptionsDetail: View {
                             fileurl.stopAccessingSecurityScopedResource()
                             isShowingAlert = true
                         } else {
-                            TAKLogger.error("Unable to securely access \(String(describing: fileurl))")
+                            TAKLogger.error("[KMLOptions] Unable to securely access \(String(describing: fileurl))")
                             alertText = "Overlay import failed"
                             isShowingAlert = true
                         }

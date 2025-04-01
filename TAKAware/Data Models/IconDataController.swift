@@ -145,7 +145,7 @@ class IconDataController: ObservableObject {
                 if deleteStoredFile {
                     let fileManager = FileManager()
                     let iconsetSubdirectory = AppConstants.appDirectoryFor(.iconsets).appendingPathComponent(iconsetUUID.uuidString)
-                    TAKLogger.debug("[DataController] Deleting Iconset directory at \(iconsetSubdirectory.path())")
+                    TAKLogger.debug("[DataController] Deleting Iconset directory at \(iconsetSubdirectory.path(percentEncoded: false))")
                     try fileManager.removeItem(at: iconsetSubdirectory)
                 }
             } catch {

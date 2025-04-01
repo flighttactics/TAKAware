@@ -51,7 +51,7 @@ class KMLData {
         guard let data = try? Data(contentsOf: filePath) else {
             // TODO: Maybe notify the user or update the KML UI?
             // This is a rare case, usually only during development
-            TAKLogger.debug("[KMLData] Unable to load KML from \(filePath.path())")
+            TAKLogger.debug("[KMLData] Unable to load KML from \(filePath.path(percentEncoded: false))")
             return
         }
         
