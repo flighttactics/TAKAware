@@ -754,9 +754,7 @@ struct MapView: UIViewRepresentable {
     
     private func kmlChangeNotified(notification: Notification) {
         TAKLogger.debug("[MapView] Notified of a KML change \(notification.debugDescription)")
-        if shouldUpdateMap {
             updateKmlOverlays()
-        }
     }
     
     private func cotChangeNotified(notification: Notification) {
@@ -830,9 +828,6 @@ struct MapView: UIViewRepresentable {
                 let kmlData = KMLData(kmlRecord: kmlRecord)
                 
                 kmlData.placemarks.forEach { placemark in
-                    guard !placemark.mapKitShapes.isEmpty else {
-                        return
-                    }
                     let mpa = MapPointAnnotation(id: UUID().uuidString, title: placemark.name, icon: "", coordinate: placemark.coordinate, remarks: placemark.description)
                     mpa.isKML = true
                     mpa.groupID = fileId
