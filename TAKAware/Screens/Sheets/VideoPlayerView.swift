@@ -55,7 +55,7 @@ struct PlayerView: UIViewRepresentable {
 struct VideoPlayerView: View {
     @Environment(\.dismiss) var dismiss
     @State var currentPlayer: VLCMediaPlayer = VLCMediaPlayer()
-    var currentSelectedAnnotation: MapPointAnnotation?
+    @Binding var currentSelectedAnnotation : MapPointAnnotation?
     @State var viewPresent: Bool = true
     @State var cachedAnnotation: MapPointAnnotation?
     
