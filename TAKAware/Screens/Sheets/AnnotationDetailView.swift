@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import WebKit
+import SwiftTAK
 
 enum BaseCot2525Mapping: String, CaseIterable, Identifiable, CustomStringConvertible {
     var id: Self { self }
@@ -65,11 +66,11 @@ struct HTMLView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> WKWebView {
         webView.isOpaque = false
+        webView.loadHTMLString(htmlString, baseURL: nil)
         return webView
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
-        webView.loadHTMLString(htmlString, baseURL: nil)
     }
     
 //    func webViewConfiguration() -> WKWebViewConfiguration {
@@ -120,6 +121,98 @@ struct HTMLView: UIViewRepresentable {
 //    }
 }
 
+struct InfoRowView: View {
+    var title: String
+    var info: String?
+    var alwaysShow: Bool = false
+    
+    var infoText: String {
+        if info == nil { return "" }
+        return info!
+    }
+    
+    var shouldDisplay: Bool {
+        let emptyVals = [
+            "0°", "0 m/s", "0.0 m", "-1", "\(String(COTPoint.DEFAULT_ERROR_VALUE)) m"
+        ]
+        if alwaysShow { return true }
+        if infoText.isEmpty { return false }
+        if emptyVals.contains(infoText) {
+            return false
+        }
+        return true
+     }
+    
+    var body: some View {
+        Group {
+            if shouldDisplay {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title)
+                        .foregroundColor(.primary)
+                        .font(.headline)
+                    Text(infoText)
+                        .foregroundColor(.secondary)
+                        .font(.subheadline)
+                }
+            }
+        }
+    }
+}
+
+struct RemarksRowView: View {
+    var title: String
+    var info: String?
+    
+    var infoText: AttributedString {
+        if info == nil { return "" }
+        return (try? AttributedString(markdown: info!, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace))) ?? AttributedString(info!)
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(title)
+                .foregroundColor(.primary)
+                .font(.headline)
+            Text(infoText)
+                .foregroundColor(.secondary)
+                .font(.subheadline)
+        }
+    }
+}
+
+struct TitleRowView: View {
+    var annotation: MapPointAnnotation
+    
+    var infoText: String {
+        var finalText = annotation.role ?? ""
+        if annotation.cotType != nil && !annotation.cotType!.isEmpty {
+            if !finalText.isEmpty {
+                finalText = "\(finalText) (\(annotation.cotType!))"
+            } else {
+                finalText = annotation.cotType!
+            }
+        }
+        return finalText
+    }
+    
+    var body: some View {
+        Group {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(annotation.title ?? "")
+                        .foregroundColor(.primary)
+                        .font(.headline)
+                    Text(infoText)
+                        .foregroundColor(.secondary)
+                        .font(.subheadline)
+                }
+                Spacer()
+                IconImage(annotation: annotation, frameSize: 30.0)
+            }
+        }
+    }
+}
+
 struct AnnotationDetailReadOnly: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var takManager: TAKManager
@@ -128,10 +221,6 @@ struct AnnotationDetailReadOnly: View {
     @State private var showingAlert = false
     @State private var htmlContentHeight: Double = 200.0
     
-    var annotation: MapPointAnnotation? {
-        currentSelectedAnnotation
-    }
-    
     func broadcastPoint() {
         guard currentSelectedAnnotation != nil else { return }
         takManager.broadcastPoint(annotation: currentSelectedAnnotation!)
@@ -139,42 +228,40 @@ struct AnnotationDetailReadOnly: View {
     }
 
     var body: some View {
-        Group {
-            if annotation == nil {
-                Text("No Map Item Selected")
-            } else {
-                if annotation!.isKML {
+        List {
+            if let annotation = currentSelectedAnnotation {
+                if annotation.isKML {
                     VStack {
                         HStack(alignment: .top) {
                             VStack {
                                 Group {
-                                    Text(annotation!.title ?? "")
-                                    Text("Type: \(annotation!.cotType ?? "")")
-                                    Text("Latitude: \(annotation!.coordinate.latitude.description)")
-                                    Text("Longitude: \(annotation!.coordinate.longitude.description)")
+                                    Text(annotation.title ?? "")
+                                    Text("Type: \(annotation.cotType ?? "")")
+                                    Text("Latitude: \(NSString(format: "%.6f", annotation.coordinate.latitude))")
+                                    Text("Longitude: \(NSString(format: "%.6f", annotation.coordinate.longitude))")
                                 }
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             }
                             IconImage(annotation: annotation, frameSize: 40.0)
                         }
                         // TODO: Be smarter about when to show HTML (check for CDATA)
-                        HTMLView(htmlString: annotation!.remarks!)
+                        HTMLView(htmlString: annotation.remarks!)
                             .frame(height: htmlContentHeight)
                     }
                 } else {
-                    HStack(alignment: .top) {
-                        VStack {
-                            Group {
-                                Text(annotation!.title ?? "")
-                                Text("Remarks: \(annotation!.remarks ?? "")")
-                                Text("Type: \(annotation!.cotType ?? "")")
-                                Text("Latitude: \(annotation!.coordinate.latitude.description)")
-                                Text("Longitude: \(annotation!.coordinate.longitude.description)")
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                    TitleRowView(annotation: annotation)
+                    InfoRowView(title: "Location", info: "\(String(format: "%.6f", annotation.coordinate.latitude)), \(String(format: "%.6f", annotation.coordinate.longitude))", alwaysShow: true)
+                    InfoRowView(title: "Height Above Elevation", info: String(format: "%.1f m", annotation.altitude!))
+                    InfoRowView(title: "Speed", info: String(format: "%.0f m/s", annotation.speed!))
+                    InfoRowView(title: "Course", info: String(format: "%.0f°", annotation.course!))
+                    if annotation.battery != nil && annotation.battery! != 0.0 {
+                        HStack {
+                            InfoRowView(title: "Battery", info: String(format: "%.0f%%", annotation.battery!))
+                            Spacer()
+                            BatteryStatusIcon(battery: annotation.battery!)
                         }
-                        IconImage(annotation: annotation, frameSize: 40.0)
                     }
+                    RemarksRowView(title: "Remarks", info: annotation.remarks)
                 }
                 HStack {
                     Spacer()
@@ -193,6 +280,8 @@ struct AnnotationDetailReadOnly: View {
                     }
                     .buttonStyle(BorderedProminentButtonStyle())
                 }
+            } else {
+                Text("No Map Item Selected")
             }
         }
         .alert("Marker broadcast to server", isPresented: $showingAlert) {
@@ -206,15 +295,11 @@ struct AnnotationDetailView: View {
     @State var isEditing: Bool = false
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
     let parentView: AwarenessView
-    
-    var annotation: MapPointAnnotation? {
-        currentSelectedAnnotation
-    }
 
     var body: some View {
         NavigationStack {
-            List {
-                if annotation == nil {
+            Group {
+                if currentSelectedAnnotation == nil {
                     Text("No Map Item Selected")
                 } else if(isEditing) {
                     AnnotationEditView(currentSelectedAnnotation: $currentSelectedAnnotation, parentView: parentView)
@@ -237,7 +322,7 @@ struct AnnotationDetailView: View {
                     }
                 })
             })
-            .navigationTitle(annotation?.title ?? "Item Detail")
+            .navigationTitle(currentSelectedAnnotation?.title ?? "Item Detail")
             .navigationBarTitleDisplayMode(.inline)
         }
     }

@@ -71,10 +71,17 @@ struct DisplayUIState {
             #endif
         }
         if(unit == DirectionUnit.TN) {
-            return Converter.formatOrZero(item: locationHeading.trueHeading) + "°"
+            return headingValue(heading: locationHeading.trueHeading)
         } else {
-            return Converter.formatOrZero(item: locationHeading.magneticHeading) + "°"
+            return headingValue(heading: locationHeading.magneticHeading)
         }
+    }
+    
+    func headingValue(heading: Double?) -> String {
+        guard let locationHeading = heading else {
+            return "--"
+        }
+        return Converter.formatOrZero(item: locationHeading) + "°"
     }
     
     func speedText() -> String {
@@ -93,6 +100,13 @@ struct DisplayUIState {
         return Converter.convertToSpeedUnit(unit: currentSpeedUnit, location: location)
     }
     
+    func speedValue(metersPerSecond: Double?) -> String {
+        guard let metersPerSecond = metersPerSecond else {
+            return "--"
+        }
+        return Converter.convertToSpeedUnit(unit: currentSpeedUnit, metersPerSecond: metersPerSecond)
+    }
+    
     func distanceValue(distanceMeters: Double) -> String {
         return Converter.convertToDistanceUnit(unit: currentDistanceUnit, distanceMeters: distanceMeters)
     }
@@ -105,7 +119,7 @@ struct DisplayUIState {
         }
     }
     
-    func coordinateValue(location: CLLocation?) -> CoordinateDisplay {
+    func coordinateValue(location: CLLocationCoordinate2D?) -> CoordinateDisplay {
         var display = CoordinateDisplay()
         guard let location = location else {
             display.addLine(line: CoordinateDisplayLine(
@@ -116,8 +130,8 @@ struct DisplayUIState {
         
         switch(currentLocationUnit) {
         case .DMS:
-            let latDMS = Converter.LatLonToDMS(latitude: location.coordinate.latitude).components(separatedBy: "  ")
-            let longDMS = Converter.LatLonToDMS(longitude: location.coordinate.longitude).components(separatedBy: "  ")
+            let latDMS = Converter.LatLonToDMS(latitude: location.latitude).components(separatedBy: "  ")
+            let longDMS = Converter.LatLonToDMS(longitude: location.longitude).components(separatedBy: "  ")
             display.addLine(line: CoordinateDisplayLine(
                 lineTitle: latDMS.first!,
                 lineContents: latDMS.last!
@@ -129,14 +143,14 @@ struct DisplayUIState {
         case .Decimal:
             display.addLine(line: CoordinateDisplayLine(
                 lineTitle: "Lat",
-                lineContents: Converter.LatLonToDecimal(latitude: location.coordinate.latitude)
+                lineContents: Converter.LatLonToDecimal(latitude: location.latitude)
             ))
             display.addLine(line: CoordinateDisplayLine(
                 lineTitle: "Lon",
-                lineContents: Converter.LatLonToDecimal(latitude: location.coordinate.longitude)
+                lineContents: Converter.LatLonToDecimal(latitude: location.longitude)
             ))
         case .MGRS:
-            let mgrsString = Converter.LatLongToMGRS(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+            let mgrsString = Converter.LatLongToMGRS(latitude: location.latitude, longitude: location.longitude)
             display.addLine(line: CoordinateDisplayLine(
                 lineContents: mgrsString
             ))
@@ -144,6 +158,18 @@ struct DisplayUIState {
         }
         
         return display
+    }
+    
+    func coordinateValue(location: CLLocation?) -> CoordinateDisplay {
+        var display = CoordinateDisplay()
+        guard let location = location else {
+            display.addLine(line: CoordinateDisplayLine(
+                lineContents: "---"
+            ))
+            return display
+        }
+        
+        return coordinateValue(location: location.coordinate)
     }
 }
 
@@ -162,5 +188,32 @@ struct CoordinateDisplayLine {
     
     func hasLineTitle() -> Bool {
         !lineTitle.isEmpty
+    }
+}
+
+struct BatteryStatusIcon: View {
+    var battery: Double?
+    
+    var body: some View {
+        Group {
+            if let battery = battery {
+                if battery > 90.0 {
+                    Image(systemName: "battery.100percent")
+                        .foregroundColor(Color(.label))
+                } else if battery > 75.0 {
+                    Image(systemName: "battery.75percent")
+                        .foregroundColor(Color(.label))
+                } else if battery > 40.0 {
+                    Image(systemName: "battery.50percent")
+                        .foregroundColor(Color(.label))
+                } else if battery > 25.0 {
+                    Image(systemName: "battery.25percent")
+                        .foregroundColor(Color(.systemYellow))
+                } else if battery > 0.0 {
+                    Image(systemName: "battery.0percent")
+                        .foregroundColor(Color(.systemRed))
+                }
+            }
+        }
     }
 }
