@@ -64,6 +64,10 @@ private extension AwarenessView {
     }
 }
 
+class MapViewModel: ObservableObject {
+    @Published var currentSelectedAnnotation: MapPointAnnotation? = nil
+}
+
 struct AwarenessView: View {
     @EnvironmentObject var settingsStore: SettingsStore
     @EnvironmentObject var locationManager: LocationManager
@@ -72,6 +76,8 @@ struct AwarenessView: View {
     @Binding var displayUIState: DisplayUIState
     
     @FetchRequest(sortDescriptors: []) var mapPointsData: FetchedResults<COTData>
+    
+    @StateObject var mapViewModel: MapViewModel = MapViewModel()
     
     @State private var tracking:MapUserTrackingMode = .none
     @State var selectedSheet: Sheet.SheetType? = nil
@@ -115,7 +121,7 @@ struct AwarenessView: View {
     }
     
     func didSelectAnnotation(_ annotation: MapPointAnnotation) {
-        currentSelectedAnnotation = annotation
+        mapViewModel.currentSelectedAnnotation = annotation
         closeDeconflictionView()
         annotationSelectedCallback(annotation)
     }
@@ -141,7 +147,7 @@ struct AwarenessView: View {
         }
         .navigationViewStyle(.stack)
         .sheet(item: $selectedSheet, content: {
-            Sheet(parentView: self, type: $0, conflictedItems: $conflictedItems, currentSelectedAnnotation: $currentSelectedAnnotation)
+            Sheet(parentView: self, type: $0, conflictedItems: $conflictedItems, currentSelectedAnnotation: $mapViewModel.currentSelectedAnnotation)
                 .presentationDetents([.medium, .large, .fraction(0.8), .height(200)])
                 .presentationBackgroundInteraction(.enabled)
                 .presentationContentInteraction(.scrolls)
@@ -207,79 +213,84 @@ struct AwarenessView: View {
             mapType: $settingsStore.mapTypeDisplay,
             enableTrafficDisplay: $settingsStore.enableTrafficDisplay,
             isAcquiringBloodhoundTarget: $isAcquiringBloodhoundTarget,
-            currentSelectedAnnotation: $currentSelectedAnnotation,
             conflictedItems: $conflictedItems,
+            currentSelectedAnnotation: $mapViewModel.currentSelectedAnnotation,
             parentView: self
         ).ignoresSafeArea(edges: .all)
     }
 
     var toolbarItemsRight: some View {
-        HStack(spacing: 2) {
-            Spacer()
+        VStack(alignment: .trailing) {
+            HStack(spacing: 2) {
+                Spacer()
 
-            Group {
-                Button(action: { bloodhoundDeselectedCallback() }) {
-                    navBarImage(imageName: "bloodhound")
-                        .colorMultiply((isAcquiringBloodhoundTarget ? .red : .clear))
-                        .padding(5)
-                }
-                
-                Button(action: { selectedSheet = .channels }) {
-                    navBarImage(imageName: "nav_channels")
-                        .padding(5)
-                }
-                
-                Button(action: { selectedSheet = .dataPackage }) {
-                    navBarImage(imageName: "nav_package")
-                        .padding(5)
-                }
-                
-                Button(action: {
-                    let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                Group {
+                    Button(action: { bloodhoundDeselectedCallback() }) {
+                        navBarImage(imageName: "bloodhound")
+                            .colorMultiply((isAcquiringBloodhoundTarget ? .red : .clear))
+                            .padding(5)
+                    }
                     
-                    switch(settingsStore.preferredInterface) {
-                    case "portrait":
-                        windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
-                        settingsStore.preferredInterface = InterfaceOrientation.landscapeRight.id
-                    case "landscapeRight":
-                        windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
-                        settingsStore.preferredInterface = InterfaceOrientation.portrait.id
-                    default:
-                        if UIDevice.current.orientation.isLandscape {
-                            windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
-                            settingsStore.preferredInterface = InterfaceOrientation.portrait.id
-                        } else {
+                    Button(action: { selectedSheet = .channels }) {
+                        navBarImage(imageName: "nav_channels")
+                            .padding(5)
+                    }
+                    
+                    Button(action: { selectedSheet = .dataPackage }) {
+                        navBarImage(imageName: "nav_package")
+                            .padding(5)
+                    }
+                    
+                    Button(action: {
+                        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                        
+                        switch(settingsStore.preferredInterface) {
+                        case "portrait":
                             windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
                             settingsStore.preferredInterface = InterfaceOrientation.landscapeRight.id
+                        case "landscapeRight":
+                            windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+                            settingsStore.preferredInterface = InterfaceOrientation.portrait.id
+                        default:
+                            if UIDevice.current.orientation.isLandscape {
+                                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+                                settingsStore.preferredInterface = InterfaceOrientation.portrait.id
+                            } else {
+                                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+                                settingsStore.preferredInterface = InterfaceOrientation.landscapeRight.id
+                            }
                         }
+                    }) {
+                        navBarImage(imageName: "nav_orientation")
+                            .padding(5)
                     }
-                }) {
-                    navBarImage(imageName: "nav_orientation")
-                        .padding(5)
-                }
-                
-                Button(action: { selectedSheet = .emergencySettings }) {
-                    navBarImage(imageName: "nav_alert")
-                        .foregroundColor(settingsStore.isAlertActivated ? .red : .yellow)
-                        .padding(5)
-                }
-                
-//                Button(action: { sheet = .chat }) {
-//                    navBarImage(systemName: "bubble.left")
-//                        .padding(5)
-//                }
-                
-                Button(action: { selectedSheet = .settings }) {
-                    navBarImage(systemName: "line.3.horizontal")
-                        .padding(5)
+                    
+                    Button(action: { selectedSheet = .emergencySettings }) {
+                        navBarImage(imageName: "nav_alert")
+                            .foregroundColor(settingsStore.isAlertActivated ? .red : .yellow)
+                            .padding(5)
+                    }
+                    
+    //                Button(action: { sheet = .chat }) {
+    //                    navBarImage(systemName: "bubble.left")
+    //                        .padding(5)
+    //                }
+                    
+                    Button(action: { selectedSheet = .settings }) {
+                        navBarImage(systemName: "line.3.horizontal")
+                            .padding(5)
+                    }
                 }
             }
+            .padding(.horizontal)
+            .padding(.top)
+            .foregroundColor(.yellow)
+            .imageScale(.large)
+            .fontWeight(.bold)
+            
+            selectedAnnotationInfo
+                .padding(.horizontal)
         }
-        .padding(.horizontal)
-        .padding(.top)
-        .foregroundColor(.yellow)
-        .imageScale(.large)
-        .fontWeight(.bold)
     }
     
     var serverStatus: some View {
@@ -377,6 +388,59 @@ struct AwarenessView: View {
                     }
                     .onTapGesture {
                         displayUIState.nextDistanceUnit()
+                    }
+                }
+                .font(.system(size: 10, weight: .bold))
+                .padding(.all, 5)
+                .background(
+                    RoundedRectangle(cornerRadius: 5, style: .continuous)
+                        .fill(Color.black)
+                        .opacity(0.7)
+                )
+                .frame(width: 150)
+            }
+        }
+    }
+    
+    var selectedAnnotationInfo: some View {
+        Group {
+            if let currentSelectedAnnotation = mapViewModel.currentSelectedAnnotation {
+                VStack(alignment: .leading) {
+                    Text(currentSelectedAnnotation.title ?? "")
+                    
+                    Group {
+                        ForEach(displayUIState.coordinateValue(location: currentSelectedAnnotation.coordinate).lines, id: \.id) { line in
+                            HStack {
+                                if(line.hasLineTitle()) {
+                                    Text(line.lineTitle)
+                                }
+                                Text(line.lineContents)
+                            }
+                        }
+                    }
+                    .onTapGesture {
+                        displayUIState.nextLocationUnit()
+                    }
+                    .onLongPressGesture {
+                        let coordCopy = "\(currentSelectedAnnotation.coordinate.latitude), \(currentSelectedAnnotation.coordinate.longitude)"
+                        UIPasteboard.general.setValue(coordCopy, forPasteboardType: "public.plain-text")
+                        let impactHeavy = UINotificationFeedbackGenerator()
+                        impactHeavy.notificationOccurred(.success)
+                    }
+                    
+                    HStack {
+                        Text(displayUIState.headingValue(heading: currentSelectedAnnotation.course))
+                        Spacer()
+                        BatteryStatusIcon(battery: currentSelectedAnnotation.battery)
+                        Spacer()
+                        HStack {
+                            Text(displayUIState.speedValue(metersPerSecond: currentSelectedAnnotation.speed))
+                            Text("\(displayUIState.speedText())")
+                        }
+                        .multilineTextAlignment(.trailing)
+                        .onTapGesture {
+                            displayUIState.nextSpeedUnit()
+                        }
                     }
                 }
                 .font(.system(size: 10, weight: .bold))

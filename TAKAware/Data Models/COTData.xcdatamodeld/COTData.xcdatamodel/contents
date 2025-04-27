@@ -3,10 +3,12 @@
     <entity name="COTData" representedClassName="COTData" syncable="YES" codeGenerationType="class">
         <attribute name="altitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="archived" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="battery" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="callsign" optional="YES" attributeType="String"/>
         <attribute name="cotHow" optional="YES" attributeType="String"/>
         <attribute name="cotType" optional="YES" attributeType="String"/>
         <attribute name="cotUid" optional="YES" attributeType="String"/>
+        <attribute name="course" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="fillColor" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="icon" optional="YES" attributeType="String"/>
         <attribute name="iconColor" optional="YES" attributeType="String"/>
@@ -18,6 +20,7 @@
         <attribute name="rawXml" optional="YES" attributeType="String"/>
         <attribute name="remarks" optional="YES" attributeType="String"/>
         <attribute name="role" optional="YES" attributeType="String"/>
+        <attribute name="speed" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="staleDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="strokeColor" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>

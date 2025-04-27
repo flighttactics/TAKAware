@@ -5,6 +5,7 @@
 //  Created by Cory Foy on 3/4/25.
 //
 
+import CoreLocation
 import Foundation
 import XCTest
 import SWXMLHash
@@ -28,6 +29,27 @@ final class COTMapObjectTests: TAKAwareTestCase {
             let cmo = COTMapObject(mapPoint: cotData)
             XCTAssertTrue(cmo.shape! is COTMapEllipse)
         }
+    }
+    
+    func testProperlyDiffsArrays() {
+        let existingIds = Set(["a1234", "b1234", "c1234", "d1234"])
+        let incomingIds = Set(["a1234", "b1235", "c1234"])
+        
+        let toRemove = Array(existingIds.subtracting(incomingIds))
+        let toAdd = Array(incomingIds.subtracting(existingIds))
+        
+        XCTAssertEqual(["b1234", "d1234"], toRemove.sorted())
+        XCTAssertEqual(["b1235"], toAdd)
+    }
+    
+    func testMapPointAnnotationEquality() {
+        let coord1 = CLLocationCoordinate2D(latitude: 31.0, longitude: -79.0)
+        let mp1 = MapPointAnnotation(id: "A1234", title: "Hello 1", icon: "", coordinate: coord1, remarks: "Hello 1 Remarks")
+        
+        let coord2 = CLLocationCoordinate2D(latitude: 31.0, longitude: -79.0)
+        let mp2 = MapPointAnnotation(id: "A1234", title: "Hello 1", icon: "", coordinate: coord2, remarks: "Hello 1 Remarks")
+
+        XCTAssertTrue(mp1 == mp2)
     }
     
 }

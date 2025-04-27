@@ -88,16 +88,7 @@ class Converter {
         return String(format: formatter, item)
     }
     
-    static func convertToSpeedUnit(unit: SpeedUnit, location:CLLocation) -> String {
-        // CLLocation.speed is reported in meters per second from iOS
-        var metersPerSecond = location.speed as Double
-        if(metersPerSecond < 0) {
-            #if targetEnvironment(simulator)
-            metersPerSecond = 3.1
-            #else
-            metersPerSecond = 0
-            #endif
-        }
+    static func convertToSpeedUnit(unit: SpeedUnit, metersPerSecond: Double) -> String {
         let numFeetInOneMeter = 3.281
         let numFeetInOneMile = 5280.0
         switch(unit) {
@@ -115,6 +106,19 @@ class Converter {
                 let feetToMiles = feetPerHour / numFeetInOneMile
                 return formatOrZero(item: feetToMiles)
         }
+    }
+    
+    static func convertToSpeedUnit(unit: SpeedUnit, location: CLLocation) -> String {
+        // CLLocation.speed is reported in meters per second from iOS
+        var metersPerSecond = location.speed as Double
+        if(metersPerSecond < 0) {
+            #if targetEnvironment(simulator)
+            metersPerSecond = 3.1
+            #else
+            metersPerSecond = 0
+            #endif
+        }
+        return convertToSpeedUnit(unit: unit, metersPerSecond: metersPerSecond)
     }
     
     static func LatLongToMGRS(latitude: Double, longitude: Double) -> String {
