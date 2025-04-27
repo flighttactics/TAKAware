@@ -55,70 +55,81 @@ enum BaseCot2525Mapping: String, CaseIterable, Identifiable, CustomStringConvert
     }
 }
 
-struct HTMLView: UIViewRepresentable {
-    let htmlString: String
+struct HTMLAnnotationView: UIViewRepresentable {
+    @Binding var annotation: MapPointAnnotation?
+    @State var annotationId: String = ""
     let webView: WKWebView = WKWebView()
-//    @Binding var height: Double
-//    
-//    func makeCoordinator() -> Coordinator {
-//        Coordinator(self)
-//    }
 
     func makeUIView(context: Context) -> WKWebView {
         webView.isOpaque = false
-        webView.loadHTMLString(htmlString, baseURL: nil)
+        webView.loadHTMLString(annotation?.remarks ?? "", baseURL: nil)
+        DispatchQueue.main.async {
+            annotationId = annotation?.id ?? ""
+        }
         return webView
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
+        if annotation?.id != annotationId {
+            webView.loadHTMLString(annotation?.remarks ?? "", baseURL: nil)
+            DispatchQueue.main.async {
+                annotationId = annotation?.id ?? ""
+            }
+        }
     }
     
-//    func webViewConfiguration() -> WKWebViewConfiguration {
-//        let configuration = WKWebViewConfiguration()
-//        configuration.userContentController = userContentController()
-//        return configuration
-//    }
-//    
-//    private func userContentController() -> WKUserContentController {
-//        let controller = WKUserContentController()
-//        controller.addUserScript(viewPortScript())
-//        return controller
-//    }
-//    
-//    private func viewPortScript() -> WKUserScript {
-//        let viewPortScript = """
-//            var meta = document.createElement('meta');
-//            meta.setAttribute('name', 'viewport');
-//            meta.setAttribute('content', 'width=device-width');
-//            meta.setAttribute('initial-scale', '1.0');
-//            meta.setAttribute('maximum-scale', '1.0');
-//            meta.setAttribute('minimum-scale', '1.0');
-//            meta.setAttribute('user-scalable', 'no');
-//            document.getElementsByTagName('head')[0].appendChild(meta);
-//        """
-//        return WKUserScript(source: viewPortScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
-//    }
-//    
-//    class Coordinator: NSObject, WKNavigationDelegate {
-//        var parent: HTMLView
-//        init(_ parent: HTMLView) {
-//            self.parent = parent
-//        }
-//        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-//            webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
-//                NSLog("***Height: \(height) Error: \(error)")
-//                guard let height = height as? CGFloat else {
-//                    self.parent.height = 100.0
-//                    return
-//                }
-//                if height < 30.0 {
-//                    self.parent.height = 100.0
-//                } else {
-//                    self.parent.height = height
-//                }
-//            })
-//        }
-//    }
+    //    @Binding var height: Double
+    //
+    //    func makeCoordinator() -> Coordinator {
+    //        Coordinator(self)
+    //    }
+        
+    //    func webViewConfiguration() -> WKWebViewConfiguration {
+    //        let configuration = WKWebViewConfiguration()
+    //        configuration.userContentController = userContentController()
+    //        return configuration
+    //    }
+    //
+    //    private func userContentController() -> WKUserContentController {
+    //        let controller = WKUserContentController()
+    //        controller.addUserScript(viewPortScript())
+    //        return controller
+    //    }
+    //
+    //    private func viewPortScript() -> WKUserScript {
+    //        let viewPortScript = """
+    //            var meta = document.createElement('meta');
+    //            meta.setAttribute('name', 'viewport');
+    //            meta.setAttribute('content', 'width=device-width');
+    //            meta.setAttribute('initial-scale', '1.0');
+    //            meta.setAttribute('maximum-scale', '1.0');
+    //            meta.setAttribute('minimum-scale', '1.0');
+    //            meta.setAttribute('user-scalable', 'no');
+    //            document.getElementsByTagName('head')[0].appendChild(meta);
+    //        """
+    //        return WKUserScript(source: viewPortScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+    //    }
+    //
+    //    class Coordinator: NSObject, WKNavigationDelegate {
+    //        var parent: HTMLView
+    //        init(_ parent: HTMLView) {
+    //            self.parent = parent
+    //        }
+    //        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+    //            webView.evaluateJavaScript("document.documentElement.scrollHeight", completionHandler: { (height, error) in
+    //                NSLog("***Height: \(height) Error: \(error)")
+    //                guard let height = height as? CGFloat else {
+    //                    self.parent.height = 100.0
+    //                    return
+    //                }
+    //                if height < 30.0 {
+    //                    self.parent.height = 100.0
+    //                } else {
+    //                    self.parent.height = height
+    //                }
+    //            })
+    //        }
+    //    }
 }
 
 struct InfoRowView: View {
@@ -245,7 +256,7 @@ struct AnnotationDetailReadOnly: View {
                             IconImage(annotation: annotation, frameSize: 40.0)
                         }
                         // TODO: Be smarter about when to show HTML (check for CDATA)
-                        HTMLView(htmlString: annotation.remarks!)
+                        HTMLAnnotationView(annotation: $currentSelectedAnnotation)
                             .frame(height: htmlContentHeight)
                     }
                 } else {
@@ -302,7 +313,7 @@ struct AnnotationDetailView: View {
                 if currentSelectedAnnotation == nil {
                     Text("No Map Item Selected")
                 } else if(isEditing) {
-                    AnnotationEditView(currentSelectedAnnotation: $currentSelectedAnnotation, parentView: parentView)
+                    AnnotationEditView(currentSelectedAnnotation: $currentSelectedAnnotation, isEditing: $isEditing, parentView: parentView)
                 } else {
                     AnnotationDetailReadOnly(currentSelectedAnnotation: $currentSelectedAnnotation, isEditing: $isEditing)
                 }
@@ -315,11 +326,7 @@ struct AnnotationDetailView: View {
                         dismiss()
                     }
                 }, label: {
-                    if isEditing {
-                        Text("Save")
-                    } else {
-                        Text("Close")
-                    }
+                    Text("Close")
                 })
             })
             .navigationTitle(currentSelectedAnnotation?.title ?? "Item Detail")
@@ -331,6 +338,7 @@ struct AnnotationDetailView: View {
 struct AnnotationEditView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    @Binding var isEditing: Bool
     var parentView: AwarenessView
     @State var title: String = ""
     @State var remarks: String = ""
@@ -354,7 +362,7 @@ struct AnnotationEditView: View {
     }
     
     var body: some View {
-        Group {
+        List {
             HStack {
                 Text("Call Sign")
                     .foregroundColor(.secondary)
@@ -393,6 +401,21 @@ struct AnnotationEditView: View {
                         updateAnnotation()
                     }
                 }
+            }
+            HStack {
+                Spacer()
+                Button(action: {
+                    annotation?.title = title
+                    annotation?.remarks = remarks
+                    annotation?.cotType = selectedCotType.rawValue
+                    updateAnnotation()
+                    isEditing = false
+                }) {
+                    HStack {
+                        Text("Save")
+                    }
+                }
+                .buttonStyle(BorderedProminentButtonStyle())
             }
         }
         .onAppear {

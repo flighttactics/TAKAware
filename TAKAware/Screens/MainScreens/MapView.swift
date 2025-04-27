@@ -706,9 +706,6 @@ struct MapView: UIViewRepresentable {
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_ADDED), object: nil, queue: nil, using: kmlChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_UPDATED), object: nil, queue: nil, using: kmlChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_REMOVED), object: nil, queue: nil, using: kmlChangeNotified)
-        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_ADDED), object: nil, queue: nil, using: cotChangeNotified)
-        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_UPDATED), object: nil, queue: nil, using: cotChangeNotified)
-        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_COT_REMOVED), object: nil, queue: nil, using: cotChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_KML), object: nil, queue: nil, using: scrollToKml)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_MAP_SOURCE_UPDATED), object: nil, queue: nil, using: mapSourceUpdatedCallback)
         
