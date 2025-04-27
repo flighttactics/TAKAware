@@ -38,9 +38,9 @@ class COTMapObject: NSObject {
     var annotation: MapPointAnnotation {
         if isLine, let line = self.shape as? COTMapPolyline {
             let centerPoint = line.coordinate
-            cotData.latitude = centerPoint.latitude
-            cotData.longitude = centerPoint.longitude
-            return MapPointAnnotation(mapPoint: cotData, shape: self.shape)
+            var mpa = MapPointAnnotation(mapPoint: cotData, shape: self.shape)
+            mpa.coordinate = centerPoint
+            return mpa
         } else if isShape {
             return MapPointAnnotation(mapPoint: cotData, shape: self.shape)
         } else {
@@ -306,6 +306,7 @@ class COTMapBloodhoundLine: MKGeodesicPolyline {}
 
 class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var id: String
+    dynamic var dbObjectId: NSManagedObjectID?
     dynamic var cotUid: String
     dynamic var title: String?
     dynamic var subtitle: String?
@@ -353,6 +354,7 @@ class MapPointAnnotation: NSObject, MKAnnotation {
     init(mapPoint: COTData, shapes: [MKOverlay]) {
         self.shapes = shapes
         self.id = mapPoint.id?.uuidString ?? UUID().uuidString
+        self.dbObjectId = mapPoint.objectID
         self.cotUid = mapPoint.cotUid ?? UUID().uuidString
         self.title = mapPoint.callsign ?? "NO CALLSIGN"
         self.icon = mapPoint.icon ?? ""
@@ -395,6 +397,7 @@ class MapPointAnnotation: NSObject, MKAnnotation {
     
     static func ==(lhs: MapPointAnnotation, rhs: MapPointAnnotation) -> Bool {
         return lhs.id == rhs.id &&
+        lhs.dbObjectId == rhs.dbObjectId &&
         lhs.cotUid == rhs.cotUid &&
         lhs.title == rhs.title &&
         lhs.subtitle == rhs.subtitle &&
@@ -420,26 +423,8 @@ class MapPointAnnotation: NSObject, MKAnnotation {
     public override var hash: Int {
         var hasher = Hasher()
         hasher.combine(id)
+        hasher.combine(dbObjectId)
         hasher.combine(cotUid)
-        hasher.combine(title)
-        hasher.combine(subtitle)
-        hasher.combine(coordinate.latitude)
-        hasher.combine(coordinate.longitude)
-        hasher.combine(altitude)
-        hasher.combine(speed)
-        hasher.combine(course)
-        hasher.combine(battery)
-        hasher.combine(icon)
-        hasher.combine(cotType)
-        hasher.combine(image)
-        hasher.combine(color)
-        hasher.combine(remarks)
-        hasher.combine(videoURL)
-        hasher.combine(groupID)
-        hasher.combine(kmlIcon)
-        hasher.combine(role)
-        hasher.combine(phone)
-        hasher.combine(updateDate)
         return hasher.finalize()
     }
 }
@@ -663,8 +648,31 @@ struct MapView: UIViewRepresentable {
     @FetchRequest(fetchRequest: mapSourceFetchRequest)
     private var visibleMapSources: FetchedResults<MapSource>
     
+    @State private var fetchedResultsController: NSFetchedResultsController<COTData>!
+    
     var shouldForceInitialTracking: Bool {
         return region.center.latitude == 0.0 || region.center.longitude == 0.0
+    }
+    
+    func setupFetchedResultsController(context: Context) async {
+        let fetchRequest: NSFetchRequest<COTData> = COTData.fetchRequest()
+        fetchRequest.sortDescriptors = []
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: dataContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+        
+        fetchedResultsController.delegate = context.coordinator
+        
+        do {
+            try await dataContext.perform {
+                try fetchedResultsController.performFetch()
+            }
+        } catch {
+            TAKLogger.error("[MapView] Failed to set up FRC: \(error)")
+        }
     }
 
     func makeUIView(context: Context) -> MKMapView {
@@ -686,9 +694,12 @@ struct MapView: UIViewRepresentable {
         parentView.annotationSelectedCallback = annotationSelected(_:)
         parentView.annotationsDeletedCallback = deleteAnnotations(_:)
 
-        updateAnnotations()
+        syncAnnotations()
         didUpdateRegion()
         updateKmlOverlays()
+        Task {
+            await setupFetchedResultsController(context: context)
+        }
         
         let nc = NotificationCenter.default
         
@@ -821,12 +832,6 @@ struct MapView: UIViewRepresentable {
             updateKmlOverlays()
     }
     
-    private func cotChangeNotified(notification: Notification) {
-        if shouldUpdateMap || notification.name == Notification.Name(AppConstants.NOTIFY_COT_REMOVED) {
-            updateAnnotations()
-        }
-    }
-    
     private func scrollToKml(notification: Notification) {
         guard let kmlId: UUID = notification.object as? UUID else {
             TAKLogger.debug("[MapView] Scroll to KML requested but no UUID provided")
@@ -848,7 +853,7 @@ struct MapView: UIViewRepresentable {
         dataContext.perform {
             let fetchKml: NSFetchRequest<KMLFile> = KMLFile.fetchRequest()
             fetchKml.predicate = NSPredicate(format: "visible = YES")
-            let fetchedKml = try? dataContext.fetch(fetchKml)
+            let fetchedKml: [KMLFile]? = try? dataContext.fetch(fetchKml)
             let incomingKml = (fetchedKml == nil) ? [] : fetchedKml!
 
             incomingKml.forEach { kmlRecord in
@@ -994,112 +999,219 @@ struct MapView: UIViewRepresentable {
             }
         }
     }
-
-    private func updateAnnotations() {
-        let context = DataController.shared.backgroundContext
-        context.perform {
-            let origUpdateVal = shouldUpdateMap
-            DispatchQueue.main.async {
-                shouldUpdateMap = false
-            }
-            if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
-                DispatchQueue.main.async {
-                    mapView.removeOverlay(activeBloodhound!)
-                    activeBloodhound = nil
-                    bloodhoundStartCoordinate = nil
-                    bloodhoundEndCoordinate = nil
-                    bloodhoundEndAnnotation = nil
+    
+    func removeMapAnnotation(dataRecord: COTData) {
+        guard let existingAnnotation: MapPointAnnotation = annotationForDBId(dataRecord.objectID) else {
+            TAKLogger.debug("[MapView] Attempted to delete an annotation that could not be found \(dataRecord.callsign ?? "NO CALLSIGN")")
+            return
+        }
+        
+        if(bloodhoundEndAnnotation == existingAnnotation) {
+            bloodhoundDeselected()
+        }
+        
+        DispatchQueue.main.async {
+            mapView.removeOverlays(existingAnnotation.shapes)
+            mapView.removeAnnotation(existingAnnotation)
+        }
+    }
+    
+    func updateMapAnnotation(dataRecord: COTData) {
+        guard let existingAnnotation: MapPointAnnotation = annotationForDBId(dataRecord.objectID) else {
+            addMapAnnotation(dataRecord: dataRecord)
+            return
+        }
+        
+        let updatedMp = COTMapObject(mapPoint: dataRecord).annotation
+        guard existingAnnotation != updatedMp else {
+            return
+        }
+        DispatchQueue.main.async {
+            existingAnnotation.title = updatedMp.title
+            existingAnnotation.color = updatedMp.color
+            existingAnnotation.icon = updatedMp.icon
+            existingAnnotation.cotType = updatedMp.cotType
+            existingAnnotation.coordinate = updatedMp.coordinate
+            existingAnnotation.remarks = updatedMp.remarks
+            existingAnnotation.updateDate = updatedMp.updateDate
+            existingAnnotation.battery = updatedMp.battery
+            existingAnnotation.course = updatedMp.course
+            existingAnnotation.speed = updatedMp.speed
+            if existingAnnotation.id == bloodhoundEndAnnotation?.id {
+                let userLocation = mapView.userLocation.coordinate
+                let endPointLocation = existingAnnotation.coordinate
+                if(userLocation.latitude != bloodhoundStartCoordinate?.latitude ||
+                   userLocation.longitude != bloodhoundStartCoordinate?.longitude ||
+                   endPointLocation.latitude != bloodhoundEndCoordinate?.latitude ||
+                   endPointLocation.longitude != bloodhoundEndCoordinate?.longitude
+                ){
+                    TAKLogger.debug("Bloodhound endpoint being updated! \(existingAnnotation.title!)")
+                    if(activeBloodhound != nil) {
+                        TAKLogger.debug("[MapView] Removing old bloodhound line")
+                        mapView.removeOverlay(activeBloodhound!)
+                    } else {
+                        TAKLogger.debug("[MapView] Updated Bloodhound line but no activeBloodhound")
+                    }
+                    createBloodhound(annotation: updatedMp)
                 }
             }
-            
+            updateCurrentSelectedAnnotation(updatedMp: updatedMp)
+            annotationUpdatedCallback(annotation: existingAnnotation)
+        }
+    }
+    
+    func addMapAnnotation(dataRecord: COTData) {
+        guard annotationForDBId(dataRecord.objectID) == nil else {
+            TAKLogger.debug("[MapView] Attempted to add an annotation that is already on the map (\(dataRecord.callsign ?? "NO TITLE")). Skipping.")
+            return
+        }
+        let mpa = COTMapObject(mapPoint: dataRecord).annotation
+        DispatchQueue.main.async {
+            mapView.addAnnotation(mpa)
+            mapView.addOverlays(mpa.shapes)
+        }
+    }
+    
+    func annotationForDBId(_ dbObjectId: NSManagedObjectID) -> MapPointAnnotation? {
+        let existingAnnotation: MapPointAnnotation? = DispatchQueue.main.sync {
+            mapView.annotations.first {
+                $0 is MapPointAnnotation &&
+                ($0 as! MapPointAnnotation).dbObjectId == dbObjectId
+            } as? MapPointAnnotation
+        }
+        return existingAnnotation
+    }
+    
+    func cleanBloodhoundLine() {
+        if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
+            DispatchQueue.main.async {
+                mapView.removeOverlay(activeBloodhound!)
+                activeBloodhound = nil
+                bloodhoundStartCoordinate = nil
+                bloodhoundEndCoordinate = nil
+                bloodhoundEndAnnotation = nil
+            }
+        }
+    }
+    
+    private func syncAnnotations() {
+        let context = DataController.shared.backgroundContext
+        context.perform {
+            cleanBloodhoundLine()
             let fetchData: NSFetchRequest<COTData> = COTData.fetchRequest()
             fetchData.predicate = NSPredicate(format: "visible = YES")
 
             let incomingData: [COTData] = (try? context.fetch(fetchData)) ?? []
             
-            let existingAnnotations: [MapPointAnnotation] = mapView.annotations.filter { $0 is MapPointAnnotation } as? [MapPointAnnotation] ?? []
-
-            let current = Set(existingAnnotations.map { $0.id })
-            let new = Set(incomingData.filter { $0.id != nil }.map { $0.id!.uuidString })
-
-            let toRemove = Set(current.subtracting(new))
-            let toAdd = Set(new.subtracting(current))
-
-            if !toRemove.isEmpty {
-                let removableAnnotations = existingAnnotations.filter {
-                    !$0.isKML &&
-                    toRemove.contains($0.id)
-                }
-
-                if !removableAnnotations.isEmpty {
-                    if(bloodhoundEndAnnotation != nil && toRemove.contains(bloodhoundEndAnnotation!.id)) {
-                        bloodhoundDeselected()
-                    }
-                    
-                    let overlaysToRemove = Array(removableAnnotations.map { $0.shapes }.joined()) as! [MKOverlay]
-                    DispatchQueue.main.async {
-                        mapView.removeOverlays(overlaysToRemove)
-                        mapView.removeAnnotations(removableAnnotations)
-                    }
-                }
-            }
-            
-            for mpAnnotation in existingAnnotations {
-                guard let node = incomingData.first(where: {$0.id?.uuidString == mpAnnotation.id}) else { continue }
-                let updatedMp = COTMapObject(mapPoint: node).annotation
-                guard mpAnnotation != updatedMp else { continue }
-                DispatchQueue.main.async {
-                    mpAnnotation.title = updatedMp.title
-                    mpAnnotation.color = updatedMp.color
-                    mpAnnotation.icon = updatedMp.icon
-                    mpAnnotation.cotType = updatedMp.cotType
-                    mpAnnotation.coordinate = updatedMp.coordinate
-                    mpAnnotation.remarks = updatedMp.remarks
-                    mpAnnotation.updateDate = updatedMp.updateDate
-                    mpAnnotation.battery = updatedMp.battery
-                    mpAnnotation.course = updatedMp.course
-                    mpAnnotation.speed = updatedMp.speed
-                    if mpAnnotation.id == bloodhoundEndAnnotation?.id {
-                        let userLocation = mapView.userLocation.coordinate
-                        let endPointLocation = mpAnnotation.coordinate
-                        if(userLocation.latitude != bloodhoundStartCoordinate?.latitude ||
-                           userLocation.longitude != bloodhoundStartCoordinate?.longitude ||
-                           endPointLocation.latitude != bloodhoundEndCoordinate?.latitude ||
-                           endPointLocation.longitude != bloodhoundEndCoordinate?.longitude
-                        ){
-                            TAKLogger.debug("Bloodhound endpoint being updated! \(mpAnnotation.title!)")
-                            if(activeBloodhound != nil) {
-                                TAKLogger.debug("[MapView] Removing old bloodhound line")
-                                mapView.removeOverlay(activeBloodhound!)
-                            } else {
-                                TAKLogger.debug("[MapView] Updated Bloodhound line but no activeBloodhound")
-                            }
-                            createBloodhound(annotation: updatedMp)
-                        }
-                    }
-                    updateCurrentSelectedAnnotation(updatedMp: updatedMp)
-
-                    annotationUpdatedCallback(annotation: mpAnnotation)
-                }
-            }
-
-            if !toAdd.isEmpty {
-                let insertingAnnotations = incomingData.filter { toAdd.contains($0.id?.uuidString ?? "") }
-                let newMapPoints = insertingAnnotations
-                    .map { COTMapObject(mapPoint: $0) }
-                let newAnnotations = newMapPoints.filter { !existingAnnotations.contains($0.annotation) }.map { $0.annotation }
-                let newOverlays = Array(newAnnotations.map { $0.shapes }.joined()) as! [MKOverlay]
-                
-                DispatchQueue.main.async {
-                    mapView.addAnnotations(newAnnotations)
-                    mapView.addOverlays(newOverlays)
-                }
-            }
-            DispatchQueue.main.async {
-                shouldUpdateMap = origUpdateVal
-            }
+            incomingData.forEach { dataRecord in addMapAnnotation(dataRecord: dataRecord) }
         }
     }
+
+//    private func updateAnnotations() {
+//        let context = DataController.shared.backgroundContext
+//        context.perform {
+//            let origUpdateVal = shouldUpdateMap
+//            DispatchQueue.main.async {
+//                shouldUpdateMap = false
+//            }
+//            if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
+//                DispatchQueue.main.async {
+//                    mapView.removeOverlay(activeBloodhound!)
+//                    activeBloodhound = nil
+//                    bloodhoundStartCoordinate = nil
+//                    bloodhoundEndCoordinate = nil
+//                    bloodhoundEndAnnotation = nil
+//                }
+//            }
+//            
+//            let fetchData: NSFetchRequest<COTData> = COTData.fetchRequest()
+//            fetchData.predicate = NSPredicate(format: "visible = YES")
+//
+//            let incomingData: [COTData] = (try? context.fetch(fetchData)) ?? []
+//            
+//            let existingAnnotations: [MapPointAnnotation] = mapView.annotations.filter { $0 is MapPointAnnotation } as? [MapPointAnnotation] ?? []
+//
+//            let current = Set(existingAnnotations.map { $0.id })
+//            let new = Set(incomingData.filter { $0.id != nil }.map { $0.id!.uuidString })
+//
+//            let toRemove = Set(current.subtracting(new))
+//            let toAdd = Set(new.subtracting(current))
+//
+//            if !toRemove.isEmpty {
+//                let removableAnnotations = existingAnnotations.filter {
+//                    !$0.isKML &&
+//                    toRemove.contains($0.id)
+//                }
+//
+//                if !removableAnnotations.isEmpty {
+//                    if(bloodhoundEndAnnotation != nil && toRemove.contains(bloodhoundEndAnnotation!.id)) {
+//                        bloodhoundDeselected()
+//                    }
+//                    
+//                    let overlaysToRemove = Array(removableAnnotations.map { $0.shapes }.joined()) as! [MKOverlay]
+//                    DispatchQueue.main.async {
+//                        mapView.removeOverlays(overlaysToRemove)
+//                        mapView.removeAnnotations(removableAnnotations)
+//                    }
+//                }
+//            }
+//            
+//            for mpAnnotation in existingAnnotations {
+//                guard let node = incomingData.first(where: {$0.id?.uuidString == mpAnnotation.id}) else { continue }
+//                let updatedMp = COTMapObject(mapPoint: node).annotation
+//                guard mpAnnotation != updatedMp else { continue }
+//                DispatchQueue.main.async {
+//                    mpAnnotation.title = updatedMp.title
+//                    mpAnnotation.color = updatedMp.color
+//                    mpAnnotation.icon = updatedMp.icon
+//                    mpAnnotation.cotType = updatedMp.cotType
+//                    mpAnnotation.coordinate = updatedMp.coordinate
+//                    mpAnnotation.remarks = updatedMp.remarks
+//                    mpAnnotation.updateDate = updatedMp.updateDate
+//                    mpAnnotation.battery = updatedMp.battery
+//                    mpAnnotation.course = updatedMp.course
+//                    mpAnnotation.speed = updatedMp.speed
+//                    if mpAnnotation.id == bloodhoundEndAnnotation?.id {
+//                        let userLocation = mapView.userLocation.coordinate
+//                        let endPointLocation = mpAnnotation.coordinate
+//                        if(userLocation.latitude != bloodhoundStartCoordinate?.latitude ||
+//                           userLocation.longitude != bloodhoundStartCoordinate?.longitude ||
+//                           endPointLocation.latitude != bloodhoundEndCoordinate?.latitude ||
+//                           endPointLocation.longitude != bloodhoundEndCoordinate?.longitude
+//                        ){
+//                            TAKLogger.debug("Bloodhound endpoint being updated! \(mpAnnotation.title!)")
+//                            if(activeBloodhound != nil) {
+//                                TAKLogger.debug("[MapView] Removing old bloodhound line")
+//                                mapView.removeOverlay(activeBloodhound!)
+//                            } else {
+//                                TAKLogger.debug("[MapView] Updated Bloodhound line but no activeBloodhound")
+//                            }
+//                            createBloodhound(annotation: updatedMp)
+//                        }
+//                    }
+//                    updateCurrentSelectedAnnotation(updatedMp: updatedMp)
+//
+//                    // annotationUpdatedCallback(annotation: mpAnnotation)
+//                }
+//            }
+//
+//            if !toAdd.isEmpty {
+//                let insertingAnnotations = incomingData.filter { toAdd.contains($0.id?.uuidString ?? "") }
+//                let newMapPoints = insertingAnnotations
+//                    .map { COTMapObject(mapPoint: $0) }
+//                let newAnnotations = newMapPoints.filter { !existingAnnotations.contains($0.annotation) }.map { $0.annotation }
+//                let newOverlays = Array(newAnnotations.map { $0.shapes }.joined()) as! [MKOverlay]
+//                
+//                DispatchQueue.main.async {
+//                    mapView.addAnnotations(newAnnotations)
+//                    mapView.addOverlays(newOverlays)
+//                }
+//            }
+//            DispatchQueue.main.async {
+//                shouldUpdateMap = origUpdateVal
+//            }
+//        }
+//    }
     
     func updateCurrentSelectedAnnotation(updatedMp: MapPointAnnotation) {
         if currentSelectedAnnotation != nil
@@ -1264,7 +1376,7 @@ struct MapView: UIViewRepresentable {
         }
     }
 
-    class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
+    class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate, NSFetchedResultsControllerDelegate {
         var parent: MapView
 
         var mapTapRecognizer = UITapGestureRecognizer()
@@ -1404,6 +1516,26 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             return parent.initializeOrUpdateAnnotationView(mapView: mapView, annotation: annotation)
+        }
+        
+        func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+            guard let point = anObject as? COTData else {
+                preconditionFailure("All changes observed in the map view controller should be for COTData instances")
+            }
+            let context = DataController.shared.backgroundContext
+            context.perform {
+                self.parent.cleanBloodhoundLine()
+                switch type {
+                case .insert:
+                    self.parent.addMapAnnotation(dataRecord: point)
+                case .delete:
+                    self.parent.removeMapAnnotation(dataRecord: point)
+                case .update:
+                    self.parent.updateMapAnnotation(dataRecord: point)
+                default:
+                    TAKLogger.debug("[MapView] Unknown object update received")
+                }
+            }
         }
     }
 }

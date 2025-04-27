@@ -200,6 +200,7 @@ class IconData {
         return await IconData.iconFor(type2525: annotation?.cotType ?? "", iconsetPath: iconSetPath)
     }
     
+    // TODO: <__group abbr="TC" exrole="Tactical Communicator" name="Cyan" role="RTO"/>
     static func iconFor(role: String) -> Icon {
         
         if let cached = cache[role] {
@@ -304,9 +305,11 @@ class IconData {
             } else {
                 TAKLogger.debug("[IconData] No 2525 icon found, checking static icons")
                 let staticIconName = IconData.staticIconNameFromCotType(cotType: type2525)
-                let staticIcon = UIImage(named: staticIconName)
-                if staticIcon != nil {
-                    uiImg = staticIcon!
+                if !staticIconName.isEmpty {
+                    let staticIcon = UIImage(named: staticIconName)
+                    if staticIcon != nil {
+                        uiImg = staticIcon!
+                    }
                 }
             }
         }

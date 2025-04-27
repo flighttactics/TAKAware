@@ -86,7 +86,6 @@
 		A5A1F9E22D300B7E009AA951 /* datapackage-cot-importer-subfolder.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5A1F9E12D300B7E009AA951 /* datapackage-cot-importer-subfolder.zip */; };
 		A5A1F9E42D3164AE009AA951 /* DataPackageManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A1F9E32D3164A8009AA951 /* DataPackageManagerTests.swift */; };
 		A5A30D572D280F88009399F3 /* KMLData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A30D562D280F84009399F3 /* KMLData.swift */; };
-		A5A30D592D2A431E009399F3 /* COTData+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A30D582D2A4318009399F3 /* COTData+Extension.swift */; };
 		A5A32C592D585EBA00C9F12A /* IconSetModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A5A32C572D585EBA00C9F12A /* IconSetModel.xcdatamodeld */; };
 		A5A32C5B2D5863B300C9F12A /* IconDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A32C5A2D5863AF00C9F12A /* IconDataController.swift */; };
 		A5A49D902A5459B5009764C1 /* TAKManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A49D8F2A5459B5009764C1 /* TAKManager.swift */; };
@@ -3542,7 +3541,6 @@
 		A5A1F9E12D300B7E009AA951 /* datapackage-cot-importer-subfolder.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = "datapackage-cot-importer-subfolder.zip"; sourceTree = "<group>"; };
 		A5A1F9E32D3164A8009AA951 /* DataPackageManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackageManagerTests.swift; sourceTree = "<group>"; };
 		A5A30D562D280F84009399F3 /* KMLData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLData.swift; sourceTree = "<group>"; };
-		A5A30D582D2A4318009399F3 /* COTData+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "COTData+Extension.swift"; sourceTree = "<group>"; };
 		A5A32C582D585EBA00C9F12A /* IconSetModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = IconSetModel.xcdatamodel; sourceTree = "<group>"; };
 		A5A32C5A2D5863AF00C9F12A /* IconDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconDataController.swift; sourceTree = "<group>"; };
 		A5A49D8F2A5459B5009764C1 /* TAKManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKManager.swift; sourceTree = "<group>"; };
@@ -6954,7 +6952,6 @@
 			children = (
 				A567329E2D7E4B5200BCC83F /* StringProtocol+Extension.swift */,
 				A567329C2D7E4B4500BCC83F /* Collection+Extension.swift */,
-				A5A30D582D2A4318009399F3 /* COTData+Extension.swift */,
 				A52BE9082D17E01000E82414 /* KMLFile+Extension.swift */,
 				4630FD162B5071BD00988ED4 /* String+Extension.swift */,
 				A5B1FF632C3B86D600C7F546 /* UIImage+Extension.swift */,
@@ -14162,7 +14159,6 @@
 				A5E2D0BD2C3F218B009FCD51 /* ChannelManager.swift in Sources */,
 				A55ABF452ABDBF9A00195AB7 /* UserInformation.swift in Sources */,
 				A578E42E2C550FD8001978D4 /* MapView.swift in Sources */,
-				A5A30D592D2A431E009399F3 /* COTData+Extension.swift in Sources */,
 				A50C5F5F2A6032D2001E52E6 /* EmergencyView.swift in Sources */,
 				A59C08472AACF95100C33B44 /* CertificateManager.swift in Sources */,
 				A50C5F5B2A5F92FF001E52E6 /* SettingsStore.swift in Sources */,

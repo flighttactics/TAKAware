@@ -262,6 +262,7 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
     }
     
     func storeDataSyncMission(missionName: String, password: String? = nil, missionPackage: DataSyncDataPackage? = nil) {
+        TAKLogger.debug("[DataSyncManager] storing data sync mission files for \(missionName)")
         dataContext.perform {
             let fetchDsm: NSFetchRequest<DataSyncMission> = DataSyncMission.fetchRequest()
             fetchDsm.predicate = NSPredicate(format: "name = %@", missionName as String)
