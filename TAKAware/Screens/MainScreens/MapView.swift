@@ -1058,6 +1058,10 @@ struct MapView: UIViewRepresentable {
     }
     
     func addMapAnnotation(dataRecord: COTData) {
+        guard dataRecord.cotUid != AppConstants.getClientID() else {
+            TAKLogger.debug("[MapView] Attempted to add an annotation for the current user. Skipping.")
+            return
+        }
         guard annotationForDBId(dataRecord.objectID) == nil else {
             TAKLogger.debug("[MapView] Attempted to add an annotation that is already on the map (\(dataRecord.callsign ?? "NO TITLE")). Skipping.")
             return
