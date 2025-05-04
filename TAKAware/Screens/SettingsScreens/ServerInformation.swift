@@ -81,8 +81,10 @@ struct ServerInformationDisplay: View {
         .alert("Update Server Info", isPresented: $isShowingEditBox, actions: {
             TextField("Host", text: $currentServerUrl)
                 .foregroundColor(.black)
+                .background(.white)
             TextField("Port", text: $currentServerPort)
                 .foregroundColor(.black)
+                .background(.white)
             Button("Update", action: { updateServer() })
             Button("Cancel", role: .cancel, action: {
                 currentServerUrl = settingsStore.takServerUrl
