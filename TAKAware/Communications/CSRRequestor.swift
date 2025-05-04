@@ -48,8 +48,7 @@ struct CSRConfiguration {
     var response: URLResponse? = nil
     var responseData: Data? = nil
 
-    var orgName: String = ""
-    var orgUnitName: String = ""
+    var distinguishedNameComponents: CAConfigDistiguishedName = CAConfigDistiguishedName()
     
     var host: String {
         get { return "https://\(SettingsStore.global.takServerUrl)" }
@@ -140,7 +139,6 @@ class CSRRequestor: NSObject, ObservableObject, URLSessionDelegate {
     }
     
     func processConfigResponse(data: Data, dataString: String) {
-        var caConfigEntries : [String:String] = [:]
         self.enrollmentStatus = CSREnrollmentStatus.Configuring
         
         TAKLogger.debug("[CSRRequestor] got data: \(dataString)")
@@ -148,16 +146,8 @@ class CSRRequestor: NSObject, ObservableObject, URLSessionDelegate {
         let responseParser = TAKCAConfigResponseParser()
         xmlParser.delegate = responseParser
         xmlParser.parse()
-        caConfigEntries = responseParser.nameEntries
-        TAKLogger.debug("[CSRRequestor] got name entries \(String(describing: caConfigEntries))")
-        
-        if caConfigEntries["O"] != nil {
-            self.config.orgName = caConfigEntries["O"]!
-        }
-        
-        if caConfigEntries["OU"] != nil {
-            self.config.orgUnitName = caConfigEntries["OU"]!
-        }
+        TAKLogger.debug("[CSRRequestor] got name entries \(String(describing: responseParser.distingushedNameEntries))")
+        self.config.distinguishedNameComponents = responseParser.distingushedNameEntries
     }
     
     func generateCSRRequest() -> URLRequest {
@@ -239,8 +229,7 @@ class CSRRequestor: NSObject, ObservableObject, URLSessionDelegate {
         self.generateSigningRequest(
             commonName: SettingsStore.global.takServerUsername,
             hostName: SettingsStore.global.takServerUrl,
-            organizationName: self.config.orgName,
-            organizationUnitName: self.config.orgUnitName)
+            distinguishedNameEntries: self.config.distinguishedNameComponents)
 
         let rawCertData = Data(self.derEncodedCertificate)
         let certData = rawCertData.base64EncodedString()
@@ -317,15 +306,14 @@ class CSRRequestor: NSObject, ObservableObject, URLSessionDelegate {
     
     func generateSigningRequest(commonName: String,
                                 hostName: String,
-                                organizationName: String,
-                                organizationUnitName: String) {
+                                distinguishedNameEntries: CAConfigDistiguishedName) {
         do {
             let privateKeyTag = "tak.flighttactics.com-\(hostName)-pk"
             
             let certData = try CertificateManager.generateTaggedPrivateKey(privateKeyTag: privateKeyTag)
             let swiftCryptoKey = try _RSA.Signing.PrivateKey(derRepresentation: certData)
 
-            generateSigningRequest(commonName: commonName, hostName: hostName, organizationName: organizationName, organizationUnitName: organizationUnitName, privateKey: swiftCryptoKey)
+            generateSigningRequest(commonName: commonName, hostName: hostName, distinguishedNameEntries: distinguishedNameEntries, privateKey: swiftCryptoKey)
 
         } catch let error as NSError {
             TAKLogger.error("[CSRRequestor] Could not create the CSR")
@@ -335,17 +323,26 @@ class CSRRequestor: NSObject, ObservableObject, URLSessionDelegate {
     
     func generateSigningRequest(commonName: String,
                                 hostName: String,
-                                organizationName: String,
-                                organizationUnitName: String,
+                                distinguishedNameEntries: CAConfigDistiguishedName,
                                 privateKey: _RSA.Signing.PrivateKey) {
         do {
 
             let key = Certificate.PrivateKey(privateKey)
 
-            let subjectName = try DistinguishedName {
+            var subjectName = try DistinguishedName {
                 CommonName(commonName)
-                OrganizationName(organizationName)
-                OrganizationalUnitName(organizationUnitName)
+            }
+            
+            try distinguishedNameEntries.organizationNameComponents.forEach { orgName in
+                try subjectName.append(RelativeDistinguishedName([RelativeDistinguishedName.Attribute(type: .RDNAttributeType.organizationName, printableString: orgName)]))
+            }
+            
+            try distinguishedNameEntries.organizationalUnitNameComponents.forEach { orgUnitName in
+                try subjectName.append(RelativeDistinguishedName([RelativeDistinguishedName.Attribute(type: .RDNAttributeType.organizationalUnitName, printableString: orgUnitName)]))
+            }
+            
+            try distinguishedNameEntries.domainComponents.forEach { domainComponent in
+                try subjectName.append(RelativeDistinguishedName([RelativeDistinguishedName.Attribute(type: .NameAttributes.domainComponent, printableString: domainComponent)]))
             }
             
             TAKLogger.debug("[CSRRequestor] Creating Certificate")
