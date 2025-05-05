@@ -98,7 +98,6 @@ class IconData {
     let iconSetTable = Table("iconsets")
     let iconTable = Table("icons")
     
-    let iconSetId = Expression<Int>(value: "id")
     let iconSetName = Expression<String>(value: "name")
     let iconSetUid = Expression<String>(value: "uid")
     let selectedGroup = Expression<String>(value: "selectedGroup")

@@ -7,8 +7,14 @@
 
 import Foundation
 
+struct CAConfigDistiguishedName {
+    var organizationNameComponents: [String] = []
+    var organizationalUnitNameComponents: [String] = []
+    var domainComponents: [String] = []
+}
+
 class TAKCAConfigResponseParser: NSObject, XMLParserDelegate {
-    var nameEntries : [String:String] = [:]
+    var distingushedNameEntries: CAConfigDistiguishedName = CAConfigDistiguishedName()
     
     func parser(
         _ parser: XMLParser,
@@ -20,11 +26,16 @@ class TAKCAConfigResponseParser: NSObject, XMLParserDelegate {
         if(elementName == "nameEntry") {
             if let nameVal = attributeDict["name"],
                let valueVal = attributeDict["value"] {
-                // Only ever take the first value coming back
-                if(!nameEntries.keys.contains(nameVal)) {
-                    nameEntries[nameVal] = valueVal
-                } else {
-                    TAKLogger.info("[TAKConfigResponseParser]: Multiple entries received for \(nameVal), only using first")
+                
+                switch(nameVal.uppercased()) {
+                case "O":
+                    distingushedNameEntries.organizationNameComponents.append(valueVal)
+                case "OU":
+                    distingushedNameEntries.organizationalUnitNameComponents.append(valueVal)
+                case "DC":
+                    distingushedNameEntries.domainComponents.append(valueVal)
+                default:
+                    TAKLogger.error("[TAKConfigResponseParser]: Unknown entry received \(nameVal) - ignoring")
                 }
             }
         }
