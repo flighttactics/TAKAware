@@ -48,5 +48,18 @@ struct TAKOptions: View {
             }
             .padding(.top, 20)
         }
+        
+        Group {
+            VStack {
+                HStack {
+                    Text("User COT Type")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
+                TextField("User COT Type", text: $settingsStore.cotType)
+            }
+            .padding(.top, 20)
+        }
     }
 }

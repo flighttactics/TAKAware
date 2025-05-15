@@ -20,21 +20,21 @@ final class StreamParserTests: TAKAwareTestCase {
     
     func testSplitOnEventClosureCreatesCorrectNumberOfEvents() {
         let eventStream = Data("\(event1)\(event2)".utf8)
-        let events = parser.parse(dataStream: eventStream)
+        let events = parser.parseXml(dataStream: eventStream)
         TAKLogger.debug(String(describing: events))
         XCTAssertEqual(2, events.count, "Parser did not split properly")
     }
     
     func testSplitOnEventClosureIncludesClosureElement() {
         let eventStream = Data("\(event1)\(event2)".utf8)
-        let events = parser.parse(dataStream: eventStream)
+        let events = parser.parseXml(dataStream: eventStream)
         XCTAssertEqual(event1, String(events[0]), "Parser split did not match event1")
         XCTAssertEqual(event2, String(events[1]), "Parser split did not match event2")
     }
     
     func testParsingWithSingleEventReturnsSingleNode() {
         let eventStream = Data("\(event1)".utf8)
-        let events = parser.parse(dataStream: eventStream)
+        let events = parser.parseXml(dataStream: eventStream)
         XCTAssertEqual(1, events.count, "Parser did not split properly")
         XCTAssertEqual(event1, String(events[0]), "Parser split did not match event1")
     }
@@ -52,12 +52,12 @@ final class StreamParserTests: TAKAwareTestCase {
         let eventPartial1 = Data("<?xml version=\"1.0\"><event uid=\"1\">".utf8)
         let eventPartial2 =  Data("</event><?xml version=\"1.0\"><event uid=".utf8)
         let eventPartial3 =  Data("\"2\"></event>".utf8)
-        let initialEventsEmpty = parser.parse(dataStream: eventPartial1)
+        let initialEventsEmpty = parser.parseXml(dataStream: eventPartial1)
         XCTAssertEqual(0, initialEventsEmpty.count, "Parser parsed invalid XML")
-        let firstEventCrossed = parser.parse(dataStream: eventPartial2)
+        let firstEventCrossed = parser.parseXml(dataStream: eventPartial2)
         XCTAssertEqual(1, firstEventCrossed.count, "Parser missed first event")
         XCTAssertEqual(event1, String(firstEventCrossed[0]), "Parser split did not match event1")
-        let secondEventCrossed = parser.parse(dataStream: eventPartial3)
+        let secondEventCrossed = parser.parseXml(dataStream: eventPartial3)
         XCTAssertEqual(1, secondEventCrossed.count, "Parser missed second event")
         XCTAssertEqual(event2, String(secondEventCrossed[0]), "Parser split did not match event2")
     }
@@ -67,7 +67,7 @@ final class StreamParserTests: TAKAwareTestCase {
 <event version="2.0" uid="62d88822-1426-40c6-b30d-e440f2c56daa" type="t-x-m-c" how="h-g-i-g-o" time="2024-07-28T17:48:03Z" start="2024-07-28T17:48:03Z" stale="2024-07-28T17:53:03Z"><point lat="0" lon="0" hae="0" ce="9999999" le="9999999"/><detail></detail></event>
 """
         let cotParser: COTXMLParser = COTXMLParser()
-        let taskedEventXml = parser.parse(dataStream: Data(xml.utf8)).first
+        let taskedEventXml = parser.parseXml(dataStream: Data(xml.utf8)).first
         XCTAssertNotNil(taskedEventXml)
         let taskedEvent = cotParser.parse(taskedEventXml!)
         XCTAssertEqual(taskedEvent?.eventType, .TASKING)
@@ -89,16 +89,33 @@ final class StreamParserTests: TAKAwareTestCase {
 //        //parser.parseAtom(cotEvent: unknownEvent.first!, rawXml: cot)
 //    }
     
-//    func testParsesProtobufIntoEvents() throws {
-//        var pbTAKMessage = Atakmap_Commoncommo_Protobuf_V1_TakMessage()
-//        var pbTAKEvent = Atakmap_Commoncommo_Protobuf_V1_CotEvent()
-//        var dataMessage = Data()
-//        dataMessage.append(contentsOf: [StreamParser.PB_MAGIC_BYTE])
-//        pbTAKEvent.uid = UUID().uuidString
-//        pbTAKMessage.cotEvent = pbTAKEvent
-//        let pbMessageData = try pbTAKMessage.serializedData()
-//        dataMessage.append(pbMessageData)
-//        let events = parser.parse(dataStream: dataMessage)
-//        XCTAssertEqual(1, events.count, "Parser did not handle protobuf properly")
-//    }
+    func testParsesProtobufMeshIntoEvents() throws {
+        let cotUid = UUID().uuidString
+        var pbTAKMessage = Atakmap_Commoncommo_Protobuf_V1_TakMessage()
+        var pbTAKEvent = Atakmap_Commoncommo_Protobuf_V1_CotEvent()
+        var dataMessage = Data()
+        dataMessage.append(contentsOf: [StreamParser.PB_MAGIC_BYTE, 1, StreamParser.PB_MAGIC_BYTE]) // Mesh header
+        pbTAKEvent.uid = cotUid
+        pbTAKMessage.cotEvent = pbTAKEvent
+        let pbMessageData = try pbTAKMessage.serializedData()
+        dataMessage.append(pbMessageData)
+        let events = parser.parseProtobuf(dataStream: dataMessage)
+        XCTAssertEqual(1, events.count, "Parser did not handle protobuf properly")
+        XCTAssertEqual(cotUid, events.first?.uid, "Event UID did not match expected")
+    }
+    
+    func testParsesProtobufStreamIntoEvents() throws {
+        let cotUid = UUID().uuidString
+        var pbTAKMessage = Atakmap_Commoncommo_Protobuf_V1_TakMessage()
+        var pbTAKEvent = Atakmap_Commoncommo_Protobuf_V1_CotEvent()
+        var dataMessage = Data()
+        dataMessage.append(contentsOf: [StreamParser.PB_MAGIC_BYTE, 1]) // Stream header
+        pbTAKEvent.uid = cotUid
+        pbTAKMessage.cotEvent = pbTAKEvent
+        let pbMessageData = try pbTAKMessage.serializedData()
+        dataMessage.append(pbMessageData)
+        let events = parser.parseProtobuf(dataStream: dataMessage)
+        XCTAssertEqual(1, events.count, "Parser did not handle protobuf properly")
+        XCTAssertEqual(cotUid, events.first?.uid, "Event UID did not match expected")
+    }
 }
