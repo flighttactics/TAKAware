@@ -127,9 +127,6 @@ struct ServerUpdateScreen: View {
         }
     }
     
-    // TODO: Only submit cert enrollment if username/password changes
-    // TODO: Or do a "reneroll" button
-    // TODO: And add a toggle button to turn connection on/off
     var body: some View {
         VStack {
             List {
