@@ -249,6 +249,13 @@ class SettingsStore: ObservableObject {
         }
     }
     
+    @Published var takServerEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(takServerEnabled, forKey: "takServerEnabled")
+            NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_TAK_SERVER_AVAILABILITY_TOGGLED), object: nil)
+        }
+    }
+    
     // Note: overlayActiveMapSources in MapView also updates this value directly without going through here
     @Published var mapTypeDisplay: UInt {
         didSet {
@@ -376,6 +383,8 @@ class SettingsStore: ObservableObject {
         self.connectionStatus = (UserDefaults.standard.object(forKey: "connectionStatus") == nil ? "Disconnected" : UserDefaults.standard.object(forKey: "connectionStatus") as! String)
         
         self.takServerChanged = (UserDefaults.standard.object(forKey: "takServerChanged") == nil ? false : UserDefaults.standard.object(forKey: "takServerChanged") as! Bool)
+        
+        self.takServerEnabled = (UserDefaults.standard.object(forKey: "takServerEnabled") == nil ? true : UserDefaults.standard.object(forKey: "takServerEnabled") as! Bool)
         
         self.mapTypeDisplay = (UserDefaults.standard.object(forKey: "mapTypeDisplay") == nil ? MKMapType.standard.rawValue : UserDefaults.standard.object(forKey: "mapTypeDisplay") as! UInt)
 
