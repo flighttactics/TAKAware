@@ -30,9 +30,26 @@ class TCPMessage: NSObject, ObservableObject {
     
     override init() {
         TAKLogger.debug("[TCPMessage]: Init")
+        super.init()
+        let nc = NotificationCenter.default
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_TAK_SERVER_AVAILABILITY_TOGGLED), object: nil, queue: nil, using: serverAvailabilityToggled)
+    }
+    
+    func serverAvailabilityToggled(notification: Notification) {
+        if SettingsStore.global.takServerEnabled {
+            TAKLogger.debug("[TCPMessage]: TAK Server enabled, reconnecting")
+            reconnect()
+        } else {
+            TAKLogger.debug("[TCPMessage]: TAK Server disabled, disconnecting")
+            disconnect()
+        }
     }
     
     func send(_ payload: Data) {
+        guard SettingsStore.global.takServerEnabled else {
+            TAKLogger.debug("[TCPMessage]: TAK Server not enabled, not sending")
+            return
+        }
         let shouldForceReconnect = SettingsStore.global.takServerChanged
         let readyToSend = SettingsStore.global.isConnectedToServer && !shouldForceReconnect
         
@@ -52,6 +69,11 @@ class TCPMessage: NSObject, ObservableObject {
     }
     
     func reconnect() {
+        
+        guard SettingsStore.global.takServerEnabled else {
+            TAKLogger.debug("[TCPMessage]: TAK Server not enabled, not reconnecting")
+            return
+        }
         
         if(SettingsStore.global.isConnectingToServer) {
             TAKLogger.debug("[TCPMessage]: We're already trying to connect to the server")
@@ -96,6 +118,12 @@ class TCPMessage: NSObject, ObservableObject {
     
     func connect() {
         TAKLogger.debug("[TCPMessage]: TCP Message Connect called")
+        
+        guard SettingsStore.global.takServerEnabled else {
+            TAKLogger.debug("[TCPMessage]: TAK Server not enabled, not connecting")
+            return
+        }
+        
         let connectionStatus = SettingsStore.global.connectionStatus
         let isConnecting = SettingsStore.global.isConnectingToServer
 
@@ -205,6 +233,11 @@ class TCPMessage: NSObject, ObservableObject {
         connection!.betterPathUpdateHandler = betterPathUpdateHandler
         
         connection!.start(queue: .global())
+    }
+    
+    func disconnect() {
+        TAKLogger.debug("[TCPMessage]: Disconnecting TAK Server Connection")
+        connection?.forceCancel()
     }
     
     func receive(content: Data?, error: NWError?, connection: NWConnection?) {

@@ -138,7 +138,7 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
             
             let positionInfo = self.generatePositionInfo(location: location, heading: heading)
             
-            let message = self.cotMessage.generateCOTXml(positionInfo: positionInfo, callSign: SettingsStore.global.callSign, group: SettingsStore.global.team, role: SettingsStore.global.role, phone: SettingsStore.global.phoneNumber, phoneBatteryStatus: AppConstants.getPhoneBatteryStatus().description)
+            let message = self.cotMessage.generateCOTXml(cotType: SettingsStore.global.cotType, positionInfo: positionInfo, callSign: SettingsStore.global.callSign, group: SettingsStore.global.team, role: SettingsStore.global.role, phone: SettingsStore.global.phoneNumber, phoneBatteryStatus: AppConstants.getPhoneBatteryStatus().description)
 
             TAKLogger.debug("[TAKManager]: Getting ready to broadcast location CoT")
             TAKLogger.debug(message)

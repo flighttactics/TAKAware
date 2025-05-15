@@ -82,6 +82,7 @@
 		A59530FC2CF7EFB00078C1E8 /* DataPackageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59530FB2CF7EFA30078C1E8 /* DataPackageManager.swift */; };
 		A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6672C278CCD00E81976 /* AwarenessView.swift */; };
 		A595F66A2C278CFE00E81976 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6692C278CFE00E81976 /* Components.swift */; };
+		A599849F2DD1960E009A4F4D /* TAKProtoToSwiftTAKConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A599849E2DD195F4009A4F4D /* TAKProtoToSwiftTAKConverter.swift */; };
 		A59C08472AACF95100C33B44 /* CertificateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59C08462AACF95100C33B44 /* CertificateManager.swift */; };
 		A5A1F9E22D300B7E009AA951 /* datapackage-cot-importer-subfolder.zip in Resources */ = {isa = PBXBuildFile; fileRef = A5A1F9E12D300B7E009AA951 /* datapackage-cot-importer-subfolder.zip */; };
 		A5A1F9E42D3164AE009AA951 /* DataPackageManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A1F9E32D3164A8009AA951 /* DataPackageManagerTests.swift */; };
@@ -3536,6 +3537,7 @@
 		A59530FB2CF7EFA30078C1E8 /* DataPackageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackageManager.swift; sourceTree = "<group>"; };
 		A595F6672C278CCD00E81976 /* AwarenessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwarenessView.swift; sourceTree = "<group>"; };
 		A595F6692C278CFE00E81976 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		A599849E2DD195F4009A4F4D /* TAKProtoToSwiftTAKConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKProtoToSwiftTAKConverter.swift; sourceTree = "<group>"; };
 		A599D66C2A5E45CD00B507D9 /* TAKAware.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TAKAware.entitlements; sourceTree = "<group>"; };
 		A59C08462AACF95100C33B44 /* CertificateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateManager.swift; sourceTree = "<group>"; };
 		A5A1F9E12D300B7E009AA951 /* datapackage-cot-importer-subfolder.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = "datapackage-cot-importer-subfolder.zip"; sourceTree = "<group>"; };
@@ -10478,6 +10480,7 @@
 		A5E2F8FE2A791F5600EDD0B4 /* Data Models */ = {
 			isa = PBXGroup;
 			children = (
+				A599849E2DD195F4009A4F4D /* TAKProtoToSwiftTAKConverter.swift */,
 				A5A32C5A2D5863AF00C9F12A /* IconDataController.swift */,
 				A5A30D562D280F84009399F3 /* KMLData.swift */,
 				A5B312B62C38C57D007B3914 /* iconsets.sqlite */,
@@ -14118,6 +14121,7 @@
 				A5B312C12C397AC5007B3914 /* DataController.swift in Sources */,
 				A5F8AA492D63C163009901A7 /* MapSourceImporter.swift in Sources */,
 				A5FB4E642A8FE0020034966D /* CSRRequestor.swift in Sources */,
+				A599849F2DD1960E009A4F4D /* TAKProtoToSwiftTAKConverter.swift in Sources */,
 				A5B1FF642C3B86D600C7F546 /* UIImage+Extension.swift in Sources */,
 				A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */,
 				A5F8AA452D6374FC009901A7 /* IconImage.swift in Sources */,
@@ -14358,7 +14362,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 101;
+				CURRENT_PROJECT_VERSION = 104;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14382,7 +14386,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.1;
+				MARKETING_VERSION = 1.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -14402,7 +14406,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 101;
+				CURRENT_PROJECT_VERSION = 104;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14426,7 +14430,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.1;
+				MARKETING_VERSION = 1.4.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.flighttactics.TAKAware;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
