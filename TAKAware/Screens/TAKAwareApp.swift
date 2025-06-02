@@ -52,6 +52,11 @@ struct TAKTrackerApp: App {
                         UIApplication.shared.isIdleTimerDisabled = settingsStore.disableScreenSleep
                         UIDevice.current.isBatteryMonitoringEnabled = true
                     }
+                    .onOpenURL { url in
+                        TAKLogger.debug("[URL SCHEME] Opened with URL: \(url.absoluteString)")
+                        dump(url.absoluteString)
+                        URLSchemeHandler.shared.handle(url: url)
+                    }
                     .onChange(of: scenePhase) { newPhase in
                         if newPhase == .inactive {
                             TAKLogger.debug("[ScenePhase] Moving to inactive")
@@ -66,6 +71,11 @@ struct TAKTrackerApp: App {
                             NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_APP_BACKGROUND), object: nil)
                             settingsStore.shouldTryReconnect = true
                         }
+                    }
+                    .onOpenURL { url in
+                        TAKLogger.debug("[URL SCHEME] Opened with URL: \(url.absoluteString)")
+                        dump(url.absoluteString)
+                        URLSchemeHandler.shared.handle(url: url)
                     }
                     .preferredColorScheme(.dark)
                 

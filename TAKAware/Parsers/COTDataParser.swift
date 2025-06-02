@@ -271,9 +271,12 @@ class COTDataParser: NSObject {
             let phone = cotEvent.cotDetail?.cotContact?.phone
             let role = cotEvent.cotDetail?.cotGroup?.role
             let team = cotEvent.cotDetail?.cotGroup?.name
-            let speed = cotEvent.cotDetail?.cotTrack?.speed
-            let course = cotEvent.cotDetail?.cotTrack?.course
-            let battery = cotEvent.cotDetail?.cotStatus?.battery
+            let speed = "0.0"
+            //cotEvent.cotDetail?.cotTrack?.speed
+            let course = "0.0"
+            //cotEvent.cotDetail?.cotTrack?.course
+            let battery = ""
+            //cotEvent.cotDetail?.cotStatus?.battery
             
             if let altitude = Double(cotEvent.cotPoint?.hae ?? "0.0") {
                 mapPointData.altitude = altitude

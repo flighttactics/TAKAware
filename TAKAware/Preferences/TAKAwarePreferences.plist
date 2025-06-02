@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+    <array>
+        <dict>
+            <key>key</key>
+            <string>locationCallsign</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>My Callsign</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>locationTeam</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>My Team</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>atakRoleType</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>My Role</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>locationUnitType</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>My Display Type</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>saHasPhoneNumber</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Publish Phone Number</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>saEmailAddress</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Publish Preferred Email</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>saURN</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Unit Reference Number</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>dispatchLocationCotExternal</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Send Location Over Network</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>dispatchLocationHidden</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Hide my current position</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>locationReportingStrategy</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Reporting Strategy</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>dynamicReportingRateStationaryUnreliable</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Dynamic Reporting Rate Stationary (Unreliable)</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>dynamicReportingRateMinUnreliable</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Dynamic Reporting Rate Minimum (Unreliable)</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>dynamicReportingRateMaxUnreliable</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Dynamic Reporting Rate Maximum (Unreliable)</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>dynamicReportingRateStationaryReliable</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Dynamic Reporting Rate Stationary (Reliable)</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>dynamicReportingRateMinReliable</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Dynamic Reporting Rate Minimum (Reliable)</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>dynamicReportingRateMaxReliable</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Dynamic Reporting Rate Maximum (Reliable)</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>constantReportingRateUnreliable</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Constant Reporting Rate (Unreliable)</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>constantReportingRateReliable</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Constant Reporting Rate (Reliable)</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>dispatchLocationCotExternalAtStart</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Report Location before obtaining location fix</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>apiSecureServerPort</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Secure Server API port</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>apiUnsecureServerPort</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Unsecure Server API port</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>apiCertEnrollmentPort</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Certificate Enrollment API port</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>enableNonStreamingConnections</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Enable Mesh Network Mode</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>chatAddress</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Chat Address</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>chatPort</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Chat Port</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>toggle_log_tracks</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Log Tracks</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>track_prefix</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Track Prefix</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>toggle_rotate_track_colors</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Auto Rotate Track Colors</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>track_infinite</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Persistent Self Track</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>max_num_bread_tracks</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Set Max Number of Bread Crumbs</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>bread_dist_threshold</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Bread Crumb Distance Threshold</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>coord_display_pref</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Coordinate Display</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>alt_display_pref</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Altitude Display</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>alt_unit_pref</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Altitude Units</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>alt_display_agl</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Display AGL</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>speed_unit_pref</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Speed Units</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>rab_brg_units_pref</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Bearing Units</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>rab_rng_units_pref</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Range Units</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>rab_north_ref_pref</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>North Reference</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>location_marker_scale_key</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Marker Size</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>atakScreenLock</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Disable Screen Saver / Screen Lock</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>atakControlShortenLabels</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Shorten Long Marker Labels</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>atakControlShowLabels</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Show Marker Labels</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>atakControlOtherUserNotification</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Display Notifications for other users</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>imagery_tab_name</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Imagery Tab Name</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>staleRemoteDisconnects</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Stale out remote users as they disconnect from TAK Servers</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>expireEverything</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Remove all marker types from map when they stale out</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>expireStaleItemsTime</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Stale item cleanup time</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>expireUnknowns</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Remove Unknown markers when they stale out</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>atakLongPressMap</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Action for Long Pressing the Map</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>atakDoubleTapToZoom</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Double tap to zoom 2X</string>
+        </dict>
+        <dict>
+            <key>key</key>
+            <string>self_coord_action</string>
+            <key>defaultValue</key>
+            <string/>
+            <key>displayName</key>
+            <string>Tap Coordinate Action</string>
+        </dict>
+    </array>
+</plist>

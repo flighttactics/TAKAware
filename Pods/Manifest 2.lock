@@ -1,0 +1,35 @@
+PODS:
+  - color-ios (1.0.2)
+  - grid-ios (1.0.7):
+    - color-ios (~> 1.0.2)
+    - sf-ios (~> 4.1.4)
+  - mgrs-ios (1.1.6):
+    - grid-ios (~> 1.0.7)
+  - MobileVLCKit (3.3.17)
+  - sf-ios (4.1.4)
+
+DEPENDENCIES:
+  - color-ios (~> 1.0.1)
+  - grid-ios (~> 1.0.5)
+  - mgrs-ios (~> 1.1.4)
+  - MobileVLCKit (~> 3.3.0)
+  - sf-ios (~> 4.1.2)
+
+SPEC REPOS:
+  trunk:
+    - color-ios
+    - grid-ios
+    - mgrs-ios
+    - MobileVLCKit
+    - sf-ios
+
+SPEC CHECKSUMS:
+  color-ios: 77715f5f4c5944b3c85396e9263bfa17a1bf2cfd
+  grid-ios: 4aa398fd164bb8acac9d587cf61016cc6523defb
+  mgrs-ios: ab6bc20f8c8d34f182a25bfb164e97a19a7492da
+  MobileVLCKit: c5dd1b0ae933dc9c2348099840e753496dcdd908
+  sf-ios: 03cc989b70b11d80ab80afc9db2086a621fa4703
+
+PODFILE CHECKSUM: 46eed3330cc9452e1837db02cec5fa0f2393267a
+
+COCOAPODS: 1.15.2

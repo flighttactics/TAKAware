@@ -1,0 +1,2203 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		DD6DBFB0950D5ACA7BBB5F25E1C1A342 /* MobileVLCKit */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 41861FAD9A4BF10B77AE2077E222AF7D /* Build configuration list for PBXAggregateTarget "MobileVLCKit" */;
+			buildPhases = (
+				EC3F5098316C1BF91803A23EFD67F49E /* [CP] Copy XCFrameworks */,
+			);
+			dependencies = (
+			);
+			name = MobileVLCKit;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		01E24F34104449FE836E39E9615116DE /* sf-ios-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FAF0F21ED70A53D30046E46B35DC9F6D /* sf-ios-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		043A5BA7C0CD44BCD42289096262D00C /* sf-ios-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7726355CC3AE8FCBED1493A85CED1CCC /* sf-ios-dummy.m */; };
+		0499FF91DB04362325CFE71DD49E4C4E /* SFCentroidPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 8B79B029FBC8446AD0FD31FD546E47C4 /* SFCentroidPoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		04B3A6327E57113297E147F45AB86AC2 /* BaseZoomGrids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DAA2356B2791A6F07C65AE7F3B2230E /* BaseZoomGrids.swift */; };
+		067C7ED7510521BE277F755220E822C5 /* ZoneNumberRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA40A1A1D21549B9B8325427CF08B25 /* ZoneNumberRange.swift */; };
+		06D18D87D8504AC2715A0863CCDAED96 /* Hemisphere.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E9463124CE7D7D02BF9B636C5D5490 /* Hemisphere.swift */; };
+		071F303DFF627313B76DE65A777F15C1 /* LongitudinalStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3C118A6C97F8CEA9C00FE253B3D4D1 /* LongitudinalStrip.swift */; };
+		073B9F6C89A405A6B27EAA2B0BB69125 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		08A82D98A2958761B0C37502C499ECCC /* GridPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D346428B07A8730DB7A47ECF2AA32DF9 /* GridPoint.swift */; };
+		08BD05536937811BF7E02603A0919ADF /* SFSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = 7301C7204196B5C70ED376762A5C0625 /* SFSegment.m */; };
+		08E28DAEB2B62C7DFE9A678D95A2372F /* SFGeometryCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D1049C4E50850A62EDD264FD4743C6A /* SFGeometryCollection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		09A55B5B12C8F97AD7A9F4A5E4DC98C4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		0A42D4949996376A528CC9DE5933FFED /* PropertyConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA7BEF387468F6D6333EFDC7274A586 /* PropertyConstants.swift */; };
+		0BD3C5A71CC4DF32EE8A112D7DEA8B1F /* SFShamosHoey.h in Headers */ = {isa = PBXBuildFile; fileRef = 79F9F20E8532640EC8B855FB9882888C /* SFShamosHoey.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0C8C61BAA6753F9647E144BD8EC3BEEB /* SFTextReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 659BF55C8D3552433C428542EB03335E /* SFTextReader.m */; };
+		0D16C71CF738F3BBA2C63FEC24CBAE3F /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD59ACD5EF3782800CB7023A378AD83 /* Grid.swift */; };
+		0E48F269B264AC4DF3B3DC9E834251FC /* color-ios-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ED98E82F733F3941715B9490599953 /* color-ios-dummy.m */; };
+		12C72C459546562A4C7A8D046B5BE963 /* Grids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 155E2E113E92E4AD9EB2779D4F873CDC /* Grids.swift */; };
+		13878C5E05A4A8E68093F07E063619C7 /* SFTriangle.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE1782D9B53BD8D8AAD64797E872DA7 /* SFTriangle.m */; };
+		140A5787CBB26F85FF8D7ED484A81874 /* SFLineString.h in Headers */ = {isa = PBXBuildFile; fileRef = 7DED492EDEF118AC69D3A70B4BB7243F /* SFLineString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1CB883D34DAE692406F0DEE072097AB2 /* SFLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EA9509EEB803299A31B979D37D973C9 /* SFLine.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2192F2C6B16FB36B837F7155C8084A71 /* SFByteReader.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F73975B1B02EE4E2D3C76666650669 /* SFByteReader.m */; };
+		2465E27BE0D23BE712848E978C14EACE /* SFPolygon.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DDEAFF3E6FFF286FC580C6B7B015990 /* SFPolygon.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		26F290A0F425F5F1E6899D5C1086A588 /* SFSegment.h in Headers */ = {isa = PBXBuildFile; fileRef = 89A888192283BDBADE90D5E564CA459D /* SFSegment.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2A0CC9B779057328FAE359766059CA3C /* SFCurvePolygon.h in Headers */ = {isa = PBXBuildFile; fileRef = 56E27527F7E3C44A19800DED5F3A8FC6 /* SFCurvePolygon.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		33204D1AAADF2E10DB308BB774E6EE94 /* SFFiniteFilterTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBD47BE39E7A699C4EA8666C3A0C48C /* SFFiniteFilterTypes.m */; };
+		35A0D6930B1375D439168D1746877049 /* BaseGrids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B986DDD78EB448B7FC6FDDF17C68876 /* BaseGrids.swift */; };
+		391601FB8693640EBE5D411023C746A9 /* GridUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD9B19425B318BBDA01831437002662 /* GridUtils.swift */; };
+		3C8475E98EEDAFA774ECBDEE0D55B986 /* Pods-TAKAware-TAKAwareTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 060BF1DC38E78422A74C843B1690394B /* Pods-TAKAware-TAKAwareTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3CD803A89F48503EDFB120BF71FBE80E /* Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7FE9BFDBA0B72B031748933724DDE4 /* Unit.swift */; };
+		4098A298D2042D0B4A1FF36B5093C995 /* SFTextReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 7206467CD909FB81AD9C2ABE7C160001 /* SFTextReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		42A815BD23745682ED92761BAAD57CBA /* SFCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE944A25658D8822EBC3C9C5B1F96BE /* SFCurve.m */; };
+		44A558C59766CCEF4A6EF4FA36DB08E0 /* SFCentroidSurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 97C51F0900197F707C1F637756B16D9C /* SFCentroidSurface.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		44D1E443B2C55C7C87B8D8D461CE96FD /* Pods-TAKAware-TAKAwareTests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 08C33973B2F8BF1762BC3533FF81FD7E /* Pods-TAKAware-TAKAwareTests-dummy.m */; };
+		4563CFDA917E0E8A01C2184BC0CE4FD1 /* SFCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = E4D2565FBC2CF453AD97AB13D8B92D9E /* SFCurve.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		45FAE0AE275B0268A3A0AFF513BD46D1 /* MGRSConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD6CABF03760444EA44096EE61F7FD1C /* MGRSConstants.swift */; };
+		4849CE8F3C684A2510B5705EA8D005D8 /* SFPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 26701D8A4360A9BA206A33352480817C /* SFPoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4857891EB4E50C0313B47AAE82257B91 /* PixelRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 020FA7124D4D5F9441FA86E4E4DCADDD /* PixelRange.swift */; };
+		496D81F3B787A0191456B8D3EB26D345 /* SFGeometryConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D4F0720FED5451FEED698005490119A /* SFGeometryConstants.m */; };
+		4B8A895EECFCB0E14F31C9B854CA7283 /* mgrs-ios-mgrs-ios in Resources */ = {isa = PBXBuildFile; fileRef = F3C55B46709D88246CAD4116FE38617D /* mgrs-ios-mgrs-ios */; };
+		4E9DB3A55799AD6A7BB6CABC2792DA9D /* GridLabeler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900FDD7DC87335FDEE32B370CEC64F27 /* GridLabeler.swift */; };
+		4FAEF057D06A2FE9452EC6402A646935 /* CLRColorConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 65BC250B35824A2FBBA53D423CE8C2EF /* CLRColorConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		504452CAC12585B620DE82B41AE2F0EF /* GridType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CA61277833AAB50DAD92E54F2F21CE8 /* GridType.swift */; };
+		58090A8C68FE54524677FD5B059D279B /* MGRSTileOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AFAC179FD5AA6EA0A309C2C0F37C23 /* MGRSTileOverlay.swift */; };
+		5CBAC7D4FAE6D964AF1545D6C2A70A0D /* SFGeometryTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = A7BC1B1334D7A5554BA67B567AC081DA /* SFGeometryTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5DEEDED84D1B4B01781E6DABA90EDF98 /* GZDLabeler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CD832B5A65B9AE0F585B1475332743 /* GZDLabeler.swift */; };
+		5E8C298257FC8FA288AB6E017CF94ADF /* Bounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C6CC9B96EB3DFC2805CCC2152877EB2 /* Bounds.swift */; };
+		5F16E3EF1FAABDF6C5C1DDB451948919 /* GridLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFC4FD2A8AD6AB1768911F8BD9ED623 /* GridLabel.swift */; };
+		5F51793BAFC2F88157E555F8AE7B7E6B /* SFTIN.h in Headers */ = {isa = PBXBuildFile; fileRef = 5AFCC989021364439E73A97C6B80B94A /* SFTIN.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5F657D10EC9C1F621FE145E6961CDBDA /* Pixel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B919C706E18344B6A808D60953A139C8 /* Pixel.swift */; };
+		5FE0D23D76F236937936CBE8E3A0E3C8 /* SFByteWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 65A8C8FF683DA1207477445F1C206FCC /* SFByteWriter.m */; };
+		604E8707017D85117E078AAB6F7C7D39 /* SFExtendedGeometryCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = DB5A68B21383D9B620C578E53CC581A6 /* SFExtendedGeometryCollection.m */; };
+		63756BEF5E77BB06AFF5E9BDE479C409 /* SFGeometryUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 77B18B4051D751D54A5810056E49AE47 /* SFGeometryUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		654954E18721C9A66264F7E1D1DC2A3B /* SFLinearRing.h in Headers */ = {isa = PBXBuildFile; fileRef = C3629E60879086CF38B7807DAA5681B3 /* SFLinearRing.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		655B618AA7337F91593380D603986548 /* GridStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6ADED6975979AC5D1E3A40F5165BAC5 /* GridStyle.swift */; };
+		66AAA766D7293D6DE733D3C0DFD53472 /* TileDraw.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B0B28BCAB4155CB927614D265F46 /* TileDraw.swift */; };
+		689B2DF51EECBC692E7C2507180E7696 /* CLRColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A37DB2FA85AF0965C46C234D8075BEC /* CLRColor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		68B51322B39DCC50748D2EE8233C2015 /* SFGeometryConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = DE36F2F7CABCD9E4069A6F0C417616E5 /* SFGeometryConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6BD4703819230EBC43EE62C714ED496F /* SFGeometry.m in Sources */ = {isa = PBXBuildFile; fileRef = B3BD8C6A0C17738E6EC96543449E5CBD /* SFGeometry.m */; };
+		6F20B8F0146A73F62329FD94633D0B05 /* SFLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DC832BFDDDCDB55B25BBE7FC0825C70 /* SFLine.m */; };
+		70950CFD6962198EDFF1D059C79B86A5 /* SFCompoundCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = 07DEDC8DDA74A855297C662863FCE045 /* SFCompoundCurve.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		74585E9E10FBA5F30783BD9E73D0D829 /* SFEventTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DA2308FEB2FD8F11156DAAD5D9F383 /* SFEventTypes.m */; };
+		7531B4F97700F1C84513A7A8B43C75FE /* BaseGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C2EA42D081108BEB666128FE50B69B /* BaseGrid.swift */; };
+		762A1A250E9E3D184BD8894A6394AFB1 /* SFGeometryPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = D996D8EC0AB2FF9426E77279D4FB56F6 /* SFGeometryPrinter.m */; };
+		78267E7E1895E8D7E50AD58EB76E479C /* SFCentroidCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = A9363E532E55ECA55DD64F9FA5D2B04F /* SFCentroidCurve.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7978033FB68971A81750B0F0CAD52EA2 /* SFMultiSurface.h in Headers */ = {isa = PBXBuildFile; fileRef = A02A7747588D3CA45ECFAB7A48BA8498 /* SFMultiSurface.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7AB45672E1B9BF48632144D30410BEE8 /* grid-ios-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C69A114868681E644C58CD971F939B6C /* grid-ios-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F85D88909E290092EEEF632B285DF49 /* SFCircularString.h in Headers */ = {isa = PBXBuildFile; fileRef = A7F092C534F80E6C7A8C62D91387CB90 /* SFCircularString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7FA49CA3EDC298CA7C55C460F06B0DC2 /* mgrs-ios-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C1C15423462B3465B4C06EE7DC8E5985 /* mgrs-ios-dummy.m */; };
+		8323122226801FE48215EEC1D14BC7F1 /* SFLinearRing.m in Sources */ = {isa = PBXBuildFile; fileRef = CA494D010D58480D602E0EE4BC6D15A8 /* SFLinearRing.m */; };
+		8447B58BA06145AA077143850FFDDFD6 /* MGRS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75929F3A1080F9F006524E3745A15C8E /* MGRS.swift */; };
+		85033FED5CBFB7D24E7CAB85F76D7DED /* GridZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9484C238F605F8BC3AB563F95E709402 /* GridZone.swift */; };
+		872B78D3153760E10DA1800A5C587F79 /* SFPointFiniteFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B34B43279EA3331AD1B824B20CA7E3E /* SFPointFiniteFilter.m */; };
+		896C368B418AA7843136C3E4206D4D19 /* SFByteWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3AE5CD8DA164152F773D13FECF2CF6FD /* SFByteWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8B78D5F13AD47242A5DD454D6BD22F8B /* SFSweepLine.m in Sources */ = {isa = PBXBuildFile; fileRef = FFEC52BE36A0A064B21B3E2EFA4E067D /* SFSweepLine.m */; };
+		8BE33E4CC9E7E959CE032C2FC0A02E34 /* SFMultiSurface.m in Sources */ = {isa = PBXBuildFile; fileRef = F8F75F1ECF2151A857892A82E4155E46 /* SFMultiSurface.m */; };
+		8C11C1EC2F3F3F0661DFDB60551BF9F2 /* SFMultiCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = D3AA0611737664061022755D10EF5D0B /* SFMultiCurve.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8E1ED91F9BCAB9ABE5F8027D5630DBEC /* SFMultiLineString.h in Headers */ = {isa = PBXBuildFile; fileRef = 6066CA8624309651551FC3D22CA483E5 /* SFMultiLineString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8EEDABBA18D9397E645A211061384249 /* SFGeometryEnvelopeBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = DE3A403C1EC0B3861D11E005468966F9 /* SFGeometryEnvelopeBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8EF71A6770ED4645A84546B3D9E9867F /* SFPolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE85BB4546E32CE0119F71E38F8DF2A /* SFPolygon.m */; };
+		90BB7015474EAF8B75427F67C02B71C3 /* SFEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 395E1B1906DACF7783987E3EE14B2ED4 /* SFEvent.m */; };
+		9199F3D813C5616AB348DC0D123B0A9A /* CLRColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 047622E9FF5CDD0B163A9E369214D8CC /* CLRColor.m */; };
+		91CAB179CD1DE577A52DD992150E361F /* Pods-TAKAware-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 94726F75289CFA96C6595EC8AB86A052 /* Pods-TAKAware-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		924AEDBC61A93B6D768898178090E828 /* SFGeometryFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1439F0D0289005728486E453EF490ABE /* SFGeometryFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		92AD7B6978B043A6D87647E147EE2763 /* GridRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1811A7B26B09C129BE8DB37F40D6DEC5 /* GridRange.swift */; };
+		94912950A9C260BE459DCF38E524EE1E /* SFCompoundCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = E180402B7C5194DE457AE9BA39CC0860 /* SFCompoundCurve.m */; };
+		99B9881241193A806E011146B84D03E6 /* SFExtendedGeometryCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = B91CB64BFB8087A69684519CD5F76AA5 /* SFExtendedGeometryCollection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		99D63002859B00ED49BE5D481965B751 /* LatitudeBand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321398D0A48A816162B73075547A6591 /* LatitudeBand.swift */; };
+		9A1CF5F77CBB50B95AB79D27214BF2FC /* CLRColorUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 7D8B56902FB9690F09128A5A927E5BF6 /* CLRColorUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9B01CF7800EF58F9C8EBE31057565954 /* SFPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = D340C44F023F0DEEBA613148261EBCAF /* SFPoint.m */; };
+		9EC2E5219A088F42DE1D232142EAE40F /* sf_ios.h in Headers */ = {isa = PBXBuildFile; fileRef = EFC270A6C0078BCC3EE0A4D0EFAE354B /* sf_ios.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A36F822D2B7D7C4774F3B05F2F001B7E /* SFSweepLine.h in Headers */ = {isa = PBXBuildFile; fileRef = BB07999E37CCA1E99ED72255A525997E /* SFSweepLine.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A7762F48007EEF23B7B6FE3E5B34357D /* SFCurvePolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3E19F68FAD1E46D38BA7D6D631517B /* SFCurvePolygon.m */; };
+		A81014158665DFB1D5A4A401B1C72D61 /* SFSurface.h in Headers */ = {isa = PBXBuildFile; fileRef = B05E3B4B9B45BF8E95CC2F9403811E80 /* SFSurface.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AB993CC5257AF6FF1C717831225C7A5A /* SFShamosHoey.m in Sources */ = {isa = PBXBuildFile; fileRef = E12B318FB10D6DF183A3D03F5AE7F9EF /* SFShamosHoey.m */; };
+		AE7434CD15CBEFF4168F1B9A071887E2 /* CLRColorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 64DA33A485284B523D0C617D3C04D380 /* CLRColorUtils.m */; };
+		B1BFDB9E4706D492A8052A8DCB2FBB3F /* GridTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1332C9CB083B546B80512A67C7FD5381 /* GridTile.swift */; };
+		B3D24A91D499AE8FA8686B61B67C8DE5 /* MGRSLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600CFEFDDDA10DAACCD7B8EEDC4B612C /* MGRSLine.swift */; };
+		B77F1D9646332D623422C30E1D087C91 /* SFEventQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = A428152971D83F51CBCC57857F1694B0 /* SFEventQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B9CE441CDCD318CB9A977B27705DE792 /* GridZones.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C47E406D1CFAD85294B4885DD15505 /* GridZones.swift */; };
+		BDCE97ED83E61A94B542611EDA20AA47 /* SFByteReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 394F071868BE21F6332E4F47301A2170 /* SFByteReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BF81B20C43E1481A43E85459D5A4CB56 /* SFMultiLineString.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C87826521301EC0503011D9FF345CB9 /* SFMultiLineString.m */; };
+		C11537AA814A3402A466782435F8D82C /* SFPolyhedralSurface.m in Sources */ = {isa = PBXBuildFile; fileRef = 42025C5C5CD91B5E2A20628166693F8B /* SFPolyhedralSurface.m */; };
+		C1A99C38DE8AD8351521E2822380350D /* mgrs-ios-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AC4889273E45603758B9FD40BE950F9E /* mgrs-ios-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C3C5FC86F0E8D6FC0DAC0C60C6607228 /* SFGeometryUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = E03206D1AC9A827F52A90C72048AFB26 /* SFGeometryUtils.m */; };
+		C58C3CBDFADC280064A3E6AC33A1BE85 /* MGRSLabeler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E289C9D06C09D263961E30D463A03AB /* MGRSLabeler.swift */; };
+		C5CAD22E414BBE58230BBE27B91389E6 /* SFCentroidPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 49ECCF5046CF72DD282CDF44C8C3B07D /* SFCentroidPoint.m */; };
+		C774508F87C38B95CEFA774C1193BC31 /* SFMultiPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = CFA1EE4FA4A6630190146EF52CA382E8 /* SFMultiPoint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CA931BED8FFF97222F2E4C1DD002C117 /* Labeler.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFD50C31E24114DAA2C612B4687786E /* Labeler.swift */; };
+		CADA2601EAA2068C3187325E4781B24E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		CAE6E2581FA7901DBEBCF30452A56E1C /* SFGeometryTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = C8B862F1D4E38D07781423609E4CB60E /* SFGeometryTypes.m */; };
+		CD126F036EFD89489A8BB1569BE326E3 /* SFPolyhedralSurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 29A774AD5064B9DBE76F78DF041F3260 /* SFPolyhedralSurface.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CD58FCD440C3CB39746FC62196361E7C /* GridProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D733BB3F0B62AABD663549645F05FE4D /* GridProperties.swift */; };
+		CD7C88F27F98E1D9D6FE102DA5EABB69 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		CE533344411E6131F0F2E5FD7AD939BE /* SFLineString.m in Sources */ = {isa = PBXBuildFile; fileRef = 80FACA2C026251172B99B0A061650BBA /* SFLineString.m */; };
+		CF34CAB0718A94789E261ACA55B7EAA8 /* SFDegreesCentroid.m in Sources */ = {isa = PBXBuildFile; fileRef = B4946533F612CD107F356468147C2CFB /* SFDegreesCentroid.m */; };
+		CF5249AEDEDC4B24C152FA9084FCBCFA /* SFEventTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A65E36DA492031255F4ECB871DF721D /* SFEventTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CFBA7864F1E814D35878F4FDCD8EB188 /* SFPointFiniteFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = C4AEB65D7FDB13D4950A7CEC1140BD0F /* SFPointFiniteFilter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D130AFFC0A897C313D0990DEC7243456 /* SFMultiCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 055F6F55805660D9D97FEAC2F4D64C1D /* SFMultiCurve.m */; };
+		D3D9157CA245B575FEEDFB25658729CF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		D3F3327945F7F283BEF0A4A995143FB9 /* SFGeometryEnvelope.m in Sources */ = {isa = PBXBuildFile; fileRef = 74E4A7F2D63C9FF61C5ED5479BFC9DBB /* SFGeometryEnvelope.m */; };
+		D455C681B9ABB5C70DFFB6E150C6AA70 /* SFMultiPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 9748DAC0F2D30D15C984EB71FFBBEA78 /* SFMultiPoint.m */; };
+		D4A82FE97D097418A6D469327D543E5B /* grid-ios-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FF51D318F629E57C7AF59A52E996A544 /* grid-ios-dummy.m */; };
+		D86877292E6CB8562A8C4782C0306DB9 /* SFMultiPolygon.m in Sources */ = {isa = PBXBuildFile; fileRef = C0F22090EA531571863250D02FA58926 /* SFMultiPolygon.m */; };
+		D9A1DF495BF9773DD784205359712CC5 /* GridConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD06FD9C616D6F75CE5BE44E46AE41B /* GridConstants.swift */; };
+		D9E6AF6C3F9D162775813E50FD5E720A /* SFCentroidCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7D1FE6E9ED32FF5A954A8AF5649A5C /* SFCentroidCurve.m */; };
+		DAB730E21D56529CC9C8E5E27B86FE10 /* SFEventQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFACFC281782527E4035607F3527D3A /* SFEventQueue.m */; };
+		DB7F8AA41AF685B34D8B1582AF72A68B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		DD10EACF6DEE4C4CE4EE62BCBF61A83F /* SFEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = A40D47DFA0C22134CEA75B9223BCDB0C /* SFEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DD482B6B690DB5A0E0F3AF839B6F558B /* SFFiniteFilterTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 44A811EAF60265E34650F38E717B5281 /* SFFiniteFilterTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DDA9DBBF04907C44FB81443455D4391A /* SFGeometryCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8572A7433BF9A8117325AB7FD8547D /* SFGeometryCollection.m */; };
+		DDED62BD2C447F6C5E7297D20D697A1A /* MGRSProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BC9DD235FA3DCF676B0E133E3F9EA /* MGRSProperties.swift */; };
+		DE0812E35F28B6F0E1647226542ACC11 /* TileUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0566746AF92144BAD028C889633D073B /* TileUtils.swift */; };
+		DF9D7D1FCFA243E6EFE52B9ADBAFF56D /* CLRColorConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AD711AE873D95BE98820106267C1A9C /* CLRColorConstants.m */; };
+		E32BF664C3A4805DC68E173AEA7E5410 /* SFCentroidSurface.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DEBAE851767574E984095F9730CF86F /* SFCentroidSurface.m */; };
+		E4FCEA16DE75F4A694D3726150FB3E93 /* ZoomGrids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066539B6D1B266A6CE7F5D102B771805 /* ZoomGrids.swift */; };
+		E5F08217EF6A30642871B7D68B28A52D /* SFTIN.m in Sources */ = {isa = PBXBuildFile; fileRef = 66F3AB0F20D8DE7205540F1C5BC043AB /* SFTIN.m */; };
+		EA5DA71FD0FB705F895C0B06B12D0CF6 /* SFGeometryEnvelope.h in Headers */ = {isa = PBXBuildFile; fileRef = 16B6265AB4CD5F65DEA4B69873A1792E /* SFGeometryEnvelope.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EDCFF70922054DF3698286E865D22B37 /* SFTriangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 070850C2389489D5CF8AFD1817070B10 /* SFTriangle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EE0C10640468B75902B8B4E3782CBA03 /* SFGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CED23486E935833B80BBBB4C7C889FF /* SFGeometry.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EE12BDF6B07146DCE7D71A1FD9BB5C58 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF1BBA45AC8904BDF7EA875B0B0E12CC /* Line.swift */; };
+		EF1C288D10C68E69DA5FCF9BFAB6F854 /* color-ios-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A09DD07BD51A8EFBAF29B0EEDAE9B8C /* color-ios-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EF7FB19EC749C2AF91625156E43FDED4 /* color-ios-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 2279B0698685C90B05D2FBDF06F5F3A8 /* color-ios-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EF91FA9EAE540DBC574A3DF34E6FBE69 /* Pods-TAKAware-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 33BBB5E0F2AA9C6E5C5FB8C0E3302821 /* Pods-TAKAware-dummy.m */; };
+		F14EDBC8ED51FCCEF49ED9ADE3DFE796 /* SFMultiPolygon.h in Headers */ = {isa = PBXBuildFile; fileRef = 0CA3BBC562D3EEE5B1A6A8D76B219FEF /* SFMultiPolygon.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F409817C39D27D0382BFED215AA3F83D /* SFGeometryPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 12B371512B5F11EC6C8E9B3D503795B1 /* SFGeometryPrinter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F5DA2BD5458F7EA65CD2E599D35CC4F8 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65684A9979467FB44692B6D3B220F40 /* Label.swift */; };
+		F654D5A518E438259AE74EDAF2B9953F /* SFDegreesCentroid.h in Headers */ = {isa = PBXBuildFile; fileRef = 462A843696F7191EF17A0534DCE08E7B /* SFDegreesCentroid.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F74B1D2D126E49BB9B0FF8DA9CC05E63 /* MGRSUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8185DC593E61C487850525A24E421E0 /* MGRSUtils.swift */; };
+		F74DACE39727F19D1C8607A911A6CC3D /* mgrs.plist in Resources */ = {isa = PBXBuildFile; fileRef = FBF23B7F9604C3E7862D0C6E5FE93DF6 /* mgrs.plist */; };
+		F78BA22134075F8298F97B5C2F49AF23 /* SFSurface.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC735D0B7985C16C97C6252E02BC6AB /* SFSurface.m */; };
+		F84FCFCAC9BCAB72DD72486E6B8E7A68 /* UTM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A20A27D580A04B01387988EAA811C08 /* UTM.swift */; };
+		FB05AA3AC49B2D5912893D55BDFDE27F /* SFGeometryEnvelopeBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA8884E57BF2314C485F54FEBF148B7 /* SFGeometryEnvelopeBuilder.m */; };
+		FBA0B6116F184AEE48111DCA56484F4F /* color_ios.h in Headers */ = {isa = PBXBuildFile; fileRef = CD38726090EFADC5C2371D7B47CC74B0 /* color_ios.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FCAFDB839EBA8B315CE492A387252A78 /* SFCircularString.m in Sources */ = {isa = PBXBuildFile; fileRef = E51EAF51682832E5E7AE36672ECE9A65 /* SFCircularString.m */; };
+		FEEFC687A6B32BAA607C17C758513AF7 /* sf-ios-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = A0005B70FC010706F8C251ECDDBDF4F1 /* sf-ios-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF828B06B69B612AF17AE40C3149481C /* BandLetterRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0046371D1267373E2C5EC2DF0AEF2DE /* BandLetterRange.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		25464816B43A45CD11DF8DAB0A609312 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5D942CA48BAB353546F6B788AC3EA195;
+			remoteInfo = "color-ios";
+		};
+		2DB9C7723D6053604314E44003C72C26 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F99C60B9711DB2529FC6C4FC9904B3F9;
+			remoteInfo = "grid-ios";
+		};
+		496EF475F198D57ED6F566C43C29EB7D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F99C60B9711DB2529FC6C4FC9904B3F9;
+			remoteInfo = "grid-ios";
+		};
+		5DD643AB7D1AF7C6F0EBC95C735C802A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D3A419CC7A327DAABA72019D5CE9F57;
+			remoteInfo = "sf-ios";
+		};
+		61EBA8890071426DDC29A4423B7EBE0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F99C60B9711DB2529FC6C4FC9904B3F9;
+			remoteInfo = "grid-ios";
+		};
+		688EC1A706037FE9FBF47056C47452E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA341BB40DB010A6FF2E54DFC3D1E5D8;
+			remoteInfo = "mgrs-ios";
+		};
+		6E81F88C65522E32A75DF12B63A85386 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D3A419CC7A327DAABA72019D5CE9F57;
+			remoteInfo = "sf-ios";
+		};
+		7768119CBF6B836AB0EC60CDF942F220 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD6DBFB0950D5ACA7BBB5F25E1C1A342;
+			remoteInfo = MobileVLCKit;
+		};
+		7E4C8DA3324547848A80D67C9FEDB49D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D3A419CC7A327DAABA72019D5CE9F57;
+			remoteInfo = "sf-ios";
+		};
+		95670E99C794BFD3E0E7BE09387AD537 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5D942CA48BAB353546F6B788AC3EA195;
+			remoteInfo = "color-ios";
+		};
+		9D1FEE1DC0C93B73163C211062E47FE9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD6DBFB0950D5ACA7BBB5F25E1C1A342;
+			remoteInfo = MobileVLCKit;
+		};
+		A8061EAC40A5AEF9519928C79B70BC78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5D942CA48BAB353546F6B788AC3EA195;
+			remoteInfo = "color-ios";
+		};
+		B4EA3B4BFFACC991C5E3A535146BBA36 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 577E91B04D12C328F76DD4B7C16DBAEF;
+			remoteInfo = "mgrs-ios-mgrs-ios";
+		};
+		C2987CA7926C28C522DA2AAE4C2EF8B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA341BB40DB010A6FF2E54DFC3D1E5D8;
+			remoteInfo = "mgrs-ios";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0012457B26848618AE37B5BB8B4C611B /* Pods-TAKAware-TAKAwareTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TAKAware-TAKAwareTests.debug.xcconfig"; sourceTree = "<group>"; };
+		020FA7124D4D5F9441FA86E4E4DCADDD /* PixelRange.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PixelRange.swift; path = "grid-ios/tile/PixelRange.swift"; sourceTree = "<group>"; };
+		047622E9FF5CDD0B163A9E369214D8CC /* CLRColor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CLRColor.m; path = "color-ios/CLRColor.m"; sourceTree = "<group>"; };
+		055F6F55805660D9D97FEAC2F4D64C1D /* SFMultiCurve.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFMultiCurve.m; path = "sf-ios/SFMultiCurve.m"; sourceTree = "<group>"; };
+		0566746AF92144BAD028C889633D073B /* TileUtils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TileUtils.swift; path = "grid-ios/tile/TileUtils.swift"; sourceTree = "<group>"; };
+		060BF1DC38E78422A74C843B1690394B /* Pods-TAKAware-TAKAwareTests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-TAKAware-TAKAwareTests-umbrella.h"; sourceTree = "<group>"; };
+		066539B6D1B266A6CE7F5D102B771805 /* ZoomGrids.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ZoomGrids.swift; path = "mgrs-ios/grid/ZoomGrids.swift"; sourceTree = "<group>"; };
+		070850C2389489D5CF8AFD1817070B10 /* SFTriangle.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFTriangle.h; path = "sf-ios/SFTriangle.h"; sourceTree = "<group>"; };
+		07DEDC8DDA74A855297C662863FCE045 /* SFCompoundCurve.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFCompoundCurve.h; path = "sf-ios/SFCompoundCurve.h"; sourceTree = "<group>"; };
+		08C33973B2F8BF1762BC3533FF81FD7E /* Pods-TAKAware-TAKAwareTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TAKAware-TAKAwareTests-dummy.m"; sourceTree = "<group>"; };
+		0A09DD07BD51A8EFBAF29B0EEDAE9B8C /* color-ios-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "color-ios-umbrella.h"; sourceTree = "<group>"; };
+		0CA3BBC562D3EEE5B1A6A8D76B219FEF /* SFMultiPolygon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFMultiPolygon.h; path = "sf-ios/SFMultiPolygon.h"; sourceTree = "<group>"; };
+		0CED23486E935833B80BBBB4C7C889FF /* SFGeometry.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFGeometry.h; path = "sf-ios/SFGeometry.h"; sourceTree = "<group>"; };
+		0D4F0720FED5451FEED698005490119A /* SFGeometryConstants.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFGeometryConstants.m; path = "sf-ios/util/SFGeometryConstants.m"; sourceTree = "<group>"; };
+		10AB4717875D1C86480CC3F400A4833C /* color-ios.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "color-ios.modulemap"; sourceTree = "<group>"; };
+		12B371512B5F11EC6C8E9B3D503795B1 /* SFGeometryPrinter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFGeometryPrinter.h; path = "sf-ios/util/SFGeometryPrinter.h"; sourceTree = "<group>"; };
+		1332C9CB083B546B80512A67C7FD5381 /* GridTile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridTile.swift; path = "grid-ios/tile/GridTile.swift"; sourceTree = "<group>"; };
+		1439F0D0289005728486E453EF490ABE /* SFGeometryFilter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFGeometryFilter.h; path = "sf-ios/util/filter/SFGeometryFilter.h"; sourceTree = "<group>"; };
+		155E2E113E92E4AD9EB2779D4F873CDC /* Grids.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Grids.swift; path = "mgrs-ios/grid/Grids.swift"; sourceTree = "<group>"; };
+		16B6265AB4CD5F65DEA4B69873A1792E /* SFGeometryEnvelope.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFGeometryEnvelope.h; path = "sf-ios/SFGeometryEnvelope.h"; sourceTree = "<group>"; };
+		1811A7B26B09C129BE8DB37F40D6DEC5 /* GridRange.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridRange.swift; path = "mgrs-ios/gzd/GridRange.swift"; sourceTree = "<group>"; };
+		18ED98E82F733F3941715B9490599953 /* color-ios-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "color-ios-dummy.m"; sourceTree = "<group>"; };
+		1A20A27D580A04B01387988EAA811C08 /* UTM.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UTM.swift; path = "mgrs-ios/utm/UTM.swift"; sourceTree = "<group>"; };
+		1A65E36DA492031255F4ECB871DF721D /* SFEventTypes.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFEventTypes.h; path = "sf-ios/util/sweep/SFEventTypes.h"; sourceTree = "<group>"; };
+		1C87826521301EC0503011D9FF345CB9 /* SFMultiLineString.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFMultiLineString.m; path = "sf-ios/SFMultiLineString.m"; sourceTree = "<group>"; };
+		206BC9DD235FA3DCF676B0E133E3F9EA /* MGRSProperties.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MGRSProperties.swift; path = "mgrs-ios/property/MGRSProperties.swift"; sourceTree = "<group>"; };
+		219871870BA51774E45830B1011057B4 /* sf-ios-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "sf-ios-Info.plist"; sourceTree = "<group>"; };
+		2279B0698685C90B05D2FBDF06F5F3A8 /* color-ios-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "color-ios-Bridging-Header.h"; path = "color-ios/color-ios-Bridging-Header.h"; sourceTree = "<group>"; };
+		26701D8A4360A9BA206A33352480817C /* SFPoint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFPoint.h; path = "sf-ios/SFPoint.h"; sourceTree = "<group>"; };
+		26A16AF72A3908C8F0BCC2DAF2264463 /* Pods-TAKAware-TAKAwareTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TAKAware-TAKAwareTests.release.xcconfig"; sourceTree = "<group>"; };
+		273C8B442BF5E07B0D9D4B31A9BD705C /* color-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "color-ios.release.xcconfig"; sourceTree = "<group>"; };
+		29A774AD5064B9DBE76F78DF041F3260 /* SFPolyhedralSurface.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFPolyhedralSurface.h; path = "sf-ios/SFPolyhedralSurface.h"; sourceTree = "<group>"; };
+		2A37DB2FA85AF0965C46C234D8075BEC /* CLRColor.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CLRColor.h; path = "color-ios/CLRColor.h"; sourceTree = "<group>"; };
+		2AA40A1A1D21549B9B8325427CF08B25 /* ZoneNumberRange.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ZoneNumberRange.swift; path = "mgrs-ios/gzd/ZoneNumberRange.swift"; sourceTree = "<group>"; };
+		2D3E19F68FAD1E46D38BA7D6D631517B /* SFCurvePolygon.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFCurvePolygon.m; path = "sf-ios/SFCurvePolygon.m"; sourceTree = "<group>"; };
+		2DA7BEF387468F6D6333EFDC7274A586 /* PropertyConstants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PropertyConstants.swift; path = "grid-ios/property/PropertyConstants.swift"; sourceTree = "<group>"; };
+		2DC832BFDDDCDB55B25BBE7FC0825C70 /* SFLine.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFLine.m; path = "sf-ios/SFLine.m"; sourceTree = "<group>"; };
+		321398D0A48A816162B73075547A6591 /* LatitudeBand.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LatitudeBand.swift; path = "mgrs-ios/gzd/LatitudeBand.swift"; sourceTree = "<group>"; };
+		33BBB5E0F2AA9C6E5C5FB8C0E3302821 /* Pods-TAKAware-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-TAKAware-dummy.m"; sourceTree = "<group>"; };
+		394F071868BE21F6332E4F47301A2170 /* SFByteReader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFByteReader.h; path = "sf-ios/util/SFByteReader.h"; sourceTree = "<group>"; };
+		395E1B1906DACF7783987E3EE14B2ED4 /* SFEvent.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFEvent.m; path = "sf-ios/util/sweep/SFEvent.m"; sourceTree = "<group>"; };
+		39EDEDCDA5AEC1C778475C942F321A34 /* Pods-TAKAware-TAKAwareTests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TAKAware-TAKAwareTests-Info.plist"; sourceTree = "<group>"; };
+		3AD711AE873D95BE98820106267C1A9C /* CLRColorConstants.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CLRColorConstants.m; path = "color-ios/CLRColorConstants.m"; sourceTree = "<group>"; };
+		3AE5CD8DA164152F773D13FECF2CF6FD /* SFByteWriter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFByteWriter.h; path = "sf-ios/util/SFByteWriter.h"; sourceTree = "<group>"; };
+		3AFC4FD2A8AD6AB1768911F8BD9ED623 /* GridLabel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridLabel.swift; path = "mgrs-ios/grid/GridLabel.swift"; sourceTree = "<group>"; };
+		3C26BAA9F439F90C6CBF55C8C3A591AB /* sf-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "sf-ios.release.xcconfig"; sourceTree = "<group>"; };
+		3C8572A7433BF9A8117325AB7FD8547D /* SFGeometryCollection.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFGeometryCollection.m; path = "sf-ios/SFGeometryCollection.m"; sourceTree = "<group>"; };
+		3EDE74658C56269CC2C84BC688FA3568 /* Pods-TAKAware-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TAKAware-acknowledgements.plist"; sourceTree = "<group>"; };
+		42025C5C5CD91B5E2A20628166693F8B /* SFPolyhedralSurface.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFPolyhedralSurface.m; path = "sf-ios/SFPolyhedralSurface.m"; sourceTree = "<group>"; };
+		44A811EAF60265E34650F38E717B5281 /* SFFiniteFilterTypes.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFFiniteFilterTypes.h; path = "sf-ios/util/filter/SFFiniteFilterTypes.h"; sourceTree = "<group>"; };
+		462A843696F7191EF17A0534DCE08E7B /* SFDegreesCentroid.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFDegreesCentroid.h; path = "sf-ios/util/centroid/SFDegreesCentroid.h"; sourceTree = "<group>"; };
+		49D01747E7F38CCCFE492F50F6F3FDD4 /* Pods-TAKAware.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TAKAware.debug.xcconfig"; sourceTree = "<group>"; };
+		49ECCF5046CF72DD282CDF44C8C3B07D /* SFCentroidPoint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFCentroidPoint.m; path = "sf-ios/util/centroid/SFCentroidPoint.m"; sourceTree = "<group>"; };
+		4B34B43279EA3331AD1B824B20CA7E3E /* SFPointFiniteFilter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFPointFiniteFilter.m; path = "sf-ios/util/filter/SFPointFiniteFilter.m"; sourceTree = "<group>"; };
+		4B986DDD78EB448B7FC6FDDF17C68876 /* BaseGrids.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BaseGrids.swift; path = "grid-ios/BaseGrids.swift"; sourceTree = "<group>"; };
+		4C6CC9B96EB3DFC2805CCC2152877EB2 /* Bounds.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Bounds.swift; path = "grid-ios/features/Bounds.swift"; sourceTree = "<group>"; };
+		4DAA2356B2791A6F07C65AE7F3B2230E /* BaseZoomGrids.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BaseZoomGrids.swift; path = "grid-ios/BaseZoomGrids.swift"; sourceTree = "<group>"; };
+		4DEBAE851767574E984095F9730CF86F /* SFCentroidSurface.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFCentroidSurface.m; path = "sf-ios/util/centroid/SFCentroidSurface.m"; sourceTree = "<group>"; };
+		4E289C9D06C09D263961E30D463A03AB /* MGRSLabeler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MGRSLabeler.swift; path = "mgrs-ios/grid/MGRSLabeler.swift"; sourceTree = "<group>"; };
+		4EA9509EEB803299A31B979D37D973C9 /* SFLine.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFLine.h; path = "sf-ios/SFLine.h"; sourceTree = "<group>"; };
+		4FD9B19425B318BBDA01831437002662 /* GridUtils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridUtils.swift; path = "grid-ios/GridUtils.swift"; sourceTree = "<group>"; };
+		52E7FE5405CEA05DEB26D1F065970C4B /* Pods-TAKAware-TAKAwareTests */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-TAKAware-TAKAwareTests"; path = Pods_TAKAware_TAKAwareTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		56E27527F7E3C44A19800DED5F3A8FC6 /* SFCurvePolygon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFCurvePolygon.h; path = "sf-ios/SFCurvePolygon.h"; sourceTree = "<group>"; };
+		575B829C2C2F519EBC6F80BC03F44E47 /* Pods-TAKAware-TAKAwareTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TAKAware-TAKAwareTests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		5A3C118A6C97F8CEA9C00FE253B3D4D1 /* LongitudinalStrip.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LongitudinalStrip.swift; path = "mgrs-ios/gzd/LongitudinalStrip.swift"; sourceTree = "<group>"; };
+		5AFCC989021364439E73A97C6B80B94A /* SFTIN.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFTIN.h; path = "sf-ios/SFTIN.h"; sourceTree = "<group>"; };
+		5BA885BFB908441A2A8071FC7643481C /* mgrs-ios-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "mgrs-ios-prefix.pch"; sourceTree = "<group>"; };
+		5C1BDC9F3621A8E5EC72491190BC1BD0 /* Pods-TAKAware-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TAKAware-Info.plist"; sourceTree = "<group>"; };
+		5CA61277833AAB50DAD92E54F2F21CE8 /* GridType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridType.swift; path = "mgrs-ios/grid/GridType.swift"; sourceTree = "<group>"; };
+		600CFEFDDDA10DAACCD7B8EEDC4B612C /* MGRSLine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MGRSLine.swift; path = "mgrs-ios/features/MGRSLine.swift"; sourceTree = "<group>"; };
+		6066CA8624309651551FC3D22CA483E5 /* SFMultiLineString.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFMultiLineString.h; path = "sf-ios/SFMultiLineString.h"; sourceTree = "<group>"; };
+		6078BC3D505310CF3329B18932DA4F8C /* grid-ios.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "grid-ios.modulemap"; sourceTree = "<group>"; };
+		646EABBD780CCE4AC74582C06AEFC635 /* mgrs-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "mgrs-ios.debug.xcconfig"; sourceTree = "<group>"; };
+		64DA33A485284B523D0C617D3C04D380 /* CLRColorUtils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CLRColorUtils.m; path = "color-ios/CLRColorUtils.m"; sourceTree = "<group>"; };
+		659BF55C8D3552433C428542EB03335E /* SFTextReader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFTextReader.m; path = "sf-ios/util/SFTextReader.m"; sourceTree = "<group>"; };
+		65A8C8FF683DA1207477445F1C206FCC /* SFByteWriter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFByteWriter.m; path = "sf-ios/util/SFByteWriter.m"; sourceTree = "<group>"; };
+		65BC250B35824A2FBBA53D423CE8C2EF /* CLRColorConstants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CLRColorConstants.h; path = "color-ios/CLRColorConstants.h"; sourceTree = "<group>"; };
+		66F3AB0F20D8DE7205540F1C5BC043AB /* SFTIN.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFTIN.m; path = "sf-ios/SFTIN.m"; sourceTree = "<group>"; };
+		6701E1E7881E37B884FEEA9B3F803E0B /* color-ios */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "color-ios"; path = color_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		69CA2A7E3840C92683C7F0810D7BE3EF /* MobileVLCKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MobileVLCKit.release.xcconfig; sourceTree = "<group>"; };
+		6AD06FD9C616D6F75CE5BE44E46AE41B /* GridConstants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridConstants.swift; path = "grid-ios/GridConstants.swift"; sourceTree = "<group>"; };
+		6C3EA2EDA369A97BAE89E98EB56540E0 /* Pods-TAKAware.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-TAKAware.release.xcconfig"; sourceTree = "<group>"; };
+		6CCC417D0EB4263310FACE425306B441 /* mgrs-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "mgrs-ios.release.xcconfig"; sourceTree = "<group>"; };
+		6DDEAFF3E6FFF286FC580C6B7B015990 /* SFPolygon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFPolygon.h; path = "sf-ios/SFPolygon.h"; sourceTree = "<group>"; };
+		6FBD47BE39E7A699C4EA8666C3A0C48C /* SFFiniteFilterTypes.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFFiniteFilterTypes.m; path = "sf-ios/util/filter/SFFiniteFilterTypes.m"; sourceTree = "<group>"; };
+		7206467CD909FB81AD9C2ABE7C160001 /* SFTextReader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFTextReader.h; path = "sf-ios/util/SFTextReader.h"; sourceTree = "<group>"; };
+		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		7301C7204196B5C70ED376762A5C0625 /* SFSegment.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFSegment.m; path = "sf-ios/util/sweep/SFSegment.m"; sourceTree = "<group>"; };
+		74E4A7F2D63C9FF61C5ED5479BFC9DBB /* SFGeometryEnvelope.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFGeometryEnvelope.m; path = "sf-ios/SFGeometryEnvelope.m"; sourceTree = "<group>"; };
+		75929F3A1080F9F006524E3745A15C8E /* MGRS.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MGRS.swift; path = "mgrs-ios/MGRS.swift"; sourceTree = "<group>"; };
+		7726355CC3AE8FCBED1493A85CED1CCC /* sf-ios-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "sf-ios-dummy.m"; sourceTree = "<group>"; };
+		77B18B4051D751D54A5810056E49AE47 /* SFGeometryUtils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFGeometryUtils.h; path = "sf-ios/util/SFGeometryUtils.h"; sourceTree = "<group>"; };
+		79F9F20E8532640EC8B855FB9882888C /* SFShamosHoey.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFShamosHoey.h; path = "sf-ios/util/sweep/SFShamosHoey.h"; sourceTree = "<group>"; };
+		7A8921AE842CCB02AC6839CD7BD12416 /* mgrs-ios-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "mgrs-ios-Info.plist"; sourceTree = "<group>"; };
+		7D8B56902FB9690F09128A5A927E5BF6 /* CLRColorUtils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CLRColorUtils.h; path = "color-ios/CLRColorUtils.h"; sourceTree = "<group>"; };
+		7DED492EDEF118AC69D3A70B4BB7243F /* SFLineString.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFLineString.h; path = "sf-ios/SFLineString.h"; sourceTree = "<group>"; };
+		7EE66363A245AC8A4B45D95E5CEC6B09 /* grid-ios */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "grid-ios"; path = grid_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		80FACA2C026251172B99B0A061650BBA /* SFLineString.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFLineString.m; path = "sf-ios/SFLineString.m"; sourceTree = "<group>"; };
+		852C7DCFE6FCE7251D11717B5BE4EA22 /* grid-ios-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "grid-ios-Info.plist"; sourceTree = "<group>"; };
+		89A888192283BDBADE90D5E564CA459D /* SFSegment.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFSegment.h; path = "sf-ios/util/sweep/SFSegment.h"; sourceTree = "<group>"; };
+		8B79B029FBC8446AD0FD31FD546E47C4 /* SFCentroidPoint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFCentroidPoint.h; path = "sf-ios/util/centroid/SFCentroidPoint.h"; sourceTree = "<group>"; };
+		8D1049C4E50850A62EDD264FD4743C6A /* SFGeometryCollection.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFGeometryCollection.h; path = "sf-ios/SFGeometryCollection.h"; sourceTree = "<group>"; };
+		8F791443C102A5B2170669F233124B33 /* Pods-TAKAware */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-TAKAware"; path = Pods_TAKAware.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		900FDD7DC87335FDEE32B370CEC64F27 /* GridLabeler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridLabeler.swift; path = "mgrs-ios/grid/GridLabeler.swift"; sourceTree = "<group>"; };
+		915209422D157FC00298A61A503E1774 /* MobileVLCKit.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; path = MobileVLCKit.xcframework; sourceTree = "<group>"; };
+		92CD832B5A65B9AE0F585B1475332743 /* GZDLabeler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GZDLabeler.swift; path = "mgrs-ios/gzd/GZDLabeler.swift"; sourceTree = "<group>"; };
+		94726F75289CFA96C6595EC8AB86A052 /* Pods-TAKAware-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-TAKAware-umbrella.h"; sourceTree = "<group>"; };
+		9484C238F605F8BC3AB563F95E709402 /* GridZone.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridZone.swift; path = "mgrs-ios/gzd/GridZone.swift"; sourceTree = "<group>"; };
+		9748DAC0F2D30D15C984EB71FFBBEA78 /* SFMultiPoint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFMultiPoint.m; path = "sf-ios/SFMultiPoint.m"; sourceTree = "<group>"; };
+		97C51F0900197F707C1F637756B16D9C /* SFCentroidSurface.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFCentroidSurface.h; path = "sf-ios/util/centroid/SFCentroidSurface.h"; sourceTree = "<group>"; };
+		9CFABC79CB210A0394B2E7F6184107A4 /* Pods-TAKAware-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TAKAware-frameworks.sh"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9EFACFC281782527E4035607F3527D3A /* SFEventQueue.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFEventQueue.m; path = "sf-ios/util/sweep/SFEventQueue.m"; sourceTree = "<group>"; };
+		A0005B70FC010706F8C251ECDDBDF4F1 /* sf-ios-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "sf-ios-Bridging-Header.h"; path = "sf-ios/sf-ios-Bridging-Header.h"; sourceTree = "<group>"; };
+		A02A7747588D3CA45ECFAB7A48BA8498 /* SFMultiSurface.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFMultiSurface.h; path = "sf-ios/SFMultiSurface.h"; sourceTree = "<group>"; };
+		A152FCB26E692AE7D5B9569C7E8F6665 /* Pods-TAKAware-TAKAwareTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-TAKAware-TAKAwareTests.modulemap"; sourceTree = "<group>"; };
+		A40D47DFA0C22134CEA75B9223BCDB0C /* SFEvent.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFEvent.h; path = "sf-ios/util/sweep/SFEvent.h"; sourceTree = "<group>"; };
+		A428152971D83F51CBCC57857F1694B0 /* SFEventQueue.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFEventQueue.h; path = "sf-ios/util/sweep/SFEventQueue.h"; sourceTree = "<group>"; };
+		A6C47E406D1CFAD85294B4885DD15505 /* GridZones.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridZones.swift; path = "mgrs-ios/gzd/GridZones.swift"; sourceTree = "<group>"; };
+		A7BC1B1334D7A5554BA67B567AC081DA /* SFGeometryTypes.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFGeometryTypes.h; path = "sf-ios/SFGeometryTypes.h"; sourceTree = "<group>"; };
+		A7F092C534F80E6C7A8C62D91387CB90 /* SFCircularString.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFCircularString.h; path = "sf-ios/SFCircularString.h"; sourceTree = "<group>"; };
+		A8C3771605074614E32B0D9EE7284145 /* MobileVLCKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = MobileVLCKit.debug.xcconfig; sourceTree = "<group>"; };
+		A9363E532E55ECA55DD64F9FA5D2B04F /* SFCentroidCurve.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFCentroidCurve.h; path = "sf-ios/util/centroid/SFCentroidCurve.h"; sourceTree = "<group>"; };
+		AAE944A25658D8822EBC3C9C5B1F96BE /* SFCurve.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFCurve.m; path = "sf-ios/SFCurve.m"; sourceTree = "<group>"; };
+		AC4889273E45603758B9FD40BE950F9E /* mgrs-ios-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "mgrs-ios-umbrella.h"; sourceTree = "<group>"; };
+		AD45413530EA859FD2CAB5C3AE50E824 /* color-ios-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "color-ios-prefix.pch"; sourceTree = "<group>"; };
+		AD6CABF03760444EA44096EE61F7FD1C /* MGRSConstants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MGRSConstants.swift; path = "mgrs-ios/MGRSConstants.swift"; sourceTree = "<group>"; };
+		B05E3B4B9B45BF8E95CC2F9403811E80 /* SFSurface.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFSurface.h; path = "sf-ios/SFSurface.h"; sourceTree = "<group>"; };
+		B3BD8C6A0C17738E6EC96543449E5CBD /* SFGeometry.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFGeometry.m; path = "sf-ios/SFGeometry.m"; sourceTree = "<group>"; };
+		B3E7B0B28BCAB4155CB927614D265F46 /* TileDraw.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TileDraw.swift; path = "grid-ios/tile/TileDraw.swift"; sourceTree = "<group>"; };
+		B4946533F612CD107F356468147C2CFB /* SFDegreesCentroid.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFDegreesCentroid.m; path = "sf-ios/util/centroid/SFDegreesCentroid.m"; sourceTree = "<group>"; };
+		B919C706E18344B6A808D60953A139C8 /* Pixel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Pixel.swift; path = "grid-ios/tile/Pixel.swift"; sourceTree = "<group>"; };
+		B91CB64BFB8087A69684519CD5F76AA5 /* SFExtendedGeometryCollection.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFExtendedGeometryCollection.h; path = "sf-ios/extended/SFExtendedGeometryCollection.h"; sourceTree = "<group>"; };
+		BB07999E37CCA1E99ED72255A525997E /* SFSweepLine.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFSweepLine.h; path = "sf-ios/util/sweep/SFSweepLine.h"; sourceTree = "<group>"; };
+		BBD2387058B110041EC41EFD0EA2E8C1 /* grid-ios-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "grid-ios-prefix.pch"; sourceTree = "<group>"; };
+		C0DA2308FEB2FD8F11156DAAD5D9F383 /* SFEventTypes.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFEventTypes.m; path = "sf-ios/util/sweep/SFEventTypes.m"; sourceTree = "<group>"; };
+		C0F22090EA531571863250D02FA58926 /* SFMultiPolygon.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFMultiPolygon.m; path = "sf-ios/SFMultiPolygon.m"; sourceTree = "<group>"; };
+		C1C15423462B3465B4C06EE7DC8E5985 /* mgrs-ios-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "mgrs-ios-dummy.m"; sourceTree = "<group>"; };
+		C1D37DBF2B7B7BCE0213BC0468DA7AB5 /* mgrs-ios */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "mgrs-ios"; path = mgrs_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3629E60879086CF38B7807DAA5681B3 /* SFLinearRing.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFLinearRing.h; path = "sf-ios/SFLinearRing.h"; sourceTree = "<group>"; };
+		C3F4657EEC91A0059EB476EFF79035EE /* color-ios-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "color-ios-Info.plist"; sourceTree = "<group>"; };
+		C4AEB65D7FDB13D4950A7CEC1140BD0F /* SFPointFiniteFilter.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFPointFiniteFilter.h; path = "sf-ios/util/filter/SFPointFiniteFilter.h"; sourceTree = "<group>"; };
+		C4AFAC179FD5AA6EA0A309C2C0F37C23 /* MGRSTileOverlay.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MGRSTileOverlay.swift; path = "mgrs-ios/tile/MGRSTileOverlay.swift"; sourceTree = "<group>"; };
+		C69A114868681E644C58CD971F939B6C /* grid-ios-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "grid-ios-umbrella.h"; sourceTree = "<group>"; };
+		C8B862F1D4E38D07781423609E4CB60E /* SFGeometryTypes.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFGeometryTypes.m; path = "sf-ios/SFGeometryTypes.m"; sourceTree = "<group>"; };
+		C93FDEB6C6F10046937E56BFA5959E95 /* Pods-TAKAware-TAKAwareTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-TAKAware-TAKAwareTests-acknowledgements.plist"; sourceTree = "<group>"; };
+		C989A117CCE501B26F553742AB9312B4 /* sf-ios-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "sf-ios-prefix.pch"; sourceTree = "<group>"; };
+		CA494D010D58480D602E0EE4BC6D15A8 /* SFLinearRing.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFLinearRing.m; path = "sf-ios/SFLinearRing.m"; sourceTree = "<group>"; };
+		CB7D1FE6E9ED32FF5A954A8AF5649A5C /* SFCentroidCurve.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFCentroidCurve.m; path = "sf-ios/util/centroid/SFCentroidCurve.m"; sourceTree = "<group>"; };
+		CCC735D0B7985C16C97C6252E02BC6AB /* SFSurface.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFSurface.m; path = "sf-ios/SFSurface.m"; sourceTree = "<group>"; };
+		CCD59ACD5EF3782800CB7023A378AD83 /* Grid.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Grid.swift; path = "mgrs-ios/grid/Grid.swift"; sourceTree = "<group>"; };
+		CCE1782D9B53BD8D8AAD64797E872DA7 /* SFTriangle.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFTriangle.m; path = "sf-ios/SFTriangle.m"; sourceTree = "<group>"; };
+		CCE85BB4546E32CE0119F71E38F8DF2A /* SFPolygon.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFPolygon.m; path = "sf-ios/SFPolygon.m"; sourceTree = "<group>"; };
+		CD38726090EFADC5C2371D7B47CC74B0 /* color_ios.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = color_ios.h; path = "color-ios/color_ios.h"; sourceTree = "<group>"; };
+		CFA1EE4FA4A6630190146EF52CA382E8 /* SFMultiPoint.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFMultiPoint.h; path = "sf-ios/SFMultiPoint.h"; sourceTree = "<group>"; };
+		D0046371D1267373E2C5EC2DF0AEF2DE /* BandLetterRange.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BandLetterRange.swift; path = "mgrs-ios/gzd/BandLetterRange.swift"; sourceTree = "<group>"; };
+		D24C5F56E8224D89C58A395B6CAB441E /* MobileVLCKit-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "MobileVLCKit-xcframeworks.sh"; sourceTree = "<group>"; };
+		D340C44F023F0DEEBA613148261EBCAF /* SFPoint.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFPoint.m; path = "sf-ios/SFPoint.m"; sourceTree = "<group>"; };
+		D346428B07A8730DB7A47ECF2AA32DF9 /* GridPoint.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridPoint.swift; path = "grid-ios/features/GridPoint.swift"; sourceTree = "<group>"; };
+		D3AA0611737664061022755D10EF5D0B /* SFMultiCurve.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFMultiCurve.h; path = "sf-ios/SFMultiCurve.h"; sourceTree = "<group>"; };
+		D57C1FAB77A663260850740EEB9C3590 /* sf-ios */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "sf-ios"; path = sf_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5E9463124CE7D7D02BF9B636C5D5490 /* Hemisphere.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Hemisphere.swift; path = "grid-ios/Hemisphere.swift"; sourceTree = "<group>"; };
+		D733BB3F0B62AABD663549645F05FE4D /* GridProperties.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridProperties.swift; path = "grid-ios/property/GridProperties.swift"; sourceTree = "<group>"; };
+		D8185DC593E61C487850525A24E421E0 /* MGRSUtils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MGRSUtils.swift; path = "mgrs-ios/MGRSUtils.swift"; sourceTree = "<group>"; };
+		D8CD2804289F6A2AB79D4138BA5078F1 /* sf-ios.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "sf-ios.modulemap"; sourceTree = "<group>"; };
+		D996D8EC0AB2FF9426E77279D4FB56F6 /* SFGeometryPrinter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFGeometryPrinter.m; path = "sf-ios/util/SFGeometryPrinter.m"; sourceTree = "<group>"; };
+		D9F73975B1B02EE4E2D3C76666650669 /* SFByteReader.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFByteReader.m; path = "sf-ios/util/SFByteReader.m"; sourceTree = "<group>"; };
+		DB5A68B21383D9B620C578E53CC581A6 /* SFExtendedGeometryCollection.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFExtendedGeometryCollection.m; path = "sf-ios/extended/SFExtendedGeometryCollection.m"; sourceTree = "<group>"; };
+		DD0E9EB52E2B0FB56CF4D4062FE4620D /* mgrs-ios.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "mgrs-ios.modulemap"; sourceTree = "<group>"; };
+		DE36F2F7CABCD9E4069A6F0C417616E5 /* SFGeometryConstants.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFGeometryConstants.h; path = "sf-ios/util/SFGeometryConstants.h"; sourceTree = "<group>"; };
+		DE3A403C1EC0B3861D11E005468966F9 /* SFGeometryEnvelopeBuilder.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFGeometryEnvelopeBuilder.h; path = "sf-ios/util/SFGeometryEnvelopeBuilder.h"; sourceTree = "<group>"; };
+		DFA7CFF05142411892E78341C45BC841 /* sf-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "sf-ios.debug.xcconfig"; sourceTree = "<group>"; };
+		E03206D1AC9A827F52A90C72048AFB26 /* SFGeometryUtils.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFGeometryUtils.m; path = "sf-ios/util/SFGeometryUtils.m"; sourceTree = "<group>"; };
+		E094D500CE5C11943FA48685B8CDD490 /* Pods-TAKAware-TAKAwareTests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-TAKAware-TAKAwareTests-frameworks.sh"; sourceTree = "<group>"; };
+		E12B318FB10D6DF183A3D03F5AE7F9EF /* SFShamosHoey.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFShamosHoey.m; path = "sf-ios/util/sweep/SFShamosHoey.m"; sourceTree = "<group>"; };
+		E180402B7C5194DE457AE9BA39CC0860 /* SFCompoundCurve.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFCompoundCurve.m; path = "sf-ios/SFCompoundCurve.m"; sourceTree = "<group>"; };
+		E326CDCFEA3C0CC5DAC3FA664733BEA6 /* Pods-TAKAware.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-TAKAware.modulemap"; sourceTree = "<group>"; };
+		E4D2565FBC2CF453AD97AB13D8B92D9E /* SFCurve.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SFCurve.h; path = "sf-ios/SFCurve.h"; sourceTree = "<group>"; };
+		E4FA52BB686F88EA09E2373070DF1142 /* Pods-TAKAware-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-TAKAware-acknowledgements.markdown"; sourceTree = "<group>"; };
+		E51EAF51682832E5E7AE36672ECE9A65 /* SFCircularString.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFCircularString.m; path = "sf-ios/SFCircularString.m"; sourceTree = "<group>"; };
+		E66BC6230A89A6690B2E7984AE7F198E /* grid-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "grid-ios.release.xcconfig"; sourceTree = "<group>"; };
+		E6C2EA42D081108BEB666128FE50B69B /* BaseGrid.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BaseGrid.swift; path = "grid-ios/BaseGrid.swift"; sourceTree = "<group>"; };
+		EB7FE9BFDBA0B72B031748933724DDE4 /* Unit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Unit.swift; path = "grid-ios/features/Unit.swift"; sourceTree = "<group>"; };
+		EBC56B98AB636321766C57A70DD1A422 /* ResourceBundle-mgrs-ios-mgrs-ios-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ResourceBundle-mgrs-ios-mgrs-ios-Info.plist"; sourceTree = "<group>"; };
+		EF1BBA45AC8904BDF7EA875B0B0E12CC /* Line.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Line.swift; path = "grid-ios/features/Line.swift"; sourceTree = "<group>"; };
+		EFC270A6C0078BCC3EE0A4D0EFAE354B /* sf_ios.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = sf_ios.h; path = "sf-ios/sf_ios.h"; sourceTree = "<group>"; };
+		F3C55B46709D88246CAD4116FE38617D /* mgrs-ios-mgrs-ios */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "mgrs-ios-mgrs-ios"; path = "mgrs-ios.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F65684A9979467FB44692B6D3B220F40 /* Label.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Label.swift; path = "grid-ios/Label.swift"; sourceTree = "<group>"; };
+		F6ADED6975979AC5D1E3A40F5165BAC5 /* GridStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GridStyle.swift; path = "grid-ios/GridStyle.swift"; sourceTree = "<group>"; };
+		F8EA4744F26B4707DD3EAE7CA27B5486 /* color-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "color-ios.debug.xcconfig"; sourceTree = "<group>"; };
+		F8F75F1ECF2151A857892A82E4155E46 /* SFMultiSurface.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFMultiSurface.m; path = "sf-ios/SFMultiSurface.m"; sourceTree = "<group>"; };
+		F904E0EF9200AEFF56CD155EE21C3E4F /* grid-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "grid-ios.debug.xcconfig"; sourceTree = "<group>"; };
+		FAA8884E57BF2314C485F54FEBF148B7 /* SFGeometryEnvelopeBuilder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFGeometryEnvelopeBuilder.m; path = "sf-ios/util/SFGeometryEnvelopeBuilder.m"; sourceTree = "<group>"; };
+		FAF0F21ED70A53D30046E46B35DC9F6D /* sf-ios-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "sf-ios-umbrella.h"; sourceTree = "<group>"; };
+		FBF23B7F9604C3E7862D0C6E5FE93DF6 /* mgrs.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = mgrs.plist; path = "mgrs-ios/mgrs.plist"; sourceTree = "<group>"; };
+		FF51D318F629E57C7AF59A52E996A544 /* grid-ios-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "grid-ios-dummy.m"; sourceTree = "<group>"; };
+		FFEC52BE36A0A064B21B3E2EFA4E067D /* SFSweepLine.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SFSweepLine.m; path = "sf-ios/util/sweep/SFSweepLine.m"; sourceTree = "<group>"; };
+		FFFD50C31E24114DAA2C612B4687786E /* Labeler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Labeler.swift; path = "grid-ios/Labeler.swift"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		16F69D8DCAEFC42E1F29D4AB0A11D888 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6308171C03AEF1CDA84E20E11290150A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD7C88F27F98E1D9D6FE102DA5EABB69 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BAF24DA1AFA46D569C89388A220790C6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				073B9F6C89A405A6B27EAA2B0BB69125 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C097081D1FF513514B88F3881164333E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CADA2601EAA2068C3187325E4781B24E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C16EC3F68930905FD484F38BF48B72FE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB7F8AA41AF685B34D8B1582AF72A68B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8B41C70B6573A19AA0DF5D423643549 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09A55B5B12C8F97AD7A9F4A5E4DC98C4 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA2C4E7F3739906C8B65C8C1566CFEA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D3D9157CA245B575FEEDFB25658729CF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		02395BDBEAC2B1A81D863864DB02B9CD /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				10AB4717875D1C86480CC3F400A4833C /* color-ios.modulemap */,
+				18ED98E82F733F3941715B9490599953 /* color-ios-dummy.m */,
+				C3F4657EEC91A0059EB476EFF79035EE /* color-ios-Info.plist */,
+				AD45413530EA859FD2CAB5C3AE50E824 /* color-ios-prefix.pch */,
+				0A09DD07BD51A8EFBAF29B0EEDAE9B8C /* color-ios-umbrella.h */,
+				F8EA4744F26B4707DD3EAE7CA27B5486 /* color-ios.debug.xcconfig */,
+				273C8B442BF5E07B0D9D4B31A9BD705C /* color-ios.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/color-ios";
+			sourceTree = "<group>";
+		};
+		1BB61480812EDBEB3669AFDBD60D2793 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9BB1EAE11A8277A377991C7B3014130D /* color-ios */,
+				F9C9A85DBE1EC48BDFE76DF8927F9FD4 /* grid-ios */,
+				8BE0042050B3676EEA10BA7F892B7ED3 /* mgrs-ios */,
+				B9A4FBC0BBD5A2BD8C948724D3C8C37B /* MobileVLCKit */,
+				6CC89471B4A4D470335C4B6DBA5935E6 /* sf-ios */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		54A6BBF806B16F701DE484FA09B26D3F /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				D24C5F56E8224D89C58A395B6CAB441E /* MobileVLCKit-xcframeworks.sh */,
+				A8C3771605074614E32B0D9EE7284145 /* MobileVLCKit.debug.xcconfig */,
+				69CA2A7E3840C92683C7F0810D7BE3EF /* MobileVLCKit.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/MobileVLCKit";
+			sourceTree = "<group>";
+		};
+		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		6CC89471B4A4D470335C4B6DBA5935E6 /* sf-ios */ = {
+			isa = PBXGroup;
+			children = (
+				A0005B70FC010706F8C251ECDDBDF4F1 /* sf-ios-Bridging-Header.h */,
+				EFC270A6C0078BCC3EE0A4D0EFAE354B /* sf_ios.h */,
+				394F071868BE21F6332E4F47301A2170 /* SFByteReader.h */,
+				D9F73975B1B02EE4E2D3C76666650669 /* SFByteReader.m */,
+				3AE5CD8DA164152F773D13FECF2CF6FD /* SFByteWriter.h */,
+				65A8C8FF683DA1207477445F1C206FCC /* SFByteWriter.m */,
+				A9363E532E55ECA55DD64F9FA5D2B04F /* SFCentroidCurve.h */,
+				CB7D1FE6E9ED32FF5A954A8AF5649A5C /* SFCentroidCurve.m */,
+				8B79B029FBC8446AD0FD31FD546E47C4 /* SFCentroidPoint.h */,
+				49ECCF5046CF72DD282CDF44C8C3B07D /* SFCentroidPoint.m */,
+				97C51F0900197F707C1F637756B16D9C /* SFCentroidSurface.h */,
+				4DEBAE851767574E984095F9730CF86F /* SFCentroidSurface.m */,
+				A7F092C534F80E6C7A8C62D91387CB90 /* SFCircularString.h */,
+				E51EAF51682832E5E7AE36672ECE9A65 /* SFCircularString.m */,
+				07DEDC8DDA74A855297C662863FCE045 /* SFCompoundCurve.h */,
+				E180402B7C5194DE457AE9BA39CC0860 /* SFCompoundCurve.m */,
+				E4D2565FBC2CF453AD97AB13D8B92D9E /* SFCurve.h */,
+				AAE944A25658D8822EBC3C9C5B1F96BE /* SFCurve.m */,
+				56E27527F7E3C44A19800DED5F3A8FC6 /* SFCurvePolygon.h */,
+				2D3E19F68FAD1E46D38BA7D6D631517B /* SFCurvePolygon.m */,
+				462A843696F7191EF17A0534DCE08E7B /* SFDegreesCentroid.h */,
+				B4946533F612CD107F356468147C2CFB /* SFDegreesCentroid.m */,
+				A40D47DFA0C22134CEA75B9223BCDB0C /* SFEvent.h */,
+				395E1B1906DACF7783987E3EE14B2ED4 /* SFEvent.m */,
+				A428152971D83F51CBCC57857F1694B0 /* SFEventQueue.h */,
+				9EFACFC281782527E4035607F3527D3A /* SFEventQueue.m */,
+				1A65E36DA492031255F4ECB871DF721D /* SFEventTypes.h */,
+				C0DA2308FEB2FD8F11156DAAD5D9F383 /* SFEventTypes.m */,
+				B91CB64BFB8087A69684519CD5F76AA5 /* SFExtendedGeometryCollection.h */,
+				DB5A68B21383D9B620C578E53CC581A6 /* SFExtendedGeometryCollection.m */,
+				44A811EAF60265E34650F38E717B5281 /* SFFiniteFilterTypes.h */,
+				6FBD47BE39E7A699C4EA8666C3A0C48C /* SFFiniteFilterTypes.m */,
+				0CED23486E935833B80BBBB4C7C889FF /* SFGeometry.h */,
+				B3BD8C6A0C17738E6EC96543449E5CBD /* SFGeometry.m */,
+				8D1049C4E50850A62EDD264FD4743C6A /* SFGeometryCollection.h */,
+				3C8572A7433BF9A8117325AB7FD8547D /* SFGeometryCollection.m */,
+				DE36F2F7CABCD9E4069A6F0C417616E5 /* SFGeometryConstants.h */,
+				0D4F0720FED5451FEED698005490119A /* SFGeometryConstants.m */,
+				16B6265AB4CD5F65DEA4B69873A1792E /* SFGeometryEnvelope.h */,
+				74E4A7F2D63C9FF61C5ED5479BFC9DBB /* SFGeometryEnvelope.m */,
+				DE3A403C1EC0B3861D11E005468966F9 /* SFGeometryEnvelopeBuilder.h */,
+				FAA8884E57BF2314C485F54FEBF148B7 /* SFGeometryEnvelopeBuilder.m */,
+				1439F0D0289005728486E453EF490ABE /* SFGeometryFilter.h */,
+				12B371512B5F11EC6C8E9B3D503795B1 /* SFGeometryPrinter.h */,
+				D996D8EC0AB2FF9426E77279D4FB56F6 /* SFGeometryPrinter.m */,
+				A7BC1B1334D7A5554BA67B567AC081DA /* SFGeometryTypes.h */,
+				C8B862F1D4E38D07781423609E4CB60E /* SFGeometryTypes.m */,
+				77B18B4051D751D54A5810056E49AE47 /* SFGeometryUtils.h */,
+				E03206D1AC9A827F52A90C72048AFB26 /* SFGeometryUtils.m */,
+				4EA9509EEB803299A31B979D37D973C9 /* SFLine.h */,
+				2DC832BFDDDCDB55B25BBE7FC0825C70 /* SFLine.m */,
+				C3629E60879086CF38B7807DAA5681B3 /* SFLinearRing.h */,
+				CA494D010D58480D602E0EE4BC6D15A8 /* SFLinearRing.m */,
+				7DED492EDEF118AC69D3A70B4BB7243F /* SFLineString.h */,
+				80FACA2C026251172B99B0A061650BBA /* SFLineString.m */,
+				D3AA0611737664061022755D10EF5D0B /* SFMultiCurve.h */,
+				055F6F55805660D9D97FEAC2F4D64C1D /* SFMultiCurve.m */,
+				6066CA8624309651551FC3D22CA483E5 /* SFMultiLineString.h */,
+				1C87826521301EC0503011D9FF345CB9 /* SFMultiLineString.m */,
+				CFA1EE4FA4A6630190146EF52CA382E8 /* SFMultiPoint.h */,
+				9748DAC0F2D30D15C984EB71FFBBEA78 /* SFMultiPoint.m */,
+				0CA3BBC562D3EEE5B1A6A8D76B219FEF /* SFMultiPolygon.h */,
+				C0F22090EA531571863250D02FA58926 /* SFMultiPolygon.m */,
+				A02A7747588D3CA45ECFAB7A48BA8498 /* SFMultiSurface.h */,
+				F8F75F1ECF2151A857892A82E4155E46 /* SFMultiSurface.m */,
+				26701D8A4360A9BA206A33352480817C /* SFPoint.h */,
+				D340C44F023F0DEEBA613148261EBCAF /* SFPoint.m */,
+				C4AEB65D7FDB13D4950A7CEC1140BD0F /* SFPointFiniteFilter.h */,
+				4B34B43279EA3331AD1B824B20CA7E3E /* SFPointFiniteFilter.m */,
+				6DDEAFF3E6FFF286FC580C6B7B015990 /* SFPolygon.h */,
+				CCE85BB4546E32CE0119F71E38F8DF2A /* SFPolygon.m */,
+				29A774AD5064B9DBE76F78DF041F3260 /* SFPolyhedralSurface.h */,
+				42025C5C5CD91B5E2A20628166693F8B /* SFPolyhedralSurface.m */,
+				89A888192283BDBADE90D5E564CA459D /* SFSegment.h */,
+				7301C7204196B5C70ED376762A5C0625 /* SFSegment.m */,
+				79F9F20E8532640EC8B855FB9882888C /* SFShamosHoey.h */,
+				E12B318FB10D6DF183A3D03F5AE7F9EF /* SFShamosHoey.m */,
+				B05E3B4B9B45BF8E95CC2F9403811E80 /* SFSurface.h */,
+				CCC735D0B7985C16C97C6252E02BC6AB /* SFSurface.m */,
+				BB07999E37CCA1E99ED72255A525997E /* SFSweepLine.h */,
+				FFEC52BE36A0A064B21B3E2EFA4E067D /* SFSweepLine.m */,
+				7206467CD909FB81AD9C2ABE7C160001 /* SFTextReader.h */,
+				659BF55C8D3552433C428542EB03335E /* SFTextReader.m */,
+				5AFCC989021364439E73A97C6B80B94A /* SFTIN.h */,
+				66F3AB0F20D8DE7205540F1C5BC043AB /* SFTIN.m */,
+				070850C2389489D5CF8AFD1817070B10 /* SFTriangle.h */,
+				CCE1782D9B53BD8D8AAD64797E872DA7 /* SFTriangle.m */,
+				C0AC5A25A94D72EA20550AC0F2B68204 /* Support Files */,
+			);
+			name = "sf-ios";
+			path = "sf-ios";
+			sourceTree = "<group>";
+		};
+		8354E07F0CC7B1D80145C122361A856E /* Pods-TAKAware-TAKAwareTests */ = {
+			isa = PBXGroup;
+			children = (
+				A152FCB26E692AE7D5B9569C7E8F6665 /* Pods-TAKAware-TAKAwareTests.modulemap */,
+				575B829C2C2F519EBC6F80BC03F44E47 /* Pods-TAKAware-TAKAwareTests-acknowledgements.markdown */,
+				C93FDEB6C6F10046937E56BFA5959E95 /* Pods-TAKAware-TAKAwareTests-acknowledgements.plist */,
+				08C33973B2F8BF1762BC3533FF81FD7E /* Pods-TAKAware-TAKAwareTests-dummy.m */,
+				E094D500CE5C11943FA48685B8CDD490 /* Pods-TAKAware-TAKAwareTests-frameworks.sh */,
+				39EDEDCDA5AEC1C778475C942F321A34 /* Pods-TAKAware-TAKAwareTests-Info.plist */,
+				060BF1DC38E78422A74C843B1690394B /* Pods-TAKAware-TAKAwareTests-umbrella.h */,
+				0012457B26848618AE37B5BB8B4C611B /* Pods-TAKAware-TAKAwareTests.debug.xcconfig */,
+				26A16AF72A3908C8F0BCC2DAF2264463 /* Pods-TAKAware-TAKAwareTests.release.xcconfig */,
+			);
+			name = "Pods-TAKAware-TAKAwareTests";
+			path = "Target Support Files/Pods-TAKAware-TAKAwareTests";
+			sourceTree = "<group>";
+		};
+		8BE0042050B3676EEA10BA7F892B7ED3 /* mgrs-ios */ = {
+			isa = PBXGroup;
+			children = (
+				D0046371D1267373E2C5EC2DF0AEF2DE /* BandLetterRange.swift */,
+				CCD59ACD5EF3782800CB7023A378AD83 /* Grid.swift */,
+				3AFC4FD2A8AD6AB1768911F8BD9ED623 /* GridLabel.swift */,
+				900FDD7DC87335FDEE32B370CEC64F27 /* GridLabeler.swift */,
+				1811A7B26B09C129BE8DB37F40D6DEC5 /* GridRange.swift */,
+				155E2E113E92E4AD9EB2779D4F873CDC /* Grids.swift */,
+				5CA61277833AAB50DAD92E54F2F21CE8 /* GridType.swift */,
+				9484C238F605F8BC3AB563F95E709402 /* GridZone.swift */,
+				A6C47E406D1CFAD85294B4885DD15505 /* GridZones.swift */,
+				92CD832B5A65B9AE0F585B1475332743 /* GZDLabeler.swift */,
+				321398D0A48A816162B73075547A6591 /* LatitudeBand.swift */,
+				5A3C118A6C97F8CEA9C00FE253B3D4D1 /* LongitudinalStrip.swift */,
+				75929F3A1080F9F006524E3745A15C8E /* MGRS.swift */,
+				AD6CABF03760444EA44096EE61F7FD1C /* MGRSConstants.swift */,
+				4E289C9D06C09D263961E30D463A03AB /* MGRSLabeler.swift */,
+				600CFEFDDDA10DAACCD7B8EEDC4B612C /* MGRSLine.swift */,
+				206BC9DD235FA3DCF676B0E133E3F9EA /* MGRSProperties.swift */,
+				C4AFAC179FD5AA6EA0A309C2C0F37C23 /* MGRSTileOverlay.swift */,
+				D8185DC593E61C487850525A24E421E0 /* MGRSUtils.swift */,
+				1A20A27D580A04B01387988EAA811C08 /* UTM.swift */,
+				2AA40A1A1D21549B9B8325427CF08B25 /* ZoneNumberRange.swift */,
+				066539B6D1B266A6CE7F5D102B771805 /* ZoomGrids.swift */,
+				EC40B20DC7C20FC9C0AD5EC83B131704 /* Resources */,
+				F3A5CE1CC1846AE2DBA79918FC99B141 /* Support Files */,
+			);
+			name = "mgrs-ios";
+			path = "mgrs-ios";
+			sourceTree = "<group>";
+		};
+		9BB1EAE11A8277A377991C7B3014130D /* color-ios */ = {
+			isa = PBXGroup;
+			children = (
+				2A37DB2FA85AF0965C46C234D8075BEC /* CLRColor.h */,
+				047622E9FF5CDD0B163A9E369214D8CC /* CLRColor.m */,
+				65BC250B35824A2FBBA53D423CE8C2EF /* CLRColorConstants.h */,
+				3AD711AE873D95BE98820106267C1A9C /* CLRColorConstants.m */,
+				7D8B56902FB9690F09128A5A927E5BF6 /* CLRColorUtils.h */,
+				64DA33A485284B523D0C617D3C04D380 /* CLRColorUtils.m */,
+				2279B0698685C90B05D2FBDF06F5F3A8 /* color-ios-Bridging-Header.h */,
+				CD38726090EFADC5C2371D7B47CC74B0 /* color_ios.h */,
+				02395BDBEAC2B1A81D863864DB02B9CD /* Support Files */,
+			);
+			name = "color-ios";
+			path = "color-ios";
+			sourceTree = "<group>";
+		};
+		B4A0C1F70E99B4688275BD3B63EDD6C7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				915209422D157FC00298A61A503E1774 /* MobileVLCKit.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B9A4FBC0BBD5A2BD8C948724D3C8C37B /* MobileVLCKit */ = {
+			isa = PBXGroup;
+			children = (
+				B4A0C1F70E99B4688275BD3B63EDD6C7 /* Frameworks */,
+				54A6BBF806B16F701DE484FA09B26D3F /* Support Files */,
+			);
+			name = MobileVLCKit;
+			path = MobileVLCKit;
+			sourceTree = "<group>";
+		};
+		C0AC5A25A94D72EA20550AC0F2B68204 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				D8CD2804289F6A2AB79D4138BA5078F1 /* sf-ios.modulemap */,
+				7726355CC3AE8FCBED1493A85CED1CCC /* sf-ios-dummy.m */,
+				219871870BA51774E45830B1011057B4 /* sf-ios-Info.plist */,
+				C989A117CCE501B26F553742AB9312B4 /* sf-ios-prefix.pch */,
+				FAF0F21ED70A53D30046E46B35DC9F6D /* sf-ios-umbrella.h */,
+				DFA7CFF05142411892E78341C45BC841 /* sf-ios.debug.xcconfig */,
+				3C26BAA9F439F90C6CBF55C8C3A591AB /* sf-ios.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/sf-ios";
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
+				1BB61480812EDBEB3669AFDBD60D2793 /* Pods */,
+				DC29E095A55A1C03774A79F728D39534 /* Products */,
+				FCC4AC4599EC0D8BBF67BAA0A68C7C50 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				578452D2E740E91742655AC8F1636D1F /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DC29E095A55A1C03774A79F728D39534 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6701E1E7881E37B884FEEA9B3F803E0B /* color-ios */,
+				7EE66363A245AC8A4B45D95E5CEC6B09 /* grid-ios */,
+				C1D37DBF2B7B7BCE0213BC0468DA7AB5 /* mgrs-ios */,
+				F3C55B46709D88246CAD4116FE38617D /* mgrs-ios-mgrs-ios */,
+				8F791443C102A5B2170669F233124B33 /* Pods-TAKAware */,
+				52E7FE5405CEA05DEB26D1F065970C4B /* Pods-TAKAware-TAKAwareTests */,
+				D57C1FAB77A663260850740EEB9C3590 /* sf-ios */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E491E372B31DE36E48240C1591339F4D /* Pods-TAKAware */ = {
+			isa = PBXGroup;
+			children = (
+				E326CDCFEA3C0CC5DAC3FA664733BEA6 /* Pods-TAKAware.modulemap */,
+				E4FA52BB686F88EA09E2373070DF1142 /* Pods-TAKAware-acknowledgements.markdown */,
+				3EDE74658C56269CC2C84BC688FA3568 /* Pods-TAKAware-acknowledgements.plist */,
+				33BBB5E0F2AA9C6E5C5FB8C0E3302821 /* Pods-TAKAware-dummy.m */,
+				9CFABC79CB210A0394B2E7F6184107A4 /* Pods-TAKAware-frameworks.sh */,
+				5C1BDC9F3621A8E5EC72491190BC1BD0 /* Pods-TAKAware-Info.plist */,
+				94726F75289CFA96C6595EC8AB86A052 /* Pods-TAKAware-umbrella.h */,
+				49D01747E7F38CCCFE492F50F6F3FDD4 /* Pods-TAKAware.debug.xcconfig */,
+				6C3EA2EDA369A97BAE89E98EB56540E0 /* Pods-TAKAware.release.xcconfig */,
+			);
+			name = "Pods-TAKAware";
+			path = "Target Support Files/Pods-TAKAware";
+			sourceTree = "<group>";
+		};
+		E989D37C45D3215EC1B63D651907A93D /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				6078BC3D505310CF3329B18932DA4F8C /* grid-ios.modulemap */,
+				FF51D318F629E57C7AF59A52E996A544 /* grid-ios-dummy.m */,
+				852C7DCFE6FCE7251D11717B5BE4EA22 /* grid-ios-Info.plist */,
+				BBD2387058B110041EC41EFD0EA2E8C1 /* grid-ios-prefix.pch */,
+				C69A114868681E644C58CD971F939B6C /* grid-ios-umbrella.h */,
+				F904E0EF9200AEFF56CD155EE21C3E4F /* grid-ios.debug.xcconfig */,
+				E66BC6230A89A6690B2E7984AE7F198E /* grid-ios.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/grid-ios";
+			sourceTree = "<group>";
+		};
+		EC40B20DC7C20FC9C0AD5EC83B131704 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FBF23B7F9604C3E7862D0C6E5FE93DF6 /* mgrs.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		F3A5CE1CC1846AE2DBA79918FC99B141 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				DD0E9EB52E2B0FB56CF4D4062FE4620D /* mgrs-ios.modulemap */,
+				C1C15423462B3465B4C06EE7DC8E5985 /* mgrs-ios-dummy.m */,
+				7A8921AE842CCB02AC6839CD7BD12416 /* mgrs-ios-Info.plist */,
+				5BA885BFB908441A2A8071FC7643481C /* mgrs-ios-prefix.pch */,
+				AC4889273E45603758B9FD40BE950F9E /* mgrs-ios-umbrella.h */,
+				646EABBD780CCE4AC74582C06AEFC635 /* mgrs-ios.debug.xcconfig */,
+				6CCC417D0EB4263310FACE425306B441 /* mgrs-ios.release.xcconfig */,
+				EBC56B98AB636321766C57A70DD1A422 /* ResourceBundle-mgrs-ios-mgrs-ios-Info.plist */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/mgrs-ios";
+			sourceTree = "<group>";
+		};
+		F9C9A85DBE1EC48BDFE76DF8927F9FD4 /* grid-ios */ = {
+			isa = PBXGroup;
+			children = (
+				E6C2EA42D081108BEB666128FE50B69B /* BaseGrid.swift */,
+				4B986DDD78EB448B7FC6FDDF17C68876 /* BaseGrids.swift */,
+				4DAA2356B2791A6F07C65AE7F3B2230E /* BaseZoomGrids.swift */,
+				4C6CC9B96EB3DFC2805CCC2152877EB2 /* Bounds.swift */,
+				6AD06FD9C616D6F75CE5BE44E46AE41B /* GridConstants.swift */,
+				D346428B07A8730DB7A47ECF2AA32DF9 /* GridPoint.swift */,
+				D733BB3F0B62AABD663549645F05FE4D /* GridProperties.swift */,
+				F6ADED6975979AC5D1E3A40F5165BAC5 /* GridStyle.swift */,
+				1332C9CB083B546B80512A67C7FD5381 /* GridTile.swift */,
+				4FD9B19425B318BBDA01831437002662 /* GridUtils.swift */,
+				D5E9463124CE7D7D02BF9B636C5D5490 /* Hemisphere.swift */,
+				F65684A9979467FB44692B6D3B220F40 /* Label.swift */,
+				FFFD50C31E24114DAA2C612B4687786E /* Labeler.swift */,
+				EF1BBA45AC8904BDF7EA875B0B0E12CC /* Line.swift */,
+				B919C706E18344B6A808D60953A139C8 /* Pixel.swift */,
+				020FA7124D4D5F9441FA86E4E4DCADDD /* PixelRange.swift */,
+				2DA7BEF387468F6D6333EFDC7274A586 /* PropertyConstants.swift */,
+				B3E7B0B28BCAB4155CB927614D265F46 /* TileDraw.swift */,
+				0566746AF92144BAD028C889633D073B /* TileUtils.swift */,
+				EB7FE9BFDBA0B72B031748933724DDE4 /* Unit.swift */,
+				E989D37C45D3215EC1B63D651907A93D /* Support Files */,
+			);
+			name = "grid-ios";
+			path = "grid-ios";
+			sourceTree = "<group>";
+		};
+		FCC4AC4599EC0D8BBF67BAA0A68C7C50 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				E491E372B31DE36E48240C1591339F4D /* Pods-TAKAware */,
+				8354E07F0CC7B1D80145C122361A856E /* Pods-TAKAware-TAKAwareTests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		048D7A94232439D86944DB85B3645E41 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FEEFC687A6B32BAA607C17C758513AF7 /* sf-ios-Bridging-Header.h in Headers */,
+				01E24F34104449FE836E39E9615116DE /* sf-ios-umbrella.h in Headers */,
+				9EC2E5219A088F42DE1D232142EAE40F /* sf_ios.h in Headers */,
+				BDCE97ED83E61A94B542611EDA20AA47 /* SFByteReader.h in Headers */,
+				896C368B418AA7843136C3E4206D4D19 /* SFByteWriter.h in Headers */,
+				78267E7E1895E8D7E50AD58EB76E479C /* SFCentroidCurve.h in Headers */,
+				0499FF91DB04362325CFE71DD49E4C4E /* SFCentroidPoint.h in Headers */,
+				44A558C59766CCEF4A6EF4FA36DB08E0 /* SFCentroidSurface.h in Headers */,
+				7F85D88909E290092EEEF632B285DF49 /* SFCircularString.h in Headers */,
+				70950CFD6962198EDFF1D059C79B86A5 /* SFCompoundCurve.h in Headers */,
+				4563CFDA917E0E8A01C2184BC0CE4FD1 /* SFCurve.h in Headers */,
+				2A0CC9B779057328FAE359766059CA3C /* SFCurvePolygon.h in Headers */,
+				F654D5A518E438259AE74EDAF2B9953F /* SFDegreesCentroid.h in Headers */,
+				DD10EACF6DEE4C4CE4EE62BCBF61A83F /* SFEvent.h in Headers */,
+				B77F1D9646332D623422C30E1D087C91 /* SFEventQueue.h in Headers */,
+				CF5249AEDEDC4B24C152FA9084FCBCFA /* SFEventTypes.h in Headers */,
+				99B9881241193A806E011146B84D03E6 /* SFExtendedGeometryCollection.h in Headers */,
+				DD482B6B690DB5A0E0F3AF839B6F558B /* SFFiniteFilterTypes.h in Headers */,
+				EE0C10640468B75902B8B4E3782CBA03 /* SFGeometry.h in Headers */,
+				08E28DAEB2B62C7DFE9A678D95A2372F /* SFGeometryCollection.h in Headers */,
+				68B51322B39DCC50748D2EE8233C2015 /* SFGeometryConstants.h in Headers */,
+				EA5DA71FD0FB705F895C0B06B12D0CF6 /* SFGeometryEnvelope.h in Headers */,
+				8EEDABBA18D9397E645A211061384249 /* SFGeometryEnvelopeBuilder.h in Headers */,
+				924AEDBC61A93B6D768898178090E828 /* SFGeometryFilter.h in Headers */,
+				F409817C39D27D0382BFED215AA3F83D /* SFGeometryPrinter.h in Headers */,
+				5CBAC7D4FAE6D964AF1545D6C2A70A0D /* SFGeometryTypes.h in Headers */,
+				63756BEF5E77BB06AFF5E9BDE479C409 /* SFGeometryUtils.h in Headers */,
+				1CB883D34DAE692406F0DEE072097AB2 /* SFLine.h in Headers */,
+				654954E18721C9A66264F7E1D1DC2A3B /* SFLinearRing.h in Headers */,
+				140A5787CBB26F85FF8D7ED484A81874 /* SFLineString.h in Headers */,
+				8C11C1EC2F3F3F0661DFDB60551BF9F2 /* SFMultiCurve.h in Headers */,
+				8E1ED91F9BCAB9ABE5F8027D5630DBEC /* SFMultiLineString.h in Headers */,
+				C774508F87C38B95CEFA774C1193BC31 /* SFMultiPoint.h in Headers */,
+				F14EDBC8ED51FCCEF49ED9ADE3DFE796 /* SFMultiPolygon.h in Headers */,
+				7978033FB68971A81750B0F0CAD52EA2 /* SFMultiSurface.h in Headers */,
+				4849CE8F3C684A2510B5705EA8D005D8 /* SFPoint.h in Headers */,
+				CFBA7864F1E814D35878F4FDCD8EB188 /* SFPointFiniteFilter.h in Headers */,
+				2465E27BE0D23BE712848E978C14EACE /* SFPolygon.h in Headers */,
+				CD126F036EFD89489A8BB1569BE326E3 /* SFPolyhedralSurface.h in Headers */,
+				26F290A0F425F5F1E6899D5C1086A588 /* SFSegment.h in Headers */,
+				0BD3C5A71CC4DF32EE8A112D7DEA8B1F /* SFShamosHoey.h in Headers */,
+				A81014158665DFB1D5A4A401B1C72D61 /* SFSurface.h in Headers */,
+				A36F822D2B7D7C4774F3B05F2F001B7E /* SFSweepLine.h in Headers */,
+				4098A298D2042D0B4A1FF36B5093C995 /* SFTextReader.h in Headers */,
+				5F51793BAFC2F88157E555F8AE7B7E6B /* SFTIN.h in Headers */,
+				EDCFF70922054DF3698286E865D22B37 /* SFTriangle.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0E35C898588BD6473CF6AB31014DE369 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91CAB179CD1DE577A52DD992150E361F /* Pods-TAKAware-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A41DE6A65F57F71889A3E3D63C34DAF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C8475E98EEDAFA774ECBDEE0D55B986 /* Pods-TAKAware-TAKAwareTests-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5E5C459FBCBC286333D4B05AADEAB6A3 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7AB45672E1B9BF48632144D30410BEE8 /* grid-ios-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6D18AF8FE1F54C23181291078980585B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				689B2DF51EECBC692E7C2507180E7696 /* CLRColor.h in Headers */,
+				4FAEF057D06A2FE9452EC6402A646935 /* CLRColorConstants.h in Headers */,
+				9A1CF5F77CBB50B95AB79D27214BF2FC /* CLRColorUtils.h in Headers */,
+				EF7FB19EC749C2AF91625156E43FDED4 /* color-ios-Bridging-Header.h in Headers */,
+				EF1C288D10C68E69DA5FCF9BFAB6F854 /* color-ios-umbrella.h in Headers */,
+				FBA0B6116F184AEE48111DCA56484F4F /* color_ios.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB97EA8FA8A8BDA0F7CFF2CDC3BABE92 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C1A99C38DE8AD8351521E2822380350D /* mgrs-ios-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3D3A419CC7A327DAABA72019D5CE9F57 /* sf-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 39EFF5AB1AD73FBD0FC55B415688F7A0 /* Build configuration list for PBXNativeTarget "sf-ios" */;
+			buildPhases = (
+				048D7A94232439D86944DB85B3645E41 /* Headers */,
+				52431C04A65D09F1A467E31FF6AFF6C8 /* Sources */,
+				C16EC3F68930905FD484F38BF48B72FE /* Frameworks */,
+				535E83B935455640B5BA9A4AE6F303F4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "sf-ios";
+			productName = sf_ios;
+			productReference = D57C1FAB77A663260850740EEB9C3590 /* sf-ios */;
+			productType = "com.apple.product-type.framework";
+		};
+		577E91B04D12C328F76DD4B7C16DBAEF /* mgrs-ios-mgrs-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03960FD43A473D385DF8D43DEF7ACD50 /* Build configuration list for PBXNativeTarget "mgrs-ios-mgrs-ios" */;
+			buildPhases = (
+				982A9FB23B165F07B2F0DCF611414948 /* Sources */,
+				16F69D8DCAEFC42E1F29D4AB0A11D888 /* Frameworks */,
+				2B38CD4C9D1C3999884E26E6326CE8E1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mgrs-ios-mgrs-ios";
+			productName = "mgrs-ios";
+			productReference = F3C55B46709D88246CAD4116FE38617D /* mgrs-ios-mgrs-ios */;
+			productType = "com.apple.product-type.bundle";
+		};
+		5D942CA48BAB353546F6B788AC3EA195 /* color-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00AD696AC94A97E80145F548E01C60F3 /* Build configuration list for PBXNativeTarget "color-ios" */;
+			buildPhases = (
+				6D18AF8FE1F54C23181291078980585B /* Headers */,
+				8279E556FB47230EE33085B83D74CF4C /* Sources */,
+				6308171C03AEF1CDA84E20E11290150A /* Frameworks */,
+				19D8C2971D17447BD731219D87348310 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "color-ios";
+			productName = color_ios;
+			productReference = 6701E1E7881E37B884FEEA9B3F803E0B /* color-ios */;
+			productType = "com.apple.product-type.framework";
+		};
+		D6969329F0EB59C8A28A1EF64D4AF7A2 /* Pods-TAKAware-TAKAwareTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3CF5FFF8241D2A49D004A1C96FB7574D /* Build configuration list for PBXNativeTarget "Pods-TAKAware-TAKAwareTests" */;
+			buildPhases = (
+				5A41DE6A65F57F71889A3E3D63C34DAF /* Headers */,
+				8889905A8CFF7143C92373DCDA4DAD5A /* Sources */,
+				DA2C4E7F3739906C8B65C8C1566CFEA7 /* Frameworks */,
+				181D092D06CD17BE75B01BDDEBF261E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				761A50737A6BEF0AB9912FA46DD6A4E3 /* PBXTargetDependency */,
+				C807BB374AFA6FC4715F83A60990A3A2 /* PBXTargetDependency */,
+				D35A2237F553E78E24A8F780890FF22F /* PBXTargetDependency */,
+				E129BC1E3BCE68115017B27981643C16 /* PBXTargetDependency */,
+				FFE92B452CD32CF89D05E8B40C473D62 /* PBXTargetDependency */,
+			);
+			name = "Pods-TAKAware-TAKAwareTests";
+			productName = Pods_TAKAware_TAKAwareTests;
+			productReference = 52E7FE5405CEA05DEB26D1F065970C4B /* Pods-TAKAware-TAKAwareTests */;
+			productType = "com.apple.product-type.framework";
+		};
+		EAFEEC6DDB8AE98EE2B2196987F59487 /* Pods-TAKAware */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D5142B9D5111E4BD3B066EE3120F0F06 /* Build configuration list for PBXNativeTarget "Pods-TAKAware" */;
+			buildPhases = (
+				0E35C898588BD6473CF6AB31014DE369 /* Headers */,
+				427C454119BC13742A9034C6CDB8BB87 /* Sources */,
+				BAF24DA1AFA46D569C89388A220790C6 /* Frameworks */,
+				2012D794B9C94F6BE59354EE70022D0C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7E5623CFCEEA94FF7FC600C4BDE8DE3D /* PBXTargetDependency */,
+				B8160B619C583EF1C96B537FD50485B0 /* PBXTargetDependency */,
+				BF886A0E5C9518DF11476C35F5480C75 /* PBXTargetDependency */,
+				0CC646CF1D80D514C1FEC0BE4CD63C25 /* PBXTargetDependency */,
+				256CEC655691522356EBD66D74A3F815 /* PBXTargetDependency */,
+			);
+			name = "Pods-TAKAware";
+			productName = Pods_TAKAware;
+			productReference = 8F791443C102A5B2170669F233124B33 /* Pods-TAKAware */;
+			productType = "com.apple.product-type.framework";
+		};
+		F99C60B9711DB2529FC6C4FC9904B3F9 /* grid-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B192E4F93DD72EAC4E2B74CB53EF40A /* Build configuration list for PBXNativeTarget "grid-ios" */;
+			buildPhases = (
+				5E5C459FBCBC286333D4B05AADEAB6A3 /* Headers */,
+				D4E6192BB99B53535D25211AF03EDDA2 /* Sources */,
+				C097081D1FF513514B88F3881164333E /* Frameworks */,
+				95EE0D2B1261DD86C3C4BAC9ABA9EDDE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D37770AB3190104A52A0A828FF3A6108 /* PBXTargetDependency */,
+				2D5FC5DFC95E5797B2CFC8E4331FC47F /* PBXTargetDependency */,
+			);
+			name = "grid-ios";
+			productName = grid_ios;
+			productReference = 7EE66363A245AC8A4B45D95E5CEC6B09 /* grid-ios */;
+			productType = "com.apple.product-type.framework";
+		};
+		FA341BB40DB010A6FF2E54DFC3D1E5D8 /* mgrs-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50DCE2A6FA367D7E9B546A0504461FF5 /* Build configuration list for PBXNativeTarget "mgrs-ios" */;
+			buildPhases = (
+				CB97EA8FA8A8BDA0F7CFF2CDC3BABE92 /* Headers */,
+				30756DA618037CC18AD1198A4C438016 /* Sources */,
+				D8B41C70B6573A19AA0DF5D423643549 /* Frameworks */,
+				5A43A87703E2F6D02B2F59253A9FDCAF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9827C9DAD4B2C028C96C1E52AF2AE2A3 /* PBXTargetDependency */,
+				5BF85B57E4213F968E40265B62EFA13A /* PBXTargetDependency */,
+			);
+			name = "mgrs-ios";
+			productName = mgrs_ios;
+			productReference = C1D37DBF2B7B7BCE0213BC0468DA7AB5 /* mgrs-ios */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = DC29E095A55A1C03774A79F728D39534 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D942CA48BAB353546F6B788AC3EA195 /* color-ios */,
+				F99C60B9711DB2529FC6C4FC9904B3F9 /* grid-ios */,
+				FA341BB40DB010A6FF2E54DFC3D1E5D8 /* mgrs-ios */,
+				577E91B04D12C328F76DD4B7C16DBAEF /* mgrs-ios-mgrs-ios */,
+				DD6DBFB0950D5ACA7BBB5F25E1C1A342 /* MobileVLCKit */,
+				EAFEEC6DDB8AE98EE2B2196987F59487 /* Pods-TAKAware */,
+				D6969329F0EB59C8A28A1EF64D4AF7A2 /* Pods-TAKAware-TAKAwareTests */,
+				3D3A419CC7A327DAABA72019D5CE9F57 /* sf-ios */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		181D092D06CD17BE75B01BDDEBF261E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19D8C2971D17447BD731219D87348310 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2012D794B9C94F6BE59354EE70022D0C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2B38CD4C9D1C3999884E26E6326CE8E1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F74DACE39727F19D1C8607A911A6CC3D /* mgrs.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		535E83B935455640B5BA9A4AE6F303F4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5A43A87703E2F6D02B2F59253A9FDCAF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B8A895EECFCB0E14F31C9B854CA7283 /* mgrs-ios-mgrs-ios in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95EE0D2B1261DD86C3C4BAC9ABA9EDDE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		EC3F5098316C1BF91803A23EFD67F49E /* [CP] Copy XCFrameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/MobileVLCKit/MobileVLCKit-xcframeworks-input-files.xcfilelist",
+			);
+			name = "[CP] Copy XCFrameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/MobileVLCKit/MobileVLCKit-xcframeworks-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/MobileVLCKit/MobileVLCKit-xcframeworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		30756DA618037CC18AD1198A4C438016 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FF828B06B69B612AF17AE40C3149481C /* BandLetterRange.swift in Sources */,
+				0D16C71CF738F3BBA2C63FEC24CBAE3F /* Grid.swift in Sources */,
+				5F16E3EF1FAABDF6C5C1DDB451948919 /* GridLabel.swift in Sources */,
+				4E9DB3A55799AD6A7BB6CABC2792DA9D /* GridLabeler.swift in Sources */,
+				92AD7B6978B043A6D87647E147EE2763 /* GridRange.swift in Sources */,
+				12C72C459546562A4C7A8D046B5BE963 /* Grids.swift in Sources */,
+				504452CAC12585B620DE82B41AE2F0EF /* GridType.swift in Sources */,
+				85033FED5CBFB7D24E7CAB85F76D7DED /* GridZone.swift in Sources */,
+				B9CE441CDCD318CB9A977B27705DE792 /* GridZones.swift in Sources */,
+				5DEEDED84D1B4B01781E6DABA90EDF98 /* GZDLabeler.swift in Sources */,
+				99D63002859B00ED49BE5D481965B751 /* LatitudeBand.swift in Sources */,
+				071F303DFF627313B76DE65A777F15C1 /* LongitudinalStrip.swift in Sources */,
+				8447B58BA06145AA077143850FFDDFD6 /* MGRS.swift in Sources */,
+				7FA49CA3EDC298CA7C55C460F06B0DC2 /* mgrs-ios-dummy.m in Sources */,
+				45FAE0AE275B0268A3A0AFF513BD46D1 /* MGRSConstants.swift in Sources */,
+				C58C3CBDFADC280064A3E6AC33A1BE85 /* MGRSLabeler.swift in Sources */,
+				B3D24A91D499AE8FA8686B61B67C8DE5 /* MGRSLine.swift in Sources */,
+				DDED62BD2C447F6C5E7297D20D697A1A /* MGRSProperties.swift in Sources */,
+				58090A8C68FE54524677FD5B059D279B /* MGRSTileOverlay.swift in Sources */,
+				F74B1D2D126E49BB9B0FF8DA9CC05E63 /* MGRSUtils.swift in Sources */,
+				F84FCFCAC9BCAB72DD72486E6B8E7A68 /* UTM.swift in Sources */,
+				067C7ED7510521BE277F755220E822C5 /* ZoneNumberRange.swift in Sources */,
+				E4FCEA16DE75F4A694D3726150FB3E93 /* ZoomGrids.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		427C454119BC13742A9034C6CDB8BB87 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF91FA9EAE540DBC574A3DF34E6FBE69 /* Pods-TAKAware-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		52431C04A65D09F1A467E31FF6AFF6C8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				043A5BA7C0CD44BCD42289096262D00C /* sf-ios-dummy.m in Sources */,
+				2192F2C6B16FB36B837F7155C8084A71 /* SFByteReader.m in Sources */,
+				5FE0D23D76F236937936CBE8E3A0E3C8 /* SFByteWriter.m in Sources */,
+				D9E6AF6C3F9D162775813E50FD5E720A /* SFCentroidCurve.m in Sources */,
+				C5CAD22E414BBE58230BBE27B91389E6 /* SFCentroidPoint.m in Sources */,
+				E32BF664C3A4805DC68E173AEA7E5410 /* SFCentroidSurface.m in Sources */,
+				FCAFDB839EBA8B315CE492A387252A78 /* SFCircularString.m in Sources */,
+				94912950A9C260BE459DCF38E524EE1E /* SFCompoundCurve.m in Sources */,
+				42A815BD23745682ED92761BAAD57CBA /* SFCurve.m in Sources */,
+				A7762F48007EEF23B7B6FE3E5B34357D /* SFCurvePolygon.m in Sources */,
+				CF34CAB0718A94789E261ACA55B7EAA8 /* SFDegreesCentroid.m in Sources */,
+				90BB7015474EAF8B75427F67C02B71C3 /* SFEvent.m in Sources */,
+				DAB730E21D56529CC9C8E5E27B86FE10 /* SFEventQueue.m in Sources */,
+				74585E9E10FBA5F30783BD9E73D0D829 /* SFEventTypes.m in Sources */,
+				604E8707017D85117E078AAB6F7C7D39 /* SFExtendedGeometryCollection.m in Sources */,
+				33204D1AAADF2E10DB308BB774E6EE94 /* SFFiniteFilterTypes.m in Sources */,
+				6BD4703819230EBC43EE62C714ED496F /* SFGeometry.m in Sources */,
+				DDA9DBBF04907C44FB81443455D4391A /* SFGeometryCollection.m in Sources */,
+				496D81F3B787A0191456B8D3EB26D345 /* SFGeometryConstants.m in Sources */,
+				D3F3327945F7F283BEF0A4A995143FB9 /* SFGeometryEnvelope.m in Sources */,
+				FB05AA3AC49B2D5912893D55BDFDE27F /* SFGeometryEnvelopeBuilder.m in Sources */,
+				762A1A250E9E3D184BD8894A6394AFB1 /* SFGeometryPrinter.m in Sources */,
+				CAE6E2581FA7901DBEBCF30452A56E1C /* SFGeometryTypes.m in Sources */,
+				C3C5FC86F0E8D6FC0DAC0C60C6607228 /* SFGeometryUtils.m in Sources */,
+				6F20B8F0146A73F62329FD94633D0B05 /* SFLine.m in Sources */,
+				8323122226801FE48215EEC1D14BC7F1 /* SFLinearRing.m in Sources */,
+				CE533344411E6131F0F2E5FD7AD939BE /* SFLineString.m in Sources */,
+				D130AFFC0A897C313D0990DEC7243456 /* SFMultiCurve.m in Sources */,
+				BF81B20C43E1481A43E85459D5A4CB56 /* SFMultiLineString.m in Sources */,
+				D455C681B9ABB5C70DFFB6E150C6AA70 /* SFMultiPoint.m in Sources */,
+				D86877292E6CB8562A8C4782C0306DB9 /* SFMultiPolygon.m in Sources */,
+				8BE33E4CC9E7E959CE032C2FC0A02E34 /* SFMultiSurface.m in Sources */,
+				9B01CF7800EF58F9C8EBE31057565954 /* SFPoint.m in Sources */,
+				872B78D3153760E10DA1800A5C587F79 /* SFPointFiniteFilter.m in Sources */,
+				8EF71A6770ED4645A84546B3D9E9867F /* SFPolygon.m in Sources */,
+				C11537AA814A3402A466782435F8D82C /* SFPolyhedralSurface.m in Sources */,
+				08BD05536937811BF7E02603A0919ADF /* SFSegment.m in Sources */,
+				AB993CC5257AF6FF1C717831225C7A5A /* SFShamosHoey.m in Sources */,
+				F78BA22134075F8298F97B5C2F49AF23 /* SFSurface.m in Sources */,
+				8B78D5F13AD47242A5DD454D6BD22F8B /* SFSweepLine.m in Sources */,
+				0C8C61BAA6753F9647E144BD8EC3BEEB /* SFTextReader.m in Sources */,
+				E5F08217EF6A30642871B7D68B28A52D /* SFTIN.m in Sources */,
+				13878C5E05A4A8E68093F07E063619C7 /* SFTriangle.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8279E556FB47230EE33085B83D74CF4C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9199F3D813C5616AB348DC0D123B0A9A /* CLRColor.m in Sources */,
+				DF9D7D1FCFA243E6EFE52B9ADBAFF56D /* CLRColorConstants.m in Sources */,
+				AE7434CD15CBEFF4168F1B9A071887E2 /* CLRColorUtils.m in Sources */,
+				0E48F269B264AC4DF3B3DC9E834251FC /* color-ios-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8889905A8CFF7143C92373DCDA4DAD5A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				44D1E443B2C55C7C87B8D8D461CE96FD /* Pods-TAKAware-TAKAwareTests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		982A9FB23B165F07B2F0DCF611414948 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E6192BB99B53535D25211AF03EDDA2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7531B4F97700F1C84513A7A8B43C75FE /* BaseGrid.swift in Sources */,
+				35A0D6930B1375D439168D1746877049 /* BaseGrids.swift in Sources */,
+				04B3A6327E57113297E147F45AB86AC2 /* BaseZoomGrids.swift in Sources */,
+				5E8C298257FC8FA288AB6E017CF94ADF /* Bounds.swift in Sources */,
+				D4A82FE97D097418A6D469327D543E5B /* grid-ios-dummy.m in Sources */,
+				D9A1DF495BF9773DD784205359712CC5 /* GridConstants.swift in Sources */,
+				08A82D98A2958761B0C37502C499ECCC /* GridPoint.swift in Sources */,
+				CD58FCD440C3CB39746FC62196361E7C /* GridProperties.swift in Sources */,
+				655B618AA7337F91593380D603986548 /* GridStyle.swift in Sources */,
+				B1BFDB9E4706D492A8052A8DCB2FBB3F /* GridTile.swift in Sources */,
+				391601FB8693640EBE5D411023C746A9 /* GridUtils.swift in Sources */,
+				06D18D87D8504AC2715A0863CCDAED96 /* Hemisphere.swift in Sources */,
+				F5DA2BD5458F7EA65CD2E599D35CC4F8 /* Label.swift in Sources */,
+				CA931BED8FFF97222F2E4C1DD002C117 /* Labeler.swift in Sources */,
+				EE12BDF6B07146DCE7D71A1FD9BB5C58 /* Line.swift in Sources */,
+				5F657D10EC9C1F621FE145E6961CDBDA /* Pixel.swift in Sources */,
+				4857891EB4E50C0313B47AAE82257B91 /* PixelRange.swift in Sources */,
+				0A42D4949996376A528CC9DE5933FFED /* PropertyConstants.swift in Sources */,
+				66AAA766D7293D6DE733D3C0DFD53472 /* TileDraw.swift in Sources */,
+				DE0812E35F28B6F0E1647226542ACC11 /* TileUtils.swift in Sources */,
+				3CD803A89F48503EDFB120BF71FBE80E /* Unit.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0CC646CF1D80D514C1FEC0BE4CD63C25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "mgrs-ios";
+			target = FA341BB40DB010A6FF2E54DFC3D1E5D8 /* mgrs-ios */;
+			targetProxy = C2987CA7926C28C522DA2AAE4C2EF8B5 /* PBXContainerItemProxy */;
+		};
+		256CEC655691522356EBD66D74A3F815 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "sf-ios";
+			target = 3D3A419CC7A327DAABA72019D5CE9F57 /* sf-ios */;
+			targetProxy = 6E81F88C65522E32A75DF12B63A85386 /* PBXContainerItemProxy */;
+		};
+		2D5FC5DFC95E5797B2CFC8E4331FC47F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "sf-ios";
+			target = 3D3A419CC7A327DAABA72019D5CE9F57 /* sf-ios */;
+			targetProxy = 5DD643AB7D1AF7C6F0EBC95C735C802A /* PBXContainerItemProxy */;
+		};
+		5BF85B57E4213F968E40265B62EFA13A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "mgrs-ios-mgrs-ios";
+			target = 577E91B04D12C328F76DD4B7C16DBAEF /* mgrs-ios-mgrs-ios */;
+			targetProxy = B4EA3B4BFFACC991C5E3A535146BBA36 /* PBXContainerItemProxy */;
+		};
+		761A50737A6BEF0AB9912FA46DD6A4E3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MobileVLCKit;
+			target = DD6DBFB0950D5ACA7BBB5F25E1C1A342 /* MobileVLCKit */;
+			targetProxy = 9D1FEE1DC0C93B73163C211062E47FE9 /* PBXContainerItemProxy */;
+		};
+		7E5623CFCEEA94FF7FC600C4BDE8DE3D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MobileVLCKit;
+			target = DD6DBFB0950D5ACA7BBB5F25E1C1A342 /* MobileVLCKit */;
+			targetProxy = 7768119CBF6B836AB0EC60CDF942F220 /* PBXContainerItemProxy */;
+		};
+		9827C9DAD4B2C028C96C1E52AF2AE2A3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "grid-ios";
+			target = F99C60B9711DB2529FC6C4FC9904B3F9 /* grid-ios */;
+			targetProxy = 496EF475F198D57ED6F566C43C29EB7D /* PBXContainerItemProxy */;
+		};
+		B8160B619C583EF1C96B537FD50485B0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "color-ios";
+			target = 5D942CA48BAB353546F6B788AC3EA195 /* color-ios */;
+			targetProxy = 95670E99C794BFD3E0E7BE09387AD537 /* PBXContainerItemProxy */;
+		};
+		BF886A0E5C9518DF11476C35F5480C75 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "grid-ios";
+			target = F99C60B9711DB2529FC6C4FC9904B3F9 /* grid-ios */;
+			targetProxy = 2DB9C7723D6053604314E44003C72C26 /* PBXContainerItemProxy */;
+		};
+		C807BB374AFA6FC4715F83A60990A3A2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "color-ios";
+			target = 5D942CA48BAB353546F6B788AC3EA195 /* color-ios */;
+			targetProxy = 25464816B43A45CD11DF8DAB0A609312 /* PBXContainerItemProxy */;
+		};
+		D35A2237F553E78E24A8F780890FF22F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "grid-ios";
+			target = F99C60B9711DB2529FC6C4FC9904B3F9 /* grid-ios */;
+			targetProxy = 61EBA8890071426DDC29A4423B7EBE0E /* PBXContainerItemProxy */;
+		};
+		D37770AB3190104A52A0A828FF3A6108 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "color-ios";
+			target = 5D942CA48BAB353546F6B788AC3EA195 /* color-ios */;
+			targetProxy = A8061EAC40A5AEF9519928C79B70BC78 /* PBXContainerItemProxy */;
+		};
+		E129BC1E3BCE68115017B27981643C16 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "mgrs-ios";
+			target = FA341BB40DB010A6FF2E54DFC3D1E5D8 /* mgrs-ios */;
+			targetProxy = 688EC1A706037FE9FBF47056C47452E5 /* PBXContainerItemProxy */;
+		};
+		FFE92B452CD32CF89D05E8B40C473D62 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "sf-ios";
+			target = 3D3A419CC7A327DAABA72019D5CE9F57 /* sf-ios */;
+			targetProxy = 7E4C8DA3324547848A80D67C9FEDB49D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		02503BBADF68B89372928F0EDC193A89 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E66BC6230A89A6690B2E7984AE7F198E /* grid-ios.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/grid-ios/grid-ios-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/grid-ios/grid-ios-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/grid-ios/grid-ios.modulemap";
+				PRODUCT_MODULE_NAME = grid_ios;
+				PRODUCT_NAME = grid_ios;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		03E82D4F751EEA649973591C5C24FA75 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 273C8B442BF5E07B0D9D4B31A9BD705C /* color-ios.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/color-ios/color-ios-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/color-ios/color-ios-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/color-ios/color-ios.modulemap";
+				PRODUCT_MODULE_NAME = color_ios;
+				PRODUCT_NAME = color_ios;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		066A6F1153970AFC1A391575E6021F88 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 646EABBD780CCE4AC74582C06AEFC635 /* mgrs-ios.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/mgrs-ios";
+				IBSC_MODULE = mgrs_ios;
+				INFOPLIST_FILE = "Target Support Files/mgrs-ios/ResourceBundle-mgrs-ios-mgrs-ios-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				PRODUCT_NAME = "mgrs-ios";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		259EE2AAC126616D807A5B571D0A3E31 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 49D01747E7F38CCCFE492F50F6F3FDD4 /* Pods-TAKAware.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-TAKAware/Pods-TAKAware-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-TAKAware/Pods-TAKAware.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		3531C72CE33B7915BFA050460B596718 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 26A16AF72A3908C8F0BCC2DAF2264463 /* Pods-TAKAware-TAKAwareTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		3DE0DED77E6E80460171AD42FF09CBBD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 646EABBD780CCE4AC74582C06AEFC635 /* mgrs-ios.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/mgrs-ios/mgrs-ios-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/mgrs-ios/mgrs-ios-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/mgrs-ios/mgrs-ios.modulemap";
+				PRODUCT_MODULE_NAME = mgrs_ios;
+				PRODUCT_NAME = mgrs_ios;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		501404B0FD0BEB3B407276C48D241E7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0012457B26848618AE37B5BB8B4C611B /* Pods-TAKAware-TAKAwareTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		7C91BBFC862F90FA65BCEEF37AD93C1C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 69CA2A7E3840C92683C7F0810D7BE3EF /* MobileVLCKit.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		844B81F240438395824047B7EE9C3D42 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6CCC417D0EB4263310FACE425306B441 /* mgrs-ios.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/mgrs-ios/mgrs-ios-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/mgrs-ios/mgrs-ios-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/mgrs-ios/mgrs-ios.modulemap";
+				PRODUCT_MODULE_NAME = mgrs_ios;
+				PRODUCT_NAME = mgrs_ios;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		90D4D09BCB6A4660E43ACBE9ECB6FE9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		9553C89E183877A5CB2F3C6801BEC129 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		9798DBC88B19F02492D9E0A130703022 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DFA7CFF05142411892E78341C45BC841 /* sf-ios.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/sf-ios/sf-ios-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/sf-ios/sf-ios-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/sf-ios/sf-ios.modulemap";
+				PRODUCT_MODULE_NAME = sf_ios;
+				PRODUCT_NAME = sf_ios;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		C2280E1BEC5EC4E219342989AA6D1362 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6CCC417D0EB4263310FACE425306B441 /* mgrs-ios.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/mgrs-ios";
+				IBSC_MODULE = mgrs_ios;
+				INFOPLIST_FILE = "Target Support Files/mgrs-ios/ResourceBundle-mgrs-ios-mgrs-ios-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				PRODUCT_NAME = "mgrs-ios";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		C66E2D1B8BCC37CB1B0B7F5FB242E218 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A8C3771605074614E32B0D9EE7284145 /* MobileVLCKit.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C916BBB4E673A4FBC0605DD262640FCB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F904E0EF9200AEFF56CD155EE21C3E4F /* grid-ios.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/grid-ios/grid-ios-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/grid-ios/grid-ios-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/grid-ios/grid-ios.modulemap";
+				PRODUCT_MODULE_NAME = grid_ios;
+				PRODUCT_NAME = grid_ios;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		DC1F0E8466B53D287E39BD5D16AEC6ED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F8EA4744F26B4707DD3EAE7CA27B5486 /* color-ios.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/color-ios/color-ios-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/color-ios/color-ios-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/color-ios/color-ios.modulemap";
+				PRODUCT_MODULE_NAME = color_ios;
+				PRODUCT_NAME = color_ios;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E6FEA6398B6622230619965EFB871F1B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C3EA2EDA369A97BAE89E98EB56540E0 /* Pods-TAKAware.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-TAKAware/Pods-TAKAware-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-TAKAware/Pods-TAKAware.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		F42822541B173881491B8893908A2848 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3C26BAA9F439F90C6CBF55C8C3A591AB /* sf-ios.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/sf-ios/sf-ios-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/sf-ios/sf-ios-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/sf-ios/sf-ios.modulemap";
+				PRODUCT_MODULE_NAME = sf_ios;
+				PRODUCT_NAME = sf_ios;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		00AD696AC94A97E80145F548E01C60F3 /* Build configuration list for PBXNativeTarget "color-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DC1F0E8466B53D287E39BD5D16AEC6ED /* Debug */,
+				03E82D4F751EEA649973591C5C24FA75 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		03960FD43A473D385DF8D43DEF7ACD50 /* Build configuration list for PBXNativeTarget "mgrs-ios-mgrs-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				066A6F1153970AFC1A391575E6021F88 /* Debug */,
+				C2280E1BEC5EC4E219342989AA6D1362 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		39EFF5AB1AD73FBD0FC55B415688F7A0 /* Build configuration list for PBXNativeTarget "sf-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9798DBC88B19F02492D9E0A130703022 /* Debug */,
+				F42822541B173881491B8893908A2848 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3CF5FFF8241D2A49D004A1C96FB7574D /* Build configuration list for PBXNativeTarget "Pods-TAKAware-TAKAwareTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				501404B0FD0BEB3B407276C48D241E7E /* Debug */,
+				3531C72CE33B7915BFA050460B596718 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		41861FAD9A4BF10B77AE2077E222AF7D /* Build configuration list for PBXAggregateTarget "MobileVLCKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C66E2D1B8BCC37CB1B0B7F5FB242E218 /* Debug */,
+				7C91BBFC862F90FA65BCEEF37AD93C1C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				90D4D09BCB6A4660E43ACBE9ECB6FE9A /* Debug */,
+				9553C89E183877A5CB2F3C6801BEC129 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50DCE2A6FA367D7E9B546A0504461FF5 /* Build configuration list for PBXNativeTarget "mgrs-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DE0DED77E6E80460171AD42FF09CBBD /* Debug */,
+				844B81F240438395824047B7EE9C3D42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B192E4F93DD72EAC4E2B74CB53EF40A /* Build configuration list for PBXNativeTarget "grid-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C916BBB4E673A4FBC0605DD262640FCB /* Debug */,
+				02503BBADF68B89372928F0EDC193A89 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D5142B9D5111E4BD3B066EE3120F0F06 /* Build configuration list for PBXNativeTarget "Pods-TAKAware" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				259EE2AAC126616D807A5B571D0A3E31 /* Debug */,
+				E6FEA6398B6622230619965EFB871F1B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

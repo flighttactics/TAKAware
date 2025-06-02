@@ -5,9 +5,6 @@
       location = "group:TestPlan.xctestplan">
    </FileRef>
    <FileRef
-      location = "group:../SwiftTAK">
-   </FileRef>
-   <FileRef
       location = "group:../swift-nio-ssl">
    </FileRef>
    <FileRef
@@ -15,8 +12,5 @@
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:../SwiftTAK.xctestplan">
    </FileRef>
 </Workspace>
