@@ -56,6 +56,7 @@ struct AppConstants {
     static let NOTIFY_APP_INACTIVE = "AppScenePhaseInactive"
     static let NOTIFY_APP_BACKGROUND = "AppScenePhaseBackground"
     static let NOTIFY_SCROLL_TO_KML = "ScrollToKML"
+    static let NOTIFY_SCROLL_TO_COORDINATE = "ScrollToCoordinate"
     static let NOTIFY_MAP_SOURCE_UPDATED = "MapSourceUpdated"
     static let NOTIFY_SERVER_CONNECTED = "TAKServerConnected"
     static let NOTIFY_PHONE_ACTION_REQUESTED = "PhoneActionRequested"
@@ -119,7 +120,7 @@ struct AppConstants {
     
     static func getPhoneBatteryStatus() -> Float {
         if (UIDevice.current.isBatteryMonitoringEnabled) {
-            return UIDevice.current.batteryLevel
+            return UIDevice.current.batteryLevel * 100
         } else {
             TAKLogger.debug("Battery Monitoring is not enabled for this device!")
             return 0.0
