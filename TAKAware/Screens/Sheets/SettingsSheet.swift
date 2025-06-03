@@ -27,8 +27,7 @@ struct SettingsSheet: View {
                 }
                 Section(header:
                             Text("Server Information")
-                    .font(.system(size: 14, weight: .medium)), footer: Text("Swipe server to manage")
-                ) {
+                    .font(.system(size: 14, weight: .medium))) {
                     ConnectionOptions(isProcessingDataPackage: $isProcessingDataPackage)
                 }
                 Section {

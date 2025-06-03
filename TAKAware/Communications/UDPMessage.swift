@@ -62,16 +62,16 @@ class UDPMessage: NSObject, ObservableObject {
         }
         
         // Handle incoming messages
-//        connectionGroup.setReceiveHandler { message, content, isComplete in
-//            if isComplete {
-//                if let data = content, !data.isEmpty {
-//                    self.parser.parseCoTStream(dataStream: data)
-//                    TAKLogger.debug("Attempting to process CoT event")
-//                } else {
-//                    TAKLogger.info("Empty message")
-//                }
-//            }
-//        }
+        connectionGroup.setReceiveHandler { message, content, isComplete in
+            if isComplete {
+                if let data = content, !data.isEmpty {
+                    self.parser.parseCoTStream(dataStream: data)
+                    TAKLogger.debug("Attempting to process CoT event")
+                } else {
+                    TAKLogger.info("Empty message")
+                }
+            }
+        }
         
         TAKLogger.debug("[UDPMessage]: Starting UDP Connection")
         connectionGroup.start(queue: .global())

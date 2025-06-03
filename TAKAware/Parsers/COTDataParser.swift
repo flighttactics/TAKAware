@@ -43,7 +43,7 @@ class COTDataParser: NSObject {
                          */
                         if contentUidNode.element != nil {
                             let cotDetailsNode = missionChange["details"]
-                            if let cotDetailsElement = cotDetailsNode.element {
+                            if cotDetailsNode.element != nil {
                                 dataContext.perform {
                                     
                                     let fetchMission: NSFetchRequest<DataSyncMission> = DataSyncMission.fetchRequest()
