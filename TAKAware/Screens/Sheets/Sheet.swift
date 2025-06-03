@@ -24,6 +24,7 @@ struct Sheet: View {
         case detail
         case videoPlayer
         case deconflictionView
+        case contacts
         
         var id: String {
             switch self {
@@ -36,6 +37,7 @@ struct Sheet: View {
                 case .detail: return "detail"
                 case .videoPlayer: return "videoPlayer"
                 case .deconflictionView: return "deconflictionView"
+                case .contacts: return "contacts"
             }
         }
     }
@@ -51,6 +53,7 @@ struct Sheet: View {
             case .detail: AnnotationDetailView(currentSelectedAnnotation: $currentSelectedAnnotation, parentView: parentView)
             case .videoPlayer: VideoPlayerView(currentSelectedAnnotation: $currentSelectedAnnotation)
             case .deconflictionView: DeconflictionSheet(conflictedItems: $conflictedItems, parentView: parentView)
+            case .contacts: ContactsSheet()
         }
     }
     
