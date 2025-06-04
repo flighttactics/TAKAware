@@ -629,6 +629,7 @@ struct MapView: UIViewRepresentable {
     
     @State var mapView: CompassMapView = CompassMapView()
     @State var activeBloodhound: COTMapBloodhoundLine?
+    @State var drawingLine: COTMapPolyline?
     @State var bloodhoundStartAnnotation: MapPointAnnotation?
     @State var bloodhoundEndAnnotation: MapPointAnnotation?
     @State var bloodhoundStartCoordinate: CLLocationCoordinate2D?
@@ -708,6 +709,8 @@ struct MapView: UIViewRepresentable {
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_KML_FILE_REMOVED), object: nil, queue: nil, using: kmlChangeNotified)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_KML), object: nil, queue: nil, using: scrollToKml)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_MAP_SOURCE_UPDATED), object: nil, queue: nil, using: mapSourceUpdatedCallback)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_COORDINATE), object: nil, queue: nil, using: scrollToCoordinate)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_CONTACT), object: nil, queue: nil, using: scrollToContact)
         
         overlayActiveMapSources()
 
@@ -842,6 +845,29 @@ struct MapView: UIViewRepresentable {
         } else {
             mapView.setCenter(kmlAnnotations.first!.coordinate, animated: true)
         }
+    }
+    
+    private func scrollToCoordinate(notification: Notification) {
+        guard let coordinate: CLLocationCoordinate2D = notification.object as? CLLocationCoordinate2D else {
+            TAKLogger.debug("[MapView] Scroll to Coordinate requested but no Coordinate provided")
+            return
+        }
+        mapView.setCenter(coordinate, animated: true)
+    }
+    
+    private func scrollToContact(notification: Notification) {
+        guard let cotUid = notification.object as? String else {
+            TAKLogger.debug("[MapView] Scroll to Contact requested but no ID provided")
+            return
+        }
+        guard let contact = mapView.annotations.first(where: {
+            ($0 as? MapPointAnnotation)?.cotUid == cotUid
+        }) as? MapPointAnnotation else {
+            TAKLogger.debug("[MapView] Scroll to Contact requested but no contact found")
+            return
+        }
+        mapView.setCenter(contact.coordinate, animated: false)
+        annotationSelected(mapView, annotation: contact)
     }
     
     private func updateKmlOverlays() {
@@ -1107,112 +1133,6 @@ struct MapView: UIViewRepresentable {
             incomingData.forEach { dataRecord in addMapAnnotation(dataRecord: dataRecord) }
         }
     }
-
-//    private func updateAnnotations() {
-//        let context = DataController.shared.backgroundContext
-//        context.perform {
-//            let origUpdateVal = shouldUpdateMap
-//            DispatchQueue.main.async {
-//                shouldUpdateMap = false
-//            }
-//            if(!isAcquiringBloodhoundTarget && activeBloodhound != nil) {
-//                DispatchQueue.main.async {
-//                    mapView.removeOverlay(activeBloodhound!)
-//                    activeBloodhound = nil
-//                    bloodhoundStartCoordinate = nil
-//                    bloodhoundEndCoordinate = nil
-//                    bloodhoundEndAnnotation = nil
-//                }
-//            }
-//            
-//            let fetchData: NSFetchRequest<COTData> = COTData.fetchRequest()
-//            fetchData.predicate = NSPredicate(format: "visible = YES")
-//
-//            let incomingData: [COTData] = (try? context.fetch(fetchData)) ?? []
-//            
-//            let existingAnnotations: [MapPointAnnotation] = mapView.annotations.filter { $0 is MapPointAnnotation } as? [MapPointAnnotation] ?? []
-//
-//            let current = Set(existingAnnotations.map { $0.id })
-//            let new = Set(incomingData.filter { $0.id != nil }.map { $0.id!.uuidString })
-//
-//            let toRemove = Set(current.subtracting(new))
-//            let toAdd = Set(new.subtracting(current))
-//
-//            if !toRemove.isEmpty {
-//                let removableAnnotations = existingAnnotations.filter {
-//                    !$0.isKML &&
-//                    toRemove.contains($0.id)
-//                }
-//
-//                if !removableAnnotations.isEmpty {
-//                    if(bloodhoundEndAnnotation != nil && toRemove.contains(bloodhoundEndAnnotation!.id)) {
-//                        bloodhoundDeselected()
-//                    }
-//                    
-//                    let overlaysToRemove = Array(removableAnnotations.map { $0.shapes }.joined()) as! [MKOverlay]
-//                    DispatchQueue.main.async {
-//                        mapView.removeOverlays(overlaysToRemove)
-//                        mapView.removeAnnotations(removableAnnotations)
-//                    }
-//                }
-//            }
-//            
-//            for mpAnnotation in existingAnnotations {
-//                guard let node = incomingData.first(where: {$0.id?.uuidString == mpAnnotation.id}) else { continue }
-//                let updatedMp = COTMapObject(mapPoint: node).annotation
-//                guard mpAnnotation != updatedMp else { continue }
-//                DispatchQueue.main.async {
-//                    mpAnnotation.title = updatedMp.title
-//                    mpAnnotation.color = updatedMp.color
-//                    mpAnnotation.icon = updatedMp.icon
-//                    mpAnnotation.cotType = updatedMp.cotType
-//                    mpAnnotation.coordinate = updatedMp.coordinate
-//                    mpAnnotation.remarks = updatedMp.remarks
-//                    mpAnnotation.updateDate = updatedMp.updateDate
-//                    mpAnnotation.battery = updatedMp.battery
-//                    mpAnnotation.course = updatedMp.course
-//                    mpAnnotation.speed = updatedMp.speed
-//                    if mpAnnotation.id == bloodhoundEndAnnotation?.id {
-//                        let userLocation = mapView.userLocation.coordinate
-//                        let endPointLocation = mpAnnotation.coordinate
-//                        if(userLocation.latitude != bloodhoundStartCoordinate?.latitude ||
-//                           userLocation.longitude != bloodhoundStartCoordinate?.longitude ||
-//                           endPointLocation.latitude != bloodhoundEndCoordinate?.latitude ||
-//                           endPointLocation.longitude != bloodhoundEndCoordinate?.longitude
-//                        ){
-//                            TAKLogger.debug("Bloodhound endpoint being updated! \(mpAnnotation.title!)")
-//                            if(activeBloodhound != nil) {
-//                                TAKLogger.debug("[MapView] Removing old bloodhound line")
-//                                mapView.removeOverlay(activeBloodhound!)
-//                            } else {
-//                                TAKLogger.debug("[MapView] Updated Bloodhound line but no activeBloodhound")
-//                            }
-//                            createBloodhound(annotation: updatedMp)
-//                        }
-//                    }
-//                    updateCurrentSelectedAnnotation(updatedMp: updatedMp)
-//
-//                    // annotationUpdatedCallback(annotation: mpAnnotation)
-//                }
-//            }
-//
-//            if !toAdd.isEmpty {
-//                let insertingAnnotations = incomingData.filter { toAdd.contains($0.id?.uuidString ?? "") }
-//                let newMapPoints = insertingAnnotations
-//                    .map { COTMapObject(mapPoint: $0) }
-//                let newAnnotations = newMapPoints.filter { !existingAnnotations.contains($0.annotation) }.map { $0.annotation }
-//                let newOverlays = Array(newAnnotations.map { $0.shapes }.joined()) as! [MKOverlay]
-//                
-//                DispatchQueue.main.async {
-//                    mapView.addAnnotations(newAnnotations)
-//                    mapView.addOverlays(newOverlays)
-//                }
-//            }
-//            DispatchQueue.main.async {
-//                shouldUpdateMap = origUpdateVal
-//            }
-//        }
-//    }
     
     func updateCurrentSelectedAnnotation(updatedMp: MapPointAnnotation) {
         if currentSelectedAnnotation != nil
@@ -1376,12 +1296,86 @@ struct MapView: UIViewRepresentable {
             }
         }
     }
+    
+    // struct StrokeSample {
+    //     let location: CGPoint
+     
+    //     init(location: CGPoint) {
+    //         self.location = location
+    //     }
+    // }
+    
+    // @objc(MapTouchCaptureGesture)class MapTouchCaptureGesture: UIGestureRecognizer, NSCoding {
+    //    var trackedTouch: UITouch? = nil
+    //    var samples = [StrokeSample]()
+     
+    //    required init?(coder aDecoder: NSCoder) {
+    //       super.init(target: nil, action: nil)
+     
+    //       self.samples = [StrokeSample]()
+    //    }
+       
+    //     override init(target: Any?, action: Selector?) {
+    //         super.init(target: target, action: action)
+    //         self.samples = [StrokeSample]()
+    //     }
+        
+    //    func encode(with aCoder: NSCoder) { }
+        
+    //     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+    //        if touches.count != 1 {
+    //           self.state = .failed
+    //        }
+         
+    //        // Capture the first touch and store some information about it.
+    //        if self.trackedTouch == nil {
+    //           if let firstTouch = touches.first {
+    //              self.trackedTouch = firstTouch
+    //              self.addSample(for: firstTouch)
+    //              state = .began
+    //           }
+    //        } else {
+    //           // Ignore all but the first touch.
+    //           for touch in touches {
+    //              if touch != self.trackedTouch {
+    //                 self.ignore(touch, for: event)
+    //              }
+    //           }
+    //        }
+    //     }
+         
+    //     func addSample(for touch: UITouch) {
+    //        let newSample = StrokeSample(location: touch.location(in: self.view))
+    //        self.samples.append(newSample)
+    //     }
+       
+    //     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    //        self.addSample(for: touches.first!)
+    //        state = .changed
+    //     }
+         
+    //     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+    //        self.addSample(for: touches.first!)
+    //        state = .ended
+    //     }
+        
+    //     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+    //        self.samples.removeAll()
+    //        state = .cancelled
+    //     }
+         
+    //     override func reset() {
+    //        self.samples.removeAll()
+    //        self.trackedTouch = nil
+    //     }
+    // }
 
     class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate, NSFetchedResultsControllerDelegate {
         var parent: MapView
 
         var mapTapRecognizer = UITapGestureRecognizer()
         var longPressRecognizer = UILongPressGestureRecognizer()
+        // var mapTouchCapture: MapTouchCaptureGesture = MapTouchCaptureGesture()
 
         init(_ parent: MapView) {
             self.parent = parent
@@ -1393,7 +1387,25 @@ struct MapView: UIViewRepresentable {
             self.longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressHandler))
             self.longPressRecognizer.delegate = self
             self.parent.mapView.addGestureRecognizer(longPressRecognizer)
+            
+//            self.mapTouchCapture = MapTouchCaptureGesture(target: self, action: #selector(mapTouchCaptureHandler))
+//            self.mapTouchCapture.delegate = self
+//            self.parent.mapView.addGestureRecognizer(mapTouchCapture)
         }
+        
+        // @objc func mapTouchCaptureHandler(_ gesture: MapTouchCaptureGesture) {
+        //     // TODO: Used for either freeform drawings, or lassos
+        //     if parent.parentView.isDrawing {
+        //         if gesture.samples.count > 1 {
+        //             let coords = gesture.samples.map { self.parent.mapView.convert($0.location, toCoordinateFrom: parent.mapView) }
+        //             if parent.drawingLine != nil {
+        //                 parent.mapView.removeOverlay(parent.drawingLine!)
+        //             }
+        //             parent.drawingLine = COTMapPolyline(coordinates: coords, count: coords.count)
+        //             parent.mapView.addOverlay(parent.drawingLine!)
+        //         }
+        //     }
+        // }
         
         @objc func longPressHandler(_ gesture: UILongPressGestureRecognizer) {
             if gesture.state == .began {
@@ -1415,20 +1427,36 @@ struct MapView: UIViewRepresentable {
             // position on the map, CLLocationCoordinate2D
             let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
             let tappedLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            TAKLogger.debug("[MapView] Map Tapped! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta)")
-            let tapRadius = 5000 * mapView.region.span.latitudeDelta
-            let closeMarkers: [MapPointAnnotation] = mapView.annotations.filter { $0 is MapPointAnnotation && tappedLocation.distance(from: CLLocation(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)) < tapRadius } as? [MapPointAnnotation] ?? []
-            TAKLogger.debug("[MapView] There are \(closeMarkers.count) markers within \(tapRadius) meters")
-            if(closeMarkers.count > 1) {
-                parent.conflictedItems = closeMarkers
-                parent.parentView.openDeconflictionView()
-            } else if(closeMarkers.count == 1) {
-                parent.parentView.closeDeconflictionView()
-                parent.annotationSelected(mapView, annotation: closeMarkers.first!)
-            } else if(parent.currentSelectedAnnotation != nil) {
-                parent.parentView.closeDeconflictionView()
-                mapView.selectedAnnotations.forEach { sa in mapView.deselectAnnotation(sa, animated: false)}
-                parent.currentSelectedAnnotation = nil
+
+            if parent.parentView.isDrawing {
+                TAKLogger.debug("[MapView] Draw Location Tapped! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta)")
+                parent.parentView.drawingPoints.append(coordinate)
+                if parent.parentView.drawingPoints.count > 1 {
+                    if parent.drawingLine != nil {
+                        mapView.removeOverlay(parent.drawingLine!)
+                    }
+                    parent.drawingLine = COTMapPolyline(coordinates: parent.parentView.drawingPoints, count: parent.parentView.drawingPoints.count)
+                    mapView.addOverlay(parent.drawingLine!)
+                }
+            } else {
+                if parent.drawingLine != nil {
+                    mapView.removeOverlay(parent.drawingLine!)
+                }
+                TAKLogger.debug("[MapView] Map Tapped! \(String(describing: coordinate)), Lat: \(mapView.region.span.latitudeDelta), Lon: \(mapView.region.span.longitudeDelta)")
+                let tapRadius = 5000 * mapView.region.span.latitudeDelta
+                let closeMarkers: [MapPointAnnotation] = mapView.annotations.filter { $0 is MapPointAnnotation && tappedLocation.distance(from: CLLocation(latitude: $0.coordinate.latitude, longitude: $0.coordinate.longitude)) < tapRadius } as? [MapPointAnnotation] ?? []
+                TAKLogger.debug("[MapView] There are \(closeMarkers.count) markers within \(tapRadius) meters")
+                if(closeMarkers.count > 1) {
+                    parent.conflictedItems = closeMarkers
+                    parent.parentView.openDeconflictionView()
+                } else if(closeMarkers.count == 1) {
+                    parent.parentView.closeDeconflictionView()
+                    parent.annotationSelected(mapView, annotation: closeMarkers.first!)
+                } else if(parent.currentSelectedAnnotation != nil) {
+                    parent.parentView.closeDeconflictionView()
+                    mapView.selectedAnnotations.forEach { sa in mapView.deselectAnnotation(sa, animated: false)}
+                    parent.currentSelectedAnnotation = nil
+                }
             }
         }
         

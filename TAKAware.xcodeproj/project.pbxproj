@@ -80,6 +80,7 @@
 		A578E42E2C550FD8001978D4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E42D2C550FD8001978D4 /* MapView.swift */; };
 		A578E4382C55B3E1001978D4 /* DataSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E4372C55B3E1001978D4 /* DataSyncManager.swift */; };
 		A578E43E2C56E97A001978D4 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A578E43D2C56E97A001978D4 /* Launch Screen.storyboard */; };
+		A587B2872DEFD936006AB654 /* ResizedSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A587B2862DEFD933006AB654 /* ResizedSymbol.swift */; };
 		A59530FC2CF7EFB00078C1E8 /* DataPackageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59530FB2CF7EFA30078C1E8 /* DataPackageManager.swift */; };
 		A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6672C278CCD00E81976 /* AwarenessView.swift */; };
 		A595F66A2C278CFE00E81976 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6692C278CFE00E81976 /* Components.swift */; };
@@ -3534,6 +3535,7 @@
 		A578E42D2C550FD8001978D4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		A578E4372C55B3E1001978D4 /* DataSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSyncManager.swift; sourceTree = "<group>"; };
 		A578E43D2C56E97A001978D4 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		A587B2862DEFD933006AB654 /* ResizedSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizedSymbol.swift; sourceTree = "<group>"; };
 		A58B372C2A57B0390002B984 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A58B372D2A57B38A0002B984 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		A59530FB2CF7EFA30078C1E8 /* DataPackageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackageManager.swift; sourceTree = "<group>"; };
@@ -10504,6 +10506,7 @@
 		A5E2F8FF2A791F6B00EDD0B4 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				A587B2862DEFD933006AB654 /* ResizedSymbol.swift */,
 				A5E7B0172A76AA8B00D9203F /* TAKLogger.swift */,
 				A55CE96A2AB1D8860081AF86 /* Converter.swift */,
 				4630FD0D2B506EC000988ED4 /* Palette+Color.swift */,
@@ -14152,6 +14155,7 @@
 				A54312EF2D52D6C100033230 /* IconsetImporter.swift in Sources */,
 				A53F59EC2D0FD58900DFD794 /* SettingsSheet.swift in Sources */,
 				A53F59ED2D0FD58900DFD794 /* Sheet.swift in Sources */,
+				A587B2872DEFD936006AB654 /* ResizedSymbol.swift in Sources */,
 				A53F59EE2D0FD58900DFD794 /* VideoPlayerView.swift in Sources */,
 				A5A30D572D280F88009399F3 /* KMLData.swift in Sources */,
 				A5B312C72C39CAAF007B3914 /* IconData.swift in Sources */,

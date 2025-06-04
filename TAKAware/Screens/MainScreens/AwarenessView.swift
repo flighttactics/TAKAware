@@ -82,12 +82,14 @@ struct AwarenessView: View {
     @State private var tracking:MapUserTrackingMode = .none
     @State var selectedSheet: Sheet.SheetType? = nil
     @State var isAcquiringBloodhoundTarget: Bool = false
+    @State var isDrawing: Bool = false
     @State var presentPhoneOptions: Bool = false
     @State var presentTextMessageComposer: Bool = false
     @State var phoneOptionsPhoneNumber: String? = nil
     @State var currentSelectedAnnotation: MapPointAnnotation? = nil
     @State var bloodhoundEndPoint: MapPointAnnotation? = nil
     @State var conflictedItems: [MapPointAnnotation] = []
+    @State var drawingPoints: [CLLocationCoordinate2D] = []
 
     @State var bloodhoundDeselectedCallback: () -> Void = { () in }
     @State var annotationUpdatedCallback: (MapPointAnnotation) -> Void = { (_) in }
@@ -218,6 +220,17 @@ struct AwarenessView: View {
             parentView: self
         ).ignoresSafeArea(edges: .all)
     }
+    
+    func drawClicked() {
+        if isDrawing {
+            print("Draw Complete!")
+            isDrawing.toggle()
+        } else {
+            print("Draw Complete!")
+            drawingPoints = []
+            isDrawing.toggle()
+        }
+    }
 
     var toolbarItemsRight: some View {
         VStack(alignment: .trailing) {
@@ -228,6 +241,17 @@ struct AwarenessView: View {
                     Button(action: { bloodhoundDeselectedCallback() }) {
                         navBarImage(imageName: "bloodhound")
                             .colorMultiply((isAcquiringBloodhoundTarget ? .red : .clear))
+                            .padding(5)
+                    }
+                    
+                    // Button(action: { drawClicked() }) {
+                    //     navBarImage(systemName: "pencil")
+                    //         .colorMultiply((isDrawing ? .red : .yellow))
+                    //         .padding(5)
+                    // }
+                    
+                    Button(action: { selectedSheet = .contacts }) {
+                        navBarImage(systemName: "person.2")
                             .padding(5)
                     }
                     

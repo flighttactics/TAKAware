@@ -57,6 +57,7 @@ struct AppConstants {
     static let NOTIFY_APP_BACKGROUND = "AppScenePhaseBackground"
     static let NOTIFY_SCROLL_TO_KML = "ScrollToKML"
     static let NOTIFY_SCROLL_TO_COORDINATE = "ScrollToCoordinate"
+    static let NOTIFY_SCROLL_TO_CONTACT = "ScrollToContact"
     static let NOTIFY_MAP_SOURCE_UPDATED = "MapSourceUpdated"
     static let NOTIFY_SERVER_CONNECTED = "TAKServerConnected"
     static let NOTIFY_PHONE_ACTION_REQUESTED = "PhoneActionRequested"
