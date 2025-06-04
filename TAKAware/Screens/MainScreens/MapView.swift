@@ -727,8 +727,8 @@ struct MapView: UIViewRepresentable {
                     TAKLogger.debug("[MapView] Clearing the existing custom map source")
                     mapView.removeOverlay(activeCustomMapOverlay!)
                 }
-                let cleanedFromGoogleUrl = sourceUrl.replacingOccurrences(of: "{$", with: "{")
-                let mapSourceOverlay = MKTileOverlay(urlTemplate: cleanedFromGoogleUrl)
+
+                let mapSourceOverlay = CacheableTileOverlay(urlTemplate: sourceUrl)
                 mapSourceOverlay.canReplaceMapContent = true
                 
                 DispatchQueue.main.async {

@@ -72,18 +72,17 @@ struct MapOptions: View {
                 Section(header: Text("Base Map")) {
                     List {
                         ForEach(availableMapSources, id:\.self) { baseMapOption in
-                            Button {
-                                updateBaseMapTo(baseMapOption)
-                            } label: {
-                                HStack {
-                                    if(isCurrentBaseMap(baseMapOption)) {
-                                        Image(systemName: "eye.fill")
-                                    } else {
-                                        Image(systemName: "eye.slash")
-                                    }
-                                    Text(baseMapOption)
+                            HStack {
+                                if(isCurrentBaseMap(baseMapOption)) {
+                                    Image(systemName: "eye.fill")
+                                } else {
+                                    Image(systemName: "eye.slash")
                                 }
+                                Text(baseMapOption)
+                                Spacer()
                             }
+                            .contentShape(Rectangle())
+                            .onTapGesture(perform: { updateBaseMapTo(baseMapOption) })
                         }
                     }
                 }

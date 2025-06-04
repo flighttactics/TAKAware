@@ -9,6 +9,7 @@
 // TODO: Modify this to be able to pull from uploaded MBTile files
 // TODO: Does this matter if it's an actual offline map vs image overlay?
 
+import CoreData
 import Foundation
 import SQLite
 import MapKit
@@ -168,6 +169,38 @@ class OfflineTileOverlay : MKTileOverlay {
             TAKLogger.error("[OfflineTileOverlay] Error retrieving tile \(error)")
         }
         throw OfflineTileLoadError()
+    }
+}
+
+class CachedTile {
+    var tileData: Data
+    
+    init(tileData: Data) {
+        self.tileData = tileData
+    }
+}
+
+class CacheableTileOverlay: MKTileOverlay {
+    let cache = NSCache<NSString, CachedTile>()
+    
+    override init(urlTemplate URLTemplate: String?) {
+        let sourceUrl = URLTemplate ?? ""
+        let cleanedFromGoogleUrl = sourceUrl.replacingOccurrences(of: "{$", with: "{")
+        super.init(urlTemplate: cleanedFromGoogleUrl)
+    }
+    
+    override func loadTile(at path: MKTileOverlayPath) async throws -> Data {
+        return try await super.loadTile(at: path)
+        // TODO: Reenable caching
+//        let cacheKey = self.url(forTilePath: path).absoluteString
+//        guard let cachedTile = await MapCacheDataController.shared.retrieveTileFor(cacheKey: cacheKey) else {
+//            let loadedTile = try await super.loadTile(at: path)
+//            if !loadedTile.isEmpty {
+//                await MapCacheDataController.shared.insertTile(cacheKey: cacheKey, mapTile: loadedTile)
+//            }
+//            return loadedTile
+//        }
+//        return cachedTile
     }
 }
 

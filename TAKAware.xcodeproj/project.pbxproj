@@ -81,6 +81,8 @@
 		A578E4382C55B3E1001978D4 /* DataSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A578E4372C55B3E1001978D4 /* DataSyncManager.swift */; };
 		A578E43E2C56E97A001978D4 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A578E43D2C56E97A001978D4 /* Launch Screen.storyboard */; };
 		A587B2872DEFD936006AB654 /* ResizedSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A587B2862DEFD933006AB654 /* ResizedSymbol.swift */; };
+		A587B28C2DF0E1A0006AB654 /* MapCache.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A587B28A2DF0E1A0006AB654 /* MapCache.xcdatamodeld */; };
+		A587B28E2DF0E268006AB654 /* MapCacheDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A587B28D2DF0E263006AB654 /* MapCacheDataController.swift */; };
 		A59530FC2CF7EFB00078C1E8 /* DataPackageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59530FB2CF7EFA30078C1E8 /* DataPackageManager.swift */; };
 		A595F6682C278CCD00E81976 /* AwarenessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6672C278CCD00E81976 /* AwarenessView.swift */; };
 		A595F66A2C278CFE00E81976 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = A595F6692C278CFE00E81976 /* Components.swift */; };
@@ -3536,6 +3538,8 @@
 		A578E4372C55B3E1001978D4 /* DataSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSyncManager.swift; sourceTree = "<group>"; };
 		A578E43D2C56E97A001978D4 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		A587B2862DEFD933006AB654 /* ResizedSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizedSymbol.swift; sourceTree = "<group>"; };
+		A587B28B2DF0E1A0006AB654 /* MapCache.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MapCache.xcdatamodel; sourceTree = "<group>"; };
+		A587B28D2DF0E263006AB654 /* MapCacheDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapCacheDataController.swift; sourceTree = "<group>"; };
 		A58B372C2A57B0390002B984 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A58B372D2A57B38A0002B984 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		A59530FB2CF7EFA30078C1E8 /* DataPackageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPackageManager.swift; sourceTree = "<group>"; };
@@ -10485,6 +10489,7 @@
 		A5E2F8FE2A791F5600EDD0B4 /* Data Models */ = {
 			isa = PBXGroup;
 			children = (
+				A587B28D2DF0E263006AB654 /* MapCacheDataController.swift */,
 				A599849E2DD195F4009A4F4D /* TAKProtoToSwiftTAKConverter.swift */,
 				A5A32C5A2D5863AF00C9F12A /* IconDataController.swift */,
 				A5A30D562D280F84009399F3 /* KMLData.swift */,
@@ -10499,6 +10504,7 @@
 				A5B312C62C39CAAF007B3914 /* IconData.swift */,
 				A54312DC2D4E720000033230 /* takproto-swift */,
 				A5A32C572D585EBA00C9F12A /* IconSetModel.xcdatamodeld */,
+				A587B28A2DF0E1A0006AB654 /* MapCache.xcdatamodeld */,
 			);
 			path = "Data Models";
 			sourceTree = "<group>";
@@ -14108,6 +14114,7 @@
 				A54312DD2D4E720000033230 /* group.pb.swift in Sources */,
 				A54312DE2D4E720000033230 /* contact.pb.swift in Sources */,
 				A54312DF2D4E720000033230 /* takmessage.pb.swift in Sources */,
+				A587B28C2DF0E1A0006AB654 /* MapCache.xcdatamodeld in Sources */,
 				A54312E02D4E720000033230 /* takcontrol.pb.swift in Sources */,
 				A567329F2D7E4B5700BCC83F /* StringProtocol+Extension.swift in Sources */,
 				A54312E12D4E720000033230 /* cotevent.pb.swift in Sources */,
@@ -14147,6 +14154,7 @@
 				A53F59E62D0FD58900DFD794 /* AnnotationDetailView.swift in Sources */,
 				A53F59E72D0FD58900DFD794 /* ChannelSheet.swift in Sources */,
 				A52BE8F52D15AAB900E82414 /* KMLParser.swift in Sources */,
+				A587B28E2DF0E268006AB654 /* MapCacheDataController.swift in Sources */,
 				A53F59E82D0FD58900DFD794 /* ChatSheet.swift in Sources */,
 				A53F59E92D0FD58900DFD794 /* DataPackageSheet.swift in Sources */,
 				A567329D2D7E4B4E00BCC83F /* Collection+Extension.swift in Sources */,
@@ -14682,6 +14690,16 @@
 			);
 			currentVersion = 4630FD4B2B51A34500988ED4 /* Message.xcdatamodel */;
 			path = MessageModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		A587B28A2DF0E1A0006AB654 /* MapCache.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A587B28B2DF0E1A0006AB654 /* MapCache.xcdatamodel */,
+			);
+			currentVersion = A587B28B2DF0E1A0006AB654 /* MapCache.xcdatamodel */;
+			path = MapCache.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
