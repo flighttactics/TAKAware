@@ -53,15 +53,52 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
         return positionInfo
     }
     
+    // TODO: Need to include all attributes of the source point (color, etc)
+    // TODO: Need to test this sending over mesh only network
+    func sendPointTo(annotation: MapPointAnnotation, contacts: [COTData]) {
+        let cotLink = COTLink(parentCallsign: SettingsStore.global.callSign, productionTime: ISO8601DateFormatter().string(from: Date.now), relation: "p-p", type: SettingsStore.global.cotType, uid: AppConstants.getClientID())
+        contacts.forEach { contact in
+            let cotEvent = buildCotEvent(annotation: annotation, link: cotLink, callsign: contact.callsign)
+            let message = cotEvent.toXml()
+            TAKLogger.debug("[TAKManager]: Getting ready to send marker CoT")
+            TAKLogger.debug(message)
+            self.sendToTCP(message: message)
+            TAKLogger.debug("[TAKManager]: Done sending marker CoT")
+        }
+    }
+    
     func broadcastPoint(annotation: MapPointAnnotation) {
-        var cotEvent = COTEvent(version: COTMessage.COT_EVENT_VERSION, uid: annotation.id, type: annotation.cotType!, how: HowType.HumanGIGO.rawValue, time: Date(), start: Date(), stale: Date().addingTimeInterval(10.0))
+        let cotEvent = buildCotEvent(annotation: annotation)
+        
+        let message = cotEvent.toXml()
+        TAKLogger.debug("[TAKManager]: Getting ready to broadcast marker CoT")
+        TAKLogger.debug(message)
+        self.sendToUDP(message: message)
+        self.sendToTCP(message: message)
+        TAKLogger.debug("[TAKManager]: Done broadcasting marker CoT")
+    }
+    
+    private func buildCotEvent(annotation: MapPointAnnotation, link: COTLink? = nil, callsign: String? = nil) -> COTEvent {
+        var cotEvent = COTEvent(version: COTMessage.COT_EVENT_VERSION, uid: annotation.id, type: annotation.cotType!, how: annotation.cotHow!, time: Date(), start: Date(), stale: Date().addingTimeInterval(10.0))
         
         let cotPoint = COTPoint(lat: annotation.coordinate.latitude.description, lon: annotation.coordinate.longitude.description, hae: COTPoint.DEFAULT_ERROR_VALUE.description, ce: COTPoint.DEFAULT_ERROR_VALUE.description, le: COTPoint.DEFAULT_ERROR_VALUE.description)
         
         cotEvent.childNodes.append(cotPoint)
         
         var cotDetail = COTDetail()
-        cotDetail.childNodes.append(COTContact(callsign: annotation.title ?? "Unknown"))
+        if let cotLink = link {
+            cotDetail.childNodes.append(cotLink)
+        }
+        if let callsign = callsign {
+            cotDetail.childNodes.append(COTMarti(uid: callsign))
+            cotDetail.childNodes.append(COTContact(
+                endpoint: "*:-1:stcp",
+                callsign: annotation.title ?? "Unknown"
+            ))
+        } else {
+            cotDetail.childNodes.append(COTContact(callsign: annotation.title ?? "Unknown"))
+        }
+        
         cotDetail.childNodes.append(COTArchive())
         cotDetail.childNodes.append(COTRemarks(message: annotation.remarks ?? ""))
         if annotation.icon != nil {
@@ -114,13 +151,7 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
         }
         
         cotEvent.childNodes.append(cotDetail)
-        
-        let message = cotEvent.toXml()
-        TAKLogger.debug("[TAKManager]: Getting ready to broadcast marker CoT")
-        TAKLogger.debug(message)
-        self.sendToUDP(message: message)
-        self.sendToTCP(message: message)
-        TAKLogger.debug("[TAKManager]: Done broadcasting marker CoT")
+        return cotEvent
     }
     
     func broadcastLocation(locationManager: LocationManager) {

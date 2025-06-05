@@ -317,6 +317,7 @@ class MapPointAnnotation: NSObject, MKAnnotation {
     dynamic var battery: Double?
     dynamic var icon: String?
     dynamic var cotType: String?
+    dynamic var cotHow: String?
     dynamic var image: UIImage? = UIImage.init(systemName: "circle.fill")
     dynamic var color: UIColor?
     dynamic var remarks: String?
@@ -359,6 +360,7 @@ class MapPointAnnotation: NSObject, MKAnnotation {
         self.title = mapPoint.callsign ?? "NO CALLSIGN"
         self.icon = mapPoint.icon ?? ""
         self.cotType = mapPoint.cotType ?? "a-U-G"
+        self.cotHow = mapPoint.cotHow ?? HowType.HumanGIGO.rawValue
         self.coordinate = CLLocationCoordinate2D(latitude: mapPoint.latitude, longitude: mapPoint.longitude)
         self.altitude = mapPoint.altitude
         self.speed = mapPoint.speed

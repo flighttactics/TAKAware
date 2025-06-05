@@ -230,6 +230,7 @@ struct AnnotationDetailReadOnly: View {
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
     @Binding var isEditing: Bool
     @State private var showingAlert = false
+    @State private var presentContactSelection = false
     @State private var htmlContentHeight: Double = 200.0
     
     func broadcastPoint() {
@@ -279,14 +280,18 @@ struct AnnotationDetailReadOnly: View {
                     Button(action: { isEditing = true }) {
                         HStack {
                             Text("Edit")
-                            Image(systemName: "square.and.pencil")
+                        }
+                    }
+                    .buttonStyle(BorderedProminentButtonStyle())
+                    Button(action: { presentContactSelection.toggle() }) {
+                        HStack {
+                            Text("Send")
                         }
                     }
                     .buttonStyle(BorderedProminentButtonStyle())
                     Button(action: { broadcastPoint() }) {
                         HStack {
                             Text("Broadcast")
-                            Image(systemName: "square.and.arrow.up.fill")
                         }
                     }
                     .buttonStyle(BorderedProminentButtonStyle())
@@ -298,6 +303,14 @@ struct AnnotationDetailReadOnly: View {
         .alert("Marker broadcast to server", isPresented: $showingAlert) {
             Button("OK", role: .cancel) { }
         }
+        .sheet(isPresented: $presentContactSelection, content: {
+            if currentSelectedAnnotation != nil {
+                ContactsSelectionSheet(selectedAnnotation: currentSelectedAnnotation!)
+            } else {
+                Text("No Annotation Selected")
+                Button("Close") { dismiss() }
+            }
+        })
     }
 }
 
