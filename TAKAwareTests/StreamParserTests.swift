@@ -118,4 +118,28 @@ final class StreamParserTests: TAKAwareTestCase {
         XCTAssertEqual(1, events.count, "Parser did not handle protobuf properly")
         XCTAssertEqual(cotUid, events.first?.uid, "Event UID did not match expected")
     }
+    
+    func testParseFileDownload() throws {
+        /*
+         <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
+         <event version=\"2.0\" uid=\"59f920ce-43c8-4e02-b9ef-a1639d4c96a1\" type=\"b-f-t-r\" how=\"h-e\" time=\"2025-06-04T21:45:20Z\" start=\"2025-06-04T21:45:20Z\" stale=\"2025-06-04T21:45:30Z\" access=\"Undefined\">
+         <point lat=\"36.046997\" lon=\"-79.176799\" hae=\"174.4675914\" ce=\"9.9350462\" le=\"NaN\"/>
+         <detail>
+             <fileshare
+                 filename=\"BingHybrid.xml.zip\"
+                 senderUrl=\"https://137.118.181.203:8443/Marti/sync/content?hash=6f083c3b6b19aa8233ef8907b2eab241f96987f328c19c6193428d210659a1d2\"
+                 sizeInBytes=\"938\"
+                 sha256=\"6f083c3b6b19aa8233ef8907b2eab241f96987f328c19c6193428d210659a1d2\"
+                 senderUid=\"ANDROID-07b42ddf9728082d\"
+                 senderCallsign=\"USCP-HQ-UASMONITOR\"
+                 name=\"BingHybrid.xml\"/>
+             <ackrequest
+                 uid=\"aedbfc35-a1a3-46dd-9759-45e2c88e7d4c\"
+                 ackrequested=\"true\"
+                 tag=\"BingHybrid.xml\"/>
+             <_flow-tags_ TAK-Server-7e38d7c8805a4306bc5ab0a61ffec77d=\"2025-06-04T21:45:20Z\"/>
+         </detail>
+         </event>
+         */
+    }
 }
