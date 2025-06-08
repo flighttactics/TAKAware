@@ -20,6 +20,23 @@ class COTMapObject: NSObject {
     static let LINE_TYPES: [String] = ["b-m-r"]
     static let OVERLAY_TYPES: [String] = RECTANGLE_TYPES + CIRCLE_TYPES + LINE_TYPES + ELLIPSE_TYPES
     
+    static func typeToDescriptor(_ cotType: String) -> String {
+        switch(cotType) {
+        case "u-d-f":
+            "Polygon"
+        case "u-d-r":
+            "Rectangle"
+        case "u-d-c-c":
+            "Circle"
+        case "u-d-c-e":
+            "Ellipse"
+        case "b-m-r":
+            "Line"
+        default:
+            "Unknown Shape"
+        }
+    }
+    
     var cotData: COTData
     var cotEvent: COTEvent?
     
@@ -38,7 +55,7 @@ class COTMapObject: NSObject {
     var annotation: MapPointAnnotation {
         if isLine, let line = self.shape as? COTMapPolyline {
             let centerPoint = line.coordinate
-            var mpa = MapPointAnnotation(mapPoint: cotData, shape: self.shape)
+            let mpa = MapPointAnnotation(mapPoint: cotData, shape: self.shape)
             mpa.coordinate = centerPoint
             return mpa
         } else if isShape {

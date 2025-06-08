@@ -10,8 +10,31 @@ import Foundation
 import SwiftUI
 import MobileVLCKit
 
+struct VideoList: View {
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.callsign)], predicate: NSPredicate(format: "videoURL != NULL"))
+    private var videos: FetchedResults<COTData>
+    
+    @State var nullAnnotation: MapPointAnnotation? = nil
+    
+    var body: some View {
+        List {
+            ForEach(videos) { video in
+                NavigationLink {
+                    VideoView(currentSelectedAnnotation: $nullAnnotation, nonBindingAnnotation: MapPointAnnotation(mapPoint: video))
+                } label: {
+                    HStack {
+                        IconImage(annotation: MapPointAnnotation(mapPoint: video))
+                        Text(video.callsign ?? "No Callsign")
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct VideoView: UIViewRepresentable {
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
+    var nonBindingAnnotation: MapPointAnnotation? = nil
     @State var mediaPlayer = VLCMediaPlayer()
 
     typealias UIViewType = UIView
@@ -24,11 +47,26 @@ struct VideoView: UIViewRepresentable {
 
     func updateUIView(_ uiView: UIView, context: Context) {
         if let url = currentSelectedAnnotation?.videoURL {
-            TAKLogger.debug("[VideoView] Attempting to play \(url)")
-            mediaPlayer.media = VLCMedia(url: url)
-            mediaPlayer.play()
-        }
-        else {
+            if mediaPlayer.media == nil {
+                TAKLogger.debug("[VideoView] Attempting to play \(url)")
+                mediaPlayer.media = VLCMedia(url: url)
+                mediaPlayer.play()
+            } else if mediaPlayer.media.url != url {
+                TAKLogger.debug("[VideoView] Attempting to play updated \(url)")
+                mediaPlayer.media = VLCMedia(url: url)
+                mediaPlayer.play()
+            }
+        } else if let url = nonBindingAnnotation?.videoURL {
+            if mediaPlayer.media == nil {
+                TAKLogger.debug("[VideoView] Attempting to play \(url)")
+                mediaPlayer.media = VLCMedia(url: url)
+                mediaPlayer.play()
+            } else if mediaPlayer.media.url != url {
+                TAKLogger.debug("[VideoView] Attempting to play updated \(url)")
+                mediaPlayer.media = VLCMedia(url: url)
+                mediaPlayer.play()
+            }
+        } else {
             mediaPlayer.stop()
         }
     }

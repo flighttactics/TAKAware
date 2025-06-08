@@ -37,6 +37,7 @@ struct SettingsSheet: View {
                     DataPackageOptions()
                     KMLOptions()
                     DataSyncMissionOptions()
+                    OverlayManagerOptions()
                     AboutInformation()
                 }
             }

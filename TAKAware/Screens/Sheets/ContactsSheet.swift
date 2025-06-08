@@ -11,6 +11,110 @@ import MapKit
 import SwiftTAK
 import SwiftUI
 
+struct AlertsDetail: View {
+    @FetchRequest(sortDescriptors: [], predicate: NSPredicate(format: "isAlert = YES"))
+    private var contactAlerts: FetchedResults<COTData>
+    
+    var body: some View {
+        List {
+            if contactAlerts.isEmpty {
+                Text("No alerts found")
+            } else {
+                ForEach(contactAlerts) { marker in
+                    HStack {
+                        IconImage(annotation: MapPointAnnotation(mapPoint: marker))
+                        Text(marker.callsign ?? "Unknown Marker")
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_CONTACT), object: marker.cotUid)
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct ContactsDetail: View {
+    @StateObject var settingsStore: SettingsStore = SettingsStore.global
+    
+    @SectionedFetchRequest(
+      entity: COTData.entity(),
+      sectionIdentifier: \.role,
+      sortDescriptors: [
+        NSSortDescriptor(SortDescriptor(\COTData.role, comparator: .localizedStandard))
+      ],
+      predicate: NSPredicate(format: "role != NULL")
+    ) var contactsByRole: SectionedFetchResults<String?, COTData>
+    
+    @SectionedFetchRequest(
+      entity: COTData.entity(),
+      sectionIdentifier: \.team,
+      sortDescriptors: [
+        NSSortDescriptor(SortDescriptor(\COTData.team, comparator: .localizedStandard))
+      ],
+      predicate: NSPredicate(format: "role != NULL")
+    ) var contactsByTeam: SectionedFetchResults<String?, COTData>
+
+    var body: some View {
+        List {
+            ForEach(contactsByRole) { section in
+                NavigationLink {
+                    List {
+                        ForEach(section.sorted(by: { ($0.callsign ?? "") < ($1.callsign ?? "") })) { marker in
+                            HStack {
+                                IconImage(annotation: MapPointAnnotation(mapPoint: marker))
+                                Text(marker.callsign ?? "Unknown Marker")
+                                Spacer()
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_CONTACT), object: marker.cotUid)
+                            }
+                        }
+                    }
+                } label: {
+                    HStack {
+                        RoleImage(role: section.id!)
+                        VStack(alignment: .leading) {
+                            Text(section.id!)
+                            Text("^[\(section.count) items](inflect: true)")
+                                .font(.system(size: 8.0))
+                        }
+                    }
+                }
+            }
+            ForEach(contactsByTeam) { section in
+                NavigationLink {
+                    List {
+                        ForEach(section.sorted(by: { ($0.callsign ?? "") < ($1.callsign ?? "") })) { marker in
+                            HStack {
+                                IconImage(annotation: MapPointAnnotation(mapPoint: marker))
+                                Text(marker.callsign ?? "Unknown Marker")
+                                Spacer()
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_CONTACT), object: marker.cotUid)
+                            }
+                        }
+                    }
+                } label: {
+                    HStack {
+                        TeamImage(team: section.id!)
+                        VStack(alignment: .leading) {
+                            Text(section.id!)
+                            Text("^[\(section.count) items](inflect: true)")
+                                .font(.system(size: 8.0))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct ContactsSelectionSheet: View {
     let selectedAnnotation: MapPointAnnotation
 
