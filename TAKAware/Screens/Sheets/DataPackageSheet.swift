@@ -92,10 +92,21 @@ struct DataPackageFilesList: View {
         let zipEntry = dataPackageFile.zipEntry ?? ""
         if dataPackageFile.isCoT {
             Image(systemName: "target")
+                .onTapGesture {
+                    NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_CONTACT), object: dataPackageFile.cotData?.cotUid)
+                }
         } else if zipEntry.hasSuffix(".kml") {
             Image(systemName: "doc")
+                .onTapGesture {
+                    debugPrint(dataPackageFile)
+                    NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_KML), object: dataPackageFile.cotUid)
+                }
         } else if zipEntry.hasSuffix(".kmz") {
             Image(systemName: "doc")
+                .onTapGesture {
+                    debugPrint(dataPackageFile)
+                    NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_KML), object: dataPackageFile.cotUid)
+                }
         } else {
             let fileUrl = DataPackageManager.filePathFor(packageId: dataPackageFile.dataPackage?.uid, filePath: zipEntry)
             if dataPackageFile.zipEntry != nil && fileUrl != nil {

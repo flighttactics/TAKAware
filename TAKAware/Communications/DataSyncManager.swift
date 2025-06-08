@@ -168,6 +168,38 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
         retrieveMission(missionName: missionName, password: password, shouldSyncContents: true)
     }
     
+    func dM2(mission: DataSyncDataPackage, shouldDbBack: Bool = false) {
+        /*
+         DS Missions consist of two primary data structures: UIDs and Contents:
+         - UIDs are the CoT messages, and can be any valid CoT message (though usually markers, shapes, etc)
+         - Contents are files, which could be images, PDFs, GeoPDF/GeoTiffs, DataPackages, etc
+            - Contents have to be downloaded in a separate call for each file by hash
+            - We'll want to store them locally on the file system
+            - We'll also need to process them like we're importing a DataPackage file
+                - Import Zip files like DataPackages
+                - Import KML/KMZs as KML/KMZs and place on the map
+                - Import GeoPDFs/GeoTiffs/etc and place on the map
+                - Download all other files and make accessible via preview/share sheet
+         
+         When we're syncing a mission in bulk like this, we need to take into account that
+         this may be a mission we already have, so we may be adding or deleting items or
+         content from the device
+         
+         So the basics of this are:
+            - Save the DS mission itself in the DataStore
+            - Loop through the UIDs and process like CoT messages
+            - Loop through Contents, creating a directory based on the
+                mission UUID, and download the files
+            - Then process any downloaded files
+            - Store UID and Content items in the DataStore as children of the mission
+            - Match up deleted files and CoT and remove from the mission
+         
+         Once subscribed, individual changes will be processed through our CoT Stream Parser
+         Though worth noting that when we disconnect from the server, it unsubscribes us
+         so the next time we connect we'll resync in bulk again
+         */
+    }
+    
     func downloadMission(mission: DataSyncDataPackage, shouldDbBack: Bool = false) {
         isDownloadingMission = true
         // Retrieve Mission
@@ -300,6 +332,7 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
         }
     }
     
+    // TODO: Delete mission items as well
     func deleteDataSyncMission(missionName: String, deleteContents: Bool = false) {
         dataContext.perform {
             let fetchDsm: NSFetchRequest<DataSyncMission> = DataSyncMission.fetchRequest()
@@ -534,6 +567,23 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                             return dsPackage
                         }
                         
+                        /*
+                         ["creatorUid": F8C5D325-7B71-48E1-B148-F00E62387BEC, "timestamp": 2025-03-01T03:34:07.309Z, "data": {
+                             creatorUid = "F8C5D325-7B71-48E1-B148-F00E62387BEC";
+                             expiration = "-1";
+                             hash = 2be3118b8c1e71b719b2372513010271f27634b8dbc59f6581b58f742b5c1ee9;
+                             keywords =     (
+                             );
+                             mimeType = "application/octet-stream";
+                             name = "20250301_033326.jpeg";
+                             size = 4625737;
+                             submissionTime = "2025-03-01T03:34:06.706Z";
+                             submitter = "cory.foy.iphone";
+                             uid = "37F38D33-E6E6-C8E6-9045-1027181C8AED";
+                         }]
+                         */
+                        
+                        // TODO: Download contents to the file system
                         let mappedContents: [DataSyncDataPackageContent] = contents.map { content in
                             let detail: [String: Any]? = content["data"] as? [String: Any]
                             let uid = detail?["uid"] as? String ?? UUID().uuidString
@@ -542,7 +592,11 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
                                 data: DataSyncDataPackageContentData(
                                     mimeType: detail?["mimeType"] as? String ?? "",
                                     name: detail?["name"] as? String ?? "UNKNOWN",
+                                    submissionTime: detail?["submissionTime"] as? String ?? "",
+                                    submitter: detail?["submitter"] as? String ?? "",
                                     uid: uid,
+                                    creatorUid: detail?["creatorUid"] as? String ?? "",
+                                    hash: detail?["hash"] as? String ?? "",
                                     size: detail?["size"] as? Int ?? 0
                                 ),
                                 timestamp: content["timestamp"] as? String ?? "",

@@ -109,6 +109,7 @@ struct DataSyncSubscribedMissionDetail: View {
                                 }
                             }
 
+                            // TODO: Delete Mission Items option
                             if retrievedMission?.dbUid != nil {
                                 Button(role: .destructive, action: { unsubscribeFromMission() }) {
                                     HStack {
