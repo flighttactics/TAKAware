@@ -101,7 +101,6 @@
 		A5AA510F2AC35B75006696B2 /* SettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5AA510E2AC35B75006696B2 /* SettingsStoreTests.swift */; };
 		A5B1FF642C3B86D600C7F546 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B1FF632C3B86D600C7F546 /* UIImage+Extension.swift */; };
 		A5B312B72C38C57D007B3914 /* iconsets.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = A5B312B62C38C57D007B3914 /* iconsets.sqlite */; };
-		A5B312BB2C38C5A6007B3914 /* COTData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A5B312B92C38C5A6007B3914 /* COTData.xcdatamodeld */; };
 		A5B312C12C397AC5007B3914 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B312C02C397AC5007B3914 /* DataController.swift */; };
 		A5B312C52C39CA91007B3914 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = A5B312C42C39CA91007B3914 /* SQLite */; };
 		A5B312C72C39CAAF007B3914 /* IconData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B312C62C39CAAF007B3914 /* IconData.swift */; };
@@ -3435,6 +3434,7 @@
 		A5FB4E8C2AACF2830034966D /* foyc.p12 in Resources */ = {isa = PBXBuildFile; fileRef = A5FB4E872AACF2830034966D /* foyc.p12 */; };
 		A5FB4E8E2AACF2A20034966D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A5FB4E8D2AACF2A10034966D /* Assets.xcassets */; };
 		B6C8997D4C1B298C733111DC /* Pods_TAKAware.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0840B3A75D0239E21ADEA2E7 /* Pods_TAKAware.framework */; };
+		CF2FDB832F2025EF00B204A6 /* COTData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CF2FDB812F2025EF00B204A6 /* COTData.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -3565,7 +3565,6 @@
 		A5AA510E2AC35B75006696B2 /* SettingsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsStoreTests.swift; sourceTree = "<group>"; };
 		A5B1FF632C3B86D600C7F546 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		A5B312B62C38C57D007B3914 /* iconsets.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconsets.sqlite; sourceTree = "<group>"; };
-		A5B312BA2C38C5A6007B3914 /* COTData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = COTData.xcdatamodel; sourceTree = "<group>"; };
 		A5B312C02C397AC5007B3914 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		A5B312C62C39CAAF007B3914 /* IconData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconData.swift; sourceTree = "<group>"; };
 		A5B312C92C39D1F0007B3914 /* IconDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconDataTests.swift; sourceTree = "<group>"; };
@@ -6899,6 +6898,7 @@
 		A5FB4E872AACF2830034966D /* foyc.p12 */ = {isa = PBXFileReference; lastKnownFileType = file; path = foyc.p12; sourceTree = "<group>"; };
 		A5FB4E8D2AACF2A10034966D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEFD401A913144B7229D2781 /* Pods_TAKAware_TAKAwareTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TAKAware_TAKAwareTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF2FDB822F2025EF00B204A6 /* COTData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = COTData.xcdatamodel; sourceTree = "<group>"; };
 		E7150D9B3F41CFFF2C34C4A3 /* Pods-TAKAware-TAKAwareTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TAKAware-TAKAwareTests.release.xcconfig"; path = "Target Support Files/Pods-TAKAware-TAKAwareTests/Pods-TAKAware-TAKAwareTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -10508,7 +10508,7 @@
 				A5FB4E652A98D0FF0034966D /* TAKConstants.swift */,
 				4630FD4A2B51A34500988ED4 /* MessageModel.xcdatamodeld */,
 				A5014F9A2C178C5300BE40C1 /* Migrator.swift */,
-				A5B312B92C38C5A6007B3914 /* COTData.xcdatamodeld */,
+				CF2FDB812F2025EF00B204A6 /* COTData.xcdatamodeld */,
 				A5B312C02C397AC5007B3914 /* DataController.swift */,
 				A5B312C62C39CAAF007B3914 /* IconData.swift */,
 				A54312DC2D4E720000033230 /* takproto-swift */,
@@ -14154,11 +14154,11 @@
 				A5A32C592D585EBA00C9F12A /* IconSetModel.xcdatamodeld in Sources */,
 				A59530FC2CF7EFB00078C1E8 /* DataPackageManager.swift in Sources */,
 				A5D8D37E2A53B0F9002F0E3E /* TAKAwareApp.swift in Sources */,
-				A5B312BB2C38C5A6007B3914 /* COTData.xcdatamodeld in Sources */,
 				A5E7B00B2A70B5FA00D9203F /* TAKDataPackageParser.swift in Sources */,
 				A595F66A2C278CFE00E81976 /* Components.swift in Sources */,
 				A5A49D902A5459B5009764C1 /* TAKManager.swift in Sources */,
 				4630FD4C2B51A34500988ED4 /* MessageModel.xcdatamodeld in Sources */,
+				CF2FDB832F2025EF00B204A6 /* COTData.xcdatamodeld in Sources */,
 				A53F59E52D0FD58900DFD794 /* AlertSheet.swift in Sources */,
 				A53F59E62D0FD58900DFD794 /* AnnotationDetailView.swift in Sources */,
 				A53F59E72D0FD58900DFD794 /* ChannelSheet.swift in Sources */,
@@ -14390,7 +14390,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14434,7 +14434,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = 28788VBS76;
 				ENABLE_PREVIEWS = YES;
@@ -14474,7 +14474,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14495,7 +14495,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14514,7 +14514,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
@@ -14531,7 +14531,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEVELOPMENT_TEAM = 5LZ5HR44P3;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
@@ -14725,15 +14725,15 @@
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
-		A5B312B92C38C5A6007B3914 /* COTData.xcdatamodeld */ = {
+		CF2FDB812F2025EF00B204A6 /* COTData.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				A5B312BA2C38C5A6007B3914 /* COTData.xcdatamodel */,
+				CF2FDB822F2025EF00B204A6 /* COTData.xcdatamodel */,
 			);
-			currentVersion = A5B312BA2C38C5A6007B3914 /* COTData.xcdatamodel */;
+			currentVersion = CF2FDB822F2025EF00B204A6 /* COTData.xcdatamodel */;
 			name = COTData.xcdatamodeld;
-			path = "/Users/foyc/Workspace/flighttactics/TAKAware/TAKAware/Data Models/COTData.xcdatamodeld";
-			sourceTree = "<group>";
+			path = "../TAKAware-internal/TAKAware/Data Models/COTData.xcdatamodeld";
+			sourceTree = SOURCE_ROOT;
 			versionGroupType = wrapper.xcdatamodel;
 		};
 /* End XCVersionGroup section */

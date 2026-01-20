@@ -19,4 +19,7 @@
    <FileRef
       location = "group:../SwiftTAK.xctestplan">
    </FileRef>
+   <FileRef
+      location = "group:notes.md">
+   </FileRef>
 </Workspace>
