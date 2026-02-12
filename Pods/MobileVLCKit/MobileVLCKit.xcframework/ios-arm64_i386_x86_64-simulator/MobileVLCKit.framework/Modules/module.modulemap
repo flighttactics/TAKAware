@@ -1,6 +1,0 @@
-framework module MobileVLCKit {
-  umbrella header "MobileVLCKit.h"
-
-  export *
-  module * { export * }
-}
