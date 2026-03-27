@@ -50,7 +50,10 @@ class ChannelManager: APIRequestObject, ObservableObject {
         }
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.CHANNELS_LIST_PATH)?useCache=true&sendLatestSA=true"
         TAKLogger.debug("[ChannelManager] Requesting channels from \(requestURLString)")
-        let requestUrl = URL(string: requestURLString)!
+        guard let requestUrl = URL(string: requestURLString) else {
+            logChannelsError("Invalid URL: \(requestURLString)")
+            return
+        }
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 5
         var request = URLRequest(url: requestUrl)
@@ -95,16 +98,17 @@ class ChannelManager: APIRequestObject, ObservableObject {
             if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 guard let channelList = json["data"] as? [[String: Any]] else { return }
                 for channelData in channelList {
-                    var name = channelData["name"] as! String
+                    guard let rawName = channelData["name"] as? String else { continue }
+                    var name = rawName
                     if(name == ANON_CHANNEL_NAME) {
                         name = "Public"
                     }
                     
-                    let active = channelData["active"] as! Int == 1
-                    var direction = channelData["direction"] as! String
-                    let createdString = channelData["created"] as! String
+                    let active = (channelData["active"] as? Int ?? 0) == 1
+                    var direction = channelData["direction"] as? String ?? "UNKNOWN"
+                    let createdString = channelData["created"] as? String ?? ""
                     let created = dateFormatter.date(from: createdString)
-                    let type = channelData["type"] as! String
+                    let type = channelData["type"] as? String ?? "UNKNOWN"
                     let bitpos = channelData["bitpos"] as? Int
                     
                     if let existingChannel = activeChannels.first(where: {$0.name == name}) {
@@ -134,7 +138,7 @@ class ChannelManager: APIRequestObject, ObservableObject {
         updatedChannels.first(where: {$0 == channel})?.active.toggle()
         activeChannels = updatedChannels
         
-        let activeBits: [Int] = activeChannels.filter({ $0.active }).map({ $0.bitpos! })
+        let activeBits: [Int] = activeChannels.filter({ $0.active }).compactMap({ $0.bitpos })
         let requestData = try? JSONSerialization.data(
             withJSONObject: activeBits,
             options: []
@@ -143,7 +147,10 @@ class ChannelManager: APIRequestObject, ObservableObject {
         isSendingUpdate = true
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.CHANNELS_BIT_UPDATE_PATH)"
         TAKLogger.debug("[ChannelManager] Sending updated active channels to \(requestURLString)")
-        let requestUrl = URL(string: requestURLString)!
+        guard let requestUrl = URL(string: requestURLString) else {
+            logChannelsError("Invalid URL: \(requestURLString)")
+            return
+        }
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 5
         var request = URLRequest(url: requestUrl)

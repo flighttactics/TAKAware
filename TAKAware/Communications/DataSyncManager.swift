@@ -125,7 +125,10 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
         let missionPath = AppConstants.DATA_SYNC_MISSION_COT_DETAILS_PATH.replacingOccurrences(of: "{name}", with: mission.name)
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(missionPath)"
         TAKLogger.debug("[DataSyncManager] Retriving mission CoT from \(requestURLString)")
-        let requestUrl = URL(string: requestURLString)!
+        guard let requestUrl = URL(string: requestURLString) else {
+            logDataPackagesError("Invalid URL: \(requestURLString)")
+            return
+        }
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 5
         var request = URLRequest(url: requestUrl)
@@ -369,7 +372,11 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
         let uidPath = "uid=\(AppConstants.getClientID())"
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(missionPath)&\(uidPath)"
         TAKLogger.debug("[DataSyncManager] Unsubscribing from mission via \(requestURLString)")
-        let requestUrl = URL(string: requestURLString)!
+        guard let requestUrl = URL(string: requestURLString) else {
+            logDataPackagesError("Invalid URL: \(requestURLString)")
+            DispatchQueue.main.async { self.isUnsubscribingFromMission = false }
+            return
+        }
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 5
         var request = URLRequest(url: requestUrl)
@@ -415,7 +422,11 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
         let pwPath = password == nil ? "" : "&password=\(password!)"
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(missionPath)?\(uidPath)\(pwPath)"
         TAKLogger.debug("[DataSyncManager] Subscribing to mission from \(requestURLString)")
-        let requestUrl = URL(string: requestURLString)!
+        guard let requestUrl = URL(string: requestURLString) else {
+            logDataPackagesError("Invalid URL: \(requestURLString)")
+            DispatchQueue.main.async { self.isSubscribingToMission = false }
+            return
+        }
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 5
         var request = URLRequest(url: requestUrl)
@@ -455,7 +466,11 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
         let pwPath = password == nil ? "" : "password=\(password!)"
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(missionPath)?\(pwPath)"
         TAKLogger.debug("[DataSyncManager] Requesting data mission details from \(requestURLString)")
-        let requestUrl = URL(string: requestURLString)!
+        guard let requestUrl = URL(string: requestURLString) else {
+            logDataPackagesError("Invalid URL: \(requestURLString)")
+            isLoadingMission = false
+            return
+        }
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 5
         var request = URLRequest(url: requestUrl)
@@ -633,7 +648,11 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
         isLoadingMissionList = true
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.DATA_SYNC_MISSION_LIST_PATH)"
         TAKLogger.debug("[DataSyncManager] Requesting missions from \(requestURLString)")
-        let requestUrl = URL(string: requestURLString)!
+        guard let requestUrl = URL(string: requestURLString) else {
+            logDataPackagesError("Invalid URL: \(requestURLString)")
+            isLoadingMissionList = false
+            return
+        }
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 5
         var request = URLRequest(url: requestUrl)

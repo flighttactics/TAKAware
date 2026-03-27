@@ -14732,8 +14732,8 @@
 			);
 			currentVersion = A5B312BA2C38C5A6007B3914 /* COTData.xcdatamodel */;
 			name = COTData.xcdatamodeld;
-			path = "/Users/foyc/Workspace/flighttactics/TAKAware/TAKAware/Data Models/COTData.xcdatamodeld";
-			sourceTree = "<group>";
+			path = "TAKAware/Data Models/COTData.xcdatamodeld";
+			sourceTree = SOURCE_ROOT;
 			versionGroupType = wrapper.xcdatamodel;
 		};
 /* End XCVersionGroup section */

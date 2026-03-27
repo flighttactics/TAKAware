@@ -89,7 +89,10 @@ class DataPackageManager: APIRequestObject, ObservableObject {
         }
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.MISSION_PACKAGE_LIST_PATH)"
         TAKLogger.debug("[DataPackageManager] Requesting packages from \(requestURLString)")
-        let requestUrl = URL(string: requestURLString)!
+        guard let requestUrl = URL(string: requestURLString) else {
+            logDataPackageManagerError("Invalid URL: \(requestURLString)")
+            return
+        }
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 5
         var request = URLRequest(url: requestUrl)
@@ -218,7 +221,11 @@ class DataPackageManager: APIRequestObject, ObservableObject {
         isProcessingRemotePackage = true
         let requestURLString = "https://\(SettingsStore.global.takServerUrl):\(SettingsStore.global .takServerSecureAPIPort)\(AppConstants.MISSION_PACKAGE_FILE_PATH)/\(missionPackage.hash)"
         TAKLogger.debug("[DataPackageManager] Requesting file from \(requestURLString)")
-        let requestUrl = URL(string: requestURLString)!
+        guard let requestUrl = URL(string: requestURLString) else {
+            logDataPackageManagerError("Invalid URL: \(requestURLString)")
+            isProcessingRemotePackage = false
+            return
+        }
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 5
         
