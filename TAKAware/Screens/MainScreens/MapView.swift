@@ -738,6 +738,28 @@ struct MapView: UIViewRepresentable {
     
     private func overlayActiveMapSources() {
         TAKLogger.debug("[MapView] Updating active map sources overlays")
+        
+        // Check for built-in tile provider first
+        if let activeKey = UserDefaults.standard.string(forKey: "activeBuiltInTile"),
+           let provider = BuiltInTileProvider.from(storageKey: activeKey) {
+            TAKLogger.debug("[MapView] Built-in tile provider active: \(provider.label)")
+            if activeCustomMapOverlay != nil {
+                mapView.removeOverlay(activeCustomMapOverlay!)
+            }
+            let overlay = CacheableTileOverlay(urlTemplate: provider.urlTemplate)
+            overlay.canReplaceMapContent = true
+            overlay.maximumZ = provider.maxZoom
+            
+            DispatchQueue.main.async {
+                // Suppress Apple labels by forcing satellite base map (same as custom sources)
+                mapView.mapType = .satellite
+                mapView.removeOverlays(mapView.overlays.filter({$0 is MKTileOverlay}))
+                mapView.insertOverlay(overlay, at: 0, level: .aboveRoads)
+                activeCustomMapOverlay = overlay
+            }
+            return
+        }
+        
         if !visibleMapSources.isEmpty {
             let mapSource = visibleMapSources.first!
             if let sourceUrl = URLComponents(string: mapSource.url!)?.string?.removingPercentEncoding {
@@ -751,12 +773,9 @@ struct MapView: UIViewRepresentable {
                 mapSourceOverlay.canReplaceMapContent = true
                 
                 DispatchQueue.main.async {
-                    // We need to force the background map to satellite (so no Apple Maps labels show)
-                    // but we don't want to trigger the standard callback if we use SettingsStore
                     UserDefaults.standard.set(MKMapType.satellite.rawValue, forKey: "mapTypeDisplay")
                     
                     TAKLogger.debug("[MapView] Adding the map source overlay")
-                    // Place Tile Overlays at the bottom
                     mapView.removeOverlays(mapView.overlays.filter({$0 is MKTileOverlay}))
                     mapView.insertOverlay(mapSourceOverlay, at: 0, level: .aboveRoads)
                     activeCustomMapOverlay = mapSourceOverlay

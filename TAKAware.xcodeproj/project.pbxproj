@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CFE6A6ED2F2031EF00B204A6 /* BuiltInTileProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF1E9A9A2F2031EF00B204A6 /* BuiltInTileProvider.swift */; };
 		4630FD0E2B506EC000988ED4 /* Palette+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD0D2B506EC000988ED4 /* Palette+Color.swift */; };
 		4630FD132B5071A100988ED4 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD102B5071A100988ED4 /* ChatView.swift */; };
 		4630FD142B5071A100988ED4 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4630FD122B5071A100988ED4 /* MessageView.swift */; };
@@ -6890,6 +6891,7 @@
 		A5F8AA5F2D68BA17009901A7 /* MapOverlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapOverlays.swift; sourceTree = "<group>"; };
 		A5FB4E632A8FE0020034966D /* CSRRequestor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRRequestor.swift; sourceTree = "<group>"; };
 		A5FB4E652A98D0FF0034966D /* TAKConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAKConstants.swift; sourceTree = "<group>"; };
+		CF1E9A9A2F2031EF00B204A6 /* BuiltInTileProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInTileProvider.swift; sourceTree = "<group>"; };
 		A5FB4E6A2AA751890034966D /* CertificateSigningRequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSigningRequestTests.swift; sourceTree = "<group>"; };
 		A5FB4E772AAA49D30034966D /* TestConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestConstants.swift; sourceTree = "<group>"; };
 		A5FB4E832AACF2820034966D /* tak-server.pref */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "tak-server.pref"; sourceTree = "<group>"; };
@@ -10506,6 +10508,7 @@
 				4630FD1B2B5071D200988ED4 /* MessageData.swift */,
 				A50C5F5A2A5F92FF001E52E6 /* SettingsStore.swift */,
 				A5FB4E652A98D0FF0034966D /* TAKConstants.swift */,
+				CF1E9A9A2F2031EF00B204A6 /* BuiltInTileProvider.swift */,
 				4630FD4A2B51A34500988ED4 /* MessageModel.xcdatamodeld */,
 				A5014F9A2C178C5300BE40C1 /* Migrator.swift */,
 				A5B312B92C38C5A6007B3914 /* COTData.xcdatamodeld */,
@@ -14158,6 +14161,7 @@
 				A5E7B00B2A70B5FA00D9203F /* TAKDataPackageParser.swift in Sources */,
 				A595F66A2C278CFE00E81976 /* Components.swift in Sources */,
 				A5A49D902A5459B5009764C1 /* TAKManager.swift in Sources */,
+				CFE6A6ED2F2031EF00B204A6 /* BuiltInTileProvider.swift in Sources */,
 				4630FD4C2B51A34500988ED4 /* MessageModel.xcdatamodeld in Sources */,
 				A53F59E52D0FD58900DFD794 /* AlertSheet.swift in Sources */,
 				A53F59E62D0FD58900DFD794 /* AnnotationDetailView.swift in Sources */,

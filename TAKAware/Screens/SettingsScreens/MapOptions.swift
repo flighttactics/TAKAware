@@ -37,11 +37,19 @@ struct MapOptions: View {
         "Flyover"
     ]
     
+    let builtInTileProviders = BuiltInTileProvider.allCases
+    
     func updateBaseMapTo(_ baseMap: String) {
         DataController.shared.activateMapSource(name: baseMap)
     }
     
     func isCurrentBaseMap(_ baseMap: String) -> Bool {
+        // Check built-in tile providers first
+        if let activeKey = UserDefaults.standard.string(forKey: "activeBuiltInTile"),
+           let activeProvider = BuiltInTileProvider.from(storageKey: activeKey) {
+            return baseMap == activeProvider.label
+        }
+        
         if !visibleMapSources.isEmpty {
             return visibleMapSources.first!.name == baseMap
         }
@@ -63,15 +71,15 @@ struct MapOptions: View {
     }
     
     var availableMapSources: [String] {
-        availableBaseMaps + mapSources.map { $0.name! }
+        availableBaseMaps + builtInTileProviders.map { $0.label } + mapSources.map { $0.name! }
     }
     
     var body: some View {
         Form {
             Group {
-                Section(header: Text("Base Map")) {
+                Section(header: Text("Apple Maps")) {
                     List {
-                        ForEach(availableMapSources, id:\.self) { baseMapOption in
+                        ForEach(availableBaseMaps, id:\.self) { baseMapOption in
                             HStack {
                                 if(isCurrentBaseMap(baseMapOption)) {
                                     Image(systemName: "eye.fill")
@@ -83,6 +91,47 @@ struct MapOptions: View {
                             }
                             .contentShape(Rectangle())
                             .onTapGesture(perform: { updateBaseMapTo(baseMapOption) })
+                        }
+                    }
+                }
+                
+                Section(header: Text("Built-In Tile Providers")) {
+                    List {
+                        ForEach(builtInTileProviders) { provider in
+                            HStack {
+                                if(isCurrentBaseMap(provider.label)) {
+                                    Image(systemName: "eye.fill")
+                                } else {
+                                    Image(systemName: "eye.slash")
+                                }
+                                VStack(alignment: .leading) {
+                                    Text(provider.label)
+                                    Text(provider.attribution)
+                                        .font(.caption2)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture(perform: { updateBaseMapTo(provider.label) })
+                        }
+                    }
+                }
+                
+                if !mapSources.isEmpty {
+                    Section(header: Text("Imported Map Sources")) {
+                        ForEach(mapSources) { source in
+                            HStack {
+                                if(isCurrentBaseMap(source.name ?? "")) {
+                                    Image(systemName: "eye.fill")
+                                } else {
+                                    Image(systemName: "eye.slash")
+                                }
+                                Text(source.name ?? "Unknown")
+                                Spacer()
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture(perform: { updateBaseMapTo(source.name ?? "") })
                         }
                     }
                 }

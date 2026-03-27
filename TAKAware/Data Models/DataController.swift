@@ -208,6 +208,18 @@ class DataController: ObservableObject {
     }
     
     func activateMapSource(name: String) {
+        // Check if it's a built-in tile provider
+        if let provider = BuiltInTileProvider.allCases.first(where: { $0.label == name }) {
+            UserDefaults.standard.set(provider.storageKey, forKey: "activeBuiltInTile")
+            SettingsStore.global.mapTypeDisplay = MKMapType.standard.rawValue
+            changeCustomMapSourceVisibility(visible: false)
+            NotificationCenter.default.post(name: Notification.Name(AppConstants.NOTIFY_MAP_SOURCE_UPDATED), object: nil)
+            return
+        }
+        
+        // Clear any active built-in tile provider
+        UserDefaults.standard.removeObject(forKey: "activeBuiltInTile")
+        
         switch name {
         case "Standard":
             SettingsStore.global.mapTypeDisplay = MKMapType.standard.rawValue
