@@ -176,6 +176,26 @@ class TAKDataPackageParser: NSObject {
         
         do {
             try serverCerts.forEach { serverCert in
+                // Guard against empty password — NIOSSLPKCS12Bundle calls fatalError on bad P12
+                guard !serverCert.certificatePassword.isEmpty else {
+                    TAKLogger.error("[TAKDataPackageParser]: Empty password for server certificate, skipping NIOSSL parse")
+                    // Try using Security framework instead
+                    var importResult: CFArray?
+                    let options: [String: Any] = [kSecImportExportPassphrase as String: serverCert.certificatePassword]
+                    let status = SecPKCS12Import(serverCert.certificateData as CFData, options as CFDictionary, &importResult)
+                    if status == errSecSuccess, let items = importResult as? [[String: Any]] {
+                        for item in items {
+                            if let chain = item[kSecImportItemCertChain as String] as? [SecCertificate] {
+                                for cert in chain {
+                                    serverCertChain.append(SecCertificateCopyData(cert) as Data)
+                                }
+                            }
+                        }
+                    } else {
+                        TAKLogger.error("[TAKDataPackageParser]: SecPKCS12Import failed with status \(status)")
+                    }
+                    return
+                }
                 let p12Bundle = try NIOSSLPKCS12Bundle(buffer: Array(serverCert.certificateData), passphrase: Array(serverCert.certificatePassword.utf8))
                 try p12Bundle.certificateChain.forEach { cert in
                     try serverCertChain.append(Data(cert.toDERBytes()))

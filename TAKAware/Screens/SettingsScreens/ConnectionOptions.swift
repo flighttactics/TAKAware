@@ -271,48 +271,59 @@ struct CertEnrollmentScreen: View {
         
         Task {
             do {
-                // Simple async download — no custom delegate needed
-                let config = URLSessionConfiguration.default
-                config.timeoutIntervalForRequest = 60
-                config.timeoutIntervalForResource = 60
-                let session = URLSession(configuration: config)
+                // Simple async download
+                let (tempURL, response) = try await URLSession.shared.download(from: url)
                 
-                let (tempURL, response) = try await session.download(from: url)
-                session.finishTasksAndInvalidate()
-                
-                // Check HTTP status
-                if let httpResponse = response as? HTTPURLResponse {
-                    guard (200...299).contains(httpResponse.statusCode) else {
-                        let msg = httpResponse.statusCode == 403
-                            ? "The download URL has expired. Please generate a new QR code in CloudTAK (HTTP 403)"
-                            : "Download failed with status \(httpResponse.statusCode)"
-                        throw NSError(domain: "CloudTAK", code: httpResponse.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])
-                    }
-                }
-                
-                // Move to our temp directory with restricted permissions
+                // IMPORTANT: URLSession temp file is deleted after this scope.
+                // Copy it to our own temp location before it disappears.
                 let destDir = (NSTemporaryDirectory() as NSString).appendingPathComponent("com.takaware.pkg-import")
                 try? FileManager.default.createDirectory(atPath: destDir, withIntermediateDirectories: true)
                 let destPath = (destDir as NSString).appendingPathComponent(UUID().uuidString + ".zip")
                 let destURL = URL(fileURLWithPath: destPath)
-                try FileManager.default.moveItem(at: tempURL, to: destURL)
-                try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: destPath)
+                try FileManager.default.copyItem(at: tempURL, to: destURL)
                 
-                TAKLogger.debug("[CertEnrollment] Download complete: \(destURL.lastPathComponent)")
-                
-                await MainActor.run {
-                    downloadedZipURL = destURL
-                    isDownloading = false
-                    importStatusMessage = "Importing configuration..."
+                // Check HTTP status
+                if let httpResponse = response as? HTTPURLResponse,
+                   !(200...299).contains(httpResponse.statusCode) {
+                    try? FileManager.default.removeItem(at: destURL)
+                    throw NSError(domain: "CloudTAK", code: httpResponse.statusCode,
+                                  userInfo: [NSLocalizedDescriptionKey: "HTTP \(httpResponse.statusCode)"])
                 }
-                // Run import OFF the main thread
-                await importStandardAsync(zipURL: destURL)
-            } catch {
-                TAKLogger.error("[CertEnrollment] Download failed: \(error)")
+                
+                TAKLogger.debug("[CertEnrollment] Downloaded to: \(destURL)")
+                
+                // Parse on background thread
+                let tdpp = TAKDataPackageParser(fileLocation: destURL)
+                let errors: [String] = await withCheckedContinuation { continuation in
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        tdpp.parse()
+                        Thread.sleep(forTimeInterval: 1.0)
+                        continuation.resume(returning: tdpp.parsingErrors)
+                    }
+                }
+                
+                // Clean up temp file
+                try? FileManager.default.removeItem(at: destURL)
+                
                 await MainActor.run {
                     isDownloading = false
                     importStatusMessage = ""
-                    cloudTAKAlertTitle = "Download Failed"
+                    if errors.isEmpty {
+                        cloudTAKImportSucceeded = true
+                        cloudTAKAlertTitle = "Success"
+                        cloudTAKAlertMessage = "Configuration imported. Server connection will be established."
+                    } else {
+                        cloudTAKAlertTitle = "Import Result"
+                        cloudTAKAlertMessage = errors.joined(separator: "\n")
+                    }
+                    isShowingCloudTAKAlert = true
+                }
+            } catch {
+                TAKLogger.error("[CertEnrollment] Error: \(error)")
+                await MainActor.run {
+                    isDownloading = false
+                    importStatusMessage = ""
+                    cloudTAKAlertTitle = "Error"
                     cloudTAKAlertMessage = error.localizedDescription
                     isShowingCloudTAKAlert = true
                 }
