@@ -35,6 +35,10 @@ class TCPMessage: NSObject, ObservableObject {
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_TAK_SERVER_AVAILABILITY_TOGGLED), object: nil, queue: nil, using: serverAvailabilityToggled)
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     func serverAvailabilityToggled(notification: Notification) {
         if SettingsStore.global.takServerEnabled {
             TAKLogger.debug("[TCPMessage]: TAK Server enabled, reconnecting")

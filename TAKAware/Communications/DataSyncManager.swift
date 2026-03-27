@@ -99,6 +99,10 @@ class DataSyncManager: COTDataParser, ObservableObject, URLSessionDelegate {
         }
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     func serverConnectedNotification(notification: Notification) {
         guard let serverName = notification.object as? String else {
             TAKLogger.error("[TAKTrackerApp] Server Connection notification received with no server name")

@@ -50,8 +50,8 @@ class DataController: ObservableObject {
     
     func startCleanUpTimer() {
         guard cleanUpTimer == nil else { return }
-        cleanUpTimer = Timer.scheduledTimer(withTimeInterval: 15.0, repeats: true) { _ in
-            self.clearStaleItems()
+        cleanUpTimer = Timer.scheduledTimer(withTimeInterval: 15.0, repeats: true) { [weak self] _ in
+            self?.clearStaleItems()
         }
     }
 

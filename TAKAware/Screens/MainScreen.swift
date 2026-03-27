@@ -26,6 +26,7 @@ struct MainScreen: View {
     @State private var displayUIState = DisplayUIState()
     @State private var migrator = Migrator()
     @State var isShowingAlert = false
+    @State private var broadcastTimer: Timer?
     
     var body: some View {
         Group {
@@ -39,9 +40,13 @@ struct MainScreen: View {
                 isShowingAlert = !migrator.migrationSucceeded
             }
             broadcastLocation()
-            Timer.scheduledTimer(withTimeInterval: settingsStore.broadcastIntervalSeconds, repeats: true) { timer in
+            broadcastTimer = Timer.scheduledTimer(withTimeInterval: settingsStore.broadcastIntervalSeconds, repeats: true) { _ in
                 broadcastLocation()
             }
+        }
+        .onDisappear {
+            broadcastTimer?.invalidate()
+            broadcastTimer = nil
         }
         .onRotate { newOrientation in
             locationManager.deviceUpdatedOrientation(orientation: newOrientation)

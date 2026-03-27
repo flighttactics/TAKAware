@@ -59,10 +59,11 @@ class SettingsStore: ObservableObject {
         
         var item: CFTypeRef?
         let status = SecItemCopyMatching(getquery as CFDictionary, &item)
-        guard status == errSecSuccess else {
+        guard status == errSecSuccess, let item = item else {
             TAKLogger.error("[SettingsStore]: Identity was not stored in the keychain \(String(describing: status))")
             return nil
         }
+        // CFTypeRef is always bridgeable to SecIdentity when kSecClassIdentity is used
         let clientIdentity = item as! SecIdentity
         return clientIdentity
     }
@@ -71,6 +72,67 @@ class SettingsStore: ObservableObject {
         TAKLogger.debug("[SettingsStore]: Clearing out all existing identities")
         let cleanUpQuery: [String: Any] = [kSecClass as String:  kSecClassIdentity]
         SecItemDelete(cleanUpQuery as CFDictionary)
+    }
+    
+    // MARK: - Keychain helpers for sensitive strings
+    
+    private static let keychainService = "com.flighttactics.TAKAware"
+    
+    private func keychainSave(key: String, value: String) {
+        let data = Data(value.utf8)
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: Self.keychainService,
+            kSecAttrAccount as String: key
+        ]
+        SecItemDelete(query as CFDictionary)
+        guard !value.isEmpty else { return }
+        var addQuery = query
+        addQuery[kSecValueData as String] = data
+        addQuery[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+        let status = SecItemAdd(addQuery as CFDictionary, nil)
+        if status != errSecSuccess {
+            TAKLogger.error("[SettingsStore]: Keychain save failed for \(key): \(status)")
+        }
+    }
+    
+    private func keychainLoad(key: String) -> String {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: Self.keychainService,
+            kSecAttrAccount as String: key,
+            kSecReturnData as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ]
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
+        guard status == errSecSuccess, let data = item as? Data, let str = String(data: data, encoding: .utf8) else {
+            return ""
+        }
+        return str
+    }
+    
+    private func keychainDelete(key: String) {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: Self.keychainService,
+            kSecAttrAccount as String: key
+        ]
+        SecItemDelete(query as CFDictionary)
+    }
+    
+    /// Migrate passwords from UserDefaults to Keychain (one-time)
+    private func migratePasswordsToKeychain() {
+        let keys = ["serverCertificatePassword", "userCertificatePassword", "takServerUsername", "takServerPassword"]
+        for key in keys {
+            if let value = UserDefaults.standard.string(forKey: key), !value.isEmpty {
+                if keychainLoad(key: key).isEmpty {
+                    keychainSave(key: key, value: value)
+                    TAKLogger.debug("[SettingsStore]: Migrated \(key) to Keychain")
+                }
+                UserDefaults.standard.removeObject(forKey: key)
+            }
+        }
     }
     
     func clearConnection() {
@@ -85,6 +147,10 @@ class SettingsStore: ObservableObject {
         takServerCSRPort = TAKConstants.DEFAULT_CSR_PORT
         takServerSecureAPIPort = TAKConstants.DEFAULT_SECURE_API_PORT
         serverCertificateTruststore = []
+        keychainDelete(key: "serverCertificatePassword")
+        keychainDelete(key: "userCertificatePassword")
+        keychainDelete(key: "takServerUsername")
+        keychainDelete(key: "takServerPassword")
         clearAllIdentities()
     }
     
@@ -188,7 +254,7 @@ class SettingsStore: ObservableObject {
     
     @Published var serverCertificatePassword: String {
         didSet {
-            UserDefaults.standard.set(serverCertificatePassword, forKey: "serverCertificatePassword")
+            keychainSave(key: "serverCertificatePassword", value: serverCertificatePassword)
             UserDefaults.standard.set(true, forKey: "shouldTryReconnect")
         }
     }
@@ -202,20 +268,20 @@ class SettingsStore: ObservableObject {
     
     @Published var userCertificatePassword: String {
         didSet {
-            UserDefaults.standard.set(userCertificatePassword, forKey: "userCertificatePassword")
+            keychainSave(key: "userCertificatePassword", value: userCertificatePassword)
             UserDefaults.standard.set(true, forKey: "shouldTryReconnect")
         }
     }
     
     @Published var takServerUsername: String {
         didSet {
-            UserDefaults.standard.set(takServerUsername, forKey: "takServerUsername")
+            keychainSave(key: "takServerUsername", value: takServerUsername)
         }
     }
     
     @Published var takServerPassword: String {
         didSet {
-            UserDefaults.standard.set(takServerPassword, forKey: "takServerPassword")
+            keychainSave(key: "takServerPassword", value: takServerPassword)
         }
     }
     
@@ -364,15 +430,15 @@ class SettingsStore: ObservableObject {
         
         self.serverCertificate = (UserDefaults.standard.object(forKey: "serverCertificate") == nil ? Data() : UserDefaults.standard.object(forKey: "serverCertificate") as! Data)
         
-        self.serverCertificatePassword = (UserDefaults.standard.object(forKey: "serverCertificatePassword") == nil ? "" : UserDefaults.standard.object(forKey: "serverCertificatePassword") as! String)
+        self.serverCertificatePassword = ""
         
         self.userCertificate = (UserDefaults.standard.object(forKey: "userCertificate") == nil ? Data() : UserDefaults.standard.object(forKey: "userCertificate") as! Data)
         
-        self.userCertificatePassword = (UserDefaults.standard.object(forKey: "userCertificatePassword") == nil ? "" : UserDefaults.standard.object(forKey: "userCertificatePassword") as! String)
+        self.userCertificatePassword = ""
         
-        self.takServerUsername = (UserDefaults.standard.object(forKey: "takServerUsername") == nil ? "" : UserDefaults.standard.object(forKey: "takServerUsername") as! String)
+        self.takServerUsername = ""
         
-        self.takServerPassword = (UserDefaults.standard.object(forKey: "takServerPassword") == nil ? "" : UserDefaults.standard.object(forKey: "takServerPassword") as! String)
+        self.takServerPassword = ""
         
         self.shouldTryReconnect = (UserDefaults.standard.object(forKey: "shouldTryReconnect") == nil ? true : UserDefaults.standard.object(forKey: "shouldTryReconnect") as! Bool)
         
@@ -393,5 +459,12 @@ class SettingsStore: ObservableObject {
         self.activeAlertType = (UserDefaults.standard.object(forKey: "activeAlertType") == nil ? "" : UserDefaults.standard.object(forKey: "activeAlertType") as! String)
         
         self.hasOnboarded = (UserDefaults.standard.object(forKey: "hasOnboarded") == nil ? false : UserDefaults.standard.object(forKey: "hasOnboarded") as! Bool)
+        
+        // Migrate passwords from UserDefaults to Keychain, then load from Keychain
+        migratePasswordsToKeychain()
+        self.serverCertificatePassword = keychainLoad(key: "serverCertificatePassword")
+        self.userCertificatePassword = keychainLoad(key: "userCertificatePassword")
+        self.takServerUsername = keychainLoad(key: "takServerUsername")
+        self.takServerPassword = keychainLoad(key: "takServerPassword")
     }
 }
