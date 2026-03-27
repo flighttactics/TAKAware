@@ -143,7 +143,6 @@ class TAKDataPackageParser: NSObject {
     /// Synchronous variant used by the CloudTAK import path so that
     /// parsingErrors are populated before the caller inspects them.
     func storeUserCertificateSynchronously(packageContents: DataPackageContents) {
-        assert(!Thread.isMainThread, "storeUserCertificateSynchronously must not be called from the main thread")
         TAKLogger.debug("[TAKDataPackageParser]: Storing User Certificate (sync)")
         
         let parsedCert = PKCS12(data: packageContents.userCertificate, password: packageContents.userCertificatePassword)
@@ -154,7 +153,9 @@ class TAKDataPackageParser: NSObject {
             return
         }
         
-        SettingsStore.global.storeIdentity(identity: identity, label: packageContents.serverURL)
+        DispatchQueue.main.async {
+            SettingsStore.global.storeIdentity(identity: identity, label: packageContents.serverURL)
+        }
         
         TAKLogger.debug("[TAKDataPackageParser]: User Certificate Stored (sync)")
     }
@@ -167,7 +168,9 @@ class TAKDataPackageParser: NSObject {
         
         guard !serverCerts.isEmpty else {
             parsingErrors.append("No Server truststore certificate was found in the data package")
-            SettingsStore.global.serverCertificateTruststore = serverCertChain
+            DispatchQueue.main.async {
+                SettingsStore.global.serverCertificateTruststore = serverCertChain
+            }
             return
         }
         
@@ -188,14 +191,18 @@ class TAKDataPackageParser: NSObject {
         }
         
         TAKLogger.debug("[TAKDataPackageParser]: Storing cert chain with \(serverCertChain.count) cert(s)")
-        SettingsStore.global.serverCertificateTruststore = serverCertChain
+        DispatchQueue.main.async {
+            SettingsStore.global.serverCertificateTruststore = serverCertChain
+        }
     }
     
-    func storePreferences(packageContents: DataPackageContents) {        
-        SettingsStore.global.takServerUrl = packageContents.serverURL
-        SettingsStore.global.takServerPort = packageContents.serverPort
-        SettingsStore.global.takServerProtocol = packageContents.serverProtocol
-        SettingsStore.global.takServerChanged = true
+    func storePreferences(packageContents: DataPackageContents) {
+        DispatchQueue.main.async {
+            SettingsStore.global.takServerUrl = packageContents.serverURL
+            SettingsStore.global.takServerPort = packageContents.serverPort
+            SettingsStore.global.takServerProtocol = packageContents.serverProtocol
+            SettingsStore.global.takServerChanged = true
+        }
     }
 
 }
