@@ -3490,6 +3490,7 @@
 		A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedOptions.swift; sourceTree = "<group>"; };
 		A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SituationalAwarenessOptions.swift; sourceTree = "<group>"; };
 		A5264D392DDA94C5004F3ECB /* ContactsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSheet.swift; sourceTree = "<group>"; };
+		CF51B38E2F2030EF00B204A6 /* TeleportSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeleportSheet.swift; sourceTree = "<group>"; };
 		A52BE8EC2D132C3A00E82414 /* APIRequestObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequestObject.swift; sourceTree = "<group>"; };
 		A52BE8F42D15AAB600E82414 /* KMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLParser.swift; sourceTree = "<group>"; };
 		A52BE8F62D15AAC500E82414 /* KMLParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMLParserTests.swift; sourceTree = "<group>"; };
@@ -14397,7 +14398,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 107;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = P95SK5MHP9;
 				ENABLE_PREVIEWS = YES;
@@ -14441,7 +14442,7 @@
 				CODE_SIGN_ENTITLEMENTS = TAKAware/TAKAware.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 107;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_ASSET_PATHS = "TAKAware/Preview\\ Content";
 				DEVELOPMENT_TEAM = P95SK5MHP9;
 				ENABLE_PREVIEWS = YES;
@@ -14481,7 +14482,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 107;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = P95SK5MHP9;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14502,7 +14503,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 107;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = P95SK5MHP9;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -14521,7 +14522,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 107;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = P95SK5MHP9;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
@@ -14538,7 +14539,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 107;
+				CURRENT_PROJECT_VERSION = 108;
 				DEVELOPMENT_TEAM = P95SK5MHP9;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.1;
