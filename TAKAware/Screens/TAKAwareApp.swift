@@ -18,6 +18,7 @@ struct TAKTrackerApp: App {
     
     init() {
         TAKLogger.debug("Hello, TAK Aware!")
+        CloudTAKDownloader.sweepOrphanedTempFiles()
     }
 
     var body: some Scene {

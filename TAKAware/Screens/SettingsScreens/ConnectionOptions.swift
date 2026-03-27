@@ -178,6 +178,7 @@ struct CertEnrollmentScreen: View {
     @State var isPresentingQRScanner = false
     @State var qrCodeResult: String = ""
     @State var shouldShowQRCodeFailureAlert = false
+    @State var qrCodeFailureMessage: String = "The QR Code you scanned did not contain connection information. Please try a different QR code"
     @State var isShowingPassword = false
     
     @State var formServerURL = ""
@@ -186,6 +187,20 @@ struct CertEnrollmentScreen: View {
     @State var formPassword = ""
     @State var formCSRPort = ""
     @State var formSecureAPIPort = ""
+    
+    // CloudTAK import state
+    @State var isShowingHostConfirmation = false
+    @State var cloudTAKURL: URL? = nil
+    @State var isShowingPasswordPrompt = false
+    @State var p12PasswordInput = ""
+    @State var downloadedZipURL: URL? = nil
+    @StateObject var downloader = CloudTAKDownloader()
+    @State var isDownloading = false
+    @State var importStatusMessage = ""
+    @State var isShowingCloudTAKAlert = false
+    @State var cloudTAKAlertTitle = ""
+    @State var cloudTAKAlertMessage = ""
+    @State var cloudTAKImportSucceeded = false
     
     var isAuthorized: Bool {
         get {
@@ -218,21 +233,117 @@ struct CertEnrollmentScreen: View {
     }
     
     func processQRCode(_ scannedString: String) {
-        TAKLogger.debug("[ConnectionOptions] Parsing QR code \(scannedString)")
-        let response = QRCodeParser.parse(scannedString)
-        if(response.wasInvalidString) {
+        TAKLogger.debug("[ConnectionOptions] Parsing QR code")
+        let result = QRCodeParser.parseExtended(scannedString)
+        
+        switch result {
+        case .certificateEnrollment(let response):
+            if response.wasInvalidString {
+                qrCodeFailureMessage = "The QR Code you scanned did not contain connection information. Please try a different QR code"
+                shouldShowQRCodeFailureAlert = true
+                return
+            }
+            formServerURL = response.serverURL
+            formServerPort = response.serverPort
+            formUsername = response.username
+            formPassword = response.password
+            if response.shouldAutoSubmit {
+                submitCertEnrollmentForm()
+            }
+            
+        case .cloudTAKURL(let url):
+            cloudTAKURL = url
+            isShowingHostConfirmation = true
+            
+        case .invalid(let message):
+            qrCodeFailureMessage = message
             shouldShowQRCodeFailureAlert = true
-            return
         }
+    }
+    
+    func startCloudTAKDownload() {
+        guard let url = cloudTAKURL else { return }
+        guard !isDownloading else { return }
+        isDownloading = true
+        importStatusMessage = "Downloading configuration..."
         
-        formServerURL = response.serverURL
-        formServerPort = response.serverPort
-        formUsername = response.username
-        formPassword = response.password
-        
-        if(response.shouldAutoSubmit) {
-            submitCertEnrollmentForm()
+        Task {
+            do {
+                let zipURL = try await downloader.download(from: url)
+                await MainActor.run {
+                    downloadedZipURL = zipURL
+                    isDownloading = false
+                    importStatusMessage = ""
+                    isShowingPasswordPrompt = true
+                }
+            } catch let error as DownloadError {
+                await MainActor.run {
+                    isDownloading = false
+                    importStatusMessage = ""
+                    cloudTAKAlertTitle = "Download Failed"
+                    cloudTAKAlertMessage = error.errorDescription ?? "Unknown download error"
+                    isShowingCloudTAKAlert = true
+                    downloader.cleanup()
+                }
+            } catch {
+                await MainActor.run {
+                    isDownloading = false
+                    importStatusMessage = ""
+                    cloudTAKAlertTitle = "Download Failed"
+                    cloudTAKAlertMessage = error.localizedDescription
+                    isShowingCloudTAKAlert = true
+                    downloader.cleanup()
+                }
+            }
         }
+    }
+    
+    func importWithPassword() {
+        guard let zipURL = downloadedZipURL else { return }
+        guard !p12PasswordInput.isEmpty else { return }
+        
+        let passwordData = Data(p12PasswordInput.utf8)
+        p12PasswordInput = ""
+        
+        importStatusMessage = "Importing certificates..."
+        
+        let tdpp = TAKDataPackageParser(fileLocation: zipURL)
+        tdpp.parse(p12Password: passwordData)
+        
+        if tdpp.parsingErrors.isEmpty {
+            cloudTAKImportSucceeded = true
+            cloudTAKAlertTitle = "Success"
+            cloudTAKAlertMessage = "Configuration imported successfully. The server connection will be established."
+            isShowingCloudTAKAlert = true
+            downloader.cleanup()
+            downloadedZipURL = nil
+        } else {
+            let errors = tdpp.parsingErrors.joined(separator: "\n\n")
+            // Check if it's a password error (keep zip for retry)
+            if errors.lowercased().contains("password") || errors.lowercased().contains("certificate") {
+                cloudTAKAlertTitle = "Import Error"
+                cloudTAKAlertMessage = "Incorrect password. Please try again."
+                isShowingCloudTAKAlert = true
+                // Don't cleanup — allow retry
+            } else {
+                cloudTAKAlertTitle = "Import Failed"
+                cloudTAKAlertMessage = "Data package could not be processed\n\n\(errors)"
+                isShowingCloudTAKAlert = true
+                downloader.cleanup()
+                downloadedZipURL = nil
+            }
+        }
+        importStatusMessage = ""
+    }
+    
+    func cancelCloudTAKImport() {
+        downloader.cancel()
+        downloadedZipURL = nil
+        cloudTAKURL = nil
+        isDownloading = false
+        isShowingPasswordPrompt = false
+        importStatusMessage = ""
+        p12PasswordInput = ""
     }
     
     func submitCertEnrollmentForm() {
@@ -352,6 +463,16 @@ struct CertEnrollmentScreen: View {
                 
                 Text("Status: " + csrRequest.enrollmentStatus.description)
                 Text("For Server \(SettingsStore.global.takServerUrl)")
+                
+                if isDownloading {
+                    ProgressView("Downloading configuration...")
+                        .padding(.top, 8)
+                }
+                if !importStatusMessage.isEmpty && !isDownloading {
+                    Text(importStatusMessage)
+                        .foregroundColor(.secondary)
+                        .padding(.top, 4)
+                }
             }
             .sheet(isPresented: $isPresentingQRScanner, onDismiss: {
                 processQRCode(qrCodeResult)
@@ -386,7 +507,72 @@ struct CertEnrollmentScreen: View {
                 }
             }
             .alert(isPresented: $shouldShowQRCodeFailureAlert) {
-                Alert(title: Text("QR Code Failure"), message: Text("The QR Code you scanned did not contain connection information. Please try a different QR code"), dismissButton: .default(Text("OK")))
+                Alert(title: Text("QR Code Failure"), message: Text(qrCodeFailureMessage), dismissButton: .default(Text("OK")))
+            }
+            .alert("Confirm Download", isPresented: $isShowingHostConfirmation) {
+                Button("Cancel", role: .cancel) {
+                    cloudTAKURL = nil
+                }
+                Button("Download") {
+                    startCloudTAKDownload()
+                }
+            } message: {
+                Text("Download configuration from \(cloudTAKURL?.host ?? "unknown host")?")
+            }
+            .alert(cloudTAKAlertTitle, isPresented: $isShowingCloudTAKAlert) {
+                if downloadedZipURL != nil && cloudTAKAlertTitle == "Import Error" {
+                    Button("Retry") {
+                        isShowingPasswordPrompt = true
+                    }
+                    Button("Cancel", role: .cancel) {
+                        cancelCloudTAKImport()
+                    }
+                } else if cloudTAKImportSucceeded {
+                    Button("OK") {
+                        isProcessingDataPackage = false
+                        dismiss()
+                    }
+                } else {
+                    Button("OK", role: .cancel) { }
+                }
+            } message: {
+                Text(cloudTAKAlertMessage)
+            }
+            .sheet(isPresented: $isShowingPasswordPrompt) {
+                NavigationView {
+                    VStack(spacing: 20) {
+                        Text("Enter the password set when generating the configuration file in CloudTAK.")
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        
+                        SecureField("P12 Password", text: $p12PasswordInput)
+                            .autocorrectionDisabled(true)
+                            .textContentType(.password)
+                            .textFieldStyle(.roundedBorder)
+                            .padding(.horizontal)
+                        
+                        Button("Import") {
+                            isShowingPasswordPrompt = false
+                            importWithPassword()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(p12PasswordInput.isEmpty)
+                        
+                        Spacer()
+                    }
+                    .padding(.top, 30)
+                    .navigationTitle("P12 Password")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                                isShowingPasswordPrompt = false
+                                cancelCloudTAKImport()
+                            }
+                        }
+                    }
+                }
+                .presentationDetents([.medium])
             }
         }
         .onAppear(perform: {

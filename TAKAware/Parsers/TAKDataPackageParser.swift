@@ -8,6 +8,7 @@
 import Foundation
 import NIOSSL
 import SwiftTAK
+import ZIPFoundation
 
 class TAKDataPackageParser: NSObject {
     var archiveLocation: URL
@@ -27,6 +28,93 @@ class TAKDataPackageParser: NSObject {
         storeServerCertificate(packageContents: contents)
         storePreferences(packageContents: contents)
         TAKLogger.debug("[TAKDataPackageParser]: Completed Parsing")
+    }
+    
+    // MARK: - CloudTAK import with explicit P12 password
+    
+    static let maxUncompressedSize: Int64 = 250 * 1024 * 1024  // 250 MB
+    static let maxEntryCount: Int = 1000
+    
+    func parse(p12Password: Data) {
+        var passwordBuffer = p12Password
+        defer {
+            TAKDataPackageParser.zeroPasswordBuffer(&passwordBuffer)
+        }
+        
+        // Validate zip safety before extraction
+        if let safetyError = validateZipSafety() {
+            parsingErrors.append(safetyError)
+            TAKLogger.error("[TAKDataPackageParser]: Zip safety check failed: \(safetyError)")
+            return
+        }
+        
+        let parser = DataPackageParser(fileLocation: archiveLocation)
+        parser.parse()
+        var contents = parser.packageContents
+        
+        // Override password with the provided Data buffer
+        let passwordString = String(data: passwordBuffer, encoding: .utf8) ?? ""
+        contents.userCertificatePassword = passwordString
+        for i in 0..<contents.serverCertificates.count {
+            contents.serverCertificates[i].certificatePassword = passwordString
+        }
+        
+        storeUserCertificate(packageContents: contents, on: .main)
+        storeServerCertificate(packageContents: contents)
+        storePreferences(packageContents: contents)
+        TAKLogger.debug("[TAKDataPackageParser]: Completed CloudTAK Parsing")
+    }
+    
+    func validateZipSafety() -> String? {
+        guard let archive = Archive(url: archiveLocation, accessMode: .read) else {
+            return "The downloaded file is not a valid data package"
+        }
+        
+        var entryCount = 0
+        var totalUncompressedSize: Int64 = 0
+        
+        for entry in archive {
+            entryCount += 1
+            if entryCount > Self.maxEntryCount {
+                return "Data package extraction aborted: too many files (>\(Self.maxEntryCount))"
+            }
+            
+            totalUncompressedSize += Int64(entry.uncompressedSize)
+            if totalUncompressedSize > Self.maxUncompressedSize {
+                return "Data package extraction aborted: uncompressed size exceeds 250 MB"
+            }
+            
+            let entryPath = entry.path
+            
+            // Reject absolute paths
+            if entryPath.hasPrefix("/") {
+                TAKLogger.debug("[TAKDataPackageParser]: Skipping entry with absolute path: \(entryPath)")
+                continue
+            }
+            
+            // Reject path traversal
+            if entryPath.contains("../") {
+                TAKLogger.debug("[TAKDataPackageParser]: Skipping entry with path traversal: \(entryPath)")
+                continue
+            }
+            
+            // Reject symbolic links
+            if entry.type == .symlink {
+                TAKLogger.debug("[TAKDataPackageParser]: Skipping symbolic link entry: \(entryPath)")
+                continue
+            }
+        }
+        
+        return nil
+    }
+    
+    static func zeroPasswordBuffer(_ buffer: inout Data) {
+        buffer.withUnsafeMutableBytes { ptr in
+            if let baseAddress = ptr.baseAddress {
+                memset(baseAddress, 0, ptr.count)
+            }
+        }
+        buffer = Data()
     }
     
     func storeUserCertificate(packageContents: DataPackageContents, on: DispatchQueue = DispatchQueue.global(qos: .background)) {

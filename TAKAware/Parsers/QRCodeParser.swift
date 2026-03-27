@@ -28,6 +28,12 @@ struct CertificateEnrollmentParameters: Equatable {
     }
 }
 
+enum QRCodeParseResult {
+    case certificateEnrollment(CertificateEnrollmentParameters)
+    case cloudTAKURL(URL)
+    case invalid(String)
+}
+
 class QRCodeParser {
     var originalString: String
     
@@ -36,8 +42,45 @@ class QRCodeParser {
         return parser.parse()
     }
     
+    static func parseExtended(_ scannedString: String) -> QRCodeParseResult {
+        let parser = QRCodeParser(scannedString: scannedString)
+        return parser.parseExtended()
+    }
+    
     private init(scannedString: String) {
         originalString = scannedString.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    func parseExtended() -> QRCodeParseResult {
+        guard !originalString.isEmpty else {
+            return .invalid("Empty QR code")
+        }
+        
+        // Existing path 1: iTAK comma-separated (4 fields)
+        if originalString.split(separator: ",").count == 4 {
+            return .certificateEnrollment(parseAsITAKQRCode())
+        }
+        
+        // Existing path 2: ATAK JSON
+        if originalString.hasPrefix("{") {
+            return .certificateEnrollment(parseAsATAKRegistrationQRCode())
+        }
+        
+        // New path 3: CloudTAK HTTPS URL
+        if originalString.lowercased().hasPrefix("https://") {
+            guard let url = URL(string: originalString),
+                  url.host != nil else {
+                return .invalid("The QR code does not contain a valid URL")
+            }
+            return .cloudTAKURL(url)
+        }
+        
+        // Reject plaintext HTTP
+        if originalString.lowercased().hasPrefix("http://") {
+            return .invalid("Only HTTPS URLs are accepted for security reasons")
+        }
+        
+        return .invalid("Unrecognized QR code format")
     }
     
     func parse() -> CertificateEnrollmentParameters {
