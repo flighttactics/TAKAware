@@ -90,3 +90,9 @@ fastlane/test_output
 
 iOSInjectionProject/
 .DS_Store
+
+# TAK server config / secrets — never commit these
+*.pref
+*.p12
+*.jks
+*.pfx

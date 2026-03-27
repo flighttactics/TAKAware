@@ -292,31 +292,40 @@ struct CertEnrollmentScreen: View {
                 
                 TAKLogger.debug("[CertEnrollment] Downloaded to: \(destURL)")
                 
-                // Parse on background thread
-                let tdpp = TAKDataPackageParser(fileLocation: destURL)
-                let errors: [String] = await withCheckedContinuation { continuation in
+                // Parse on background thread without capturing non-Sendable values
+                let (errors, certFailed): ([String], Bool) = await withCheckedContinuation { continuation in
                     DispatchQueue.global(qos: .userInitiated).async {
-                        tdpp.parse()
+                        let parser = TAKDataPackageParser(fileLocation: destURL)
+                        parser.parse()
                         Thread.sleep(forTimeInterval: 1.0)
-                        continuation.resume(returning: tdpp.parsingErrors)
+                        continuation.resume(returning: (parser.parsingErrors, parser.certImportFailed))
                     }
                 }
-                
+
                 // Clean up temp file
                 try? FileManager.default.removeItem(at: destURL)
-                
+
                 await MainActor.run {
                     isDownloading = false
                     importStatusMessage = ""
-                    if errors.isEmpty {
+                    if errors.isEmpty && !certFailed {
                         cloudTAKImportSucceeded = true
                         cloudTAKAlertTitle = "Success"
                         cloudTAKAlertMessage = "Configuration imported. Server connection will be established."
+                        isShowingCloudTAKAlert = true
+                    } else if errors.isEmpty && certFailed {
+                        // Hostname/port stored — certificate couldn't be loaded.
+                        // Pre-fill the form and let the user enter credentials.
+                        formServerURL = SettingsStore.global.takServerUrl
+                        formServerPort = SettingsStore.global.takServerPort
+                        cloudTAKAlertTitle = "Server Address Imported"
+                        cloudTAKAlertMessage = "The server address was imported but the certificate could not be loaded. Enter your username and password to connect."
+                        isShowingCloudTAKAlert = true
                     } else {
-                        cloudTAKAlertTitle = "Import Result"
+                        cloudTAKAlertTitle = "Import Failed"
                         cloudTAKAlertMessage = errors.joined(separator: "\n")
+                        isShowingCloudTAKAlert = true
                     }
-                    isShowingCloudTAKAlert = true
                 }
             } catch {
                 TAKLogger.error("[CertEnrollment] Error: \(error)")
@@ -659,3 +668,4 @@ struct CertEnrollmentScreen: View {
         })
     }
 }
+
