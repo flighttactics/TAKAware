@@ -275,14 +275,9 @@ struct CertEnrollmentScreen: View {
                 await MainActor.run {
                     downloadedZipURL = zipURL
                     isDownloading = false
-                    importStatusMessage = ""
-                    // If password was in the URL, auto-import without prompting
-                    if let password = cloudTAKPassword, !password.isEmpty {
-                        p12PasswordInput = password
-                        importWithPassword()
-                    } else {
-                        isShowingPasswordPrompt = true
-                    }
+                    importStatusMessage = "Importing configuration..."
+                    // Try standard parse first — password is usually in the .pref file inside the zip
+                    importStandard()
                 }
             } catch let error as DownloadError {
                 await MainActor.run {
@@ -302,6 +297,36 @@ struct CertEnrollmentScreen: View {
                     isShowingCloudTAKAlert = true
                     downloader.cleanup()
                 }
+            }
+        }
+    }
+    
+    /// Try standard parse — password is in the .pref file inside the zip
+    func importStandard() {
+        guard let zipURL = downloadedZipURL else { return }
+        
+        importStatusMessage = "Importing certificates..."
+        
+        let tdpp = TAKDataPackageParser(fileLocation: zipURL)
+        tdpp.parse()
+        
+        if tdpp.parsingErrors.isEmpty {
+            cloudTAKImportSucceeded = true
+            cloudTAKAlertTitle = "Success"
+            cloudTAKAlertMessage = "Configuration imported successfully. The server connection will be established."
+            isShowingCloudTAKAlert = true
+            downloader.cleanup()
+            downloadedZipURL = nil
+            importStatusMessage = ""
+        } else {
+            // Standard parse failed — try with URL password if available, otherwise prompt
+            TAKLogger.debug("[CertEnrollment] Standard parse failed: \(tdpp.parsingErrors). Trying password fallback.")
+            importStatusMessage = ""
+            if let password = cloudTAKPassword, !password.isEmpty {
+                p12PasswordInput = password
+                importWithPassword()
+            } else {
+                isShowingPasswordPrompt = true
             }
         }
     }
