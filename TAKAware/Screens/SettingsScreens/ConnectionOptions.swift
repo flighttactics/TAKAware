@@ -191,6 +191,7 @@ struct CertEnrollmentScreen: View {
     // CloudTAK import state
     @State var isShowingHostConfirmation = false
     @State var cloudTAKURL: URL? = nil
+    @State var cloudTAKPassword: String? = nil
     @State var isShowingPasswordPrompt = false
     @State var p12PasswordInput = ""
     @State var downloadedZipURL: URL? = nil
@@ -251,8 +252,9 @@ struct CertEnrollmentScreen: View {
                 submitCertEnrollmentForm()
             }
             
-        case .cloudTAKURL(let url):
+        case .cloudTAKURL(let url, let password):
             cloudTAKURL = url
+            cloudTAKPassword = password
             isShowingHostConfirmation = true
             
         case .invalid(let message):
@@ -274,7 +276,13 @@ struct CertEnrollmentScreen: View {
                     downloadedZipURL = zipURL
                     isDownloading = false
                     importStatusMessage = ""
-                    isShowingPasswordPrompt = true
+                    // If password was in the URL, auto-import without prompting
+                    if let password = cloudTAKPassword, !password.isEmpty {
+                        p12PasswordInput = password
+                        importWithPassword()
+                    } else {
+                        isShowingPasswordPrompt = true
+                    }
                 }
             } catch let error as DownloadError {
                 await MainActor.run {
@@ -340,6 +348,7 @@ struct CertEnrollmentScreen: View {
         downloader.cancel()
         downloadedZipURL = nil
         cloudTAKURL = nil
+        cloudTAKPassword = nil
         isDownloading = false
         isShowingPasswordPrompt = false
         importStatusMessage = ""

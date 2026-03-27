@@ -30,7 +30,7 @@ struct CertificateEnrollmentParameters: Equatable {
 
 enum QRCodeParseResult {
     case certificateEnrollment(CertificateEnrollmentParameters)
-    case cloudTAKURL(URL)
+    case cloudTAKURL(URL, p12Password: String?)
     case invalid(String)
 }
 
@@ -72,7 +72,10 @@ class QRCodeParser {
                   url.host != nil else {
                 return .invalid("The QR code does not contain a valid URL")
             }
-            return .cloudTAKURL(url)
+            // Extract password from query parameter if present
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            let password = components?.queryItems?.first(where: { $0.name == "password" })?.value
+            return .cloudTAKURL(url, p12Password: password)
         }
         
         // Reject plaintext HTTP
