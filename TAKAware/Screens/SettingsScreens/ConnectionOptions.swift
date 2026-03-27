@@ -276,9 +276,9 @@ struct CertEnrollmentScreen: View {
                     downloadedZipURL = zipURL
                     isDownloading = false
                     importStatusMessage = "Importing configuration..."
-                    // Try standard parse first — password is usually in the .pref file inside the zip
-                    importStandard()
                 }
+                // Run import OFF the main thread to avoid watchdog kill
+                await importStandardAsync(zipURL: zipURL)
             } catch let error as DownloadError {
                 await MainActor.run {
                     isDownloading = false
@@ -301,32 +301,41 @@ struct CertEnrollmentScreen: View {
         }
     }
     
-    /// Try standard parse — password is in the .pref file inside the zip
-    func importStandard() {
-        guard let zipURL = downloadedZipURL else { return }
-        
-        importStatusMessage = "Importing certificates..."
-        
+    /// Try standard parse — password is in the .pref file inside the zip.
+    /// Runs off the main thread to avoid watchdog kill during zip extraction.
+    func importStandardAsync(zipURL: URL) async {
         let tdpp = TAKDataPackageParser(fileLocation: zipURL)
-        tdpp.parse()
         
-        if tdpp.parsingErrors.isEmpty {
-            cloudTAKImportSucceeded = true
-            cloudTAKAlertTitle = "Success"
-            cloudTAKAlertMessage = "Configuration imported successfully. The server connection will be established."
-            isShowingCloudTAKAlert = true
-            downloader.cleanup()
-            downloadedZipURL = nil
-            importStatusMessage = ""
-        } else {
-            // Standard parse failed — try with URL password if available, otherwise prompt
-            TAKLogger.debug("[CertEnrollment] Standard parse failed: \(tdpp.parsingErrors). Trying password fallback.")
-            importStatusMessage = ""
-            if let password = cloudTAKPassword, !password.isEmpty {
-                p12PasswordInput = password
-                importWithPassword()
+        // Run zip extraction + cert import on background thread
+        let errors: [String] = await withCheckedContinuation { continuation in
+            DispatchQueue.global(qos: .userInitiated).async {
+                tdpp.parse()
+                // Wait briefly for the async storeUserCertificate to complete
+                Thread.sleep(forTimeInterval: 1.0)
+                continuation.resume(returning: tdpp.parsingErrors)
+            }
+        }
+        
+        await MainActor.run {
+            if errors.isEmpty {
+                cloudTAKImportSucceeded = true
+                cloudTAKAlertTitle = "Success"
+                cloudTAKAlertMessage = "Configuration imported successfully. The server connection will be established."
+                isShowingCloudTAKAlert = true
+                downloader.cleanup()
+                downloadedZipURL = nil
+                importStatusMessage = ""
             } else {
-                isShowingPasswordPrompt = true
+                // Standard parse failed — try with URL password if available, otherwise prompt
+                TAKLogger.debug("[CertEnrollment] Standard parse failed: \(errors). Trying password fallback.")
+                importStatusMessage = ""
+                downloadedZipURL = zipURL
+                if let password = cloudTAKPassword, !password.isEmpty {
+                    p12PasswordInput = password
+                    importWithPassword()
+                } else {
+                    isShowingPasswordPrompt = true
+                }
             }
         }
     }
