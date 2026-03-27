@@ -53,13 +53,16 @@ class TAKDataPackageParser: NSObject {
         var contents = parser.packageContents
         
         // Override password with the provided Data buffer
-        let passwordString = String(data: passwordBuffer, encoding: .utf8) ?? ""
-        contents.userCertificatePassword = passwordString
-        for i in 0..<contents.serverCertificates.count {
-            contents.serverCertificates[i].certificatePassword = passwordString
+        // Minimize String lifetime — create in local scope, apply, then clear
+        do {
+            let passwordString = String(data: passwordBuffer, encoding: .utf8) ?? ""
+            contents.userCertificatePassword = passwordString
+            for i in 0..<contents.serverCertificates.count {
+                contents.serverCertificates[i].certificatePassword = passwordString
+            }
         }
         
-        storeUserCertificate(packageContents: contents, on: .main)
+        storeUserCertificateSynchronously(packageContents: contents)
         storeServerCertificate(packageContents: contents)
         storePreferences(packageContents: contents)
         TAKLogger.debug("[TAKDataPackageParser]: Completed CloudTAK Parsing")
@@ -111,7 +114,8 @@ class TAKDataPackageParser: NSObject {
     static func zeroPasswordBuffer(_ buffer: inout Data) {
         buffer.withUnsafeMutableBytes { ptr in
             if let baseAddress = ptr.baseAddress {
-                memset(baseAddress, 0, ptr.count)
+                // memset_s (C11 Annex K) is guaranteed not to be optimized away
+                memset_s(baseAddress, ptr.count, 0, ptr.count)
             }
         }
         buffer = Data()
@@ -134,6 +138,25 @@ class TAKDataPackageParser: NSObject {
             
             TAKLogger.debug("[TAKDataPackageParser]: User Certificate Stored")
         }
+    }
+    
+    /// Synchronous variant used by the CloudTAK import path so that
+    /// parsingErrors are populated before the caller inspects them.
+    func storeUserCertificateSynchronously(packageContents: DataPackageContents) {
+        assert(!Thread.isMainThread, "storeUserCertificateSynchronously must not be called from the main thread")
+        TAKLogger.debug("[TAKDataPackageParser]: Storing User Certificate (sync)")
+        
+        let parsedCert = PKCS12(data: packageContents.userCertificate, password: packageContents.userCertificatePassword)
+        
+        guard let identity = parsedCert.identity else {
+            parsingErrors.append("No User Certificate found")
+            TAKLogger.error("[TAKDataPackageParser]: Identity was not present in the parsed cert")
+            return
+        }
+        
+        SettingsStore.global.storeIdentity(identity: identity, label: packageContents.serverURL)
+        
+        TAKLogger.debug("[TAKDataPackageParser]: User Certificate Stored (sync)")
     }
     
     func storeServerCertificate(packageContents: DataPackageContents) {

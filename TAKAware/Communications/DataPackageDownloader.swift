@@ -59,12 +59,14 @@ class CloudTAKDownloader: NSObject, ObservableObject {
     static let maxDownloadSize: Int64 = 50 * 1024 * 1024  // 50 MB
     static let downloadTimeout: TimeInterval = 60
     static let maxRedirects: Int = 5
+    static let tempSubdirectory = "com.takaware.pkg-import"
     
     private var redirectCount = 0
     private(set) var tempFileURL: URL?
     private var downloadTask: URLSessionDownloadTask?
     private var session: URLSession?
     private var downloadContinuation: CheckedContinuation<URL, Error>?
+    private let continuationQueue = DispatchQueue(label: "com.takaware.downloader.continuation")
     
     func download(from url: URL) async throws -> URL {
         guard url.scheme?.lowercased() == "https" else {
@@ -82,7 +84,9 @@ class CloudTAKDownloader: NSObject, ObservableObject {
         session = URLSession(configuration: config, delegate: self, delegateQueue: nil)
         
         return try await withCheckedThrowingContinuation { continuation in
-            self.downloadContinuation = continuation
+            self.continuationQueue.sync {
+                self.downloadContinuation = continuation
+            }
             self.downloadTask = self.session?.downloadTask(with: url)
             self.downloadTask?.resume()
         }
@@ -102,7 +106,7 @@ class CloudTAKDownloader: NSObject, ObservableObject {
     }
     
     static func sweepOrphanedTempFiles() {
-        let tempDir = NSTemporaryDirectory()
+        let tempDir = (NSTemporaryDirectory() as NSString).appendingPathComponent(tempSubdirectory)
         let fm = FileManager.default
         guard let files = try? fm.contentsOfDirectory(atPath: tempDir) else { return }
         for file in files where file.hasSuffix(".zip") {
@@ -110,14 +114,22 @@ class CloudTAKDownloader: NSObject, ObservableObject {
             try? fm.removeItem(atPath: path)
             TAKLogger.debug("[CloudTAKDownloader] Swept orphaned temp file: \(file)")
         }
+        // Remove subdirectory if empty
+        if let remaining = try? fm.contentsOfDirectory(atPath: tempDir), remaining.isEmpty {
+            try? fm.removeItem(atPath: tempDir)
+        }
     }
     
     private func finishWithError(_ error: DownloadError) {
         Task { @MainActor in
             status = .failed(error)
         }
-        downloadContinuation?.resume(throwing: error)
-        downloadContinuation = nil
+        continuationQueue.sync {
+            downloadContinuation?.resume(throwing: error)
+            downloadContinuation = nil
+        }
+        session?.finishTasksAndInvalidate()
+        session = nil
     }
 }
 
@@ -152,13 +164,15 @@ extension CloudTAKDownloader: URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         guard let error = error else { return }
         // Only handle errors here if continuation hasn't been consumed yet
-        guard downloadContinuation != nil else { return }
+        let hasContinuation = continuationQueue.sync { downloadContinuation != nil }
+        guard hasContinuation else { return }
         
         if (error as NSError).code == NSURLErrorTimedOut {
             finishWithError(.timeout)
         } else if (error as NSError).code == NSURLErrorCancelled {
             // Cancellation — continuation may already be consumed by redirect handler
-            if downloadContinuation != nil {
+            let stillHasContinuation = continuationQueue.sync { downloadContinuation != nil }
+            if stillHasContinuation {
                 finishWithError(.networkError(error))
             }
         } else {
@@ -198,24 +212,23 @@ extension CloudTAKDownloader: URLSessionDownloadDelegate {
         if let httpResponse = downloadTask.response as? HTTPURLResponse {
             let statusCode = httpResponse.statusCode
             guard (200...299).contains(statusCode) else {
-                if statusCode == 403 {
-                    finishWithError(.httpError(statusCode: statusCode))
-                } else {
-                    finishWithError(.httpError(statusCode: statusCode))
-                }
+                finishWithError(.httpError(statusCode: statusCode))
                 return
             }
         }
         
-        // Move to a permanent temp location
-        let tempDir = NSTemporaryDirectory()
+        // Move to a dedicated temp subdirectory
+        let tempDir = (NSTemporaryDirectory() as NSString).appendingPathComponent(Self.tempSubdirectory)
+        let fm = FileManager.default
+        try? fm.createDirectory(atPath: tempDir, withIntermediateDirectories: true)
+        
         let fileName = UUID().uuidString + ".zip"
         let destPath = (tempDir as NSString).appendingPathComponent(fileName)
         let destURL = URL(fileURLWithPath: destPath)
         
         do {
-            try FileManager.default.moveItem(at: location, to: destURL)
-            try FileManager.default.setAttributes(
+            try fm.moveItem(at: location, to: destURL)
+            try fm.setAttributes(
                 [.posixPermissions: 0o600],
                 ofItemAtPath: destPath
             )
@@ -228,7 +241,11 @@ extension CloudTAKDownloader: URLSessionDownloadDelegate {
         Task { @MainActor in
             status = .completed(destURL)
         }
-        downloadContinuation?.resume(returning: destURL)
-        downloadContinuation = nil
+        continuationQueue.sync {
+            downloadContinuation?.resume(returning: destURL)
+            downloadContinuation = nil
+        }
+        self.session?.finishTasksAndInvalidate()
+        self.session = nil
     }
 }
