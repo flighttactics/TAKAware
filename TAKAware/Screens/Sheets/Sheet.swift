@@ -25,7 +25,6 @@ struct Sheet: View {
         case videoPlayer
         case deconflictionView
         case contacts
-        case teleport
         
         var id: String {
             switch self {
@@ -39,7 +38,6 @@ struct Sheet: View {
                 case .videoPlayer: return "videoPlayer"
                 case .deconflictionView: return "deconflictionView"
                 case .contacts: return "contacts"
-                case .teleport: return "teleport"
             }
         }
     }
@@ -56,7 +54,6 @@ struct Sheet: View {
             case .videoPlayer: VideoPlayerView(currentSelectedAnnotation: $currentSelectedAnnotation)
             case .deconflictionView: DeconflictionSheet(conflictedItems: $conflictedItems, parentView: parentView)
             case .contacts: ContactsSheet()
-            case .teleport: TeleportSheet()
         }
     }
     

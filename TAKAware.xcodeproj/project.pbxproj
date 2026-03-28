@@ -25,7 +25,6 @@
 		A51B12EA2BB1E28800C25239 /* AdvancedOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51B12E92BB1E28800C25239 /* AdvancedOptions.swift */; };
 		A51B12EC2BB1E29800C25239 /* SituationalAwarenessOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A51B12EB2BB1E29800C25239 /* SituationalAwarenessOptions.swift */; };
 		A5264D3A2DDA94CB004F3ECB /* ContactsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5264D392DDA94C5004F3ECB /* ContactsSheet.swift */; };
-		CF51B38F2F2030EF00B204A6 /* TeleportSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF51B38E2F2030EF00B204A6 /* TeleportSheet.swift */; };
 		A52BE8ED2D132C3E00E82414 /* APIRequestObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE8EC2D132C3A00E82414 /* APIRequestObject.swift */; };
 		A52BE8F52D15AAB900E82414 /* KMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE8F42D15AAB600E82414 /* KMLParser.swift */; };
 		A52BE8F72D15AACA00E82414 /* KMLParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52BE8F62D15AAC500E82414 /* KMLParserTests.swift */; };
@@ -6994,7 +6993,6 @@
 				A587B2912DF605CC006AB654 /* MarkersSheet.swift */,
 				A587B28F2DF5B32F006AB654 /* OverlayManager.swift */,
 				A5264D392DDA94C5004F3ECB /* ContactsSheet.swift */,
-				CF51B38E2F2030EF00B204A6 /* TeleportSheet.swift */,
 				A5F8AA442D6374EE009901A7 /* IconImage.swift */,
 				A53F59DA2D0FD58900DFD794 /* AlertSheet.swift */,
 				A53F59DB2D0FD58900DFD794 /* AnnotationDetailView.swift */,
@@ -14146,7 +14144,6 @@
 				A5FB4E662A98D0FF0034966D /* TAKConstants.swift in Sources */,
 				4630FD132B5071A100988ED4 /* ChatView.swift in Sources */,
 				A5264D3A2DDA94CB004F3ECB /* ContactsSheet.swift in Sources */,
-				CF51B38F2F2030EF00B204A6 /* TeleportSheet.swift in Sources */,
 				4630FD0E2B506EC000988ED4 /* Palette+Color.swift in Sources */,
 				A5B312C12C397AC5007B3914 /* DataController.swift in Sources */,
 				A5F8AA492D63C163009901A7 /* MapSourceImporter.swift in Sources */,

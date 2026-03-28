@@ -255,11 +255,6 @@ struct AwarenessView: View {
                             .padding(5)
                     }
                     
-                    Button(action: { selectedSheet = .teleport }) {
-                        navBarImage(systemName: "location.viewfinder")
-                            .padding(5)
-                    }
-                    
                     Button(action: { selectedSheet = .channels }) {
                         navBarImage(imageName: "nav_channels")
                             .padding(5)
