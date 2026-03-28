@@ -15,6 +15,7 @@ struct TAKTrackerApp: App {
     @StateObject var takManager: TAKManager = TAKManager()
     @StateObject var settingsStore = SettingsStore.global
     @StateObject private var dataController = DataController.shared
+    @StateObject var trackingState = TrackingState()
     
     init() {
         TAKLogger.debug("Hello, TAK Aware!")
@@ -28,6 +29,7 @@ struct TAKTrackerApp: App {
                     .environmentObject(locationManager)
                     .environmentObject(takManager)
                     .environmentObject(settingsStore)
+                    .environmentObject(trackingState)
                     .environment(\.managedObjectContext, dataController.persistentContainer.viewContext)
                     .onAppear {
                         dataController.startCleanUpTimer()
@@ -43,6 +45,7 @@ struct TAKTrackerApp: App {
                     .environmentObject(locationManager)
                     .environmentObject(takManager)
                     .environmentObject(settingsStore)
+                    .environmentObject(trackingState)
                     .environment(\.managedObjectContext, dataController.persistentContainer.viewContext)
                     .onAppear {
                         dataController.startCleanUpTimer()

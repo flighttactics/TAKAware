@@ -227,6 +227,7 @@ struct TitleRowView: View {
 struct AnnotationDetailReadOnly: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var takManager: TAKManager
+    @EnvironmentObject var trackingState: TrackingState
     @Binding var currentSelectedAnnotation: MapPointAnnotation?
     @Binding var isEditing: Bool
     @State private var showingAlert = false
@@ -295,6 +296,52 @@ struct AnnotationDetailReadOnly: View {
                         }
                     }
                     .buttonStyle(BorderedProminentButtonStyle())
+                }
+                if let annotation = currentSelectedAnnotation {
+                    HStack(spacing: 8) {
+                        Button {
+                            NotificationCenter.default.post(
+                                name: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_CONTACT),
+                                object: annotation.cotUid
+                            )
+                            dismiss()
+                        } label: {
+                            Label("Center", systemImage: "scope")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+
+                        let isLocked = trackingState.lockedAnnotationUid == annotation.cotUid
+                        Button {
+                            if isLocked {
+                                trackingState.lockedAnnotationUid = nil
+                            } else {
+                                trackingState.lockedAnnotationUid = annotation.cotUid
+                                NotificationCenter.default.post(
+                                    name: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_CONTACT),
+                                    object: annotation.cotUid
+                                )
+                            }
+                        } label: {
+                            Label(isLocked ? "Unlock" : "Lock", systemImage: isLocked ? "lock.open" : "lock")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(isLocked ? .yellow : .primary)
+
+                        Button {
+                            NotificationCenter.default.post(
+                                name: Notification.Name(AppConstants.NOTIFY_SET_BLOODHOUND),
+                                object: annotation.cotUid
+                            )
+                            dismiss()
+                        } label: {
+                            Label("Track", systemImage: "arrow.triangle.turn.up.right.diamond")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                    .font(.caption)
                 }
             } else {
                 Text("No Map Item Selected")

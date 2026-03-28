@@ -592,7 +592,29 @@ class CompassMapView: MKMapView {
         //self.setCenter(self.userLocation.coordinate, animated: true)
         self.userTrackingMode = .follow
     }
+
+    @objc func goToLocationTapped(sender: UIButton) {
+        NotificationCenter.default.post(
+            name: Notification.Name(AppConstants.NOTIFY_GOTO_LOCATION_REQUESTED),
+            object: nil
+        )
+    }
     
+    lazy var goToLocationButton: UIButton = {
+        let largeTitle = UIImage.SymbolConfiguration(textStyle: .title1)
+        let medium = UIImage.SymbolConfiguration(weight: .medium)
+        let combined = largeTitle.applying(medium)
+
+        var buttonConfig = UIButton.Configuration.borderless()
+        buttonConfig.image = UIImage(systemName: "globe", withConfiguration: combined)?
+            .withTintColor(.systemYellow, renderingMode: .alwaysOriginal)
+
+        let button = UIButton(configuration: buttonConfig)
+        button.addTarget(self, action: #selector(self.goToLocationTapped), for: .touchUpInside)
+        addSubview(button)
+        return button
+    }()
+
     lazy var centerOnUserButton: UIButton = {
         let largeTitle = UIImage.SymbolConfiguration(textStyle: .title1)
         let black = UIImage.SymbolConfiguration(weight: .medium)
@@ -631,11 +653,15 @@ class CompassMapView: MKMapView {
         centerOnUserButton.frame = CGRect(
             origin: CGPoint(x: leftPadding + 24, y: topPadding + 55.0),
             size: compassButton.bounds.size)
+        goToLocationButton.frame = CGRect(
+            origin: CGPoint(x: leftPadding + 24, y: topPadding + 110.0),
+            size: compassButton.bounds.size)
     }
 }
 
 struct MapView: UIViewRepresentable {
     @Environment(\.scenePhase) var scenePhase
+    @EnvironmentObject var trackingState: TrackingState
     @Binding var region: MKCoordinateRegion
     @Binding var mapType: UInt
     @Binding var enableTrafficDisplay: Bool
@@ -730,6 +756,7 @@ struct MapView: UIViewRepresentable {
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_MAP_SOURCE_UPDATED), object: nil, queue: nil, using: mapSourceUpdatedCallback)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_COORDINATE), object: nil, queue: nil, using: scrollToCoordinate)
         nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_SCROLL_TO_CONTACT), object: nil, queue: nil, using: scrollToContact)
+        nc.addObserver(forName: Notification.Name(AppConstants.NOTIFY_SET_BLOODHOUND), object: nil, queue: nil, using: setBloodhoundToContact)
         
         overlayActiveMapSources()
 
@@ -874,6 +901,22 @@ struct MapView: UIViewRepresentable {
         mapView.setCenter(coordinate, animated: true)
     }
     
+    private func setBloodhoundToContact(notification: Notification) {
+        guard let cotUid = notification.object as? String else {
+            TAKLogger.debug("[MapView] Set Bloodhound requested but no UID provided")
+            return
+        }
+        guard let annotation = mapView.annotations.first(where: {
+            ($0 as? MapPointAnnotation)?.cotUid == cotUid
+        }) as? MapPointAnnotation else {
+            TAKLogger.debug("[MapView] Set Bloodhound requested but no annotation found for UID")
+            return
+        }
+        DispatchQueue.main.async {
+            createBloodhound(annotation: annotation)
+        }
+    }
+
     private func scrollToContact(notification: Notification) {
         guard let cotUid = notification.object as? String else {
             TAKLogger.debug("[MapView] Scroll to Contact requested but no ID provided")
@@ -1096,6 +1139,10 @@ struct MapView: UIViewRepresentable {
                     }
                     createBloodhound(annotation: updatedMp)
                 }
+            }
+            if let lockedUid = trackingState.lockedAnnotationUid,
+               existingAnnotation.cotUid == lockedUid {
+                mapView.setCenter(existingAnnotation.coordinate, animated: false)
             }
             updateCurrentSelectedAnnotation(updatedMp: updatedMp)
             annotationUpdatedCallback(annotation: existingAnnotation)

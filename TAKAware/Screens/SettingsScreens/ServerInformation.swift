@@ -124,6 +124,7 @@ struct ServerUpdateScreen: View {
             csrRequest.beginEnrollment()
         } else {
             settingsStore.takServerChanged = true
+            settingsStore.captureCurrentAsServerConfiguration()
         }
     }
     

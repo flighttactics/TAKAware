@@ -71,6 +71,7 @@ class MapViewModel: ObservableObject {
 struct AwarenessView: View {
     @EnvironmentObject var settingsStore: SettingsStore
     @EnvironmentObject var locationManager: LocationManager
+    @EnvironmentObject var trackingState: TrackingState
     @Environment(\.managedObjectContext) var dataContext
     
     @Binding var displayUIState: DisplayUIState
@@ -164,6 +165,9 @@ struct AwarenessView: View {
             bloodhoundInfo
                 .padding(.horizontal)
         })
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name(AppConstants.NOTIFY_GOTO_LOCATION_REQUESTED))) { _ in
+            selectedSheet = .goToLocation
+        }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name(AppConstants.NOTIFY_PHONE_ACTION_REQUESTED))) { info in
             guard let phone = info.object as? String else {
                 TAKLogger.error("[AwarenessView] Phone Action request notification received with no phone")
@@ -430,7 +434,14 @@ struct AwarenessView: View {
         Group {
             if let currentSelectedAnnotation = mapViewModel.currentSelectedAnnotation {
                 VStack(alignment: .leading) {
-                    Text(currentSelectedAnnotation.title ?? "")
+                    HStack(spacing: 4) {
+                        Text(currentSelectedAnnotation.title ?? "")
+                        if trackingState.lockedAnnotationUid == currentSelectedAnnotation.cotUid {
+                            Image(systemName: "lock.fill")
+                                .foregroundColor(.yellow)
+                                .imageScale(.small)
+                        }
+                    }
                     
                     Group {
                         ForEach(displayUIState.coordinateValue(location: currentSelectedAnnotation.coordinate).lines, id: \.id) { line in

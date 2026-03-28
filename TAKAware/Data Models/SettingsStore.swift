@@ -16,6 +16,40 @@ enum MapLabelDisplayOption: Int {
     case Scroll
 }
 
+struct ServerConfiguration: Codable, Identifiable, Equatable {
+    var id: UUID
+    var name: String
+    var host: String
+    var port: String
+    var csrPort: String
+    var secureAPIPort: String
+    var userCertificate: Data
+    var serverCertificate: Data
+    var serverCertificateTruststore: [Data]
+
+    init(
+        id: UUID = UUID(),
+        name: String = "",
+        host: String,
+        port: String = TAKConstants.DEFAULT_STREAMING_PORT,
+        csrPort: String = TAKConstants.DEFAULT_CSR_PORT,
+        secureAPIPort: String = TAKConstants.DEFAULT_SECURE_API_PORT,
+        userCertificate: Data = Data(),
+        serverCertificate: Data = Data(),
+        serverCertificateTruststore: [Data] = []
+    ) {
+        self.id = id
+        self.name = name.isEmpty ? host : name
+        self.host = host
+        self.port = port
+        self.csrPort = csrPort
+        self.secureAPIPort = secureAPIPort
+        self.userCertificate = userCertificate
+        self.serverCertificate = serverCertificate
+        self.serverCertificateTruststore = serverCertificateTruststore
+    }
+}
+
 class SettingsStore: ObservableObject {
     static let global = SettingsStore()
     
@@ -36,15 +70,14 @@ class SettingsStore: ObservableObject {
     
     
     func storeIdentity(identity: SecIdentity, label: String) {
-        
-        //Clean up any existing identities
-        clearAllIdentities()
-        
-        //Add the new identity in
+        // Delete only the existing identity with this specific label
+        let deleteQuery: [String: Any] = [kSecClass as String: kSecClassIdentity,
+                                          kSecAttrLabel as String: label]
+        SecItemDelete(deleteQuery as CFDictionary)
+
         let addQuery: [String: Any] = [kSecValueRef as String: identity,
                                        kSecAttrLabel as String: label]
-
-        TAKLogger.debug("[SettingsStore]: Adding Identity to Keychain")
+        TAKLogger.debug("[SettingsStore]: Adding Identity to Keychain with label \(label)")
         let status = SecItemAdd(addQuery as CFDictionary, nil)
         guard status == errSecSuccess else {
             TAKLogger.error("[SettingsStore]: Error adding identity to keychain \(String(describing: status))")
@@ -136,6 +169,7 @@ class SettingsStore: ObservableObject {
     }
     
     func clearConnection() {
+        activeServerId = nil
         isConnectedToServer = false
         isConnectingToServer = false
         shouldTryReconnect = false
@@ -153,7 +187,139 @@ class SettingsStore: ObservableObject {
         keychainDelete(key: "takServerPassword")
         clearAllIdentities()
     }
-    
+
+    // MARK: - Multi-Server Management
+
+    @Published var serverConfigurations: [ServerConfiguration] {
+        didSet {
+            if let encoded = try? JSONEncoder().encode(serverConfigurations) {
+                UserDefaults.standard.set(encoded, forKey: "serverConfigurations")
+            }
+        }
+    }
+
+    @Published var activeServerId: UUID? {
+        didSet {
+            UserDefaults.standard.set(activeServerId?.uuidString, forKey: "activeServerId")
+        }
+    }
+
+    func saveServerConfiguration(
+        _ config: ServerConfiguration,
+        username: String = "",
+        password: String = "",
+        certPassword: String = ""
+    ) {
+        keychainSave(key: "server-\(config.id)-username", value: username)
+        keychainSave(key: "server-\(config.id)-password", value: password)
+        keychainSave(key: "server-\(config.id)-certpwd", value: certPassword)
+        if let idx = serverConfigurations.firstIndex(where: { $0.id == config.id }) {
+            serverConfigurations[idx] = config
+        } else {
+            serverConfigurations.append(config)
+        }
+    }
+
+    func deleteServerConfiguration(id: UUID) {
+        keychainDelete(key: "server-\(id)-username")
+        keychainDelete(key: "server-\(id)-password")
+        keychainDelete(key: "server-\(id)-certpwd")
+        if let config = serverConfigurations.first(where: { $0.id == id }) {
+            let deleteQuery: [String: Any] = [kSecClass as String: kSecClassIdentity,
+                                              kSecAttrLabel as String: config.host]
+            SecItemDelete(deleteQuery as CFDictionary)
+        }
+        serverConfigurations.removeAll { $0.id == id }
+        if activeServerId == id { clearConnection() }
+    }
+
+    func activateServer(id: UUID) {
+        guard let config = serverConfigurations.first(where: { $0.id == id }) else { return }
+        activeServerId = id
+        takServerUrl = config.host
+        takServerPort = config.port
+        takServerCSRPort = config.csrPort
+        takServerSecureAPIPort = config.secureAPIPort
+        serverCertificate = config.serverCertificate
+        serverCertificateTruststore = config.serverCertificateTruststore
+        userCertificate = config.userCertificate
+        takServerUsername = keychainLoad(key: "server-\(id)-username")
+        takServerPassword = keychainLoad(key: "server-\(id)-password")
+        userCertificatePassword = keychainLoad(key: "server-\(id)-certpwd")
+        if retrieveIdentity(label: config.host) == nil && !config.userCertificate.isEmpty {
+            reimportIdentity(
+                p12Data: config.userCertificate,
+                password: keychainLoad(key: "server-\(id)-certpwd"),
+                label: config.host
+            )
+        }
+        takServerChanged = true
+        takServerEnabled = true
+    }
+
+    /// Snapshot current flat SettingsStore state into the server list.
+    /// Call after any successful enrollment or server update.
+    @discardableResult
+    func captureCurrentAsServerConfiguration(name: String = "") -> ServerConfiguration {
+        let resolvedId = activeServerId ?? UUID()
+        let displayName = name.isEmpty ? (takServerUrl.isEmpty ? "Server" : takServerUrl) : name
+        let config = ServerConfiguration(
+            id: resolvedId,
+            name: displayName,
+            host: takServerUrl,
+            port: takServerPort,
+            csrPort: takServerCSRPort,
+            secureAPIPort: takServerSecureAPIPort,
+            userCertificate: userCertificate,
+            serverCertificate: serverCertificate,
+            serverCertificateTruststore: serverCertificateTruststore
+        )
+        saveServerConfiguration(
+            config,
+            username: takServerUsername,
+            password: takServerPassword,
+            certPassword: userCertificatePassword
+        )
+        activeServerId = config.id
+        return config
+    }
+
+    private func reimportIdentity(p12Data: Data, password: String, label: String) {
+        let options: [String: Any] = [kSecImportExportPassphrase as String: password]
+        var items: CFArray?
+        let status = SecPKCS12Import(p12Data as CFData, options as CFDictionary, &items)
+        guard status == errSecSuccess,
+              let array = items as? [[String: Any]],
+              let identityRef = array.first?[kSecImportItemIdentity as String]
+        else {
+            TAKLogger.error("[SettingsStore]: P12 reimport failed for \(label): \(status)")
+            return
+        }
+        storeIdentity(identity: identityRef as! SecIdentity, label: label)
+    }
+
+    private func migrateLegacyServerIfNeeded() {
+        guard serverConfigurations.isEmpty && !takServerUrl.isEmpty else { return }
+        let config = ServerConfiguration(
+            name: takServerUrl,
+            host: takServerUrl,
+            port: takServerPort,
+            csrPort: takServerCSRPort,
+            secureAPIPort: takServerSecureAPIPort,
+            userCertificate: userCertificate,
+            serverCertificate: serverCertificate,
+            serverCertificateTruststore: serverCertificateTruststore
+        )
+        saveServerConfiguration(
+            config,
+            username: takServerUsername,
+            password: takServerPassword,
+            certPassword: userCertificatePassword
+        )
+        activeServerId = config.id
+        TAKLogger.debug("[SettingsStore]: Migrated legacy server config for \(takServerUrl)")
+    }
+
     @Published var callSign: String {
         didSet {
             UserDefaults.standard.set(callSign, forKey: "callSign")
@@ -460,11 +626,28 @@ class SettingsStore: ObservableObject {
         
         self.hasOnboarded = (UserDefaults.standard.object(forKey: "hasOnboarded") == nil ? false : UserDefaults.standard.object(forKey: "hasOnboarded") as! Bool)
         
+        // Multi-server list
+        if let data = UserDefaults.standard.data(forKey: "serverConfigurations"),
+           let configs = try? JSONDecoder().decode([ServerConfiguration].self, from: data) {
+            self.serverConfigurations = configs
+        } else {
+            self.serverConfigurations = []
+        }
+
+        if let idStr = UserDefaults.standard.string(forKey: "activeServerId"),
+           let id = UUID(uuidString: idStr) {
+            self.activeServerId = id
+        } else {
+            self.activeServerId = nil
+        }
+
         // Migrate passwords from UserDefaults to Keychain, then load from Keychain
         migratePasswordsToKeychain()
         self.serverCertificatePassword = keychainLoad(key: "serverCertificatePassword")
         self.userCertificatePassword = keychainLoad(key: "userCertificatePassword")
         self.takServerUsername = keychainLoad(key: "takServerUsername")
         self.takServerPassword = keychainLoad(key: "takServerPassword")
+
+        migrateLegacyServerIfNeeded()
     }
 }

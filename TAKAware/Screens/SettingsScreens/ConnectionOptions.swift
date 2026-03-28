@@ -59,6 +59,7 @@ struct DataPackageEnrollment: View {
                                     fileurl.stopAccessingSecurityScopedResource()
                                     isProcessingDataPackage = false
                                     if(tdpp.parsingErrors.isEmpty) {
+                                        SettingsStore.global.captureCurrentAsServerConfiguration()
                                         alertText = "Data package processed successfully!"
                                     } else {
                                         alertText = "Data package could not be processed\n\n\(tdpp.parsingErrors.joined(separator: "\n\n"))"
@@ -87,14 +88,35 @@ struct DataPackageEnrollment: View {
 struct ConnectionOptions: View {
     @Binding var isProcessingDataPackage: Bool
     @ObservedObject var settingsStore = SettingsStore.global
-    
+
     var body: some View {
         Group {
-            if(!isProcessingDataPackage && settingsStore.takServerUrl != "") {
-                ServerInformationDisplay()
-            } else {
-                NavigationLink(destination: ConnectionOptionsScreen(isProcessingDataPackage: $isProcessingDataPackage)) {
+            if settingsStore.serverConfigurations.isEmpty {
+                NavigationLink(
+                    destination: ConnectionOptionsScreen(isProcessingDataPackage: $isProcessingDataPackage)
+                ) {
                     Text("Connect to a TAK Server")
+                }
+            } else {
+                NavigationLink(destination: ServerListScreen()) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Servers")
+                            Text(
+                                "^[\(settingsStore.serverConfigurations.count) server](inflect: true) configured"
+                            )
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        }
+                        Spacer()
+                        if settingsStore.isConnectedToServer {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                        } else if settingsStore.activeServerId != nil {
+                            Image(systemName: "circle.dotted")
+                                .foregroundColor(.yellow)
+                        }
+                    }
                 }
             }
         }
@@ -392,6 +414,7 @@ struct CertEnrollmentScreen: View {
         tdpp.parse(p12Password: passwordData)
         
         if tdpp.parsingErrors.isEmpty {
+            SettingsStore.global.captureCurrentAsServerConfiguration()
             cloudTAKImportSucceeded = true
             cloudTAKAlertTitle = "Success"
             cloudTAKAlertMessage = "Configuration imported successfully. The server connection will be established."
@@ -529,6 +552,7 @@ struct CertEnrollmentScreen: View {
                 HStack {
                     if(csrRequest.enrollmentStatus == .Succeeded) {
                         Button("Close", role: .none) {
+                            SettingsStore.global.captureCurrentAsServerConfiguration()
                             isProcessingDataPackage = false
                             dismiss()
                         }

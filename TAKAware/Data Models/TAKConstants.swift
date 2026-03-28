@@ -62,6 +62,8 @@ struct AppConstants {
     static let NOTIFY_SERVER_CONNECTED = "TAKServerConnected"
     static let NOTIFY_PHONE_ACTION_REQUESTED = "PhoneActionRequested"
     static let NOTIFY_TAK_SERVER_AVAILABILITY_TOGGLED = "TAKServerAvailabilityToggled"
+    static let NOTIFY_GOTO_LOCATION_REQUESTED = "GoToLocationRequested"
+    static let NOTIFY_SET_BLOODHOUND = "SetBloodhound"
     
     static func appDirectoryFor(_ directory: AppDirectories) -> URL {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!

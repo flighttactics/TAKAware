@@ -8,6 +8,10 @@
 import SwiftUI
 import MapKit
 
+class TrackingState: ObservableObject {
+    @Published var lockedAnnotationUid: String? = nil
+}
+
 // Our custom view modifier to track rotation and
 // call our action
 struct DeviceRotationViewModifier: ViewModifier {
